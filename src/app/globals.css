@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* Add to your globals.css */
+.cl-dev-banner {
+  display: none !important;
+}

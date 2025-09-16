@@ -1,0 +1,103 @@
+{
+  "id": "frontend-developer",
+  "title": "Frontend Developer",
+  "description": "Master modern frontend development with React, TypeScript, and contemporary web technologies",
+  "category": "Development",
+  "level": "Entry Level",
+  "totalDuration": "6-8 months",
+  "avgSalary": {
+    "min": 60000,
+    "max": 120000,
+    "currency": "USD"
+  },
+  "demandLevel": "Very High",
+  "tags": ["React", "JavaScript", "HTML", "CSS", "TypeScript"],
+  "lastUpdated": "2024-12-01",
+  "author": "Tech Career Hub",
+  "steps": [
+    {
+      "id": "html-css-basics",
+      "title": "HTML & CSS Fundamentals",
+      "description": "Learn the building blocks of web development",
+      "duration": "3-4 weeks",
+      "difficulty": "Beginner",
+      "skills": ["HTML5", "CSS3", "Responsive Design", "Flexbox", "CSS Grid"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "HTML & CSS Complete Course",
+          "url": "https://example.com",
+          "description": "Comprehensive beginner-friendly course"
+        },
+        {
+          "type": "Practice",
+          "title": "Build 5 Static Websites",
+          "description": "Practice responsive layouts"
+        }
+      ]
+    },
+    {
+      "id": "javascript-fundamentals",
+      "title": "JavaScript Fundamentals",
+      "description": "Master JavaScript programming concepts",
+      "duration": "4-6 weeks",
+      "difficulty": "Beginner",
+      "skills": ["JavaScript ES6+", "DOM Manipulation", "Event Handling", "Async Programming"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Modern JavaScript Course",
+          "url": "https://example.com"
+        },
+        {
+          "type": "Project",
+          "title": "Interactive Calculator",
+          "description": "Build a functional calculator"
+        }
+      ],
+      "prerequisites": ["HTML & CSS Fundamentals"]
+    },
+    {
+      "id": "react-basics",
+      "title": "React Fundamentals",
+      "description": "Learn React components, state, and hooks",
+      "duration": "4-5 weeks",
+      "difficulty": "Intermediate",
+      "skills": ["React Components", "JSX", "State Management", "Hooks", "Props"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "React Complete Guide",
+          "url": "https://example.com"
+        },
+        {
+          "type": "Project",
+          "title": "Todo App with React",
+          "description": "Build a full-featured todo application"
+        }
+      ],
+      "prerequisites": ["JavaScript Fundamentals"]
+    },
+    {
+      "id": "advanced-react",
+      "title": "Advanced React & TypeScript",
+      "description": "Master advanced React patterns and TypeScript",
+      "duration": "3-4 weeks",
+      "difficulty": "Advanced",
+      "skills": ["TypeScript", "Context API", "Custom Hooks", "Performance Optimization"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Advanced React Patterns",
+          "url": "https://example.com"
+        },
+        {
+          "type": "Project",
+          "title": "E-commerce Dashboard",
+          "description": "Complex React application with TypeScript"
+        }
+      ],
+      "prerequisites": ["React Fundamentals"]
+    }
+  ]
+}
