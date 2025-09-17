@@ -2,68 +2,85 @@
 'use client';
 
 import Link from 'next/link';
-import { Briefcase, Mail, Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
+import { Mail, Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import CircuitLogo from './CircuitLogo'; // Import the new logo component
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
+  const [showScroll, setShowScroll] = useState(false);
 
-  const scrollToTop = () => {
+  // Function to scroll to the top of the page
+  const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
+
+  // Effect to show/hide the scroll-to-top button
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScroll && window.scrollY > 400) {
+        setShowScroll(true);
+      } else if (showScroll && window.scrollY <= 400) {
+        setShowScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollTop);
+    return () => window.removeEventListener('scroll', checkScrollTop);
+  }, [showScroll]);
+
+  const socialLinks = [
+    { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
+    { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
+    { name: 'GitHub', href: 'https://github.com', icon: Github },
+    { name: 'Mail', href: 'mailto:hello@hirely.ma', icon: Mail },
+  ];
+
+  const quickLinks = [
+    { name: 'Home', href: '/' },
+    { name: 'All Articles', href: '/blog' },
+    { name: 'About Us', href: '/about' },
+    { name: 'Contact', href: '/contact' },
+  ];
+
+  const popularTopics = [
+    { name: 'CV Optimization', href: '/blog?tag=cv-optimization' },
+    { name: 'Interview Tips', href: '/blog?tag=interview-tips' },
+    { name: 'ATS Systems', href: '/blog?tag=ats-systems' },
+    { name: 'Career Advice', href: '/blog?tag=career-advice' },
+    { name: 'Job Search Strategy', href: '/blog?tag=job-search' },
+  ];
 
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          
-          {/* Brand Section */}
+          {/* Brand Section with Circuit Logo */}
           <div className="lg:col-span-1">
-            <div className="flex items-center space-x-2 mb-4">
-              <Briefcase className="w-8 h-8 text-blue-400" />
-              <span className="text-xl font-bold">
-                Career<span className="text-blue-400">Pro</span>
-              </span>
-            </div>
+            <Link href="/" className="inline-block mb-4" aria-label="hirely Home">
+              <CircuitLogo size="sm" />
+            </Link>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
               Expert career advice and job search strategies to help you land your dream tech job. 
               From CV optimization to interview prep, we've got you covered.
             </p>
             <div className="flex space-x-4">
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-blue-400 transition-colors"
-                aria-label="Follow us on Twitter"
-              >
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-blue-400 transition-colors"
-                aria-label="Connect on LinkedIn"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-gray-400 hover:text-blue-400 transition-colors"
-                aria-label="Follow us on GitHub"
-              >
-                <Github className="w-5 h-5" />
-              </a>
-              <a 
-                href="mailto:hello@careerpro.com"
-                className="text-gray-400 hover:text-blue-400 transition-colors"
-                aria-label="Send us an email"
-              >
-                <Mail className="w-5 h-5" />
-              </a>
+              {socialLinks.map((link) => {
+                const Icon = link.icon;
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-blue-400 transition-colors"
+                    aria-label={`Follow us on ${link.name}`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -71,46 +88,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Quick Links</h3>
             <ul className="space-y-2">
-              <li>
-                <Link 
-                  href="/" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  All Articles
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/about" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/contact" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Contact
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/privacy-policy" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Privacy Policy
-                </Link>
-              </li>
+              {quickLinks.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -118,46 +105,16 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Popular Topics</h3>
             <ul className="space-y-2">
-              <li>
-                <Link 
-                  href="/blog?tag=cv-optimization" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  CV Optimization
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog?tag=interview-tips" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Interview Tips
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog?tag=ats-systems" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  ATS Systems
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog?tag=career-advice" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Career Advice
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  href="/blog?tag=job-search" 
-                  className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                >
-                  Job Search Strategy
-                </Link>
-              </li>
+              {popularTopics.map((link) => (
+                <li key={link.name}>
+                  <Link
+                    href={link.href}
+                    className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -188,33 +145,35 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Bottom Bar */}
+      {/* Bottom Bar & Scroll to Top */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div className="text-gray-400 text-sm mb-2 sm:mb-0">
-              © {currentYear} CareerPro. All rights reserved.
+              © {currentYear} hirely.ma. All rights reserved.
             </div>
             <div className="flex items-center space-x-6">
-              <Link 
-                href="/privacy-policy" 
+              <Link
+                href="/privacy-policy"
                 className="text-gray-400 hover:text-white transition-colors text-sm"
               >
                 Privacy Policy
               </Link>
-              <Link 
-                href="/terms" 
+              <Link
+                href="/terms"
                 className="text-gray-400 hover:text-white transition-colors text-sm"
               >
                 Terms of Service
               </Link>
-              <button
-                onClick={scrollToTop}
-                className="text-gray-400 hover:text-blue-400 transition-colors p-1"
-                aria-label="Scroll to top"
-              >
-                <ArrowUp className="w-4 h-4" />
-              </button>
+              {showScroll && (
+                <button
+                  onClick={scrollToTop}
+                  className="bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                  aria-label="Scroll to top"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>
