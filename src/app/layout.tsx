@@ -19,8 +19,11 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'CareerPro - Expert Career Advice & Job Search Strategies',
+  title: 'Hirely - Expert Career Advice & Job Search Strategies',
   description: 'Get expert career advice, CV optimization tips, and job search strategies to land your dream tech job.',
+  icons: {
+    icon: '../images/blog/logo.svg',
+  },
 }
 
 export default function RootLayout({
@@ -36,7 +39,6 @@ export default function RootLayout({
             <Header />
             <main className="flex-grow">
               {children}
-              
             </main>
             <Footer />
           </div>
