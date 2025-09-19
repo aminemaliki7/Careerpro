@@ -1,0 +1,55 @@
+{
+  "id": "2",
+  "title": "Junior Java Developer",
+  "company": "CGI",
+  "location": "Knoxville, TN, USA",
+  "type": "Full-time",
+  "description": "As a Junior Java Developer at CGI, you will join a collaborative team working on innovative client solutions. You’ll contribute to the design, development, testing, and deployment of enterprise-grade applications while continuously learning and growing your technical skills.",
+  "requirements": [
+    "0-2 years of experience in software development (internships or projects accepted)",
+    "Solid knowledge of Java and object-oriented programming",
+    "Familiarity with relational databases (SQL, PostgreSQL, or Oracle)",
+    "Understanding of web development concepts (REST APIs, HTML/CSS/JavaScript)",
+    "Bachelor’s degree in Computer Science, Software Engineering, or related field"
+  ],
+  "skills": ["Java", "Spring Boot", "SQL", "Git", "Agile/Scrum"],
+  "salary": {
+    "min": 65000,
+    "max": 80000,
+    "currency": "USD",
+    "period": "year"
+  },
+  "benefits": [
+    "Health, Dental, and Vision Insurance",
+    "401k with company match",
+    "Paid Time Off and Holidays",
+    "Learning & Development Programs",
+    "Employee Stock Purchase Plan"
+  ],
+  "applyUrl": "https://www.cgi.com/careers/jobs/j1224-0683",
+  "companyUrl": "https://www.cgi.com",
+  "logo": "https://upload.wikimedia.org/wikipedia/commons/5/51/CGI_logo.svg",
+  "postedDate": "2025-09-12",
+  "isRemote": false,
+  "experienceLevel": "Entry Level",
+  "department": "Engineering",
+  "featured": true,
+  "sponsored": true,
+  "companySize": "Enterprise",
+  "industry": "IT Consulting & Services",
+  "tags": ["java", "spring", "backend", "entry-level", "cgi"],
+  "recommendedCourses": [
+    {
+      "type": "Course",
+      "title": "Java Programming and Software Engineering Fundamentals",
+      "url": "https://www.coursera.org/specializations/java-programming",
+      "description": "Coursera specialization (Duke University). Covers Java, OOP, data structures, and debugging."
+    },
+    {
+      "type": "Course",
+      "title": "Spring Boot for Beginners",
+      "url": "https://www.udemy.com/course/spring-boot-for-beginners",
+      "description": "Practical Udemy course on building REST APIs with Spring Boot."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "id": "senior-frontend-developer",
+  "slug": "senior-frontend-developer",
+  "title": "Senior Frontend Developer",
+  "company": "Tech Innovations Inc.",
+  "location": "New York, NY",
+  "type": "Full-time",
+  "workArrangement": "Hybrid",
+  "description": "We are seeking a highly skilled Senior Frontend Developer to join our dynamic team. You will be responsible for building and maintaining user-facing features, optimizing performance, and collaborating with our design and backend teams to deliver exceptional user experiences.",
+  "requirements": [
+    "5+ years of experience in frontend development.",
+    "Expertise in React.js and its ecosystem (Redux, Hooks, etc.).",
+    "Proficiency with TypeScript, JavaScript, HTML5, and CSS3.",
+    "Experience with RESTful APIs and GraphQL.",
+    "Strong understanding of modern web development best practices."
+  ],
+  "skills": [
+    "React",
+    "TypeScript",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "Redux",
+    "GraphQL",
+    "Next.js"
+  ],
+  "salary": {
+    "min": 120000,
+    "max": 150000,
+    "currency": "USD",
+    "period": "year"
+  },
+  "benefits": [
+    "Medical, dental, and vision insurance.",
+    "Paid time off and sick leave.",
+    "401(k) with company match.",
+    "Remote work flexibility.",
+    "Professional development opportunities."
+  ],
+  "applyUrl": "https://careers.techinnovations.com/apply/senior-frontend-developer",
+  "companyUrl": "https://www.techinnovations.com",
+  "logo": "/images/logos/tech-innovations.png",
+  "postedDate": "2025-09-15",
+  "experienceLevel": "Senior Level",
+  "department": "Engineering",
+  "featured": true,
+  "sponsored": false,
+  "companySize": "Medium",
+  "industry": "Software Development",
+  "tags": [
+    "Frontend",
+    "React",
+    "Developer",
+    "Senior"
+  ]
+}

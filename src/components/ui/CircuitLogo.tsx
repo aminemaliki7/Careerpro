@@ -1,202 +1,141 @@
-// src/components/ui/CircuitLogo.tsx
 'use client';
+import React from 'react';
 
-import React, { useState } from 'react';
-
-interface CircuitLogoProps {
+interface HirelyLogoProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
+  color?: string; // Customizable for brand alignment (e.g., LinkedIn blue, Indeed orange)
 }
 
-export default function CircuitLogo({ size = 'md', className = '' }: CircuitLogoProps) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Size configurations
+export default function HirelyLogo({ size = 'md', className = '', color = '#0A66C2' }: HirelyLogoProps) {
+  // Size configurations – tuned for balance and responsiveness
   const sizeConfig = {
-    xs: { svg: 32, text: 'text-lg', spacing: 'mr-2' },
-    sm: { svg: 36, text: 'text-xl', spacing: 'mr-2' },
-    md: { svg: 42, text: 'text-2xl', spacing: 'mr-3' },
-    lg: { svg: 48, text: 'text-3xl', spacing: 'mr-3' },
+    xs: { icon: 20, text: 'text-base', spacing: 'mr-1' },
+    sm: { icon: 24, text: 'text-lg', spacing: 'mr-1.5' },
+    md: { icon: 28, text: 'text-xl', spacing: 'mr-2' },
+    lg: { icon: 36, text: 'text-2xl', spacing: 'mr-2.5' },
   };
 
   const config = sizeConfig[size];
 
   return (
-    <div 
-      className={`flex items-center cursor-pointer transition-all duration-300 hover:scale-105 ${className}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Circuit Board HM Symbol */}
-      <div className={`relative ${config.spacing}`}>
-        <svg 
-          width={config.svg} 
-          height={config.svg} 
-          viewBox="0 0 42 42" 
-          className="drop-shadow-lg"
+    <div className={`flex items-center cursor-pointer ${className}`}>
+      {/* Icon: Stylized 'H' as a roadmap with milestones and forward arrow */}
+      <div className={`relative flex items-center justify-center ${config.spacing}`}>
+        <svg
+          width={config.icon}
+          height={config.icon}
+          viewBox="0 0 48 48"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          <defs>
-            {/* Main gradient for HM letters */}
-            <linearGradient id="circuitGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#10B981" />
-              <stop offset="50%" stopColor="#3B82F6" />
-              <stop offset="100%" stopColor="#8B5CF6" />
-            </linearGradient>
-            
-            {/* Glow effect */}
-            <filter id="circuitGlow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-              <feMerge> 
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-            
-            {/* Animated pulse for circuit traces */}
-            <filter id="pulse">
-              <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
-              <feMerge> 
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
-          </defs>
-          
-          {/* Dark circuit board background */}
-          <rect 
-            width="42" 
-            height="42" 
-            fill="#0F172A" 
-            rx="6" 
-            opacity="0.9"
-            className="transition-all duration-300"
+          {/* Left path: Career track with smooth curve */}
+          <path
+            d="M14 8c0 2 1 4 3 4h3v24c0 2-1 4-3 4H14"
+            fill="#FFFFFF"
+            stroke={color}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           />
-          
-          {/* Circuit traces - animated on hover */}
-          <g className="transition-all duration-500">
-            {/* Top trace */}
-            <path 
-              d="M6 10 L12 10 L12 16 L18 16 M24 16 L30 16 L30 10 L36 10" 
-              stroke="#10B981" 
-              strokeWidth={isHovered ? "2" : "1"} 
-              opacity={isHovered ? "1" : "0.6"} 
-              fill="none"
-              filter={isHovered ? "url(#pulse)" : "none"}
-              className="transition-all duration-500"
-            />
-            
-            {/* Bottom trace */}
-            <path 
-              d="M6 32 L12 32 L12 26 L18 26 M24 26 L30 26 L30 32 L36 32" 
-              stroke="#8B5CF6" 
-              strokeWidth={isHovered ? "2" : "1"} 
-              opacity={isHovered ? "1" : "0.6"} 
-              fill="none"
-              filter={isHovered ? "url(#pulse)" : "none"}
-              className="transition-all duration-500 delay-100"
-            />
-            
-            {/* Side traces for extra detail */}
-            <path 
-              d="M4 21 L8 21" 
-              stroke="#3B82F6" 
-              strokeWidth="1" 
-              opacity={isHovered ? "0.8" : "0.4"}
-              className="transition-all duration-300 delay-200"
-            />
-            <path 
-              d="M34 21 L38 21" 
-              stroke="#3B82F6" 
-              strokeWidth="1" 
-              opacity={isHovered ? "0.8" : "0.4"}
-              className="transition-all duration-300 delay-300"
-            />
-          </g>
-          
-          {/* HM Letters - main focus */}
-          <g filter="url(#circuitGlow)">
-            {/* H - left vertical */}
-            <rect 
-              x="10" 
-              y="12" 
-              width="3" 
-              height="18" 
-              fill="url(#circuitGradient)" 
-              rx="1.5"
-              className="transition-all duration-300"
-            />
-            
-            {/* H - horizontal bar */}
-            <rect 
-              x="15" 
-              y="19" 
-              width="12" 
-              height="3" 
-              fill="url(#circuitGradient)" 
-              rx="1.5"
-              className="transition-all duration-300"
-            />
-            
-            {/* H - right vertical (M part) */}
-            <rect 
-              x="29" 
-              y="12" 
-              width="3" 
-              height="18" 
-              fill="url(#circuitGradient)" 
-              rx="1.5"
-              className="transition-all duration-300"
-            />
-          </g>
-          
-          {/* Connection points - animated */}
-          <g className="transition-all duration-300">
-            <circle 
-              cx="11.5" 
-              cy="15" 
-              r={isHovered ? "2" : "1.5"} 
-              fill="#10B981"
-              className="transition-all duration-300"
-            />
-            <circle 
-              cx="30.5" 
-              cy="27" 
-              r={isHovered ? "2" : "1.5"} 
-              fill="#8B5CF6"
-              className="transition-all duration-300 delay-100"
-            />
-            <circle 
-              cx="21" 
-              cy="20.5" 
-              r={isHovered ? "1.5" : "1"} 
-              fill="#3B82F6"
-              opacity={isHovered ? "1" : "0.7"}
-              className="transition-all duration-300 delay-200"
-            />
-          </g>
-          
-          {/* Data flow indicators - subtle animation */}
-          {isHovered && (
-            <g opacity="0.6">
-              <circle cx="8" cy="10" r="0.5" fill="#10B981">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" />
-              </circle>
-              <circle cx="34" cy="32" r="0.5" fill="#8B5CF6">
-                <animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite" begin="0.5s" />
-              </circle>
-            </g>
-          )}
+          {/* Right path: Mirrored track with forward momentum */}
+          <path
+            d="M34 8c0 2-1 4-3 4h-3v24c0 2 1 4 3 4h3"
+            fill="#FFFFFF"
+            stroke={color}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Crossbar: Bridge connecting paths */}
+          <path
+            d="M17 24h14"
+            stroke={color}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+          />
+          {/* Milestone dots: Representing blogs, trends, and applications */}
+          <circle cx="20" cy="24" r="2" fill={color} />
+          <circle cx="28" cy="24" r="2" fill={color} />
+          {/* Arrow: Forward progress, inspired by Indeed's energy */}
+          <path
+            d="M34 36l4 4-4 4"
+            fill="none"
+            stroke={color}
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* Subtle glow: Inspired by Glassdoor's transparency */}
+          <path
+            d="M14 8c0 2 1 4 3 4h3v24c0 2-1 4-3 4H14 M34 8c0 2-1 4-3 4h-3v24c0 2 1 4 3 4h3"
+            fill="url(#glow)"
+            opacity="0.1"
+          />
+          <defs>
+            <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={color} />
+              <stop offset="100%" stopColor="#FFFFFF" />
+            </linearGradient>
+          </defs>
         </svg>
       </div>
       
-      {/* Text Logo */}
-      <div className="flex items-baseline">
-        <span className={`font-black ${config.text} bg-gradient-to-r from-emerald-400 via-blue-500 to-violet-500 bg-clip-text text-transparent tracking-tight transition-all duration-300 ${isHovered ? 'tracking-wide' : ''}`}>
-        </span>
-        <span className={`text-lg font-light text-gray-300 ml-1 transition-all duration-300 ${isHovered ? 'text-emerald-300' : ''}`}>
-          
+      {/* Text: Bold, professional typography inspired by LinkedIn */}
+      <div className="flex items-baseline font-sans">
+        <span className={`font-bold ${config.text} tracking-tight`} style={{ color }}>
+          Hirely
         </span>
       </div>
     </div>
   );
 }
+
+// Demo component showing different sizes and variations
+function LogoDemo() {
+  return (
+    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
+      <div className="bg-white p-8 rounded-2xl shadow-lg">
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Hirely Logo Variations</h2>
+        
+        <div className="space-y-6">
+          <div className="flex items-center gap-8">
+            <span className="w-16 text-sm text-gray-600">Large:</span>
+            <HirelyLogo size="lg" />
+          </div>
+          
+          <div className="flex items-center gap-8">
+            <span className="w-16 text-sm text-gray-600">Medium:</span>
+            <HirelyLogo size="md" />
+          </div>
+          
+          <div className="flex items-center gap-8">
+            <span className="w-16 text-sm text-gray-600">Small:</span>
+            <HirelyLogo size="sm" />
+          </div>
+          
+          <div className="flex items-center gap-8">
+            <span className="w-16 text-sm text-gray-600">XSmall:</span>
+            <HirelyLogo size="xs" />
+          </div>
+        </div>
+      </div>
+      
+      <div className="bg-slate-800 p-8 rounded-2xl shadow-lg">
+        <h3 className="text-xl font-bold text-white mb-6">Dark Background</h3>
+        <HirelyLogo size="lg" color="#ffffff" />
+      </div>
+      
+      <div className="bg-white p-8 rounded-2xl shadow-lg">
+        <h3 className="text-xl font-bold text-gray-800 mb-6">Custom Colors</h3>
+        <div className="space-y-4">
+          <HirelyLogo size="md" color="#16a34a" className="mb-2" />
+          <HirelyLogo size="md" color="#dc2626" className="mb-2" />
+          <HirelyLogo size="md" color="#7c3aed" className="mb-2" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Export the demo as default for artifact display
