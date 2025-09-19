@@ -1,10 +1,9 @@
-// src/components/ui/Footer.tsx
 'use client';
 
 import Link from 'next/link';
 import { Mail, Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import CircuitLogo from './CircuitLogo'; // Import the new logo component
+import HirelyLogo from './CircuitLogo'; // Import the new logo component
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -59,7 +58,7 @@ export default function Footer() {
           {/* Brand Section with Circuit Logo */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4" aria-label="hirely Home">
-              <CircuitLogo size="sm" />
+              <HirelyLogo size="sm" color="#ffffff" />
             </Link>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
               Expert career advice and job search strategies to help you land your dream tech job. 

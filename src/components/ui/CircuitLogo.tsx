@@ -20,64 +20,20 @@ export default function HirelyLogo({ size = 'md', className = '', color = '#0A66
 
   return (
     <div className={`flex items-center cursor-pointer ${className}`}>
-      {/* Icon: Stylized 'H' as a roadmap with milestones and forward arrow */}
+      {/* Icon: Moroccan star */}
       <div className={`relative flex items-center justify-center ${config.spacing}`}>
         <svg
           width={config.icon}
           height={config.icon}
-          viewBox="0 0 48 48"
+          viewBox="0 0 100 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Left path: Career track with smooth curve */}
+          {/* Main star shape */}
           <path
-            d="M14 8c0 2 1 4 3 4h3v24c0 2-1 4-3 4H14"
-            fill="#FFFFFF"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
+            d="M50 0L61.8 38.2L100 38.2L69.1 61.8L80.9 100L50 76.4L19.1 100L30.9 61.8L0 38.2L38.2 38.2L50 0Z"
+            fill={color}
           />
-          {/* Right path: Mirrored track with forward momentum */}
-          <path
-            d="M34 8c0 2-1 4-3 4h-3v24c0 2 1 4 3 4h3"
-            fill="#FFFFFF"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Crossbar: Bridge connecting paths */}
-          <path
-            d="M17 24h14"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-          />
-          {/* Milestone dots: Representing blogs, trends, and applications */}
-          <circle cx="20" cy="24" r="2" fill={color} />
-          <circle cx="28" cy="24" r="2" fill={color} />
-          {/* Arrow: Forward progress, inspired by Indeed's energy */}
-          <path
-            d="M34 36l4 4-4 4"
-            fill="none"
-            stroke={color}
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* Subtle glow: Inspired by Glassdoor's transparency */}
-          <path
-            d="M14 8c0 2 1 4 3 4h3v24c0 2-1 4-3 4H14 M34 8c0 2-1 4-3 4h-3v24c0 2 1 4 3 4h3"
-            fill="url(#glow)"
-            opacity="0.1"
-          />
-          <defs>
-            <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={color} />
-              <stop offset="100%" stopColor="#FFFFFF" />
-            </linearGradient>
-          </defs>
         </svg>
       </div>
       
