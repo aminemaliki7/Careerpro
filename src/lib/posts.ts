@@ -10,7 +10,10 @@ type JobStep = {
   title: string;
   description: string;
   estimatedTime: string;
-  resources: any[]; // Assuming resources can be of any type for now
+  resources: {
+    title: string;
+    link: string;
+  }[];
 };
 
 const postsDirectory = path.join(process.cwd(), 'src/content/posts')
