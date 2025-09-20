@@ -47,51 +47,5 @@ export default function HirelyLogo({ size = 'md', className = '', color = '#0A66
   );
 }
 
-// Demo component showing different sizes and variations
-function LogoDemo() {
-  return (
-    <div className="p-8 space-y-8 bg-gray-50 min-h-screen">
-      <div className="bg-white p-8 rounded-2xl shadow-lg">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Hirely Logo Variations</h2>
-        
-        <div className="space-y-6">
-          <div className="flex items-center gap-8">
-            <span className="w-16 text-sm text-gray-600">Large:</span>
-            <HirelyLogo size="lg" />
-          </div>
-          
-          <div className="flex items-center gap-8">
-            <span className="w-16 text-sm text-gray-600">Medium:</span>
-            <HirelyLogo size="md" />
-          </div>
-          
-          <div className="flex items-center gap-8">
-            <span className="w-16 text-sm text-gray-600">Small:</span>
-            <HirelyLogo size="sm" />
-          </div>
-          
-          <div className="flex items-center gap-8">
-            <span className="w-16 text-sm text-gray-600">XSmall:</span>
-            <HirelyLogo size="xs" />
-          </div>
-        </div>
-      </div>
-      
-      <div className="bg-slate-800 p-8 rounded-2xl shadow-lg">
-        <h3 className="text-xl font-bold text-white mb-6">Dark Background</h3>
-        <HirelyLogo size="lg" color="#ffffff" />
-      </div>
-      
-      <div className="bg-white p-8 rounded-2xl shadow-lg">
-        <h3 className="text-xl font-bold text-gray-800 mb-6">Custom Colors</h3>
-        <div className="space-y-4">
-          <HirelyLogo size="md" color="#16a34a" className="mb-2" />
-          <HirelyLogo size="md" color="#dc2626" className="mb-2" />
-          <HirelyLogo size="md" color="#7c3aed" className="mb-2" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Export the demo as default for artifact display

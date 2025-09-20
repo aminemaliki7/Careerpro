@@ -1,4 +1,3 @@
-// src/app/blog/BlogClient.tsx
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
@@ -228,7 +227,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             <Search className="w-12 h-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No articles found</h3>
             <p className="text-gray-600 mb-4">
-              Try adjusting your search terms or filters to find what you're looking for.
+              Try adjusting your search terms or filters to find what you&apos;re looking for.
             </p>
             <button
               onClick={clearFilters}

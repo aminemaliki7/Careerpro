@@ -1,6 +1,5 @@
 "use client";
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { Roadmap } from '@/types/roadmap';
 import Link from 'next/link';
 
@@ -10,7 +9,6 @@ interface RoadmapsGridProps {
 
 export default function RoadmapsGrid({ initialRoadmaps }: RoadmapsGridProps) {
   console.log('RoadmapsGrid received:', initialRoadmaps.map(r => r.id)); // Debug: Log received roadmaps
-  const router = useRouter();
   const categories = [...new Set(initialRoadmaps.map(r => r.category))];
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -67,7 +65,7 @@ export default function RoadmapsGrid({ initialRoadmaps }: RoadmapsGridProps) {
                       roadmap.demandLevel === 'Very High' ? 'bg-green-100 text-green-800' :
                       roadmap.demandLevel === 'High' ? 'bg-blue-100 text-blue-800' :
                       'bg-gray-100 text-gray-800'
-                  }`}>
+                    }`}>
                     {roadmap.demandLevel} Demand
                   </span>
                   <h2 className="text-xl font-bold text-gray-900 mb-2">{roadmap.title}</h2>

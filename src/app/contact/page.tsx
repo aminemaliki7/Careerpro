@@ -24,7 +24,7 @@ export default function ContactPage() {
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Have a question about your career? Want to collaborate? Or just want to say hi? 
-            I'd love to hear from you.
+            I&apos;d love to hear from you.
           </p>
         </div>
 
@@ -119,7 +119,7 @@ export default function ContactPage() {
               </div>
               <p className="text-gray-700">
                 I personally read and respond to every email within 24 hours 
-                (usually much faster!). Your message won't get lost in a corporate inbox.
+                (usually much faster!). Your message won&apos;t get lost in a corporate inbox.
               </p>
             </div>
 

@@ -62,7 +62,7 @@ export default function Footer() {
             </Link>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
               Expert career advice and job search strategies to help you land your dream tech job. 
-              From CV optimization to interview prep, we've got you covered.
+              From CV optimization to interview prep, we&apos;ve got you covered.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((link) => {

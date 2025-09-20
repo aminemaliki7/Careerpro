@@ -56,7 +56,7 @@ export default function PrivacyPolicyPage() {
           <div className="bg-green-50 border-l-4 border-green-400 p-6 mb-6">
             <p className="text-green-800">
               <strong>We Never:</strong> Sell your personal information, share your data with third-party marketers, 
-              or use your information for purposes beyond what's stated in this policy.
+              or use your information for purposes beyond what&apos;s stated in this policy.
             </p>
           </div>
 
@@ -158,12 +158,12 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">7. International Users</h2>
           
           <p className="text-gray-700 mb-6">
-            Our website is hosted in the United States. If you're visiting from another country, 
+            Our website is hosted in the United States. If you&apos;re visiting from another country, 
             your information may be transferred to, stored, and processed in the US. By using our 
             website, you consent to this transfer.
           </p>
 
-          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">8. Children's Privacy</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">8. Children&apos;s Privacy</h2>
           
           <p className="text-gray-700 mb-6">
             Our website is not intended for children under 13. We do not knowingly collect 
@@ -174,8 +174,8 @@ export default function PrivacyPolicyPage() {
           <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4">9. Policy Updates</h2>
           
           <p className="text-gray-700 mb-6">
-            We may update this privacy policy periodically. We'll notify you of significant 
-            changes by posting the updated policy on this page and updating the "Last updated" 
+            We may update this privacy policy periodically. We&apos;ll notify you of significant 
+            changes by posting the updated policy on this page and updating the &apos;Last updated&apos; 
             date. For major changes, we may also send email notifications.
           </p>
 

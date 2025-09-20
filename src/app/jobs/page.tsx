@@ -111,7 +111,7 @@ export default function JobsPage() {
 
   // Filter and sort jobs
   const filteredAndSortedJobs = useMemo(() => {
-    let filtered = jobs.filter(job => {
+  const filtered = jobs.filter(job => {
       const matchesSearch = searchTerm === '' || 
         job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -295,7 +295,7 @@ export default function JobsPage() {
                 {/* Experience Level Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Niveau d'expérience
+                    Niveau d&apos;expérience
                   </label>
                   <select
                     value={selectedExperience}
@@ -414,7 +414,7 @@ export default function JobsPage() {
             {filteredAndSortedJobs.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-500 text-lg">
-                  Aucune offre d'emploi ne correspond à vos critères.
+                  Aucune offre d&apos;emploi ne correspond à vos critères.
                 </div>
                 <button
                   onClick={() => {
@@ -503,7 +503,7 @@ export default function JobsPage() {
                           href={`/jobs/${job.slug}`}
                           className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                         >
-                          Voir l'offre
+                          Voir l&apos;offre
                         </Link>
                       </div>
                     </div>

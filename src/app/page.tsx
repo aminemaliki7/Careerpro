@@ -1,8 +1,9 @@
 // Make this a Server Component by default, so we can use async/await
 import Link from 'next/link';
+import Image from 'next/image'; // 🛑 Import the Next.js Image component
 import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, MapPin, DollarSign } from 'lucide-react';
-import { getFeaturedPosts, getRecentPosts } from '@/lib/posts'; // This is still your local file system logic for posts
-import { supabase } from '@/lib/supabase'; // 🛑 Import the Supabase client
+import { getFeaturedPosts, getRecentPosts } from '@/lib/posts';
+import { supabase } from '@/lib/supabase';
 
 // This is now an asynchronous Server Component
 export default async function HomePage() {
@@ -18,8 +19,6 @@ export default async function HomePage() {
 
   if (error) {
     console.error('Error fetching featured jobs:', error);
-    // You can handle this gracefully, e.g., show a message or return an empty array
-    // For now, we'll just return an empty array
     return (
       <div className="text-center p-8">
         <p className="text-red-500">Failed to load job listings.</p>
@@ -35,19 +34,7 @@ export default async function HomePage() {
     });
   };
 
-  const formatSalary = (min: number, max: number, currency: string = 'USD') => {
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency,
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    });
-    
-    if (min === max) {
-      return formatter.format(min);
-    }
-    return `${formatter.format(min)} - ${formatter.format(max)}`;
-  };
+  // 🛑 The formatSalary function is removed because it's not used.
 
   return (
     <div className="min-h-screen bg-gray-50 font-inter">
@@ -116,11 +103,13 @@ export default async function HomePage() {
                       </div>
                     </div>
                   </div>
-                  {/* Assuming logo property exists in your Supabase table */}
+                  {/* 🛑 Replaced <img> with <Image /> for optimization */}
                   {job.logo && (
-                    <img
+                    <Image
                       src={job.logo}
                       alt={`${job.company} logo`}
+                      width={56} // Specify width
+                      height={56} // Specify height
                       className="w-14 h-14 rounded-full object-contain border border-gray-100 p-1 bg-white"
                     />
                   )}
@@ -130,6 +119,7 @@ export default async function HomePage() {
                   {job.description}
                 </p>
                 
+                {/* 🛑 Comment is now correctly wrapped in JSX braces */}
                 {/* Check if salary exists before formatting */}
                 {job.salary_range && (
                   <div className="flex items-center gap-1 mb-4 text-green-600 font-semibold">
@@ -138,25 +128,21 @@ export default async function HomePage() {
                   </div>
                 )}
                 
-               // ... inside the featuredJobs.map() block
-
-<div className="flex flex-wrap gap-2 mb-4">
-  {Array.isArray(job.skills) && job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
-    <span
-      key={`skill-${skill}-${skillIndex}`}
-      className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
-    >
-      {skill}
-    </span>
-  ))}
-  {Array.isArray(job.skills) && job.skills.length > 3 && (
-    <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-      +{job.skills.length - 3} more
-    </span>
-  )}
-</div>
-
-// ...
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {Array.isArray(job.skills) && job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
+                    <span
+                      key={`skill-${skill}-${skillIndex}`}
+                      className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                  {Array.isArray(job.skills) && job.skills.length > 3 && (
+                    <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                      +{job.skills.length - 3} more
+                    </span>
+                  )}
+                </div>
                 
                 <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
                   <span className="text-sm text-gray-500">

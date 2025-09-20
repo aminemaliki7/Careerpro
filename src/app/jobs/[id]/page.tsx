@@ -83,6 +83,16 @@ const StarIcon = ({ className, filled = false }: { className: string; filled?: b
   </svg>
 );
 
+// New interface for related jobs to avoid 'any'
+interface RelatedJob {
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  slug: string;
+}
+
 interface JobDetailsProps {
   params: {
     id: string;
@@ -206,7 +216,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   href={`mailto:${typedJob.contact_email}`}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
                 >
-                  Contactez l'entreprise
+                  Contactez l&apos;entreprise
                 </a>
               )}
             </div>
@@ -319,7 +329,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
           <div className="space-y-6">
             {/* Company Info Card */}
             <div className="bg-white rounded-xl shadow-sm border p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Informations sur l'entreprise</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Informations sur l&apos;entreprise</h3>
               <div className="space-y-3">
                 <div>
                   <dt className="text-sm font-medium text-gray-500">Entreprise</dt>
@@ -337,7 +347,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                 )}
                 {typedJob.experience_level && (
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">Niveau d'expérience</dt>
+                    <dt className="text-sm font-medium text-gray-500">Niveau d&apos;expérience</dt>
                     <dd className="text-sm text-gray-900">{formatExperienceLevel(typedJob.experience_level)}</dd>
                   </div>
                 )}
@@ -392,7 +402,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   href={`mailto:${typedJob.contact_email}`}
                   className="block w-full text-center px-4 py-2 bg-white text-blue-600 rounded-lg font-medium hover:bg-gray-50 transition-colors"
                 >
-                  Contactez l'entreprise
+                  Contactez l&apos;entreprise
                 </a>
               )}
             </div>
@@ -402,7 +412,8 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Offres similaires</h3>
                 <div className="space-y-4">
-                  {relatedJobs.map((relatedJob: any) => (
+                  {/* Changed the type from 'any' to 'RelatedJob' */}
+                  {relatedJobs.map((relatedJob: RelatedJob) => (
                     <Link 
                       key={relatedJob.id}
                       href={`/jobs/${relatedJob.slug}`}

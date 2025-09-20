@@ -6,7 +6,6 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import Header from '@/components/ui/Header'
 import Footer from '@/components/ui/Footer'
 import './globals.css'
-import Link from 'next/link'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

@@ -3,10 +3,31 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+// Define the Job interface for type safety
+interface Job {
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  experience_level: string;
+  salary_range: string;
+  description: string;
+  requirements: string[];
+  benefits: string[];
+  skills: string[];
+  remote: boolean;
+  featured: boolean;
+  contact_email: string;
+  application_url: string;
+  slug?: string;
+  posted_date?: string;
+  updated_date?: string;
+}
+
 interface JobFormProps {
-  initialData?: any
-  isEditing?: boolean
-  slug?: string
+  initialData?: Partial<Job>;
+  isEditing?: boolean;
+  slug?: string;
 }
 
 export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) {
@@ -52,7 +73,7 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
     setErrorMessage(null)
 
     try {
-      const jobData = {
+      const jobData: Job = {
         ...formData,
         requirements: formData.requirements
           .split('\n')
@@ -166,7 +187,7 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Niveau d'expérience
+            Niveau d&apos;expérience
           </label>
           <input
             type="text"

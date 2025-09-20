@@ -4,17 +4,14 @@ import {
   Clock,
   DollarSign,
   TrendingUp,
-  CheckCircle2,
   ArrowLeft,
   BookOpen,
   ExternalLink,
   Trophy,
   Users,
-  Calendar,
   Target
 } from 'lucide-react';
 import { getRoadmapById, getAllRoadmaps } from '@/lib/roadmaps';
-import { Roadmap } from '@/types/roadmap';
 
 interface RoadmapDetailPageProps {
   params: {
@@ -141,7 +138,7 @@ export default function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
           <div className="lg:col-span-2">
             {/* Skills Overview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills You'll Master</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills You&apos;ll Master</h2>
               <div className="flex flex-wrap gap-2">
                 {roadmap.tags.map((skill, index) => (
                   <span
@@ -210,7 +207,7 @@ export default function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
                         
                         {/* Skills */}
                         <div className="mb-4">
-                          <h4 className="text-sm font-semibold text-gray-700 mb-2">Skills you'll learn:</h4>
+                          <h4 className="text-sm font-semibold text-gray-700 mb-2">Skills you&apos;ll learn:</h4>
                           <div className="flex flex-wrap gap-1">
                             {step.skills.map((skill, skillIndex) => (
                               <span

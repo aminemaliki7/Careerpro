@@ -47,7 +47,7 @@ export default async function AdminPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-          <p className="mt-2 text-gray-600">Gérer vos offres d'emploi</p>
+          <p className="mt-2 text-gray-600">Gérer vos offres d&apos;emploi</p>
         </div>
 
         {/* Add New Job Button */}

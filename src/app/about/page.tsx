@@ -26,10 +26,10 @@ export default function AboutPage() {
               <span className="text-blue-600"> Simplified</span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              We've built the most comprehensive platform for tech career advancement, 
-              combining proven strategies, expert insights, and cutting-edge tools to 
-              accelerate your professional growth.
-            </p>
+  We&apos;ve built the most comprehensive platform for tech career advancement, 
+  combining proven strategies, expert insights, and cutting-edge tools to 
+  accelerate your professional growth.
+</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/jobs"
@@ -75,7 +75,7 @@ export default function AboutPage() {
               <h3 className="text-xl font-semibold text-gray-900 mb-3">ATS Systems & Filters</h3>
               <p className="text-gray-600">
                 90% of applications never reach human eyes, filtered out by automated systems 
-                that most candidates don't understand.
+                that most candidates don&apos;t understand.
               </p>
             </div>
             
@@ -97,7 +97,7 @@ export default function AboutPage() {
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-gray-900 mb-6">Our Comprehensive Solution</h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              We've reverse-engineered the hiring process and built a complete ecosystem 
+              We&apos;ve reverse-engineered the hiring process and built a complete ecosystem 
               to give you unfair advantages in your job search.
             </p>
           </div>

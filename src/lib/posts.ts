@@ -2,7 +2,16 @@ import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
-import type { BlogPost, BlogMetadata, BlogPostWithContent, JobRoadmap, AffiliateCourseLink } from '@/types/blog'
+import type { BlogMetadata, BlogPostWithContent, JobRoadmap, AffiliateCourseLink } from '@/types/blog'
+
+// Defining a type for a single step within a JobRoadmap
+type JobStep = {
+  stepNumber: number;
+  title: string;
+  description: string;
+  estimatedTime: string;
+  resources: any[]; // Assuming resources can be of any type for now
+};
 
 const postsDirectory = path.join(process.cwd(), 'src/content/posts')
 
@@ -21,7 +30,7 @@ export function getAllPosts(): BlogPostWithContent[] {
         const roadmap: JobRoadmap | undefined = data.roadmap
           ? {
               jobTitle: data.roadmap.jobTitle,
-              steps: data.roadmap.steps.map((step: any) => ({
+              steps: data.roadmap.steps.map((step: JobStep) => ({
                 stepNumber: step.stepNumber,
                 title: step.title,
                 description: step.description,
@@ -32,7 +41,7 @@ export function getAllPosts(): BlogPostWithContent[] {
           : undefined
 
         const affiliateCourseLinks: AffiliateCourseLink[] | undefined = data.affiliateCourseLinks
-          ? data.affiliateCourseLinks.map((link: any) => ({
+          ? data.affiliateCourseLinks.map((link: AffiliateCourseLink) => ({
               courseTitle: link.courseTitle,
               affiliateUrl: link.affiliateUrl,
               provider: link.provider,
@@ -75,7 +84,7 @@ export function getPostBySlug(slug: string): BlogPostWithContent | null {
     const roadmap: JobRoadmap | undefined = data.roadmap
       ? {
           jobTitle: data.roadmap.jobTitle,
-          steps: data.roadmap.steps.map((step: any) => ({
+          steps: data.roadmap.steps.map((step: JobStep) => ({
             stepNumber: step.stepNumber,
             title: step.title,
             description: step.description,
@@ -86,7 +95,7 @@ export function getPostBySlug(slug: string): BlogPostWithContent | null {
       : undefined
 
     const affiliateCourseLinks: AffiliateCourseLink[] | undefined = data.affiliateCourseLinks
-      ? data.affiliateCourseLinks.map((link: any) => ({
+      ? data.affiliateCourseLinks.map((link: AffiliateCourseLink) => ({
           courseTitle: link.courseTitle,
           affiliateUrl: link.affiliateUrl,
           provider: link.provider,
