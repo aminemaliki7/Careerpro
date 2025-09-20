@@ -91,7 +91,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
   const { data: job, error } = await supabase
     .from('jobs')
     .select('*')
-    .eq('id', slug)
+    .eq('slug', slug)
     .single();
 
   if (error || !job) {
