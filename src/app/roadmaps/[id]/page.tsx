@@ -14,13 +14,14 @@ import {
 import { getRoadmapById, getAllRoadmaps } from '@/lib/roadmaps';
 
 interface RoadmapDetailPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-export default function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
-  const roadmap = getRoadmapById(params.id);
+export default async function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
+  const { id } = await params;
+  const roadmap = getRoadmapById(id);
   if (!roadmap) {
     notFound();
   }
