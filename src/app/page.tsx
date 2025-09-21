@@ -38,140 +38,148 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-inter">
-      <section className="bg-gradient-to-r from-blue-50 via-indigo-100 to-white py-24 md:py-32 hero-pattern">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-extrabold text-gray-900 mb-6 leading-tight font-poppins">
-              Land Your Dream <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">Tech Job</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Expert advice on CV optimization, interview preparation, and career strategy. Get insider tips from industry professionals.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                href="/jobs"
-                className="bg-blue-600 text-white px-8 py-4 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-              >
-                <Briefcase className="w-5 h-5" />
-                Apply for Jobs
-              </Link>
-              <Link
-                href="/roadmaps"
-                className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-full font-semibold hover:bg-blue-50 transition-colors inline-flex items-center justify-center gap-2"
-              >
-                Job Roadmaps
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <section className="bg-gradient-to-br from-blue-50 via-indigo-50 to-white py-12 sm:py-16 md:py-24 lg:py-32 overflow-hidden">
+  <div className="max-w-7xl mx-auto mobile-container relative z-10">
+    <div className="text-center">
+      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">
+        Get Hired Faster in{' '}
+        <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 block sm:inline">
+          Tech
+        </span>
+      </h1>
+      <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+        Find the latest job opportunities, stay ahead with tech trends, 
+        and follow step-by-step roadmaps that guide you from learning 
+        to landing your dream role.
+      </p>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+        <Link
+          href="/jobs"
+          className="bg-blue-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-blue-700 transition-all duration-200 inline-flex items-center justify-center gap-2 shadow-lg hover:shadow-xl text-base sm:text-lg min-h-[48px]"
+        >
+          <Briefcase className="w-5 h-5" />
+          Explore Jobs
+        </Link>
+        <Link
+          href="/roadmaps"
+          className="border-2 border-blue-600 text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold hover:bg-blue-50 transition-all duration-200 inline-flex items-center justify-center gap-2 text-base sm:text-lg min-h-[48px]"
+        >
+          View Roadmaps
+          <ArrowRight className="w-5 h-5" />
+        </Link>
+      </div>
+    </div>
+  </div>
+</section>
 
-      {/* Featured Jobs Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 font-poppins">
-              Featured Job Opportunities
-            </h2>
-            <p className="text-lg text-gray-600">
-              Hand-picked positions from top tech companies
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-white rounded-2xl card-shadow hover:shadow-2xl transition-all border border-gray-100 p-8 transform hover:-translate-y-2"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold text-gray-900 mb-1 leading-tight font-poppins">
-                      <Link href={`/jobs/${job.slug}`}>{job.title}</Link>
-                    </h3>
-                    <p className="text-blue-600 font-semibold text-base mb-2">
-                      {job.company}
-                    </p>
-                    <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                      <div className="flex items-center gap-1">
-                        <MapPin className="w-4 h-4 text-blue-500" />
-                        {job.location}
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-4 h-4 text-blue-500" />
-                        {job.type}
-                      </div>
-                    </div>
-                  </div>
-                  {/* 🛑 Replaced <img> with <Image /> for optimization */}
-                  {job.logo && (
-                    <Image
-                      src={job.logo}
-                      alt={`${job.company} logo`}
-                      width={56} // Specify width
-                      height={56} // Specify height
-                      className="w-14 h-14 rounded-full object-contain border border-gray-100 p-1 bg-white"
-                    />
-                  )}
+
+    {/* Featured Jobs Section - Mobile Optimized */}
+<section className="py-12 sm:py-16 md:py-20 bg-white">
+  <div className="max-w-7xl mx-auto mobile-container">
+    <div className="text-center mb-8 sm:mb-12 md:mb-16">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
+        Latest Tech Job Opportunities
+      </h2>
+      <p className="text-base sm:text-lg text-gray-600 px-4">
+        Curated openings from innovative companies — hand-picked to match today’s in-demand skills.
+      </p>
+    </div>
+
+    <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+      {featuredJobs.map((job) => (
+        <div
+          key={job.id}
+          className="bg-white rounded-xl sm:rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100 p-4 sm:p-6 md:p-8 hover:-translate-y-1"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 leading-tight truncate">
+                <Link href={`/jobs/${job.slug}`} className="hover:text-blue-600 transition-colors">
+                  {job.title}
+                </Link>
+              </h3>
+              <p className="text-blue-600 font-semibold text-sm sm:text-base mb-2 truncate">
+                {job.company}
+              </p>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-3">
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
+                  <span className="truncate">{job.location}</span>
                 </div>
-                
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {job.description}
-                </p>
-                
-                {/* 🛑 Comment is now correctly wrapped in JSX braces */}
-                {/* Check if salary exists before formatting */}
-                {job.salary_range && (
-                  <div className="flex items-center gap-1 mb-4 text-green-600 font-semibold">
-                    <DollarSign className="w-4 h-4 text-green-500" />
-                    {job.salary_range}
-                  </div>
-                )}
-                
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {Array.isArray(job.skills) && job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
-                    <span
-                      key={`skill-${skill}-${skillIndex}`}
-                      className="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                  {Array.isArray(job.skills) && job.skills.length > 3 && (
-                    <span className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
-                      +{job.skills.length - 3} more
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
-                  <span className="text-sm text-gray-500">
-                    Posted {formatDate(job.posted_date)}
-                  </span>
-                  <a
-                    href={job.application_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-blue-600 text-white px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-flex items-center gap-1 text-sm shadow-md"
-                  >
-                    Apply Now
-                    <ExternalLink className="w-4 h-4" />
-                  </a>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
+                  <span>{job.type}</span>
                 </div>
               </div>
-            ))}
+            </div>
+            {job.logo && (
+              <Image
+                src={job.logo}
+                alt={`${job.company} logo`}
+                width={48}
+                height={48}
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full object-contain border border-gray-100 p-1 bg-white flex-shrink-0 ml-3"
+              />
+            )}
           </div>
-          <div className="text-center mt-12">
-            <Link
-              href="/jobs"
-              className="text-blue-600 font-semibold hover:text-blue-800 inline-flex items-center gap-2 text-lg"
+
+          <p className="text-gray-600 mb-4 text-sm sm:text-base line-clamp-2 sm:line-clamp-3 leading-relaxed">
+            {job.description}
+          </p>
+
+          {job.salary_range && (
+            <div className="flex items-center gap-1 mb-4 text-green-600 font-semibold text-sm">
+              <DollarSign className="w-4 h-4 text-green-500 flex-shrink-0" />
+              <span className="truncate">{job.salary_range}</span>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-1 sm:gap-2 mb-4">
+            {Array.isArray(job.skills) && job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
+              <span
+                key={`skill-${skill}-${skillIndex}`}
+                className="px-2 sm:px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full"
+              >
+                {skill}
+              </span>
+            ))}
+            {Array.isArray(job.skills) && job.skills.length > 3 && (
+              <span className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full">
+                +{job.skills.length - 3}
+              </span>
+            )}
+          </div>
+
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6 pt-4 border-t border-gray-100 gap-2">
+            <span className="text-xs sm:text-sm text-gray-500">
+              Posted {formatDate(job.posted_date)}
+            </span>
+            <a
+              href={job.application_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-blue-600 text-white px-4 sm:px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-1 text-sm shadow-md min-h-[40px] w-full sm:w-auto"
             >
-              View All Jobs
-              <ArrowRight className="w-5 h-5" />
-            </Link>
+              Apply Now
+              <ExternalLink className="w-4 h-4" />
+            </a>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+    <div className="text-center mt-8 sm:mt-12">
+      <Link
+        href="/jobs"
+        className="text-blue-600 font-semibold hover:text-blue-800 inline-flex items-center gap-2 text-base sm:text-lg min-h-[44px] px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors"
+      >
+        Browse All Jobs
+        <ArrowRight className="w-5 h-5" />
+      </Link>
+    </div>
+  </div>
+</section>
+
 
       {/* Featured Posts Section - no changes */}
       {featuredPosts.length > 0 && (
