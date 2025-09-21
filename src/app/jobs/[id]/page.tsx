@@ -1,4 +1,4 @@
-// src/app/jobs/[id]/page.ts
+// src/app/jobs/[id]/page.tsx
 import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -72,26 +72,27 @@ const StarIcon = ({ className, filled = false }: { className: string; filled?: b
   </svg>
 );
 
-// New interface for related jobs to avoid 'any'
+// Updated interface for related jobs to use ID
 interface RelatedJob {
   id: string;
   title: string;
   company: string;
   location: string;
   type: string;
-  slug: string;
 }
 
 interface JobDetailsProps {
-  params: Promise<{ id: string }>; // Updated to Promise
+  params: Promise<{ id: string }>;
 }
 
 export default async function JobDetailsPage({ params }: JobDetailsProps) {
-  const { id: slug } = await params; // Resolve the Promise
+  const { id } = await params; // Resolve the Promise
+  
+  // Fetch job by ID instead of slug
   const { data: job, error } = await supabase
     .from('jobs')
     .select('*')
-    .eq('slug', slug)
+    .eq('id', id)
     .single();
 
   if (error || !job) {
@@ -102,11 +103,11 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
   // Type assertion to ensure we have the correct Job type
   const typedJob: Job = job;
 
-  // Get related jobs
+  // Get related jobs (exclude current job by ID)
   const { data: relatedJobs } = await supabase
     .from('jobs')
-    .select('id, title, company, location, type, slug')
-    .neq('slug', slug)
+    .select('id, title, company, location, type')
+    .neq('id', id)
     .limit(3);
 
   // Get job region
@@ -126,7 +127,6 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
     return date.toLocaleDateString('fr-FR');
   };
 
-  // Rest of the JSX remains unchanged
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header with breadcrumb */}
@@ -386,7 +386,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   {relatedJobs.map((relatedJob: RelatedJob) => (
                     <Link
                       key={relatedJob.id}
-                      href={`/jobs/${relatedJob.slug}`}
+                      href={`/jobs/${relatedJob.id}`}
                       className="block p-4 border rounded-lg hover:border-blue-300 hover:bg-blue-50 transition-colors"
                     >
                       <h4 className="font-medium text-gray-900 text-sm mb-1">{relatedJob.title}</h4>

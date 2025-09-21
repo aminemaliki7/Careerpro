@@ -441,7 +441,7 @@ export default function JobsPage() {
                         <div className="flex-1">
                           <div className="flex items-center mb-2">
                             <Link 
-                              href={`/jobs/${job.slug}`}
+                              href={`/jobs/${job.id}`}
                               className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors mr-3"
                             >
                               {job.title}
@@ -500,7 +500,7 @@ export default function JobsPage() {
                         </div>
                         
                         <Link 
-                          href={`/jobs/${job.slug}`}
+                          href={`/jobs/${job.id}`}
                           className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                         >
                           Voir l&apos;offre
