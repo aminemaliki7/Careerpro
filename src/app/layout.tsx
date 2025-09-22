@@ -1,21 +1,20 @@
-import { type Metadata } from 'next'
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
-import { Geist, Geist_Mono } from 'next/font/google'
-import Header from '@/components/ui/Header'
-import Footer from '@/components/ui/Footer'
-import './globals.css'
+// src/app/layout.tsx
+import { type Metadata } from 'next';
+import { ClerkProvider } from '@clerk/nextjs';
+import { Geist, Geist_Mono } from 'next/font/google';
+import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper'; // Import the new wrapper
+
+import './globals.css';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
   subsets: ['latin'],
-})
+});
 
 const geistMono = Geist_Mono({
   variable: '--font-geist-mono',
   subsets: ['latin'],
-})
+});
 
 export const metadata: Metadata = {
   title: 'Hirely - Expert Career Advice & Job Search Strategies',
@@ -23,26 +22,20 @@ export const metadata: Metadata = {
   icons: {
     icon: '../images/blog/logo.svg',
   },
-}
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode
+  children: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <div className="flex flex-col min-h-screen">
-            <Header />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>
       </html>
     </ClerkProvider>
-  )
+  );
 }

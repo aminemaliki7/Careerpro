@@ -3,11 +3,14 @@
 import Link from 'next/link';
 import { Mail, Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
-import HirelyLogo from './CircuitLogo'; // Import the new logo component
+import HirelyLogo from './CircuitLogo';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
   const [showScroll, setShowScroll] = useState(false);
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Function to scroll to the top of the page
   const scrollToTop = useCallback(() => {
@@ -23,10 +26,45 @@ export default function Footer() {
         setShowScroll(false);
       }
     };
-
     window.addEventListener('scroll', checkScrollTop);
     return () => window.removeEventListener('scroll', checkScrollTop);
   }, [showScroll]);
+  
+  // Handle the form submission
+  const handleSubscribe = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Subscription successful! 🎉');
+        setEmail(''); // Clear the input field on success
+        
+        // Hide the message after 3 seconds
+        setTimeout(() => {
+          setMessage('');
+        }, 3000);
+      } else {
+        setMessage(data.message || 'An error occurred. Please try again.');
+      }
+    } catch (error) {
+      console.error('Failed to subscribe:', error);
+      setMessage('An unexpected error occurred. Please try again later.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const socialLinks = [
     { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
@@ -123,20 +161,28 @@ export default function Footer() {
             <p className="text-gray-300 text-sm mb-4">
               Get weekly career tips and job search strategies delivered to your inbox.
             </p>
-            <form className="space-y-3">
+            <form onSubmit={handleSubscribe} className="space-y-3">
               <input
                 type="email"
                 placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 text-sm"
                 required
               />
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+                disabled={isSubmitting}
+                className={`w-full bg-blue-600 text-white px-4 py-2 rounded-md transition-colors text-sm font-medium ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
               >
-                Subscribe
+                {isSubmitting ? 'Subscribing...' : 'Subscribe'}
               </button>
             </form>
+            {message && (
+              <p className={`mt-2 text-sm ${message.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
+                {message}
+              </p>
+            )}
             <p className="text-gray-400 text-xs mt-2">
               No spam. Unsubscribe anytime.
             </p>

@@ -225,8 +225,117 @@ export default function JobsPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Filters Sidebar */}
-          <div className="lg:col-span-1">
+          
+          {/* Filters Section - Mobile Only */}
+          <div className="lg:hidden">
+            <div className="bg-white rounded-lg shadow-sm border p-4 flex flex-wrap items-center justify-start gap-4">
+              <div className="flex items-center text-gray-900 font-semibold text-base whitespace-nowrap">
+                <FilterIcon className="h-5 w-5 mr-2 text-gray-500" />
+                Filtres:
+              </div>
+
+              {/* Type Filter */}
+              <select
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Type</option>
+                {jobTypes.map(type => (
+                  <option key={type} value={type}>{type}</option>
+                ))}
+              </select>
+
+              {/* Location Filter */}
+              <select
+                value={selectedLocation}
+                onChange={(e) => setSelectedLocation(e.target.value)}
+                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Localisation</option>
+                {locations.map(location => (
+                  <option key={location} value={location}>{location}</option>
+                ))}
+              </select>
+
+              {/* Region Filter */}
+              <select
+                value={selectedRegion}
+                onChange={(e) => setSelectedRegion(e.target.value)}
+                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Région</option>
+                {GLOBAL_REGIONS.map(region => (
+                  <option key={region.value} value={region.value}>
+                    {region.label}
+                  </option>
+                ))}
+              </select>
+
+              {/* Experience Filter */}
+              <select
+                value={selectedExperience}
+                onChange={(e) => setSelectedExperience(e.target.value)}
+                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Expérience</option>
+                <option value="Entry Level">Débutant</option>
+                <option value="Junior">Junior</option>
+                <option value="Mid-Level">Intermédiaire</option>
+                <option value="Senior">Senior</option>
+                <option value="Lead">Lead / Expert</option>
+                <option value="Manager">Manager</option>
+                <option value="Director">Directeur</option>
+                {experienceLevels.map(level => (
+                  <option key={level} value={level}>{level}</option>
+                ))}
+              </select>
+
+              {/* Salary Range Filter */}
+              <select
+                value={selectedSalaryRange}
+                onChange={(e) => setSelectedSalaryRange(e.target.value)}
+                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">Salaire</option>
+                <option value="< 30k">Moins de 30k€</option>
+                <option value="30k - 40k">30k€ - 40k€</option>
+                <option value="40k - 50k">40k€ - 50k€</option>
+                <option value="50k - 60k">50k€ - 60k€</option>
+                <option value="60k - 80k">60k€ - 80k€</option>
+                <option value="80k - 100k">80k€ - 100k€</option>
+                <option value="> 100k">Plus de 100k€</option>
+                {salaryRanges.map(range => (
+                  <option key={range} value={range}>{range}</option>
+                ))}
+              </select>
+
+              {/* Remote Checkbox */}
+              <label className="flex items-center text-sm text-gray-700 whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={remoteOnly}
+                  onChange={(e) => setRemoteOnly(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="ml-2">Télétravail</span>
+              </label>
+
+              {/* Featured Checkbox */}
+              <label className="flex items-center text-sm text-gray-700 whitespace-nowrap">
+                <input
+                  type="checkbox"
+                  checked={featuredOnly}
+                  onChange={(e) => setFeaturedOnly(e.target.checked)}
+                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="ml-2">Mis en avant</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Filters Sidebar - Desktop Only */}
+          <div className="hidden lg:block lg:col-span-1">
             <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <FilterIcon className="h-5 w-5 mr-2" />
@@ -409,6 +518,18 @@ export default function JobsPage() {
               <p className="text-sm text-gray-600">
                 {filteredAndSortedJobs.length} offre{filteredAndSortedJobs.length !== 1 ? 's' : ''} trouvée{filteredAndSortedJobs.length !== 1 ? 's' : ''}
               </p>
+              {/* This sort dropdown is visible on mobile */}
+              <div className="block lg:hidden">
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="posted_date">Trier par: Date</option>
+                  <option value="title">Trier par: Titre</option>
+                  <option value="company">Trier par: Entreprise</option>
+                </select>
+              </div>
             </div>
 
             {filteredAndSortedJobs.length === 0 ? (
@@ -442,7 +563,7 @@ export default function JobsPage() {
                           <div className="flex items-center mb-2">
                             <Link 
                               href={`/jobs/${job.id}`}
-                              className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors mr-3"
+                              className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors mr-3 break-words"
                             >
                               {job.title}
                             </Link>
