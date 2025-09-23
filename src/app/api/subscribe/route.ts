@@ -3,6 +3,7 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+
 export async function POST(request: Request) {
   try {
     const { email } = await request.json();
@@ -13,11 +14,12 @@ export async function POST(request: Request) {
     }
 
     // Check if email already exists to prevent duplicates
-    const { data: existingEmail, error: _existingError } = await supabase
-      .from('emails')
-      .select('email')
-      .eq('email', email)
-      .single();
+   // Version simplifiée - supprimez complètement la vérification d'erreur
+const { data: existingEmail } = await supabase
+  .from('emails')
+  .select('email')
+  .eq('email', email)
+  .single();
 
     if (existingEmail) {
       return NextResponse.json({ message: 'Email is already subscribed' }, { status: 409 });

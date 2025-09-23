@@ -1,7 +1,7 @@
 // types/gtag.d.ts
 declare global {
   interface Window {
-    dataLayer: any[];
+    dataLayer: Record<string, unknown>[];
     gtag: (
       command: 'config' | 'event' | 'js',
       targetId: string | Date,
@@ -10,7 +10,7 @@ declare global {
         event_category?: string;
         event_label?: string;
         value?: number;
-        [key: string]: any;
+        [key: string]: unknown;
       }
     ) => void;
   }
