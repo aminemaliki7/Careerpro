@@ -245,7 +245,6 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
                                         className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
                                       >
                                         <ExternalLink className="w-3 h-3" />
-                                        <span className="text-xs text-green-600 ml-1">(Affiliate Link)</span>
                                       </a>
                                     )}
                                   </div>
@@ -343,10 +342,7 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
       </div>
 
       {/* Affiliate Disclaimer Footer */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 border-t text-center text-sm text-gray-500">
-        Note: Some links in this roadmap are affiliate links. If you purchase through them, we may earn a small commission at no extra cost to you. This helps support our content.
-      </div>
-
+    
     </div>
   );
 }
