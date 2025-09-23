@@ -5,6 +5,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper'; // Import the new wrapper
 
 import './globals.css';
+import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -33,6 +34,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+                  <GoogleAnalytics />
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>
       </html>
