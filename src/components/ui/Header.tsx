@@ -71,12 +71,7 @@ export default function Header() {
               </SignUpButton>
             </SignedOut>
             <SignedIn>
-              <Link
-                href="/dashboard"
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200"
-              >
-                Dashboard
-              </Link>
+            
               <UserButton
                 appearance={{
                   elements: {
@@ -145,13 +140,7 @@ export default function Header() {
                   </div>
                 </SignedOut>
                 <SignedIn>
-                  <Link
-                    href="/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-                  >
-                    Dashboard
-                  </Link>
+                 
                 </SignedIn>
               </div>
             </div>
