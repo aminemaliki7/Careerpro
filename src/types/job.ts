@@ -158,6 +158,7 @@ export const getJobRegion = (location: string): string | null => {
 // Utility function to format experience level for display
 export const formatExperienceLevel = (level: string): string => {
   const translations: Record<string, string> = {
+    'Stage PFE': 'Stage PFE',
     'Entry Level': 'Débutant',
     'Junior': 'Junior',
     'Mid-Level': 'Intermédiaire',
