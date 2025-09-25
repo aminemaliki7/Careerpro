@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus } from 'lucide-react';
 import {
   SignInButton,
   SignUpButton,
@@ -13,7 +13,6 @@ import CircuitLogo from './CircuitLogo';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   const navigation = [
@@ -53,8 +52,9 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Auth & CTA Section - always visible */}
+          {/* Auth Section */}
           <div className="flex items-center space-x-2">
+            {/* Desktop buttons */}
             <SignedOut>
               <SignInButton>
                 <button className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 hidden md:inline-block">
@@ -77,8 +77,28 @@ export default function Header() {
               />
             </SignedIn>
 
-            {/* Mobile Menu Button */}
-            <div className="md:hidden flex items-center">
+            {/* Mobile Auth Icons */}
+            <div className="md:hidden flex items-center space-x-2">
+              <SignedOut>
+                <SignInButton>
+                  <button
+                    aria-label="Sign In"
+                    className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <LogIn className="w-6 h-6" />
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button
+                    aria-label="Get Started"
+                    className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
+                  >
+                    <UserPlus className="w-6 h-6" />
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+
+              {/* Mobile Menu Toggle */}
               <button
                 onClick={toggleMenu}
                 className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600 p-2 rounded-md hover:bg-gray-50 transition-colors duration-200"

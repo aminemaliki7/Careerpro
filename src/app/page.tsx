@@ -158,7 +158,7 @@ export default async function HomePage() {
               Posted {formatDate(job.posted_date)}
             </span>
             <a
-              href={job.application_url}
+              href={`/jobs/${job.id}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-600 text-white px-4 sm:px-5 py-2 rounded-full font-semibold hover:bg-blue-700 transition-colors inline-flex items-center justify-center gap-1 text-sm shadow-md min-h-[40px] w-full sm:w-auto"
