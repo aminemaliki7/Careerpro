@@ -50,9 +50,11 @@ export default async function HomePage() {
     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-gray-900 mb-4 tracking-tight leading-none">
       Get Hired
       <br />
-      <span className="font-medium bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-        Faster
-      </span>
+   <span className="font-medium" style={{ color: '#0A66C2' }}>
+  Faster
+</span>
+
+
     </h1>
     
     {/* Subtitle */}
@@ -91,123 +93,123 @@ export default async function HomePage() {
 
       {/* Jobs Section - Apple card design - Reduced top padding */}
       <section className="pt-16 pb-32 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          {/* Section header */}
-          <div className="text-center mb-20">
-            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-              Opportunities
-            </h2>
-            <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
-              Handpicked positions from innovative companies that value talent and growth.
-            </p>
-          </div>
+  <div className="max-w-7xl mx-auto px-6">
+    {/* Section header */}
+    <div className="text-center mb-20">
+      <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
+        Opportunities
+      </h2>
+      <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
+        Handpicked positions from innovative companies that value talent and growth.
+      </p>
+    </div>
 
-          {/* Jobs grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {featuredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 transition-all duration-500 overflow-hidden hover:shadow-2xl hover:shadow-gray-200/60"
-              >
-                <div className="p-8">
-                  {/* Company logo and header */}
-                  <div className="flex items-start justify-between mb-6">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-xl font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                        <Link href={`/jobs/${job.slug}`}>
-                          {job.title}
-                        </Link>
-                      </h3>
-                      <p className="text-blue-600 font-medium mb-4">
-                        {job.company}
-                      </p>
-                    </div>
-                    {job.logo && (
-                      <div className="ml-4 p-2 bg-gray-50 rounded-2xl group-hover:bg-gray-100 transition-colors">
-                        <Image
-                          src={job.logo}
-                          alt={`${job.company} logo`}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 object-contain"
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Job details */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <MapPin className="w-4 h-4 mr-2 text-gray-400" />
-                      {job.location}
-                    </div>
-                    <div className="flex items-center text-gray-500 text-sm">
-                      <Clock className="w-4 h-4 mr-2 text-gray-400" />
-                      {job.type}
-                    </div>
-                    {job.salary_range && (
-                      <div className="flex items-center text-green-600 text-sm font-medium">
-                        <DollarSign className="w-4 h-4 mr-2 text-green-500" />
-                        {job.salary_range}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
-                    {job.description}
-                  </p>
-
-                  {/* Skills */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {Array.isArray(job.skills) &&
-                      job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
-                        <span
-                          key={`skill-${skill}-${skillIndex}`}
-                          className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    {Array.isArray(job.skills) && job.skills.length > 3 && (
-                      <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full">
-                        +{job.skills.length - 3} more
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Apply button */}
-                  <div className="flex items-center justify-between pt-6 border-t border-gray-100">
-                    <span className="text-xs text-gray-400">
-                      {formatDate(job.posted_date)}
-                    </span>
-                    <a
-                      href={`/jobs/${job.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="group/btn bg-black text-white px-6 py-2.5 rounded-full font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center gap-2 text-sm"
-                    >
-                      Apply
-                      <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-                    </a>
-                  </div>
-                </div>
+    {/* Jobs grid */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {featuredJobs.map((job) => (
+        <div
+          key={job.id}
+          className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 transition-all duration-500 overflow-hidden hover:shadow-2xl hover:shadow-gray-200/60 flex flex-col"
+        >
+          <div className="p-8 flex flex-col flex-1">
+            {/* Company logo and header */}
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex-1 min-w-0">
+                <h3 className="text-xl font-medium text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                  <Link href={`/jobs/${job.slug}`}>
+                    {job.title}
+                  </Link>
+                </h3>
+                <p className="text-blue-600 font-medium mb-4">
+                  {job.company}
+                </p>
               </div>
-            ))}
-          </div>
+              {job.logo && (
+                <div className="ml-4 p-2 bg-gray-50 rounded-2xl group-hover:bg-gray-100 transition-colors">
+                  <Image
+                    src={job.logo}
+                    alt={`${job.company} logo`}
+                    width={40}
+                    height={40}
+                    className="w-10 h-10 object-contain"
+                  />
+                </div>
+              )}
+            </div>
 
-          {/* View all jobs */}
-          <div className="text-center mt-16">
-            <Link
-              href="/jobs"
-              className="group inline-flex items-center gap-2 text-blue-600 font-medium text-lg hover:text-blue-700 transition-colors"
-            >
-              View all opportunities
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
+            {/* Job details */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center text-gray-500 text-sm">
+                <MapPin className="w-4 h-4 mr-2 text-gray-400" />
+                {job.location}
+              </div>
+              <div className="flex items-center text-gray-500 text-sm">
+                <Clock className="w-4 h-4 mr-2 text-gray-400" />
+                {job.type}
+              </div>
+              {job.salary_range && (
+                <div className="flex items-center text-green-600 text-sm font-medium">
+                  <DollarSign className="w-4 h-4 mr-2 text-green-500" />
+                  {job.salary_range}
+                </div>
+              )}
+            </div>
+
+            {/* Description */}
+            <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
+              {job.description}
+            </p>
+
+            {/* Skills */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {Array.isArray(job.skills) &&
+                job.skills.slice(0, 3).map((skill: string, skillIndex: number) => (
+                  <span
+                    key={`skill-${skill}-${skillIndex}`}
+                    className="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              {Array.isArray(job.skills) && job.skills.length > 3 && (
+                <span className="px-3 py-1 bg-blue-50 text-blue-600 text-xs font-medium rounded-full">
+                  +{job.skills.length - 3} more
+                </span>
+              )}
+            </div>
+
+            {/* Apply button */}
+            <div className="mt-auto flex items-center justify-between pt-6 border-t border-gray-100">
+              <span className="text-xs text-gray-400">
+                {formatDate(job.posted_date)}
+              </span>
+              <a
+                href={`/jobs/${job.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/btn bg-black text-white px-6 py-2.5 rounded-full font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center gap-2 text-sm"
+              >
+                Apply
+                <ExternalLink className="w-3 h-3 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
+              </a>
+            </div>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+
+    {/* View all jobs */}
+    <div className="text-center mt-16">
+      <Link
+        href="/jobs"
+        className="group inline-flex items-center gap-2 text-blue-600 font-medium text-lg hover:text-blue-700 transition-colors"
+      >
+        View all opportunities
+        <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+      </Link>
+    </div>
+  </div>
+</section>
 
       {/* Featured Posts Section - Reduced top padding */}
       {featuredPosts.length > 0 && (
