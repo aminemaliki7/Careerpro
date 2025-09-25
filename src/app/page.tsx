@@ -47,13 +47,12 @@ export default async function HomePage() {
   
   <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
     {/* Main headline */}
-    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-gray-900 mb-4 tracking-tight leading-none">
+    <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-4 tracking-tight leading-none">
       Get Hired
       <br />
-   <span className="font-medium" style={{ color: '#0A66C2' }}>
+     <span className="font-medium text-[#1E40AF]">
   Faster
 </span>
-
 
     </h1>
     
