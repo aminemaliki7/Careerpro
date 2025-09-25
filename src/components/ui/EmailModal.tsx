@@ -29,7 +29,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Subscription successful! 🎉');
+        setMessage('Subscription successful!');
         setEmail('');
         setTimeout(() => {
           setMessage('');

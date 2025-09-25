@@ -5,6 +5,7 @@ import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, M
 import { getFeaturedPosts } from '@/lib/posts';
 import { supabase } from '@/lib/supabase';
 import { getAllRoadmaps } from '@/lib/roadmaps';
+import NewsletterCTA from '@/components/NewsletterCTA';
 
 // This is now an asynchronous Server Component
 export default async function HomePage() {
@@ -361,7 +362,6 @@ export default async function HomePage() {
       </section>
 
       {/* Newsletter CTA - Apple-style - Reduced top padding */}
-           {/* Newsletter CTA - Apple-style - Reduced top padding */}
       <section className="pt-16 pb-32 bg-black text-white relative overflow-hidden">
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20"></div>
@@ -381,23 +381,13 @@ export default async function HomePage() {
             Join over 1,000 professionals already in the know.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="px-6 py-4 rounded-full flex-1 bg-white/10 text-white placeholder-gray-400 border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent backdrop-blur-sm"
-            />
-            <button className="bg-white text-black px-8 py-4 rounded-full font-medium hover:bg-gray-100 transition-colors whitespace-nowrap">
-              Subscribe
-            </button>
-          </div>
+        <NewsletterCTA />
           
           <p className="text-gray-400 text-sm mt-6">
             No spam, just quality content. Unsubscribe anytime.
           </p>
         </div>
       </section>
-
     </div>
   );
 }
