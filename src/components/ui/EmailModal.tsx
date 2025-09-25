@@ -9,36 +9,28 @@ interface EmailModalProps {
 
 export default function EmailModal({ onClose }: EmailModalProps) {
   const [email, setEmail] = useState('');
-  const [cvFile, setCvFile] = useState<File | null>(null);
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!cvFile) {
-      setMessage('Please upload your CV (PDF).');
-      return;
-    }
-
     setIsSubmitting(true);
     setMessage('');
 
     try {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('cv', cvFile);
-
-      const response = await fetch('/api/subscribe-with-cv', {
+      const response = await fetch('/api/subscribe', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('✓ Subscription & CV upload successful');
+        setMessage('✓ Subscription successful');
         setEmail('');
-        setCvFile(null);
         setTimeout(() => {
           setMessage('');
           onClose();
@@ -47,7 +39,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
         setMessage(data.message || 'Something went wrong. Try again.');
       }
     } catch (error) {
-      console.error('Failed to submit:', error);
+      console.error('Failed to subscribe:', error);
       setMessage('Unexpected error. Please try again later.');
     } finally {
       setIsSubmitting(false);
@@ -79,7 +71,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
             Join our Newsletter
           </h2>
           <p className="text-gray-500 text-sm mb-6">
-            Weekly insights & career tips. Upload your CV (PDF) to stay connected.
+            Weekly insights, straight to your inbox.
           </p>
         </div>
 
@@ -93,13 +85,6 @@ export default function EmailModal({ onClose }: EmailModalProps) {
             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/80 focus:border-black text-sm"
             required
           />
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) => setCvFile(e.target.files?.[0] || null)}
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 text-sm file:bg-gray-200 file:px-3 file:py-2 file:rounded-md file:border-none file:text-gray-700 file:cursor-pointer focus:outline-none focus:ring-2 focus:ring-black/80"
-            required
-          />
           <button
             type="submit"
             disabled={isSubmitting}
@@ -109,7 +94,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
                 : 'hover:bg-gray-900'
             }`}
           >
-            {isSubmitting ? 'Submitting…' : 'Subscribe & Upload CV'}
+            {isSubmitting ? 'Subscribing…' : 'Subscribe'}
           </button>
         </form>
 
