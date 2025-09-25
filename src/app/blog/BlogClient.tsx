@@ -150,9 +150,9 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             {filteredPosts.map((post, index) => (
              <article
   key={post.slug || `post-${index}`}
-  className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200 group"
+  className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200 group flex flex-col h-full"
 >
-  <div className="p-4">
+  <div className="p-4 flex-1 flex flex-col">
     {/* Featured Badge */}
     {post.featured && (
       <div className="flex items-center gap-1 mb-2">
@@ -203,8 +203,8 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
       )}
     </div>
 
-    {/* Author & Read More */}
-    <div className="flex items-center justify-between">
+    {/* Footer: Author & Read More */}
+    <div className="mt-auto flex items-center justify-between">
       <div className="flex items-center gap-1 text-xs text-gray-500">
         <User className="w-3.5 h-3.5" />
         <span>{post.author}</span>
@@ -219,6 +219,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
     </div>
   </div>
 </article>
+
 
             ))}
           </div>
