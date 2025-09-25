@@ -29,63 +29,84 @@ export default function EmailModal({ onClose }: EmailModalProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Subscription successful!');
+        setMessage('✓ Subscription successful');
         setEmail('');
         setTimeout(() => {
           setMessage('');
           onClose();
-        }, 3000);
+        }, 2500);
       } else {
-        setMessage(data.message || 'An error occurred. Please try again.');
+        setMessage(data.message || 'Something went wrong. Try again.');
       }
     } catch (error) {
       console.error('Failed to subscribe:', error);
-      setMessage('An unexpected error occurred. Please try again later.');
+      setMessage('Unexpected error. Please try again later.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-sm">
-      <div className="bg-gray-900 text-white p-6 rounded-lg shadow-xl w-full max-w-sm mx-4 transform transition-all scale-100 opacity-100">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md transition-opacity">
+      <div className="bg-white text-black p-8 rounded-3xl shadow-2xl w-full max-w-md mx-4 transform transition-all scale-100 opacity-100">
+        {/* Close button */}
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="text-gray-400 hover:text-gray-200 transition-colors"
+            className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
             aria-label="Close modal"
           >
             &times;
           </button>
         </div>
+
+        {/* Icon + Title */}
         <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <Mail className="w-10 h-10 text-blue-400" />
+          <div className="flex justify-center mb-6">
+            <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center">
+              <Mail className="w-7 h-7 text-gray-800" />
+            </div>
           </div>
-          <h2 className="text-xl font-bold mb-2">Join our Newsletter</h2>
-          <p className="text-gray-400 text-sm mb-4">
-            Get weekly career tips delivered straight to your inbox.
+          <h2 className="text-2xl font-semibold mb-2 tracking-tight">
+            Join our Newsletter
+          </h2>
+          <p className="text-gray-500 text-sm mb-6">
+            Weekly insights, straight to your inbox.
           </p>
         </div>
+
+        {/* Form */}
         <form onSubmit={handleSubscribe} className="space-y-4">
           <input
             type="email"
-            placeholder="Enter your email"
+            placeholder="Your email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-black/80 focus:border-black text-sm"
             required
           />
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full bg-blue-600 text-white px-4 py-2 rounded-md transition-colors text-sm font-medium ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+            className={`w-full bg-black text-white px-4 py-3 rounded-xl text-sm font-medium tracking-wide transition-all ${
+              isSubmitting
+                ? 'opacity-50 cursor-not-allowed'
+                : 'hover:bg-gray-900'
+            }`}
           >
-            {isSubmitting ? 'Subscribing...' : 'Subscribe'}
+            {isSubmitting ? 'Subscribing…' : 'Subscribe'}
           </button>
         </form>
+
+        {/* Feedback */}
         {message && (
-          <p className={`mt-2 text-center text-sm ${message.includes('success') ? 'text-green-400' : 'text-red-400'}`}>
+          <p
+            className={`mt-3 text-center text-sm ${
+              message.includes('✓')
+                ? 'text-green-600'
+                : 'text-red-500'
+            }`}
+          >
             {message}
           </p>
         )}
