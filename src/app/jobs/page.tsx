@@ -582,7 +582,7 @@ export default function JobsPage() {
           </div>
           <div className="flex items-center gap-1">
             <GlobeIcon className="h-4 w-4" />
-            <span>{GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || 'Other region'}</span>
+            <span>{GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || ''}</span>
           </div>
           <div className="flex items-center gap-1">
             <ClockIcon className="h-4 w-4" />
