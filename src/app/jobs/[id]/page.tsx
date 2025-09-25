@@ -63,7 +63,7 @@ const ArrowLeftIcon = ({ className }: { className: string }) => (
 );
 const GlobeIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9" />
   </svg>
 );
 const StarIcon = ({ className, filled = false }: { className: string; filled?: boolean }) => (
@@ -104,10 +104,10 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays === 1) return "Aujourd'hui";
-    if (diffDays === 2) return 'Hier';
-    if (diffDays <= 7) return `Il y a ${diffDays} jours`;
-    return date.toLocaleDateString('fr-FR');
+    if (diffDays === 1) return "Today";
+    if (diffDays === 2) return 'Yesterday';
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-US');
   };
 
   return (
@@ -118,7 +118,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
           <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4 flex-wrap">
             <Link href="/jobs" className="hover:text-blue-600 flex items-center">
               <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Retour aux offres
+              Back to jobs
             </Link>
           </nav>
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-0">
@@ -153,7 +153,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   </div>
                 )}
               </div>
-              <div className="mt-2 text-sm text-gray-500">Publié {formatDate(typedJob.posted_date)}</div>
+              <div className="mt-2 text-sm text-gray-500">Posted {formatDate(typedJob.posted_date)}</div>
             </div>
             <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-2">
               <button className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50">
@@ -169,7 +169,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center"
                 >
-                  Postuler maintenant
+                  Apply Now
                 </a>
               )}
               {typedJob.contact_email && (
@@ -177,7 +177,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                   href={`mailto:${typedJob.contact_email}`}
                   className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors w-full sm:w-auto text-center"
                 >
-                  Contactez l&apos;entreprise
+                  Contact Company
                 </a>
               )}
             </div>
@@ -197,7 +197,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
               </span>
               {typedJob.remote && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                  Télétravail disponible
+                  Remote Available
                 </span>
               )}
               {typedJob.experience_level && (
@@ -207,7 +207,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
               )}
               {typedJob.featured && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                  Mis en avant
+                  Featured
                 </span>
               )}
               {typedJob.salary_range && (
@@ -222,7 +222,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <UserGroupIcon className="h-6 w-6 mr-2 text-blue-600" />
-                  Description du poste
+                  Job Description
                 </h2>
                 <div className="prose max-w-none text-gray-700">
                   <p className="whitespace-pre-line">{typedJob.description}</p>
@@ -235,7 +235,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <CheckCircleIcon className="h-6 w-6 mr-2 text-green-600" />
-                  Exigences
+                  Requirements
                 </h2>
                 <ul className="list-disc list-inside text-gray-700 space-y-2">
                   {typedJob.requirements.map((req, index) => (
@@ -244,33 +244,33 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                 </ul>
               </div>
             )}
+            
             {/* Skills */}
-{typedJob.skills && typedJob.skills.length > 0 && (
-  <div className="bg-white rounded-xl shadow-sm border p-6">
-    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-      <CodeBracketIcon className="h-6 w-6 mr-2 text-indigo-600" />
-      Compétences requises
-    </h2>
-    <div className="flex flex-wrap gap-2">
-      {typedJob.skills.map((skill, index) => (
-        <span
-          key={index}
-          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
-        >
-          {skill}
-        </span>
-      ))}
-    </div>
-  </div>
-)}
-
+            {typedJob.skills && typedJob.skills.length > 0 && (
+              <div className="bg-white rounded-xl shadow-sm border p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                  <CodeBracketIcon className="h-6 w-6 mr-2 text-indigo-600" />
+                  Required Skills
+                </h2>
+                <div className="flex flex-wrap gap-2">
+                  {typedJob.skills.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Benefits */}
             {typedJob.benefits && typedJob.benefits.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <GiftIcon className="h-6 w-6 mr-2 text-pink-600" />
-                  Avantages
+                  Benefits
                 </h2>
                 <ul className="list-disc list-inside text-gray-700 space-y-2">
                   {typedJob.benefits.map((benefit, index) => (
@@ -286,7 +286,7 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
             {/* Related Jobs */}
             {relatedJobs && relatedJobs.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Offres similaires</h2>
+                <h2 className="text-lg font-semibold text-gray-900 mb-4">Similar Jobs</h2>
                 <ul className="space-y-3">
                   {relatedJobs.map(job => (
                     <li key={job.id}>

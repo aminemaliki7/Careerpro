@@ -8,7 +8,7 @@ import { Job, getJobRegion, formatExperienceLevel, GLOBAL_REGIONS } from '@/type
 // Add globe icon for regions
 const GlobeIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9" />
   </svg>
 );
 
@@ -81,7 +81,7 @@ export default function JobsPage() {
       if (error) throw error;
       setJobs(data || []);
     } catch (err) {
-      setError('Erreur lors du chargement des offres d\'emploi');
+      setError('Error loading job listings');
       console.error('Error fetching jobs:', err);
     } finally {
       setLoading(false);
@@ -151,10 +151,10 @@ export default function JobsPage() {
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) return 'Aujourd\'hui';
-    if (diffDays === 2) return 'Hier';
-    if (diffDays <= 7) return `Il y a ${diffDays} jours`;
-    return date.toLocaleDateString('fr-FR');
+    if (diffDays === 1) return 'Today';
+    if (diffDays === 2) return 'Yesterday';
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-US');
   };
 
   if (loading) {
@@ -187,7 +187,7 @@ export default function JobsPage() {
               onClick={fetchJobs}
               className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
             >
-              Réessayer
+              Try Again
             </button>
           </div>
         </div>
@@ -202,10 +202,10 @@ export default function JobsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-2">
-              Trouvez votre emploi idéal
+              Find Your Dream Job
             </h1>
             <p className="text-lg text-gray-600 mb-6">
-              Découvrez {jobs.length} opportunités professionnelles
+              Discover {jobs.length} career opportunities
             </p>
             
             {/* Search Bar */}
@@ -213,7 +213,7 @@ export default function JobsPage() {
               <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
               <input
                 type="text"
-                placeholder="Rechercher par titre, entreprise ou mot-clé..."
+                placeholder="Search by title, company or keyword..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
@@ -231,7 +231,7 @@ export default function JobsPage() {
             <div className="bg-white rounded-lg shadow-sm border p-4 flex flex-wrap items-center justify-start gap-4">
               <div className="flex items-center text-gray-900 font-semibold text-base whitespace-nowrap">
                 <FilterIcon className="h-5 w-5 mr-2 text-gray-500" />
-                Filtres:
+                Filters:
               </div>
 
               {/* Type Filter */}
@@ -252,7 +252,7 @@ export default function JobsPage() {
                 onChange={(e) => setSelectedLocation(e.target.value)}
                 className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Localisation</option>
+                <option value="">Location</option>
                 {locations.map(location => (
                   <option key={location} value={location}>{location}</option>
                 ))}
@@ -264,7 +264,7 @@ export default function JobsPage() {
                 onChange={(e) => setSelectedRegion(e.target.value)}
                 className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Région</option>
+                <option value="">Region</option>
                 {GLOBAL_REGIONS.map(region => (
                   <option key={region.value} value={region.value}>
                     {region.label}
@@ -278,14 +278,14 @@ export default function JobsPage() {
                 onChange={(e) => setSelectedExperience(e.target.value)}
                 className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Expérience</option>
-                <option value="Entry Level">Débutant</option>
+                <option value="">Experience</option>
+                <option value="Entry Level">Entry Level</option>
                 <option value="Junior">Junior</option>
-                <option value="Mid-Level">Intermédiaire</option>
+                <option value="Mid-Level">Mid-Level</option>
                 <option value="Senior">Senior</option>
                 <option value="Lead">Lead / Expert</option>
                 <option value="Manager">Manager</option>
-                <option value="Director">Directeur</option>
+                <option value="Director">Director</option>
                 {experienceLevels.map(level => (
                   <option key={level} value={level}>{level}</option>
                 ))}
@@ -297,14 +297,14 @@ export default function JobsPage() {
                 onChange={(e) => setSelectedSalaryRange(e.target.value)}
                 className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
-                <option value="">Salaire</option>
-                <option value="< 30k">Moins de 30k€</option>
-                <option value="30k - 40k">30k€ - 40k€</option>
-                <option value="40k - 50k">40k€ - 50k€</option>
-                <option value="50k - 60k">50k€ - 60k€</option>
-                <option value="60k - 80k">60k€ - 80k€</option>
-                <option value="80k - 100k">80k€ - 100k€</option>
-                <option value="> 100k">Plus de 100k€</option>
+                <option value="">Salary</option>
+                <option value="< 30k">Less than $30k</option>
+                <option value="30k - 40k">$30k - $40k</option>
+                <option value="40k - 50k">$40k - $50k</option>
+                <option value="50k - 60k">$50k - $60k</option>
+                <option value="60k - 80k">$60k - $80k</option>
+                <option value="80k - 100k">$80k - $100k</option>
+                <option value="> 100k">More than $100k</option>
                 {salaryRanges.map(range => (
                   <option key={range} value={range}>{range}</option>
                 ))}
@@ -318,7 +318,7 @@ export default function JobsPage() {
                   onChange={(e) => setRemoteOnly(e.target.checked)}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="ml-2">Télétravail</span>
+                <span className="ml-2">Remote</span>
               </label>
 
               {/* Featured Checkbox */}
@@ -329,7 +329,7 @@ export default function JobsPage() {
                   onChange={(e) => setFeaturedOnly(e.target.checked)}
                   className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                 />
-                <span className="ml-2">Mis en avant</span>
+                <span className="ml-2">Featured</span>
               </label>
             </div>
           </div>
@@ -339,21 +339,21 @@ export default function JobsPage() {
             <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
                 <FilterIcon className="h-5 w-5 mr-2" />
-                Filtres
+                Filters
               </h2>
               
               <div className="space-y-6">
                 {/* Job Type Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Type de contrat
+                    Job Type
                   </label>
                   <select
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Tous les types</option>
+                    <option value="">All types</option>
                     {jobTypes.map(type => (
                       <option key={type} value={type}>{type}</option>
                     ))}
@@ -363,14 +363,14 @@ export default function JobsPage() {
                 {/* Location Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Ville / Localisation
+                    City / Location
                   </label>
                   <select
                     value={selectedLocation}
                     onChange={(e) => setSelectedLocation(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Toutes les villes</option>
+                    <option value="">All cities</option>
                     {locations.map(location => (
                       <option key={location} value={location}>{location}</option>
                     ))}
@@ -380,14 +380,14 @@ export default function JobsPage() {
                 {/* Global Region Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    🌍 Région mondiale
+                    🌍 Global Region
                   </label>
                   <select
                     value={selectedRegion}
                     onChange={(e) => setSelectedRegion(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Toutes les régions</option>
+                    <option value="">All regions</option>
                     {GLOBAL_REGIONS.map(region => (
                       <option key={region.value} value={region.value}>
                         {region.label}
@@ -396,7 +396,7 @@ export default function JobsPage() {
                   </select>
                   {selectedRegion && (
                     <div className="mt-2 text-xs text-gray-500">
-                      <strong>Pays inclus:</strong> {GLOBAL_REGIONS.find(r => r.value === selectedRegion)?.countries.join(', ')}
+                      <strong>Countries included:</strong> {GLOBAL_REGIONS.find(r => r.value === selectedRegion)?.countries.join(', ')}
                     </div>
                   )}
                 </div>
@@ -404,21 +404,21 @@ export default function JobsPage() {
                 {/* Experience Level Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Niveau d&apos;expérience
+                    Experience Level
                   </label>
                   <select
                     value={selectedExperience}
                     onChange={(e) => setSelectedExperience(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Tous les niveaux</option>
-                    <option value="Entry Level">Débutant / Entry Level</option>
-                    <option value="Junior">Junior (1-3 ans)</option>
-                    <option value="Mid-Level">Intermédiaire (3-5 ans)</option>
-                    <option value="Senior">Senior (5+ ans)</option>
-                    <option value="Lead">Lead / Expert (8+ ans)</option>
+                    <option value="">All levels</option>
+                    <option value="Entry Level">Entry Level</option>
+                    <option value="Junior">Junior (1-3 years)</option>
+                    <option value="Mid-Level">Mid-Level (3-5 years)</option>
+                    <option value="Senior">Senior (5+ years)</option>
+                    <option value="Lead">Lead / Expert (8+ years)</option>
                     <option value="Manager">Manager</option>
-                    <option value="Director">Directeur</option>
+                    <option value="Director">Director</option>
                     {experienceLevels.map(level => (
                       <option key={level} value={level}>{level}</option>
                     ))}
@@ -428,21 +428,21 @@ export default function JobsPage() {
                 {/* Salary Range Filter */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Fourchette salariale
+                    Salary Range
                   </label>
                   <select
                     value={selectedSalaryRange}
                     onChange={(e) => setSelectedSalaryRange(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="">Tous les salaires</option>
-                    <option value="< 30k">Moins de 30k€</option>
-                    <option value="30k - 40k">30k€ - 40k€</option>
-                    <option value="40k - 50k">40k€ - 50k€</option>
-                    <option value="50k - 60k">50k€ - 60k€</option>
-                    <option value="60k - 80k">60k€ - 80k€</option>
-                    <option value="80k - 100k">80k€ - 100k€</option>
-                    <option value="> 100k">Plus de 100k€</option>
+                    <option value="">All salaries</option>
+                    <option value="< 30k">Less than $30k</option>
+                    <option value="30k - 40k">$30k - $40k</option>
+                    <option value="40k - 50k">$40k - $50k</option>
+                    <option value="50k - 60k">$50k - $60k</option>
+                    <option value="60k - 80k">$60k - $80k</option>
+                    <option value="80k - 100k">$80k - $100k</option>
+                    <option value="> 100k">More than $100k</option>
                     {salaryRanges.map(range => (
                       <option key={range} value={range}>{range}</option>
                     ))}
@@ -458,7 +458,7 @@ export default function JobsPage() {
                       onChange={(e) => setRemoteOnly(e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Télétravail uniquement</span>
+                    <span className="ml-2 text-sm text-gray-700">Remote only</span>
                   </label>
                 </div>
 
@@ -471,23 +471,23 @@ export default function JobsPage() {
                       onChange={(e) => setFeaturedOnly(e.target.checked)}
                       className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Offres mises en avant</span>
+                    <span className="ml-2 text-sm text-gray-700">Featured jobs</span>
                   </label>
                 </div>
 
                 {/* Sort Options */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Trier par
+                    Sort by
                   </label>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   >
-                    <option value="posted_date">Date de publication</option>
-                    <option value="title">Titre</option>
-                    <option value="company">Entreprise</option>
+                    <option value="posted_date">Date Posted</option>
+                    <option value="title">Title</option>
+                    <option value="company">Company</option>
                   </select>
                 </div>
 
@@ -506,7 +506,7 @@ export default function JobsPage() {
                   }}
                   className="w-full px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
                 >
-                  Effacer les filtres
+                  Clear filters
                 </button>
               </div>
             </div>
@@ -516,7 +516,7 @@ export default function JobsPage() {
           <div className="lg:col-span-3">
             <div className="mb-6 flex justify-between items-center">
               <p className="text-sm text-gray-600">
-                {filteredAndSortedJobs.length} offre{filteredAndSortedJobs.length !== 1 ? 's' : ''} trouvée{filteredAndSortedJobs.length !== 1 ? 's' : ''}
+                {filteredAndSortedJobs.length} job{filteredAndSortedJobs.length !== 1 ? 's' : ''} found
               </p>
               {/* This sort dropdown is visible on mobile */}
               <div className="block lg:hidden">
@@ -525,9 +525,9 @@ export default function JobsPage() {
                   onChange={(e) => setSortBy(e.target.value)}
                   className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
-                  <option value="posted_date">Trier par: Date</option>
-                  <option value="title">Trier par: Titre</option>
-                  <option value="company">Trier par: Entreprise</option>
+                  <option value="posted_date">Sort by: Date</option>
+                  <option value="title">Sort by: Title</option>
+                  <option value="company">Sort by: Company</option>
                 </select>
               </div>
             </div>
@@ -535,7 +535,7 @@ export default function JobsPage() {
             {filteredAndSortedJobs.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-gray-500 text-lg">
-                  Aucune offre d&apos;emploi ne correspond à vos critères.
+                  No jobs match your criteria.
                 </div>
                 <button
                   onClick={() => {
@@ -550,7 +550,7 @@ export default function JobsPage() {
                   }}
                   className="mt-4 px-4 py-2 text-blue-600 hover:text-blue-700"
                 >
-                  Effacer les filtres
+                  Clear filters
                 </button>
               </div>
             ) : (
@@ -582,7 +582,7 @@ export default function JobsPage() {
           </div>
           <div className="flex items-center gap-1">
             <GlobeIcon className="h-4 w-4" />
-            <span>{GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || 'Autre région'}</span>
+            <span>{GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || 'Other region'}</span>
           </div>
           <div className="flex items-center gap-1">
             <ClockIcon className="h-4 w-4" />
@@ -605,12 +605,12 @@ export default function JobsPage() {
         </span>
         {job.remote && (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-            Télétravail
+            Remote
           </span>
         )}
         {job.featured && (
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-            Mis en avant
+            Featured
           </span>
         )}
         {job.experience_level && (
@@ -629,7 +629,7 @@ export default function JobsPage() {
         href={`/jobs/${job.id}`}
         className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex-shrink-0"
       >
-        Voir l&apos;offre
+        View Job
       </Link>
     </div>
   </div>
