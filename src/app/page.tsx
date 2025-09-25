@@ -43,9 +43,8 @@ export default async function HomePage() {
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">
               Get Hired Faster in{' '}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 block sm:inline">
-                Tech
-              </span>
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">  Tech
+</span>
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
               Find the latest job opportunities, stay ahead with tech trends, 
@@ -87,7 +86,7 @@ export default async function HomePage() {
     </div>
 
     {/* Equal height grid with auto-rows-fr */}
-    <div className="grid gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 auto-rows-fr">
       {featuredJobs.map((job) => (
         <div
           key={job.id}
