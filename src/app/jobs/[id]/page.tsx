@@ -244,6 +244,26 @@ export default async function JobDetailsPage({ params }: JobDetailsProps) {
                 </ul>
               </div>
             )}
+            {/* Skills */}
+{typedJob.skills && typedJob.skills.length > 0 && (
+  <div className="bg-white rounded-xl shadow-sm border p-6">
+    <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+      <CodeBracketIcon className="h-6 w-6 mr-2 text-indigo-600" />
+      Compétences requises
+    </h2>
+    <div className="flex flex-wrap gap-2">
+      {typedJob.skills.map((skill, index) => (
+        <span
+          key={index}
+          className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
+        >
+          {skill}
+        </span>
+      ))}
+    </div>
+  </div>
+)}
+
 
             {/* Benefits */}
             {typedJob.benefits && typedJob.benefits.length > 0 && (
