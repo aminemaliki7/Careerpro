@@ -556,79 +556,85 @@ export default function JobsPage() {
             ) : (
               <div className="space-y-4">
                 {filteredAndSortedJobs.map((job: Job) => (
-                  <div key={job.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow">
-                    <div className="p-6">
-                      <div className="flex justify-between items-start mb-4">
-                        <div className="flex-1">
-                          <div className="flex items-center mb-2">
-                            <Link 
-                              href={`/jobs/${job.id}`}
-                              className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors mr-3 break-words"
-                            >
-                              {job.title}
-                            </Link>
-                            {job.featured && (
-                              <StarIcon className="h-5 w-5 text-yellow-400" filled />
-                            )}
-                          </div>
-                          
-                          <div className="flex items-center text-gray-600 mb-3">
-                            <BuildingOfficeIcon className="h-4 w-4 mr-1" />
-                            <span className="font-medium mr-3">{job.company}</span>
-                            <MapPinIcon className="h-4 w-4 mr-1" />
-                            <span className="mr-3">{job.location}</span>
-                            <GlobeIcon className="h-4 w-4 mr-1" />
-                            <span className="mr-3">
-                              {GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || 'Autre région'}
-                            </span>
-                            <ClockIcon className="h-4 w-4 mr-1" />
-                            <span className="text-sm">{formatDate(job.posted_date)}</span>
-                          </div>
+                  <div key={job.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow overflow-hidden">
+  <div className="p-6 flex flex-col min-w-0">
+    <div className="flex flex-col sm:flex-row justify-between items-start mb-4 min-w-0">
+      
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center mb-2 flex-wrap">
+          <Link 
+            href={`/jobs/${job.id}`}
+            className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors mr-3 break-words min-w-0"
+          >
+            {job.title}
+          </Link>
+          {job.featured && <StarIcon className="h-5 w-5 text-yellow-400" filled />}
+        </div>
 
-                          {job.description && (
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                              {job.description.substring(0, 150)}...
-                            </p>
-                          )}
-                        </div>
-                      </div>
+        <div className="flex flex-wrap items-center text-gray-600 mb-3 gap-2 min-w-0">
+          <div className="flex items-center gap-1">
+            <BuildingOfficeIcon className="h-4 w-4" />
+            <span className="font-medium">{job.company}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <MapPinIcon className="h-4 w-4" />
+            <span>{job.location}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <GlobeIcon className="h-4 w-4" />
+            <span>{GLOBAL_REGIONS.find(region => region.value === getJobRegion(job.location))?.label || 'Autre région'}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <ClockIcon className="h-4 w-4" />
+            <span className="text-sm">{formatDate(job.posted_date)}</span>
+          </div>
+        </div>
 
-                      <div className="flex justify-between items-center">
-                        <div className="flex flex-wrap gap-2">
-                          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                            {job.type}
-                          </span>
-                          {job.remote && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              Télétravail
-                            </span>
-                          )}
-                          {job.featured && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                              Mis en avant
-                            </span>
-                          )}
-                          {job.experience_level && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
-                              {formatExperienceLevel(job.experience_level)}
-                            </span>
-                          )}
-                          {job.salary_range && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                              {job.salary_range}
-                            </span>
-                          )}
-                        </div>
-                        
-                        <Link 
-                          href={`/jobs/${job.id}`}
-                          className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
-                        >
-                          Voir l&apos;offre
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
+        {job.description && (
+          <p className="text-gray-600 text-sm mb-4 line-clamp-2 break-words min-w-0">
+            {job.description.substring(0, 150)}...
+          </p>
+        )}
+      </div>
+    </div>
+
+    <div className="flex flex-wrap justify-between items-center gap-2">
+      <div className="flex flex-wrap gap-2 min-w-0">
+        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+          {job.type}
+        </span>
+        {job.remote && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+            Télétravail
+          </span>
+        )}
+        {job.featured && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+            Mis en avant
+          </span>
+        )}
+        {job.experience_level && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+            {formatExperienceLevel(job.experience_level)}
+          </span>
+        )}
+        {job.salary_range && (
+          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+            {job.salary_range}
+          </span>
+        )}
+      </div>
+      
+      <Link 
+        href={`/jobs/${job.id}`}
+        className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex-shrink-0"
+      >
+        Voir l&apos;offre
+      </Link>
+    </div>
+  </div>
+</div>
+
                 ))}
               </div>
             )}
