@@ -148,77 +148,78 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
         {filteredPosts.length > 0 ? (
           <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
             {filteredPosts.map((post, index) => (
-              <article
-                key={post.slug || `post-${index}`}
-                className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-200 group"
-              >
-                <div className="p-6">
-                  {/* Featured Badge */}
-                  {post.featured && (
-                    <div className="flex items-center gap-1 mb-3">
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span className="text-sm font-medium text-yellow-600">Featured</span>
-                    </div>
-                  )}
+             <article
+  key={post.slug || `post-${index}`}
+  className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200 group"
+>
+  <div className="p-4">
+    {/* Featured Badge */}
+    {post.featured && (
+      <div className="flex items-center gap-1 mb-2">
+        <Star className="w-4 h-4 text-yellow-500 fill-current" />
+        <span className="text-xs font-medium text-yellow-600">Featured</span>
+      </div>
+    )}
 
-                  {/* Article Meta */}
-                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
-                    <div className="flex items-center gap-1">
-                      <CalendarDays className="w-4 h-4" />
-                      {formatDate(post.publishedAt)}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-4 h-4" />
-                      {Math.ceil(post.readingTime || 5)} min
-                    </div>
-                  </div>
+    {/* Article Meta */}
+    <div className="flex items-center gap-3 text-xs text-gray-500 mb-2">
+      <div className="flex items-center gap-1">
+        <CalendarDays className="w-3.5 h-3.5" />
+        {formatDate(post.publishedAt)}
+      </div>
+      <div className="flex items-center gap-1">
+        <Clock className="w-3.5 h-3.5" />
+        {Math.ceil(post.readingTime || 5)} min
+      </div>
+    </div>
 
-                  {/* Title */}
-                  <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight">
-                    <Link href={`/blog/${post.slug}`}>
-                      {post.title}
-                    </Link>
-                  </h2>
+    {/* Title */}
+    <h2 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors leading-snug">
+      <Link href={`/blog/${post.slug}`}>
+        {post.title}
+      </Link>
+    </h2>
 
-                  {/* Description */}
-                  <p className="text-gray-600 mb-4 line-clamp-3 leading-relaxed">
-                    {post.description}
-                  </p>
+    {/* Description */}
+    <p className="text-gray-600 mb-3 text-sm leading-snug line-clamp-3">
+      {post.description}
+    </p>
 
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.slice(0, 3).map((tag, tagIndex) => (
-                      <button
-                        key={`${post.slug}-${tag}-${tagIndex}`}
-                        onClick={() => setSelectedTag(tag)}
-                        className="px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
-                      >
-                        #{tag}
-                      </button>
-                    ))}
-                    {post.tags.length > 3 && (
-                      <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                        +{post.tags.length - 3} more
-                      </span>
-                    )}
-                  </div>
+    {/* Tags */}
+    <div className="flex flex-wrap gap-1 mb-3">
+      {post.tags.slice(0, 3).map((tag, tagIndex) => (
+        <button
+          key={`${post.slug}-${tag}-${tagIndex}`}
+          onClick={() => setSelectedTag(tag)}
+          className="px-2 py-0.5 bg-blue-50 text-blue-700 text-[11px] rounded-full hover:bg-blue-100 transition-colors"
+        >
+          #{tag}
+        </button>
+      ))}
+      {post.tags.length > 3 && (
+        <span className="px-2 py-0.5 bg-gray-100 text-gray-600 text-[11px] rounded-full">
+          +{post.tags.length - 3} more
+        </span>
+      )}
+    </div>
 
-                  {/* Author & Read More */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <User className="w-4 h-4" />
-                      <span>{post.author}</span>
-                    </div>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="inline-flex items-center gap-1 text-blue-600 font-semibold hover:text-blue-800 transition-colors"
-                    >
-                      Read More
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              </article>
+    {/* Author & Read More */}
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-1 text-xs text-gray-500">
+        <User className="w-3.5 h-3.5" />
+        <span>{post.author}</span>
+      </div>
+      <Link
+        href={`/blog/${post.slug}`}
+        className="inline-flex items-center gap-1 text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors"
+      >
+        Read More
+        <ArrowRight className="w-4 h-4" />
+      </Link>
+    </div>
+  </div>
+</article>
+
             ))}
           </div>
         ) : (

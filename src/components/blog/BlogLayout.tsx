@@ -1,3 +1,4 @@
+// components/blog/BlogLayout.tsx
 import { CalendarDays, Clock, User } from 'lucide-react'
 import type { BlogPostWithContent } from '@/types/blog'
 
@@ -7,48 +8,47 @@ interface BlogLayoutProps {
 }
 
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     })
-  }
 
   return (
-    <article className="max-w-4xl mx-auto px-4 py-8">
+    <article className="max-w-3xl mx-auto px-4 py-6">
       {/* Blog post header */}
-      <header className="mb-8 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+      <header className="mb-6 text-center">
+        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
           {post.title}
         </h1>
         
-        <p className="text-xl text-gray-600 mb-6 leading-relaxed">
+        <p className="text-lg text-gray-600 mb-3 leading-snug max-w-2xl mx-auto">
           {post.description}
         </p>
+        
         {/* Post metadata */}
-        <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-gray-500 mb-6">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 mb-3">
+          <div className="flex items-center gap-1">
             <User className="w-4 h-4" />
             <span>{post.author}</span>
           </div>
-          
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <CalendarDays className="w-4 h-4" />
             <span>{formatDate(post.publishedAt)}</span>
           </div>
-          
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>{Math.ceil(post.readingTime || 0)} min read</span>
+            <span>{Math.ceil(post.readingTime || 0)} min</span>
           </div>
         </div>
+
         {/* Tags */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="flex flex-wrap justify-center gap-1 mb-4">
           {post.tags.map((tag) => (
             <span
               key={tag}
-              className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full hover:bg-blue-200 transition-colors"
+              className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full"
             >
               #{tag}
             </span>
@@ -57,61 +57,58 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       </header>
 
       {/* Blog post content */}
-      <div className="prose prose-lg prose-gray max-w-none">
+      <div
+        className="prose prose-gray max-w-none prose-p:mb-2 prose-p:leading-snug prose-li:mb-1 prose-ul:space-y-1 prose-ol:space-y-1 prose-h1:mb-3 prose-h2:mb-2 prose-h3:mb-1"
+      >
         {children}
       </div>
 
-      {/* Roadmap section */}
+      {/* Roadmap */}
       {post.roadmap && (
-        <section className="mt-12 pt-8 border-t border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
+        <section className="mt-8 pt-4 border-t border-gray-200">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">
             Career Roadmap: {post.roadmap.jobTitle}
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-4">
             {post.roadmap.steps.map((step) => (
-              <div key={step.stepNumber} className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold mb-2">
+              <div
+                key={step.stepNumber}
+                className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200"
+              >
+                <h3 className="text-md font-semibold mb-1 text-gray-900">
                   Step {step.stepNumber}: {step.title}
                 </h3>
-                <p className="text-gray-600 mb-2">{step.description}</p>
-                <p className="text-sm text-gray-500 mb-2">
+                <p className="text-gray-700 mb-1 leading-snug">{step.description}</p>
+                <p className="text-xs text-blue-600 font-medium">
                   Estimated Time: {step.estimatedTime}
                 </p>
-                {step.resources && step.resources.length > 0 && (
-                  <div>
-                    <p className="text-sm font-semibold text-gray-700">Resources:</p>
-                    <ul className="list-disc list-inside text-gray-600">
-                      {step.resources.map((resource, index) => (
-                        <li key={index}>{resource}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </section>
       )}
 
-      {/* Affiliate courses section */}
-      {post.affiliateCourseLinks && post.affiliateCourseLinks.length > 0 && (
-        <section className="mt-12 pt-8 border-t border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">
-            Recommended Courses
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
+      {/* Courses */}
+      {post.affiliateCourseLinks?.length > 0 && (
+        <section className="mt-8 pt-4 border-t border-gray-200">
+          <h2 className="text-xl font-bold text-gray-900 mb-3">Recommended Courses</h2>
+          <div className="grid gap-4 md:grid-cols-2">
             {post.affiliateCourseLinks.map((course, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-lg">
-                <h3 className="text-lg font-semibold mb-2">{course.courseTitle}</h3>
-                <p className="text-gray-600 mb-2">{course.description}</p>
-                <p className="text-sm text-gray-500 mb-2">Provider: {course.provider}</p>
+              <div
+                key={index}
+                className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200 hover:shadow-md transition-shadow"
+              >
+                <h3 className="text-md font-semibold mb-1 text-gray-900">
+                  {course.courseTitle}
+                </h3>
+                <p className="text-gray-700 mb-1 text-sm leading-snug">{course.description}</p>
                 <a
                   href={course.affiliateUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                  className="inline-block mt-1 px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
                 >
-                  Enroll Now
+                  Enroll
                 </a>
               </div>
             ))}
@@ -119,14 +116,12 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
         </section>
       )}
 
-      {/* Author bio section */}
-      <footer className="mt-12 pt-8 border-t border-gray-200">
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-lg font-semibold mb-2">About the Author</h3>
-          <p className="text-gray-600">
-            {post.author} specializes in helping professionals land their dream tech jobs
-            through optimized CVs, interview preparation, and career strategy. Follow for
-            weekly job search tips and industry insights.
+      {/* Author */}
+      <footer className="mt-8 pt-4 border-t border-gray-200">
+        <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
+          <h3 className="text-md font-semibold mb-1 text-gray-900">About the Author</h3>
+          <p className="text-gray-700 text-sm leading-snug">
+            {post.author} helps professionals land tech jobs with optimized CVs, interview prep, and career strategy.
           </p>
         </div>
       </footer>
