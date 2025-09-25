@@ -361,6 +361,7 @@ export default async function HomePage() {
       </section>
 
       {/* Newsletter CTA - Apple-style - Reduced top padding */}
+           {/* Newsletter CTA - Apple-style - Reduced top padding */}
       <section className="pt-16 pb-32 bg-black text-white relative overflow-hidden">
         {/* Gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20"></div>
@@ -396,6 +397,7 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
+
     </div>
   );
 }
