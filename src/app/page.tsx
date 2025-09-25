@@ -42,9 +42,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto mobile-container relative z-10">
           <div className="text-center">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 sm:mb-6 leading-tight">
-              Get Hired Faster in{' '}
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">  Tech
-</span>
+              Get Hired Faster
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
               Find the latest job opportunities, stay ahead with tech trends, 
