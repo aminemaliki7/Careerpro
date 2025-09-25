@@ -1,10 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X, LogIn, UserPlus } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import {
   SignInButton,
-  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
@@ -42,39 +41,32 @@ export default function Header() {
           {/* Logo centered on mobile, left on desktop */}
           <div className="flex-1 flex justify-center md:justify-start">
             <Link href="/" aria-label="Circuit Home">
-              <CircuitLogo 
-                size="xs" 
-                className="transition-transform duration-200 hover:scale-105" 
+              <CircuitLogo
+                size="xs"
+                className="transition-transform duration-200 hover:scale-105"
               />
             </Link>
           </div>
 
-          {/* Mobile Auth Icons */}
-          <div className="md:hidden flex items-center space-x-2">
+          {/* Mobile Single Auth Button */}
+          <div className="md:hidden flex items-center">
             <SignedOut>
               <SignInButton>
                 <button
-                  aria-label="Sign In"
+                  aria-label="Account"
                   className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
                 >
-                  <LogIn className="w-6 h-6" />
+                  <UserButton />
                 </button>
               </SignInButton>
-              <SignUpButton>
-                <button
-                  aria-label="Get Started"
-                  className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
-                >
-                  <UserPlus className="w-6 h-6" />
-                </button>
-              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton
                 appearance={{
                   elements: {
-                    avatarBox: "w-8 h-8 ring-2 ring-blue-100 hover:ring-blue-300 transition-all duration-200",
-                  }
+                    avatarBox:
+                      'w-8 h-8 ring-2 ring-blue-100 hover:ring-blue-300 transition-all duration-200',
+                  },
                 }}
               />
             </SignedIn>
@@ -102,18 +94,19 @@ export default function Header() {
                   Sign In
                 </button>
               </SignInButton>
-              <SignUpButton>
+              <SignInButton>
                 <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm">
                   Get Started
                 </button>
-              </SignUpButton>
+              </SignInButton>
             </SignedOut>
             <SignedIn>
               <UserButton
                 appearance={{
                   elements: {
-                    avatarBox: "w-8 h-8 ring-2 ring-blue-100 hover:ring-blue-300 transition-all duration-200",
-                  }
+                    avatarBox:
+                      'w-8 h-8 ring-2 ring-blue-100 hover:ring-blue-300 transition-all duration-200',
+                  },
                 }}
               />
             </SignedIn>
