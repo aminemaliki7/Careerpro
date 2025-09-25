@@ -1,9 +1,10 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogIn, UserPlus } from 'lucide-react';
 import {
   SignInButton,
+  SignUpButton,
   SignedIn,
   SignedOut,
   UserButton,
@@ -48,17 +49,25 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile Single Auth Button */}
-          <div className="md:hidden flex items-center">
+          {/* Mobile Auth Icons */}
+          <div className="md:hidden flex items-center space-x-2">
             <SignedOut>
               <SignInButton>
                 <button
-                  aria-label="Account"
+                  aria-label="Sign In"
                   className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
                 >
-                  <UserButton />
+                  <LogIn className="w-6 h-6" />
                 </button>
               </SignInButton>
+              <SignUpButton>
+                <button
+                  aria-label="Get Started"
+                  className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <UserPlus className="w-6 h-6" />
+                </button>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton
@@ -94,11 +103,11 @@ export default function Header() {
                   Sign In
                 </button>
               </SignInButton>
-              <SignInButton>
+              <SignUpButton>
                 <button className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium hover:from-blue-700 hover:to-blue-800 transition-all duration-200 shadow-sm">
                   Get Started
                 </button>
-              </SignInButton>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton
