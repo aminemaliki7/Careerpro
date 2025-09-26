@@ -34,6 +34,7 @@ export interface BlogPostWithContent extends BlogPost {
   roadmap: JobRoadmap
   affiliateCourseLinks: AffiliateCourseLink[]
   coverImage?: string; // 👈 add this
+  coverImage2?: string     // deuxième image optionnelle
 
 }
 
