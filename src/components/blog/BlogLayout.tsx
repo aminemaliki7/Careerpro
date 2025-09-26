@@ -25,42 +25,29 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     setHeadings(contentHeadings);
   }, []);
 
-  // Track active heading based on scroll with improved accuracy
+  // Track active heading based on scroll - OnSaas style
   useEffect(() => {
     const handleScroll = () => {
       const headingElements = document.querySelectorAll("article h2, article h3");
-      let currentId = "";
+      let currentActiveId = "";
 
-      // Get current scroll position
-      const scrollPosition = window.scrollY + 150;
-
-      // Find the heading that's currently in view
       for (let i = 0; i < headingElements.length; i++) {
-        const el = headingElements[i] as HTMLElement;
-        const rect = el.getBoundingClientRect();
-        const elementTop = window.scrollY + rect.top;
-
-        if (scrollPosition >= elementTop) {
-          currentId = el.id;
-        } else {
-          break;
+        const element = headingElements[i] as HTMLElement;
+        const rect = element.getBoundingClientRect();
+        
+        // Check if element is in viewport with some offset for better UX
+        if (rect.top <= 100 && rect.bottom >= 0) {
+          currentActiveId = element.id;
         }
       }
 
-      // If we're at the very top, don't highlight anything
-      if (window.scrollY < 100) {
-        currentId = "";
-      }
-
-      if (currentId !== activeId) {
-        setActiveId(currentId);
-      }
+      setActiveId(currentActiveId);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    handleScroll(); // Initial check
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeId]);
+  }, []);
 
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString("en-US", {
@@ -70,309 +57,349 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     });
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       {/* Header */}
-      <header className="bg-white border-b">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-10 text-center">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight sm:leading-snug">
+      <header className="bg-white border-b border-gray-200">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
             {post.title}
           </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-700 max-w-2xl mx-auto mb-4 sm:mb-6 leading-relaxed">
+          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
             {post.description}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-gray-500 text-xs sm:text-sm lg:text-base">
-            <div className="flex items-center gap-1">
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-500 text-sm">
+            <div className="flex items-center gap-2">
               <CalendarDays className="w-4 h-4" />
-              {formatDate(post.publishedAt)}
+              <span>{formatDate(post.publishedAt)}</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2">
               <User className="w-4 h-4" />
-              {post.author}
+              <span>{post.author}</span>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content + TOC */}
-      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6 sm:py-8 lg:py-12 grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 lg:gap-10">
-        {/* Mobile TOC - Collapsible */}
+      {/* Main Content Layout */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Article Content */}
+          <main className="lg:col-span-8">
+            <article className="onsaas-prose prose prose-lg max-w-none">
+              {/* OnSaas-style prose styling */}
+              <style jsx global>{`
+                .onsaas-prose {
+                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                  color: #1a202c;
+                  line-height: 1.8;
+                }
+                
+                .onsaas-prose h1,
+                .onsaas-prose h2,
+                .onsaas-prose h3,
+                .onsaas-prose h4 {
+                  color: #1a202c;
+                  font-weight: 700;
+                  line-height: 1.3;
+                  margin-top: 3rem;
+                  margin-bottom: 1.5rem;
+                  scroll-margin-top: 120px;
+                }
+                
+                .onsaas-prose h1 {
+                  font-size: 2.5rem;
+                  margin-top: 0;
+                }
+                
+                .onsaas-prose h2 {
+                  font-size: 2rem;
+                  color: #2d3748;
+                  border-bottom: 1px solid #e2e8f0;
+                  padding-bottom: 0.5rem;
+                }
+                
+                .onsaas-prose h3 {
+                  font-size: 1.5rem;
+                  color: #2d3748;
+                }
+                
+                .onsaas-prose p {
+                  margin-bottom: 1.75rem;
+                  color: #4a5568;
+                  font-size: 1.125rem;
+                  line-height: 1.8;
+                }
+                
+                .onsaas-prose ul,
+                .onsaas-prose ol {
+                  margin-bottom: 2rem;
+                  padding-left: 2rem;
+                }
+                
+                .onsaas-prose li {
+                  margin-bottom: 0.75rem;
+                  color: #4a5568;
+                  line-height: 1.7;
+                }
+                
+                .onsaas-prose li::marker {
+                  color: #667eea;
+                }
+                
+                .onsaas-prose a {
+                  color: #667eea;
+                  text-decoration: underline;
+                  text-decoration-color: rgba(102, 126, 234, 0.4);
+                  text-underline-offset: 0.25rem;
+                  transition: all 0.2s ease;
+                }
+                
+                .onsaas-prose a:hover {
+                  color: #5a67d8;
+                  text-decoration-color: rgba(90, 103, 216, 0.8);
+                }
+                
+                .onsaas-prose blockquote {
+                  border-left: 4px solid #667eea;
+                  padding-left: 1.5rem;
+                  margin: 2rem 0;
+                  color: #2d3748;
+                  font-style: italic;
+                  background: #f7fafc;
+                  padding: 1.5rem;
+                  border-radius: 0.5rem;
+                }
+                
+                .onsaas-prose code {
+                  background-color: #edf2f7;
+                  color: #d53f8c;
+                  padding: 0.25rem 0.5rem;
+                  border-radius: 0.375rem;
+                  font-size: 0.875rem;
+                  font-weight: 600;
+                }
+                
+                .onsaas-prose pre {
+                  background: #2d3748;
+                  color: #e2e8f0;
+                  padding: 1.5rem;
+                  border-radius: 0.75rem;
+                  overflow-x: auto;
+                  margin: 2rem 0;
+                  font-size: 0.875rem;
+                  line-height: 1.6;
+                }
+                
+                .onsaas-prose pre code {
+                  background: transparent;
+                  color: inherit;
+                  padding: 0;
+                  border-radius: 0;
+                  font-size: inherit;
+                  font-weight: normal;
+                }
+                
+                .onsaas-prose img {
+                  border-radius: 0.75rem;
+                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                  margin: 2.5rem 0;
+                  width: 100%;
+                }
+                
+                .onsaas-prose table {
+                  width: 100%;
+                  border-collapse: collapse;
+                  margin: 2rem 0;
+                  border-radius: 0.5rem;
+                  overflow: hidden;
+                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                }
+                
+                .onsaas-prose th,
+                .onsaas-prose td {
+                  border: 1px solid #e2e8f0;
+                  padding: 1rem;
+                  text-align: left;
+                }
+                
+                .onsaas-prose th {
+                  background: #f7fafc;
+                  font-weight: 600;
+                  color: #2d3748;
+                }
+                
+                /* Mobile optimizations */
+                @media (max-width: 768px) {
+                  .onsaas-prose h1 {
+                    font-size: 2rem;
+                  }
+                  
+                  .onsaas-prose h2 {
+                    font-size: 1.75rem;
+                  }
+                  
+                  .onsaas-prose h3 {
+                    font-size: 1.375rem;
+                  }
+                  
+                  .onsaas-prose p {
+                    font-size: 1.1rem;
+                  }
+                  
+                  .onsaas-prose pre {
+                    padding: 1rem;
+                    font-size: 0.8rem;
+                  }
+                  
+                  .onsaas-prose table {
+                    font-size: 0.875rem;
+                  }
+                  
+                  .onsaas-prose th,
+                  .onsaas-prose td {
+                    padding: 0.75rem;
+                  }
+                }
+              `}</style>
+
+              {/* Cover Image */}
+              {post.coverImage && (
+                <div className="mb-8">
+                  <img
+                    src={post.coverImage}
+                    alt={post.title}
+                    className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
+                  />
+                </div>
+              )}
+
+              {children}
+            </article>
+          </main>
+
+          {/* OnSaas-style Sidebar TOC */}
+          {headings.length > 0 && (
+            <aside className="hidden lg:block lg:col-span-4">
+              <div className="sticky top-8">
+                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+                  <div className="flex items-center gap-2 mb-6">
+                    <div className="w-2 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
+                    <h3 className="text-lg font-bold text-gray-900">On this page</h3>
+                  </div>
+                  
+                  <nav className="space-y-1">
+                    {headings.map((heading, index) => (
+                      <a
+                        key={heading.id}
+                        href={`#${heading.id}`}
+                        className={`
+                          block py-2 px-3 rounded-lg text-sm transition-all duration-200 ease-in-out
+                          ${heading.level === 3 ? 'ml-4 text-xs' : ''}
+                          ${
+                            activeId === heading.id
+                              ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm border-l-3 border-blue-500 pl-4'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          }
+                        `}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.getElementById(heading.id);
+                          if (element) {
+                            const yOffset = -100;
+                            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                          }
+                        }}
+                      >
+                        <span className="flex items-center gap-2">
+                          {activeId === heading.id && (
+                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                          )}
+                          {heading.text}
+                        </span>
+                      </a>
+                    ))}
+                  </nav>
+                  
+                  {/* Progress indicator */}
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                      <span>Reading progress</span>
+                    </div>
+                    <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
+                      <div 
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-1 rounded-full transition-all duration-300"
+                        style={{
+                          width: `${Math.min(100, (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100)}%`
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </aside>
+          )}
+        </div>
+
+        {/* Mobile TOC - Floating Bottom Sheet Style */}
         {headings.length > 0 && (
-          <div className="lg:hidden mb-6 col-span-1">
-            <div className="bg-white rounded-lg border shadow-sm">
+          <div className="fixed bottom-4 right-4 lg:hidden z-50">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-lg max-w-xs">
               <details className="group">
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50">
-                  <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                    On this page
-                  </h3>
+                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 rounded-xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
+                    <span className="font-semibold text-gray-900 text-sm">Contents</span>
+                  </div>
                   <svg 
-                    className="w-5 h-5 text-gray-500 transition-transform group-open:rotate-180"
+                    className="w-4 h-4 text-gray-500 transition-transform group-open:rotate-180"
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                   </svg>
                 </summary>
-                <nav className="px-4 pb-4 space-y-2 text-sm border-t border-gray-100 pt-3">
-                  {headings.map((heading) => (
-                    <a
-                      key={heading.id}
-                      href={`#${heading.id}`}
-                      className={`block py-1 px-2 rounded transition-all duration-200 ${
-                        heading.level === 3 ? "ml-4" : ""
-                      } ${
-                        activeId === heading.id
-                          ? "bg-blue-50 text-blue-700 font-semibold border-l-4 border-blue-500 pl-3"
-                          : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      {heading.text}
-                    </a>
-                  ))}
-                </nav>
+                
+                <div className="px-4 pb-4 max-h-64 overflow-y-auto">
+                  <nav className="space-y-1">
+                    {headings.map((heading) => (
+                      <a
+                        key={heading.id}
+                        href={`#${heading.id}`}
+                        className={`
+                          block py-1.5 px-2 rounded text-xs transition-all duration-200
+                          ${heading.level === 3 ? 'ml-3' : ''}
+                          ${
+                            activeId === heading.id
+                              ? 'bg-blue-50 text-blue-700 font-semibold'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                          }
+                        `}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          const element = document.getElementById(heading.id);
+                          if (element) {
+                            const yOffset = -100;
+                            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                          }
+                          // Close the details element after clicking
+                          const details = e.currentTarget.closest('details');
+                          if (details) details.removeAttribute('open');
+                        }}
+                      >
+                        {heading.text}
+                      </a>
+                    ))}
+                  </nav>
+                </div>
               </details>
             </div>
           </div>
         )}
-
-        {/* Article */}
-        <article className="mobile-optimized-prose prose prose-gray max-w-none lg:col-span-8">
-          {/* Enhanced mobile styles */}
-          <style jsx global>{`
-            .mobile-optimized-prose {
-              font-size: 16px;
-              line-height: 1.7;
-              color: #1f2937;
-            }
-            
-            .mobile-optimized-prose p {
-              margin-bottom: 1.25rem;
-              font-size: 16px;
-              line-height: 1.7;
-              color: #374151;
-              text-align: left;
-            }
-            
-            .mobile-optimized-prose h1,
-            .mobile-optimized-prose h2,
-            .mobile-optimized-prose h3,
-            .mobile-optimized-prose h4 {
-              font-weight: 700;
-              color: #111827;
-              margin-top: 2rem;
-              margin-bottom: 1rem;
-              line-height: 1.3;
-              scroll-margin-top: 120px;
-            }
-            
-            .mobile-optimized-prose h2 {
-              font-size: 1.5rem;
-              margin-top: 2.5rem;
-            }
-            
-            .mobile-optimized-prose h3 {
-              font-size: 1.25rem;
-              margin-top: 2rem;
-            }
-            
-            .mobile-optimized-prose ul,
-            .mobile-optimized-prose ol {
-              margin-bottom: 1.25rem;
-              padding-left: 1.5rem;
-            }
-            
-            .mobile-optimized-prose li {
-              margin-bottom: 0.5rem;
-              line-height: 1.6;
-              color: #374151;
-            }
-            
-            .mobile-optimized-prose blockquote {
-              border-left: 4px solid #3b82f6;
-              padding-left: 1rem;
-              margin: 1.5rem 0;
-              font-style: italic;
-              color: #4b5563;
-              background-color: #f8fafc;
-              padding: 1rem;
-              border-radius: 0.375rem;
-            }
-            
-            .mobile-optimized-prose pre {
-              background-color: #1f2937;
-              color: #f9fafb;
-              padding: 1rem;
-              border-radius: 0.5rem;
-              overflow-x: auto;
-              font-size: 14px;
-              line-height: 1.5;
-              margin: 1.5rem 0;
-            }
-            
-            .mobile-optimized-prose code {
-              background-color: #f3f4f6;
-              color: #dc2626;
-              padding: 0.2rem 0.4rem;
-              border-radius: 0.25rem;
-              font-size: 0.875rem;
-              font-weight: 500;
-            }
-            
-            .mobile-optimized-prose pre code {
-              background-color: transparent;
-              color: inherit;
-              padding: 0;
-              border-radius: 0;
-              font-size: inherit;
-              font-weight: normal;
-            }
-            
-            .mobile-optimized-prose a {
-              color: #2563eb;
-              text-decoration: underline;
-              text-decoration-color: rgba(37, 99, 235, 0.3);
-              text-underline-offset: 0.2rem;
-              transition: all 0.2s;
-            }
-            
-            .mobile-optimized-prose a:hover {
-              color: #1d4ed8;
-              text-decoration-color: rgba(29, 78, 216, 0.6);
-            }
-            
-            .mobile-optimized-prose img {
-              border-radius: 0.5rem;
-              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-              margin: 1.5rem 0;
-            }
-            
-            .mobile-optimized-prose table {
-              width: 100%;
-              border-collapse: collapse;
-              margin: 1.5rem 0;
-              font-size: 0.9rem;
-              overflow-x: auto;
-              display: block;
-              white-space: nowrap;
-            }
-            
-            .mobile-optimized-prose th,
-            .mobile-optimized-prose td {
-              border: 1px solid #e5e7eb;
-              padding: 0.75rem;
-              text-align: left;
-            }
-            
-            .mobile-optimized-prose th {
-              background-color: #f9fafb;
-              font-weight: 600;
-              color: #374151;
-            }
-            
-            @media (max-width: 640px) {
-              .mobile-optimized-prose {
-                font-size: 17px;
-                line-height: 1.8;
-              }
-              
-              .mobile-optimized-prose p {
-                font-size: 17px;
-                line-height: 1.8;
-                margin-bottom: 1.5rem;
-              }
-              
-              .mobile-optimized-prose h2 {
-                font-size: 1.375rem;
-                line-height: 1.2;
-                margin-top: 2rem;
-                margin-bottom: 1rem;
-              }
-              
-              .mobile-optimized-prose h3 {
-                font-size: 1.125rem;
-                line-height: 1.3;
-                margin-top: 1.75rem;
-                margin-bottom: 0.75rem;
-              }
-              
-              .mobile-optimized-prose pre {
-                font-size: 13px;
-                padding: 0.75rem;
-                margin: 1rem 0;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-              }
-              
-              .mobile-optimized-prose table {
-                font-size: 0.8rem;
-                display: block;
-                overflow-x: auto;
-                white-space: nowrap;
-                -webkit-overflow-scrolling: touch;
-              }
-              
-              .mobile-optimized-prose th,
-              .mobile-optimized-prose td {
-                padding: 0.5rem;
-                min-width: 100px;
-              }
-            }
-            
-            @media (max-width: 480px) {
-              .mobile-optimized-prose {
-                font-size: 18px;
-                line-height: 1.8;
-              }
-              
-              .mobile-optimized-prose p {
-                font-size: 18px;
-                line-height: 1.8;
-              }
-            }
-          `}</style>
-
-          {/* Mid-article cover image */}
-          {post.coverImage && (
-            <div className="my-6 sm:my-8 lg:my-12">
-              <img
-                src={post.coverImage}
-                alt={post.title}
-                className="w-full object-cover rounded-lg sm:rounded-xl lg:rounded-2xl max-h-[200px] sm:max-h-[250px] lg:max-h-[300px]"
-              />
-            </div>
-          )}
-
-          {children}
-        </article>
-
-        {/* Desktop Sidebar TOC */}
-        {headings.length > 0 && (
-          <aside className="hidden lg:block lg:col-span-4">
-            <div className="sticky top-24 bg-white p-6 rounded-xl border shadow-sm">
-              <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-                On this page
-              </h3>
-              <nav className="space-y-2 text-sm">
-                {headings.map((heading) => (
-                  <a
-                    key={heading.id}
-                    href={`#${heading.id}`}
-                    className={`block py-2 px-3 rounded transition-all duration-200 ${
-                      heading.level === 3 ? "ml-4" : ""
-                    } ${
-                      activeId === heading.id
-                        ? "bg-blue-50 text-blue-700 font-semibold border-l-4 border-blue-500"
-                        : "text-gray-700 hover:text-blue-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    {heading.text}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </aside>
-        )}
-      </main>
+      </div>
     </div>
   );
 }
