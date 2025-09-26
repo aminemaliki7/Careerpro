@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useEffect, useState } from "react";
-import { CalendarDays, Clock, User } from "lucide-react";
+import { CalendarDays, User } from "lucide-react";
 import type { BlogPostWithContent } from "@/types/blog";
 
 interface BlogLayoutProps {
@@ -66,7 +66,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-snug">
             {post.title}
           </h1>
-          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto mb-6 leading-relaxed">
+          <p className="text-base sm:text-lg text-gray-700 max-w-2xl mx-auto mb-6 leading-relaxed">
             {post.description}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-gray-500 text-sm sm:text-base">
@@ -85,7 +85,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       {/* Main Content + TOC */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Article */}
-<article className="prose prose-sm sm:prose-base lg:prose-lg prose-blue max-w-none lg:col-span-8 prose-p:text-gray-800 prose-headings:text-gray-900">          {/* Bold h2 and h3 */}
+        <article className="prose prose-sm sm:prose-base lg:prose-lg prose-blue max-w-none lg:col-span-8 prose-p:text-gray-800 prose-headings:text-gray-900">
+          {/* Bold h2 and h3 */}
           <style jsx global>{`
             article h2, article h3 {
               font-weight: 800;
