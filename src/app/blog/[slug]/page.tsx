@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
  
   return {
-    title: `${post.title} | CareerPro`,
+    title: `${post.title} | Hirely`,
     description: post.description,
     keywords: post.seoKeywords?.join(', ') || '',
     openGraph: {

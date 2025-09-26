@@ -1,130 +1,129 @@
-// components/blog/BlogLayout.tsx
-import { CalendarDays, Clock, User } from 'lucide-react'
-import type { BlogPostWithContent } from '@/types/blog'
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
+import { CalendarDays, Clock, User } from "lucide-react";
+import type { BlogPostWithContent } from "@/types/blog";
 
 interface BlogLayoutProps {
-  post: BlogPostWithContent
-  children: React.ReactNode
+  post: BlogPostWithContent;
+  children: ReactNode;
 }
 
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
+  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
+  const [activeId, setActiveId] = useState<string>("");
+
+  useEffect(() => {
+    const contentHeadings = Array.from(
+      document.querySelectorAll("article h2, article h3")
+    ).map((el) => ({
+      id: el.id,
+      text: el.textContent || "",
+      level: el.tagName === "H2" ? 2 : 3,
+    }));
+    setHeadings(contentHeadings);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const headingElements = document.querySelectorAll("article h2, article h3");
+      let currentId = "";
+
+      for (let i = 0; i < headingElements.length; i++) {
+        const el = headingElements[i] as HTMLElement;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= 120) {
+          currentId = el.id;
+        } else {
+          break;
+        }
+      }
+
+      if (currentId !== activeId) {
+        setActiveId(currentId);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [activeId]);
+
   const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
+    new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
 
   return (
-    <article className="max-w-3xl mx-auto px-4 py-6">
-      {/* Blog post header */}
-      <header className="mb-6 text-center">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 leading-snug">
-          {post.title}
-        </h1>
-        
-        <p className="text-lg text-gray-600 mb-3 leading-snug max-w-2xl mx-auto">
-          {post.description}
-        </p>
-        
-        {/* Post metadata */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-gray-500 mb-3">
-          <div className="flex items-center gap-1">
-            <User className="w-4 h-4" />
-            <span>{post.author}</span>
+    <div className="bg-gray-50">
+      {/* Header */}
+      <header className="bg-white border-b">
+        <div className="max-w-4xl mx-auto px-6 py-12 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">{post.title}</h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">{post.description}</p>
+          <div className="flex items-center justify-center gap-6 text-gray-500 text-sm">
+            <div className="flex items-center gap-1">
+              <CalendarDays className="w-4 h-4" />
+              {formatDate(post.publishedAt)}
+            </div>
+            <div className="flex items-center gap-1">
+              <Clock className="w-4 h-4" />
+              {Math.ceil(post.readingTime || 5)} min read
+            </div>
+            <div className="flex items-center gap-1">
+              <User className="w-4 h-4" />
+              {post.author}
+            </div>
           </div>
-          <div className="flex items-center gap-1">
-            <CalendarDays className="w-4 h-4" />
-            <span>{formatDate(post.publishedAt)}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            <span>{Math.ceil(post.readingTime || 0)} min</span>
-          </div>
-        </div>
-
-        {/* Tags */}
-        <div className="flex flex-wrap justify-center gap-1 mb-4">
-          {post.tags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full"
-            >
-              #{tag}
-            </span>
-          ))}
         </div>
       </header>
 
-      {/* Blog post content */}
-      <div
-        className="prose prose-gray max-w-none prose-p:mb-2 prose-p:leading-snug prose-li:mb-1 prose-ul:space-y-1 prose-ol:space-y-1 prose-h1:mb-3 prose-h2:mb-2 prose-h3:mb-1"
-      >
-        {children}
-      </div>
+      {/* Main Content + TOC */}
+      <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
+        {/* Article */}
+        <article className="prose prose-lg prose-blue max-w-none lg:col-span-8">
+          {children}
 
-      {/* Roadmap */}
-      {post.roadmap && (
-        <section className="mt-8 pt-4 border-t border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-3">
-            Career Roadmap: {post.roadmap.jobTitle}
-          </h2>
-          <div className="space-y-4">
-            {post.roadmap.steps.map((step) => (
-              <div
-                key={step.stepNumber}
-                className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200"
-              >
-                <h3 className="text-md font-semibold mb-1 text-gray-900">
-                  Step {step.stepNumber}: {step.title}
-                </h3>
-                <p className="text-gray-700 mb-1 leading-snug">{step.description}</p>
-                <p className="text-xs text-blue-600 font-medium">
-                  Estimated Time: {step.estimatedTime}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-      )}
+          {/* Mid-article cover image */}
+          {post.coverImage && (
+            <div className="my-12">
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full object-cover rounded-2xl max-h-[400px]"
+              />
+            </div>
+          )}
+        </article>
 
-      {/* Courses */}
-      {post.affiliateCourseLinks?.length > 0 && (
-        <section className="mt-8 pt-4 border-t border-gray-200">
-          <h2 className="text-xl font-bold text-gray-900 mb-3">Recommended Courses</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {post.affiliateCourseLinks.map((course, index) => (
-              <div
-                key={index}
-                className="bg-gradient-to-br from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200 hover:shadow-md transition-shadow"
-              >
-                <h3 className="text-md font-semibold mb-1 text-gray-900">
-                  {course.courseTitle}
-                </h3>
-                <p className="text-gray-700 mb-1 text-sm leading-snug">{course.description}</p>
+        {/* Sidebar TOC */}
+        <aside className="lg:col-span-4">
+          <div className="sticky top-24 bg-white p-6 rounded-xl border shadow-sm">
+            <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
+              On this page
+            </h3>
+            <nav className="space-y-2 text-sm">
+              {headings.map((heading) => (
                 <a
-                  href={course.affiliateUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block mt-1 px-3 py-1.5 bg-green-600 text-white text-sm rounded-md hover:bg-green-700 transition-colors"
+                  key={heading.id}
+                  href={`#${heading.id}`}
+                  className={`block transition-colors ${
+                    heading.level === 3 ? "ml-4" : ""
+                  } ${
+                    activeId === heading.id
+                      ? "text-blue-700 font-semibold"
+                      : "text-gray-800 hover:text-blue-500"
+                  }`}
                 >
-                  Enroll
+                  {heading.text}
                 </a>
-              </div>
-            ))}
+              ))}
+            </nav>
           </div>
-        </section>
-      )}
-
-      {/* Author */}
-      <footer className="mt-8 pt-4 border-t border-gray-200">
-        <div className="bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-lg border border-gray-200">
-          <h3 className="text-md font-semibold mb-1 text-gray-900">About the Author</h3>
-          <p className="text-gray-700 text-sm leading-snug">
-            {post.author} helps professionals land tech jobs with optimized CVs, interview prep, and career strategy.
-          </p>
-        </div>
-      </footer>
-    </article>
-  )
+        </aside>
+      </main>
+    </div>
+  );
 }

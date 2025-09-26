@@ -33,6 +33,8 @@ export interface BlogPostWithContent extends BlogPost {
   readingTime: number
   roadmap: JobRoadmap
   affiliateCourseLinks: AffiliateCourseLink[]
+  coverImage?: string; // 👈 add this
+
 }
 
 export interface JobRoadmap {
