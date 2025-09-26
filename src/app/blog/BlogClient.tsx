@@ -58,29 +58,37 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section - Mobile Optimized */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-800 text-white py-8 sm:py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Desktop Only Hero Section */}
+      <section className="hidden sm:block bg-gradient-to-br from-blue-600 to-blue-800 text-white py-6 sm:py-8 lg:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight">
-              Expert Career Advice
+            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
+              Career Blog
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-50 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed">
-              Practical tips and strategies to advance your tech career, optimize your CV, and ace your interviews
+            <p className="text-base md:text-lg text-blue-100 mb-4 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
+              Tips and strategies to advance your tech career
             </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 text-blue-50 font-medium text-sm sm:text-base">
+            
+            <div className="flex items-center justify-center gap-6 text-blue-100 text-sm">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>{allPosts.length}+ Articles</span>
+                <TrendingUp className="w-4 h-4" />
+                <span>{allPosts.length} Articles</span>
               </div>
+              <div className="w-px h-4 bg-blue-400"></div>
               <div className="flex items-center gap-2">
-                <Star className="w-4 h-4 sm:w-5 sm:h-5" />
-                <span>{featuredPosts.length} Featured Guides</span>
+                <Star className="w-4 h-4" />
+                <span>{featuredPosts.length} Featured</span>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Mobile Header - Minimal */}
+      <div className="sm:hidden bg-white border-b border-gray-200 px-3 py-4">
+        <h1 className="text-lg font-bold text-gray-900">Career Articles</h1>
+        <p className="text-sm text-gray-600">{allPosts.length} articles • {featuredPosts.length} featured</p>
+      </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
         {/* Mobile Search Bar */}
@@ -242,7 +250,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             <div className="flex flex-wrap gap-2">
               {searchTerm && (
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  Search: &quot{searchTerm}&quot
+                  Search: "{searchTerm}"
                   <button onClick={() => setSearchTerm('')} className="hover:text-blue-600">
                     <X className="w-4 h-4" />
                   </button>
