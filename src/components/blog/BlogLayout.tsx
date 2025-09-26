@@ -12,6 +12,7 @@ interface BlogLayoutProps {
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
   const [activeId, setActiveId] = useState<string>("");
+  const [readingProgress, setReadingProgress] = useState<number>(0);
 
   // Collect headings from the article
   useEffect(() => {
@@ -86,12 +87,27 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           {/* Article Content */}
           <main className="lg:col-span-8">
             <article className="onsaas-prose prose prose-lg max-w-none">
-              {/* OnSaas-style prose styling */}
+              {/* Enhanced mobile styles with animations */}
               <style jsx global>{`
-                .onsaas-prose {
+                .mobile-optimized-prose {
                   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
                   color: #1a202c;
                   line-height: 1.8;
+                }
+                
+                .animate-fade-in {
+                  animation: fadeIn 0.5s ease-in-out;
+                }
+                
+                @keyframes fadeIn {
+                  from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                  }
                 }
                 
                 .onsaas-prose h1,
@@ -293,12 +309,12 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         key={heading.id}
                         href={`#${heading.id}`}
                         className={`
-                          block py-2 px-3 rounded-lg text-sm transition-all duration-200 ease-in-out
+                          block py-2 px-3 rounded-lg text-sm transition-all duration-300 ease-in-out
                           ${heading.level === 3 ? 'ml-4 text-xs' : ''}
                           ${
                             activeId === heading.id
-                              ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm border-l-3 border-blue-500 pl-4'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                              ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm border-l-4 border-blue-500 pl-4 transform translate-x-1'
+                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 hover:translate-x-0.5'
                           }
                         `}
                         onClick={(e) => {
@@ -312,29 +328,51 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         }}
                       >
                         <span className="flex items-center gap-2">
+                          <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                            activeId === heading.id 
+                              ? 'bg-blue-500 scale-125' 
+                              : 'bg-gray-300 scale-100'
+                          }`}></div>
+                          <span className="leading-tight">{heading.text}</span>
                           {activeId === heading.id && (
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                            <div className="ml-auto">
+                              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                            </div>
                           )}
-                          {heading.text}
                         </span>
                       </a>
                     ))}
                   </nav>
                   
-                  {/* Progress indicator */}
+                  {/* Progress indicator - Dynamic */}
                   <div className="mt-6 pt-4 border-t border-gray-100">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                      <span>Reading progress</span>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                          readingProgress > 0 ? 'bg-blue-500' : 'bg-gray-300'
+                        }`}></div>
+                        <span>Reading progress</span>
+                      </div>
+                      <span className="text-xs font-medium text-gray-600">
+                        {Math.round(readingProgress)}%
+                      </span>
                     </div>
-                    <div className="mt-2 w-full bg-gray-200 rounded-full h-1">
+                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                       <div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-1 rounded-full transition-all duration-300"
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-300 ease-out"
                         style={{
-                          width: `${Math.min(100, (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100)}%`
+                          width: `${readingProgress}%`,
+                          transform: `translateX(${readingProgress < 5 ? '-100%' : '0'})`,
+                          opacity: readingProgress < 1 ? 0.3 : 1
                         }}
                       ></div>
                     </div>
+                    {readingProgress >= 95 && (
+                      <div className="flex items-center gap-1 mt-2 text-xs text-green-600 animate-fade-in">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span>Almost done!</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -369,11 +407,11 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         key={heading.id}
                         href={`#${heading.id}`}
                         className={`
-                          block py-1.5 px-2 rounded text-xs transition-all duration-200
+                          block py-1.5 px-2 rounded text-xs transition-all duration-300
                           ${heading.level === 3 ? 'ml-3' : ''}
                           ${
                             activeId === heading.id
-                              ? 'bg-blue-50 text-blue-700 font-semibold'
+                              ? 'bg-blue-50 text-blue-700 font-semibold transform translate-x-1'
                               : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                           }
                         `}
