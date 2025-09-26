@@ -72,14 +72,14 @@ const StarIcon = ({ className, filled = false }: { className: string; filled?: b
   </svg>
 );
 
-// --- Interfaces ---
+/*/ --- Interfaces ---
 interface RelatedJob {
   id: string;
   title: string;
   company: string;
   location: string;
   type: string;
-}
+}*/
 
 interface JobDetailsProps {
   params: Promise<{ id: string }>;

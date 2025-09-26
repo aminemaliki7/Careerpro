@@ -242,7 +242,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             <div className="flex flex-wrap gap-2">
               {searchTerm && (
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  Search: "{searchTerm}"
+                  Search: &quot{searchTerm}&quot
                   <button onClick={() => setSearchTerm('')} className="hover:text-blue-600">
                     <X className="w-4 h-4" />
                   </button>
