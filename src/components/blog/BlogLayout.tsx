@@ -13,6 +13,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
   const [activeId, setActiveId] = useState<string>("");
 
+  // Collect headings from the article
   useEffect(() => {
     const contentHeadings = Array.from(
       document.querySelectorAll("article h2, article h3")
@@ -24,6 +25,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     setHeadings(contentHeadings);
   }, []);
 
+  // Track active heading based on scroll
   useEffect(() => {
     const handleScroll = () => {
       const headingElements = document.querySelectorAll("article h2, article h3");
@@ -45,7 +47,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    handleScroll(); // initialize
     return () => window.removeEventListener("scroll", handleScroll);
   }, [activeId]);
 
@@ -68,10 +70,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
               <CalendarDays className="w-4 h-4" />
               {formatDate(post.publishedAt)}
             </div>
-            <div className="flex items-center gap-1">
-              <Clock className="w-4 h-4" />
-              {Math.ceil(post.readingTime || 5)} min read
-            </div>
+            
             <div className="flex items-center gap-1">
               <User className="w-4 h-4" />
               {post.author}
@@ -84,6 +83,13 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       <main className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 lg:grid-cols-12 gap-12">
         {/* Article */}
         <article className="prose prose-lg prose-blue max-w-none lg:col-span-8">
+          {/* Force all h2 and h3 to be bold */}
+          <style jsx global>{`
+            article h2, article h3 {
+              font-weight: 800; /* bold */
+            }
+          `}</style>
+
           {children}
 
           {/* Mid-article cover image */}
