@@ -18,12 +18,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Hirely - Expert Career Advice & Job Search Strategies',
-  description: 'Get expert career advice, CV optimization tips, and job search strategies to land your dream tech job.',
+  title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
+  description: 'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
   icons: {
-    icon: '../images/blog/logo.svg',
+    icon: '/images/blog/logo.svg',
   },
 };
+
 
 export default function RootLayout({
   children,
