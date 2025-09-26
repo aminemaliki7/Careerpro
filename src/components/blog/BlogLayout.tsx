@@ -85,8 +85,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       {/* Main Content + TOC */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Article */}
-        <article className="prose prose-sm sm:prose-base lg:prose-lg prose-blue max-w-none lg:col-span-8">
-          {/* Bold h2 and h3 */}
+<article className="prose prose-sm sm:prose-base lg:prose-lg prose-blue max-w-none lg:col-span-8 prose-p:text-gray-800 prose-headings:text-gray-900">          {/* Bold h2 and h3 */}
           <style jsx global>{`
             article h2, article h3 {
               font-weight: 800;
