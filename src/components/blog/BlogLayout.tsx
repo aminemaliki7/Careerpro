@@ -12,7 +12,6 @@ interface BlogLayoutProps {
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
   const [activeId, setActiveId] = useState<string>("");
-  const [readingProgress, setReadingProgress] = useState<number>(0);
 
   // Collect headings from the article
   useEffect(() => {
@@ -82,8 +81,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       </header>
 
       {/* Main Content Layout */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1  gap-12">
           {/* Article Content */}
           <main className="lg:col-span-8">
             <article className="onsaas-prose prose prose-lg max-w-none">
@@ -293,150 +292,10 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
             </article>
           </main>
 
-          {/* OnSaas-style Sidebar TOC */}
-          {headings.length > 0 && (
-            <aside className="hidden lg:block lg:col-span-4">
-              <div className="sticky top-8">
-                <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-                  <div className="flex items-center gap-2 mb-6">
-                    <div className="w-2 h-6 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
-                    <h3 className="text-lg font-bold text-gray-900">On this page</h3>
-                  </div>
-                  
-                  <nav className="space-y-1">
-                    {headings.map((heading, index) => (
-                      <a
-                        key={heading.id}
-                        href={`#${heading.id}`}
-                        className={`
-                          block py-2 px-3 rounded-lg text-sm transition-all duration-300 ease-in-out
-                          ${heading.level === 3 ? 'ml-4 text-xs' : ''}
-                          ${
-                            activeId === heading.id
-                              ? 'bg-blue-50 text-blue-700 font-semibold shadow-sm border-l-4 border-blue-500 pl-4 transform translate-x-1'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50 hover:translate-x-0.5'
-                          }
-                        `}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const element = document.getElementById(heading.id);
-                          if (element) {
-                            const yOffset = -100;
-                            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                            window.scrollTo({ top: y, behavior: 'smooth' });
-                          }
-                        }}
-                      >
-                        <span className="flex items-center gap-2">
-                          <div className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                            activeId === heading.id 
-                              ? 'bg-blue-500 scale-125' 
-                              : 'bg-gray-300 scale-100'
-                          }`}></div>
-                          <span className="leading-tight">{heading.text}</span>
-                          {activeId === heading.id && (
-                            <div className="ml-auto">
-                              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                            </div>
-                          )}
-                        </span>
-                      </a>
-                    ))}
-                  </nav>
-                  
-                  {/* Progress indicator - Dynamic */}
-                  <div className="mt-6 pt-4 border-t border-gray-100">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2 text-xs text-gray-500">
-                        <div className={`w-2 h-2 rounded-full transition-colors duration-300 ${
-                          readingProgress > 0 ? 'bg-blue-500' : 'bg-gray-300'
-                        }`}></div>
-                        <span>Reading progress</span>
-                      </div>
-                      <span className="text-xs font-medium text-gray-600">
-                        {Math.round(readingProgress)}%
-                      </span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-full rounded-full transition-all duration-300 ease-out"
-                        style={{
-                          width: `${readingProgress}%`,
-                          transform: `translateX(${readingProgress < 5 ? '-100%' : '0'})`,
-                          opacity: readingProgress < 1 ? 0.3 : 1
-                        }}
-                      ></div>
-                    </div>
-                    {readingProgress >= 95 && (
-                      <div className="flex items-center gap-1 mt-2 text-xs text-green-600 animate-fade-in">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span>Almost done!</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </aside>
-          )}
+          
         </div>
 
-        {/* Mobile TOC - Floating Bottom Sheet Style */}
-        {headings.length > 0 && (
-          <div className="fixed bottom-4 right-4 lg:hidden z-50">
-            <div className="bg-white rounded-xl border border-gray-200 shadow-lg max-w-xs">
-              <details className="group">
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 rounded-xl">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-4 bg-gradient-to-b from-blue-500 to-purple-600 rounded-full"></div>
-                    <span className="font-semibold text-gray-900 text-sm">Contents</span>
-                  </div>
-                  <svg 
-                    className="w-4 h-4 text-gray-500 transition-transform group-open:rotate-180"
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
-                  </svg>
-                </summary>
-                
-                <div className="px-4 pb-4 max-h-64 overflow-y-auto">
-                  <nav className="space-y-1">
-                    {headings.map((heading) => (
-                      <a
-                        key={heading.id}
-                        href={`#${heading.id}`}
-                        className={`
-                          block py-1.5 px-2 rounded text-xs transition-all duration-300
-                          ${heading.level === 3 ? 'ml-3' : ''}
-                          ${
-                            activeId === heading.id
-                              ? 'bg-blue-50 text-blue-700 font-semibold transform translate-x-1'
-                              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                          }
-                        `}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const element = document.getElementById(heading.id);
-                          if (element) {
-                            const yOffset = -100;
-                            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
-                            window.scrollTo({ top: y, behavior: 'smooth' });
-                          }
-                          // Close the details element after clicking
-                          const details = e.currentTarget.closest('details');
-                          if (details) details.removeAttribute('open');
-                        }}
-                      >
-                        {heading.text}
-                      </a>
-                    ))}
-                  </nav>
-                </div>
-              </details>
-            </div>
-          </div>
-        )}
+      
       </div>
     </div>
   );
