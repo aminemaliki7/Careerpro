@@ -32,7 +32,7 @@ export interface BlogPostWithContent extends BlogPost {
   content: string
   readingTime: number
   roadmap: JobRoadmap
-  affiliateCourseLinks: AffiliateCourseLink[]
+  affiliateLink?: string; // Add this line
   coverImage?: string; // 👈 add this
 
 }

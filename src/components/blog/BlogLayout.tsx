@@ -56,6 +56,18 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       day: "numeric",
     });
 
+  // Handle affiliate link click with tracking
+  const handleAffiliateClick = () => {
+    // Add analytics tracking here if needed
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'affiliate_click', {
+        event_category: 'engagement',
+        event_label: 'cover_image',
+        value: 1
+      });
+    }
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -82,7 +94,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
       {/* Main Content Layout */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1  gap-12">
+        <div className="grid grid-cols-1 gap-12">
           {/* Article Content */}
           <main className="lg:col-span-8">
             <article className="onsaas-prose prose prose-lg max-w-none">
@@ -107,6 +119,38 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                     opacity: 1;
                     transform: translateY(0);
                   }
+                }
+
+                /* Subtle clickable image styles */
+                .clickable-cover-image {
+                  position: relative;
+                  cursor: pointer;
+                  transition: all 0.2s ease;
+                  display: block;
+                  overflow: hidden;
+                  border-radius: 0.75rem;
+                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                }
+
+                .clickable-cover-image:hover {
+                  transform: scale(1.02);
+                  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+                }
+
+                .clickable-cover-image::after {
+                  content: '';
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: rgba(0, 0, 0, 0.03);
+                  opacity: 0;
+                  transition: opacity 0.2s ease;
+                }
+
+                .clickable-cover-image:hover::after {
+                  opacity: 1;
                 }
                 
                 .onsaas-prose h1,
@@ -274,28 +318,46 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   .onsaas-prose td {
                     padding: 0.75rem;
                   }
+
+                  .image-overlay {
+                    font-size: 0.75rem;
+                    padding: 0.5rem 1rem;
+                  }
                 }
               `}</style>
 
-              {/* Cover Image */}
+              {/* Cover Image - Subtly Clickable */}
               {post.coverImage && (
                 <div className="mb-8">
-                  <img
-                    src={post.coverImage}
-                    alt={post.title}
-                    className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
-                  />
+                  {post.affiliateLink ? (
+                    <a
+                      href={post.affiliateLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="clickable-cover-image"
+                      onClick={handleAffiliateClick}
+                      aria-label={post.title}
+                    >
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-64 sm:h-80 object-cover"
+                      />
+                    </a>
+                  ) : (
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
+                    />
+                  )}
                 </div>
               )}
 
               {children}
             </article>
           </main>
-
-          
         </div>
-
-      
       </div>
     </div>
   );
