@@ -12,6 +12,9 @@ export interface BlogPost {
   readingTime?: number
   roadmap?: JobRoadmap
   affiliateCourseLinks?: AffiliateCourseLink[]
+  // Add these for consistency across all blog types
+  affiliateLink?: string
+  coverImage?: string
 }
 
 export interface BlogMetadata {
@@ -26,15 +29,18 @@ export interface BlogMetadata {
   slug: string
   roadmap?: JobRoadmap
   affiliateCourseLinks?: AffiliateCourseLink[]
+  // Add these for consistency
+  affiliateLink?: string
+  coverImage?: string
 }
 
 export interface BlogPostWithContent extends BlogPost {
   content: string
   readingTime: number
   roadmap: JobRoadmap
-  affiliateLink?: string; // Add this line
-  coverImage?: string; // 👈 add this
-
+  // These are now inherited from BlogPost, so they're consistent
+  affiliateLink?: string
+  coverImage?: string
 }
 
 export interface JobRoadmap {

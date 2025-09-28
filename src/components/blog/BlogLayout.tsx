@@ -276,6 +276,29 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   }
                 }
               `}</style>
+                {/* Clickable Cover Image */}
+              {post.coverImage && post.affiliateLink && (
+                <div className="mb-8">
+                  <a
+                    href={post.affiliateLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="clickable-cover-image"
+                    aria-label={`Try ${post.title} - Click to learn more`}
+                  >
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-full h-64 sm:h-80 object-cover"
+                    />
+                    <div className="cover-image-overlay">
+                      <div className="click-indicator">
+                        Click to Try →
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              )}
 
               {/* Cover Image */}
               {post.coverImage && (
