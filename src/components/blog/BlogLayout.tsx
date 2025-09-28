@@ -56,6 +56,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       day: "numeric",
     });
 
+
+
   return (
     <div className="bg-gray-50 min-h-screen">
       {/* Header */}
@@ -220,6 +222,67 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   margin: 2.5rem 0;
                   width: 100%;
                 }
+
+                /* Clickable image styles */
+                .clickable-cover-image {
+                  position: relative;
+                  display: block;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                  border-radius: 0.75rem;
+                  overflow: hidden;
+                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                }
+
+                .clickable-cover-image:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+                }
+
+                .clickable-cover-image:hover img {
+                  transform: scale(1.02);
+                }
+
+                .clickable-cover-image img {
+                  transition: transform 0.3s ease;
+                  margin: 0;
+                  box-shadow: none;
+                  border-radius: 0;
+                }
+
+                .cover-image-overlay {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  right: 0;
+                  bottom: 0;
+                  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(90, 103, 216, 0.1));
+                  opacity: 0;
+                  transition: opacity 0.3s ease;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+
+                .clickable-cover-image:hover .cover-image-overlay {
+                  opacity: 1;
+                }
+
+                .click-indicator {
+                  background: rgba(255, 255, 255, 0.95);
+                  color: #667eea;
+                  padding: 0.75rem 1.5rem;
+                  border-radius: 2rem;
+                  font-weight: 600;
+                  font-size: 0.875rem;
+                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                  transform: translateY(10px);
+                  transition: transform 0.3s ease;
+                }
+
+                .clickable-cover-image:hover .click-indicator {
+                  transform: translateY(0);
+                }
                 
                 .onsaas-prose table {
                   width: 100%;
@@ -274,40 +337,43 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   .onsaas-prose td {
                     padding: 0.75rem;
                   }
+
+                  .click-indicator {
+                    font-size: 0.75rem;
+                    padding: 0.5rem 1rem;
+                  }
                 }
               `}</style>
-                {/* Clickable Cover Image */}
-              {post.coverImage && post.affiliateLink && (
+
+              {/* Cover Image - Clickable if affiliate link exists */}
+              {post.coverImage && (
                 <div className="mb-8">
-                  <a
-                    href={post.affiliateLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="clickable-cover-image"
-                    aria-label={`Try ${post.title} - Click to learn more`}
-                  >
+                  {post.affiliateLink ? (
+                    <a
+                      href={post.affiliateLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="clickable-cover-image"
+                      aria-label={`Try ${post.title} - Click to learn more`}
+                    >
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-64 sm:h-80 object-cover"
+                      />
+                      <div className="cover-image-overlay">
+                        <div className="click-indicator">
+                          Click to Try →
+                        </div>
+                      </div>
+                    </a>
+                  ) : (
                     <img
                       src={post.coverImage}
                       alt={post.title}
-                      className="w-full h-64 sm:h-80 object-cover"
+                      className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
                     />
-                    <div className="cover-image-overlay">
-                      <div className="click-indicator">
-                        Click to Try →
-                      </div>
-                    </div>
-                  </a>
-                </div>
-              )}
-
-              {/* Cover Image */}
-              {post.coverImage && (
-                <div className="mb-8">
-                  <img
-                    src={post.coverImage}
-                    alt={post.title}
-                    className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
-                  />
+                  )}
                 </div>
               )}
 
