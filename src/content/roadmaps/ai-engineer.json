@@ -1,0 +1,544 @@
+{
+  "id": "ai-engineer",
+  "title": "AI Engineer",
+  "description": "Maîtrisez le Machine Learning, Deep Learning, NLP et MLOps avec Python, TensorFlow, PyTorch pour créer et déployer des systèmes d'IA en production",
+  "category": "Artificial Intelligence",
+  "level": "Advanced",
+  "totalDuration": "10-14 mois",
+  "avgSalary": {
+    "min": 150000,
+    "max": 300000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Extrêmement Élevée",
+  "tags": ["Python", "Machine Learning", "Deep Learning", "TensorFlow", "PyTorch", "NLP", "Computer Vision", "MLOps"],
+  "lastUpdated": "2025-09-29",
+  "author": "Hirely.ma",
+  "steps": [
+    {
+      "id": "python-math-foundations",
+      "title": "Python & Fondamentaux Mathématiques",
+      "description": "Maîtrisez Python pour l'IA et les mathématiques essentielles : algèbre linéaire, statistiques et calcul",
+      "duration": "4-6 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Python Avancé", "NumPy", "Pandas", "Linear Algebra", "Calculus", "Statistics", "Probability"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Complete Python for Data Science & AI Development",
+          "url": "https://www.udemy.com/course/python-for-data-science-and-machine-learning-bootcamp/?couponCode=AI2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 456789,
+          "duration": "30 sections • 285 sessions • Durée totale: 58 h 45 min",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Python complet pour l'IA : NumPy, Pandas, Matplotlib avec projets machine learning.",
+          "thumbnailUrl": "/img/python-ai.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Mathematics for Machine Learning Specialization",
+          "url": "https://www.coursera.org/specializations/mathematics-machine-learning",
+          "provider": "Coursera (Imperial College London)",
+          "rating": 4.5,
+          "students": 127000,
+          "duration": "3 mois (5-7h/semaine)",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Mathématiques universitaires pour ML : algèbre linéaire, calcul multivariable, PCA.",
+          "thumbnailUrl": "/img/math-ml.jpg",
+          "isSpecialization": true
+        },
+        {
+          "type": "Project",
+          "title": "Analyse exploratoire avancée",
+          "description": "Projet complet d'EDA avec visualisations interactives et preprocessing pour un dataset complexe"
+        }
+      ]
+    },
+    {
+      "id": "machine-learning-fundamentals",
+      "title": "Machine Learning Fondamentaux",
+      "description": "Apprenez les algorithmes ML essentiels et leur implémentation avec scikit-learn",
+      "duration": "6-8 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Supervised Learning", "Unsupervised Learning", "Scikit-learn", "Model Evaluation", "Feature Engineering", "Cross-validation"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Machine Learning A-Z: Python & R in Data Science",
+          "url": "https://www.udemy.com/course/machinelearning/?couponCode=ML2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 876543,
+          "duration": "40 sections • 320 sessions • Durée totale: 68 h 30 min",
+          "price": {
+            "original": 109.99,
+            "current": 17.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Cours ML complet : regression, classification, clustering, NLP avec projets pratiques.",
+          "thumbnailUrl": "/img/ml-az.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Machine Learning Course",
+          "url": "https://www.coursera.org/learn/machine-learning",
+          "provider": "Coursera (Stanford - Andrew Ng)",
+          "rating": 4.9,
+          "students": 4200000,
+          "duration": "11 semaines",
+          "price": {
+            "original": 79.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Cours légendaire d'Andrew Ng couvrant tous les fondamentaux ML avec implémentations.",
+          "thumbnailUrl": "/img/stanford-ml.jpg",
+          "isLegendary": true
+        },
+        {
+          "type": "Project",
+          "title": "Système de recommandation",
+          "description": "Construisez un moteur de recommandation complet avec collaborative filtering et content-based"
+        }
+      ]
+    },
+    {
+      "id": "deep-learning",
+      "title": "Deep Learning & Réseaux de Neurones",
+      "description": "Maîtrisez les réseaux de neurones avec TensorFlow et PyTorch pour créer des modèles complexes",
+      "duration": "8-10 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Neural Networks", "TensorFlow", "PyTorch", "CNN", "RNN", "LSTM", "Backpropagation", "Regularization"],
+      "resources": [
+        {
+          "type": "Specialization",
+          "title": "Deep Learning Specialization",
+          "url": "https://www.coursera.org/specializations/deep-learning",
+          "provider": "Coursera (deeplearning.ai - Andrew Ng)",
+          "rating": 4.8,
+          "students": 890000,
+          "duration": "5 mois (4-6h/semaine)",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Spécialisation référence en Deep Learning : CNN, RNN, attention, GANs avec TensorFlow.",
+          "thumbnailUrl": "/img/deep-learning-spec.jpg",
+          "isSpecialization": true,
+          "isPremium": true
+        },
+        {
+          "type": "Course",
+          "title": "PyTorch for Deep Learning with Python Bootcamp",
+          "url": "https://www.udemy.com/course/pytorch-for-deep-learning-with-python-bootcamp/?couponCode=TORCH2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "18 sections • 150 sessions • Durée totale: 42 h 15 min",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Maîtrise complète de PyTorch pour deep learning avec projets computer vision et NLP.",
+          "thumbnailUrl": "/img/pytorch-bootcamp.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Classificateur d'images CNN",
+          "description": "Créez un CNN pour classification d'images avec data augmentation, transfer learning et déploiement"
+        }
+      ]
+    },
+    {
+      "id": "computer-vision",
+      "title": "Computer Vision",
+      "description": "Spécialisez-vous dans la vision par ordinateur avec OpenCV et les architectures CNN avancées",
+      "duration": "5-6 semaines",
+      "difficulty": "Advanced",
+      "skills": ["OpenCV", "Image Processing", "Object Detection", "Face Recognition", "YOLO", "Transfer Learning", "GANs"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Complete Computer Vision & OpenCV Course",
+          "url": "https://www.udemy.com/course/python-for-computer-vision-with-opencv-and-deep-learning/?couponCode=CV2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 189456,
+          "duration": "16 sections • 125 sessions • Durée totale: 35 h 20 min",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Computer Vision complète : OpenCV, détection d'objets, reconnaissance faciale avec deep learning.",
+          "thumbnailUrl": "/img/computer-vision.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Convolutional Neural Networks",
+          "url": "https://www.coursera.org/learn/convolutional-neural-networks",
+          "provider": "Coursera (deeplearning.ai)",
+          "rating": 4.9,
+          "students": 456000,
+          "duration": "4 semaines",
+          "price": {
+            "original": 79.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Cours expert sur les CNN : ResNet, YOLO, U-Net, style transfer avec implémentations.",
+          "thumbnailUrl": "/img/cnn-course.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Système de surveillance intelligent",
+          "description": "Développez un système de détection d'objets en temps réel avec alerte automatique"
+        }
+      ]
+    },
+    {
+      "id": "natural-language-processing",
+      "title": "Natural Language Processing",
+      "description": "Maîtrisez le NLP moderne avec Transformers, BERT et les Large Language Models",
+      "duration": "6-8 semaines",
+      "difficulty": "Advanced",
+      "skills": ["NLP", "NLTK", "spaCy", "Transformers", "BERT", "GPT", "Hugging Face", "Text Classification", "Sentiment Analysis"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "NLP with Python & Deep Learning Complete Course",
+          "url": "https://www.udemy.com/course/nlp-natural-language-processing-with-python/?couponCode=NLP2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 167890,
+          "duration": "22 sections • 165 sessions • Durée totale: 45 h 15 min",
+          "price": {
+            "original": 94.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "NLP moderne : NLTK, spaCy, transformers avec projets chatbot et analyse de sentiment.",
+          "thumbnailUrl": "/img/nlp-python.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Hugging Face Transformers Course",
+          "url": "https://huggingface.co/course/chapter1/1",
+          "provider": "Hugging Face",
+          "rating": 4.8,
+          "students": 125000,
+          "duration": "Self-paced",
+          "price": {
+            "original": 0,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Cours officiel Hugging Face sur les Transformers : BERT, GPT, fine-tuning avec exemples pratiques.",
+          "thumbnailUrl": "/img/huggingface-course.jpg",
+          "isOfficial": true
+        },
+        {
+          "type": "Project",
+          "title": "Chatbot conversationnel",
+          "description": "Créez un chatbot intelligent avec BERT fine-tuné et interface web interactive"
+        }
+      ]
+    },
+    {
+      "id": "mlops-deployment",
+      "title": "MLOps & Déploiement en Production",
+      "description": "Apprenez à déployer, monitorer et maintenir des modèles ML à grande échelle",
+      "duration": "6-8 semaines",
+      "difficulty": "Advanced",
+      "skills": ["MLOps", "Docker", "Kubernetes", "MLflow", "Kubeflow", "Model Serving", "CI/CD for ML", "Model Monitoring"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "MLOps Engineering at Scale",
+          "url": "https://www.udemy.com/course/mlops-course/?couponCode=MLOPS2525",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 45678,
+          "duration": "15 sections • 95 sessions • Durée totale: 28 h 45 min",
+          "price": {
+            "original": 79.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "MLOps complet : Docker, Kubernetes, MLflow, monitoring avec déploiements cloud AWS/GCP.",
+          "thumbnailUrl": "/img/mlops-course.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Machine Learning Engineering for Production",
+          "url": "https://www.coursera.org/specializations/machine-learning-engineering-for-production-mlops",
+          "provider": "Coursera (deeplearning.ai)",
+          "rating": 4.6,
+          "students": 89000,
+          "duration": "4 mois (5h/semaine)",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Spécialisation MLOps par Andrew Ng : model serving, monitoring, data drift, infrastructure.",
+          "thumbnailUrl": "/img/mlops-specialization.jpg",
+          "isSpecialization": true
+        },
+        {
+          "type": "Project",
+          "title": "Pipeline ML end-to-end",
+          "description": "Déployez un modèle complet : training pipeline, API REST, monitoring et auto-retraining"
+        }
+      ]
+    },
+    {
+      "id": "advanced-ai-systems",
+      "title": "Systèmes d'IA Avancés",
+      "description": "Explorez les technologies de pointe : LLMs, Reinforcement Learning et AI Safety",
+      "duration": "8-10 semaines",
+      "difficulty": "Expert",
+      "skills": ["Large Language Models", "Reinforcement Learning", "AI Safety", "RAG Systems", "Vector Databases", "Fine-tuning", "Prompt Engineering"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Large Language Models: Application through Production",
+          "url": "https://www.edx.org/course/large-language-models-application-through-production",
+          "provider": "edX (Berkeley)",
+          "rating": 4.7,
+          "students": 34567,
+          "duration": "10 semaines",
+          "price": {
+            "original": 99.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Expert",
+          "description": "Cours universitaire sur les LLMs : architecture, fine-tuning, RLHF et déploiement production.",
+          "thumbnailUrl": "/img/llm-course.jpg",
+          "isUniversity": true
+        },
+        {
+          "type": "Course",
+          "title": "Deep Reinforcement Learning",
+          "url": "https://www.udemy.com/course/deep-reinforcement-learning-in-python/?couponCode=RL2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 78901,
+          "duration": "20 sections • 125 sessions • Durée totale: 38 h 30 min",
+          "price": {
+            "original": 89.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Expert",
+          "description": "RL moderne : Q-Learning, Policy Gradient, Actor-Critic avec implémentations PyTorch.",
+          "thumbnailUrl": "/img/deep-rl.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Système RAG personnalisé",
+          "description": "Construisez un système RAG complet avec embedding, vector DB et LLM fine-tuné pour domaine spécifique"
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "TensorFlow Developer Certificate",
+      "provider": "TensorFlow",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-4 mois",
+      "cost": 100,
+      "currency": "USD",
+      "renewalPeriod": "3 ans"
+    },
+    {
+      "name": "AWS Certified Machine Learning - Specialty",
+      "provider": "Amazon Web Services",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 mois",
+      "cost": 300,
+      "currency": "USD",
+      "renewalPeriod": "3 ans"
+    },
+    {
+      "name": "Google Cloud Professional ML Engineer",
+      "provider": "Google Cloud",
+      "difficulty": "Expert",
+      "estimatedStudyTime": "6-8 mois",
+      "cost": 200,
+      "currency": "USD",
+      "renewalPeriod": "2 ans"
+    },
+    {
+      "name": "Microsoft Azure AI Engineer Associate",
+      "provider": "Microsoft",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-5 mois",
+      "cost": 165,
+      "currency": "USD",
+      "renewalPeriod": "1 an"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Programming Languages",
+      "tools": ["Python", "R", "Julia", "Scala", "C++"]
+    },
+    {
+      "category": "ML Libraries",
+      "tools": ["Scikit-learn", "XGBoost", "LightGBM", "CatBoost", "Statsmodels"]
+    },
+    {
+      "category": "Deep Learning",
+      "tools": ["TensorFlow", "PyTorch", "Keras", "JAX", "Flax"]
+    },
+    {
+      "category": "Computer Vision",
+      "tools": ["OpenCV", "PIL/Pillow", "ImageIO", "Albumentations", "YOLO"]
+    },
+    {
+      "category": "NLP",
+      "tools": ["Hugging Face", "spaCy", "NLTK", "Gensim", "FastText"]
+    },
+    {
+      "category": "MLOps",
+      "tools": ["MLflow", "Kubeflow", "DVC", "Weights & Biases", "Neptune"]
+    },
+    {
+      "category": "Cloud Platforms",
+      "tools": ["AWS SageMaker", "Google AI Platform", "Azure ML", "Databricks", "Colab"]
+    },
+    {
+      "category": "Deployment",
+      "tools": ["Docker", "Kubernetes", "FastAPI", "TorchServe", "TensorFlow Serving"]
+    }
+  ],
+  "specializations": [
+    {
+      "area": "Computer Vision",
+      "applications": ["Image classification", "Object detection", "Facial recognition", "Medical imaging", "Autonomous vehicles"],
+      "keySkills": ["CNN", "Transfer learning", "Object detection", "Image segmentation", "GANs"]
+    },
+    {
+      "area": "Natural Language Processing",
+      "applications": ["Chatbots", "Language translation", "Sentiment analysis", "Document analysis", "Content generation"],
+      "keySkills": ["Transformers", "BERT/GPT", "Text preprocessing", "Language modeling", "Named entity recognition"]
+    },
+    {
+      "area": "Recommender Systems",
+      "applications": ["E-commerce", "Content platforms", "Social media", "Music/Video streaming", "Advertising"],
+      "keySkills": ["Collaborative filtering", "Content-based filtering", "Matrix factorization", "Deep learning for RecSys", "A/B testing"]
+    },
+    {
+      "area": "Time Series & Forecasting",
+      "applications": ["Financial prediction", "Demand forecasting", "IoT analytics", "Energy management", "Supply chain"],
+      "keySkills": ["ARIMA", "Prophet", "LSTM/GRU", "Seasonal decomposition", "Anomaly detection"]
+    },
+    {
+      "area": "Reinforcement Learning",
+      "applications": ["Gaming", "Robotics", "Trading algorithms", "Resource optimization", "Autonomous systems"],
+      "keySkills": ["Q-Learning", "Policy gradient", "Actor-Critic", "Multi-agent RL", "Deep RL"]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior ML Engineer",
+      "experience": "0-2 ans",
+      "salary": {
+        "min": 80000,
+        "max": 150000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Model implementation", "Data preprocessing", "Basic ML pipelines", "Code reviews"]
+    },
+    {
+      "level": "ML Engineer",
+      "experience": "2-4 ans",
+      "salary": {
+        "min": 150000,
+        "max": 220000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Model development", "Feature engineering", "A/B testing", "Production deployment"]
+    },
+    {
+      "level": "Senior AI Engineer",
+      "experience": "4-7 ans",
+      "salary": {
+        "min": 220000,
+        "max": 300000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Architecture design", "Research & development", "Technical leadership", "Complex systems"]
+    },
+    {
+      "level": "Principal AI Engineer / ML Architect",
+      "experience": "7-10 ans",
+      "salary": {
+        "min": 300000,
+        "max": 400000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Technical strategy", "Cross-team collaboration", "Innovation leadership", "Mentoring"]
+    },
+    {
+      "level": "Head of AI / VP Engineering",
+      "experience": "10+ ans",
+      "salary": {
+        "min": 400000,
+        "max": 600000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["AI strategy", "Team building", "Product vision", "Executive decisions"]
+    }
+  ],
+  "industryApplications": [
+    {
+      "sector": "Healthcare",
+      "applications": ["Medical imaging", "Drug discovery", "Clinical decision support", "Genomics analysis"]
+    },
+    {
+      "sector": "Finance",
+      "applications": ["Fraud detection", "Algorithmic trading", "Risk assessment", "Credit scoring"]
+    },
+    {
+      "sector": "Automotive",
+      "applications": ["Autonomous driving", "Predictive maintenance", "Traffic optimization", "Safety systems"]
+    },
+    {
+      "sector": "E-commerce",
+      "applications": ["Recommendation engines", "Dynamic pricing", "Demand forecasting", "Customer segmentation"]
+    },
+    {
+      "sector": "Technology",
+      "applications": ["Search algorithms", "Content moderation", "Voice assistants", "Computer vision APIs"]
+    }
+  ]
+}

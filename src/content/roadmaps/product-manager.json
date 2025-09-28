@@ -1,0 +1,411 @@
+{
+  "id": "product-manager",
+  "title": "Product Manager",
+  "description": "Maîtrisez la stratégie produit, l'analyse de données, la gestion d'équipe et les méthodologies Agile pour créer des produits à succès",
+  "category": "Product & Strategy",
+  "level": "Mid Level",
+  "totalDuration": "6-9 mois",
+  "avgSalary": {
+    "min": 100000,
+    "max": 220000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Très Élevée",
+  "tags": ["Strategy", "Analytics", "Agile", "User Research", "Data Analysis", "Leadership"],
+  "lastUpdated": "2025-09-29",
+  "author": "Hirely.ma",
+  "steps": [
+    {
+      "id": "product-fundamentals",
+      "title": "Fondamentaux du Product Management",
+      "description": "Comprenez le rôle du PM, les frameworks produit et les bases de la stratégie",
+      "duration": "3-4 semaines",
+      "difficulty": "Beginner",
+      "skills": ["Product Vision", "Market Research", "Competitive Analysis", "Product Lifecycle", "Stakeholder Management"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Product Management Fundamentals",
+          "url": "https://www.udemy.com/course/become-a-product-manager-learn-the-skills-get-a-job/?couponCode=PM2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 147832,
+          "duration": "15 sections • 125 sessions • Durée totale: 25 h 45 min",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Cours complet couvrant tous les aspects du product management, de la stratégie à l'exécution.",
+          "thumbnailUrl": "/img/pm-fundamentals.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Book",
+          "title": "Inspired: How to Create Products Customers Love",
+          "author": "Marty Cagan",
+          "description": "Bible du product management avec des insights d'experts Silicon Valley"
+        },
+        {
+          "type": "Practice",
+          "title": "Analyse concurrentielle",
+          "description": "Analysez 3 produits concurrents dans un secteur de votre choix (features, pricing, positionnement)"
+        }
+      ]
+    },
+    {
+      "id": "user-research-design",
+      "title": "Recherche Utilisateur & UX",
+      "description": "Maîtrisez les méthodologies de recherche utilisateur et les bases du design thinking",
+      "duration": "4-5 semaines",
+      "difficulty": "Beginner",
+      "skills": ["User Interviews", "Personas", "User Journey Mapping", "Wireframing", "A/B Testing", "Design Thinking"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "User Experience Research and Design",
+          "url": "https://coursera.org/specializations/michiganux",
+          "provider": "Coursera (University of Michigan)",
+          "rating": 4.7,
+          "students": 89000,
+          "duration": "6 mois (3-5h/semaine)",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Spécialisation complète en UX avec certificat universitaire et projets pratiques.",
+          "thumbnailUrl": "/img/ux-research.jpg",
+          "isPopular": true
+        },
+        {
+          "type": "Tool",
+          "title": "Figma for Product Managers",
+          "url": "https://figma.com/academy",
+          "provider": "Figma Academy",
+          "rating": 4.6,
+          "description": "Formation gratuite sur Figma pour créer des wireframes et prototypes"
+        },
+        {
+          "type": "Project",
+          "title": "Étude utilisateur complète",
+          "description": "Menez des interviews utilisateur, créez des personas et mappez le parcours client pour une app mobile"
+        }
+      ]
+    },
+    {
+      "id": "data-analytics",
+      "title": "Data Analytics & Métriques Produit",
+      "description": "Apprenez à analyser les données produit et définir les bonnes métriques",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Google Analytics", "SQL", "KPIs", "Cohort Analysis", "Funnel Analysis", "Product Analytics"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Data Analytics for Product Managers",
+          "url": "https://www.udemy.com/course/product-analytics-for-product-managers/?couponCode=DATA2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 32145,
+          "duration": "12 sections • 89 sessions • Durée totale: 18 h 30 min",
+          "price": {
+            "original": 74.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Maîtrisez Google Analytics, Mixpanel et SQL pour prendre des décisions data-driven.",
+          "thumbnailUrl": "/img/product-analytics.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "SQL for Data Analysis",
+          "url": "https://mode.com/sql-tutorial/",
+          "provider": "Mode Analytics",
+          "rating": 4.5,
+          "students": 0,
+          "duration": "Self-paced",
+          "price": {
+            "original": 0,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Tutorial SQL gratuit axé sur l'analyse de données avec exemples pratiques.",
+          "thumbnailUrl": "/img/sql-analysis.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Dashboard produit",
+          "description": "Créez un dashboard avec les KPIs clés d'une application (DAU, retention, conversion) using Google Analytics et SQL"
+        }
+      ]
+    },
+    {
+      "id": "agile-product-development",
+      "title": "Méthodologies Agile & Développement Produit",
+      "description": "Maîtrisez Scrum, Kanban et les outils de gestion de produit",
+      "duration": "3-4 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Scrum", "Kanban", "Jira", "Roadmap Planning", "Sprint Planning", "Backlog Management"],
+      "resources": [
+        {
+          "type": "Certification",
+          "title": "Professional Scrum Product Owner (PSPO I)",
+          "url": "https://scrum.org/professional-scrum-product-owner-i-certification",
+          "provider": "Scrum.org",
+          "rating": 4.8,
+          "students": 50000,
+          "duration": "2 jours",
+          "price": {
+            "original": 200,
+            "current": 200,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Certification officielle Scrum pour Product Owners avec examen pratique.",
+          "thumbnailUrl": "/img/scrum-po.jpg",
+          "isCertification": true
+        },
+        {
+          "type": "Course",
+          "title": "Jira & Confluence for Product Teams",
+          "url": "https://university.atlassian.com",
+          "provider": "Atlassian University",
+          "rating": 4.3,
+          "students": 25000,
+          "duration": "6 heures",
+          "price": {
+            "original": 0,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Formation gratuite officielle Atlassian sur Jira et Confluence.",
+          "thumbnailUrl": "/img/jira-confluence.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Roadmap produit 6 mois",
+          "description": "Créez une roadmap complète avec priorisation (MoSCoW), user stories et planning de sprints"
+        }
+      ]
+    },
+    {
+      "id": "growth-monetization",
+      "title": "Growth Hacking & Monétisation",
+      "description": "Stratégies de croissance, pricing et modèles business",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Growth Hacking", "Pricing Strategy", "Business Models", "Go-to-Market", "Customer Acquisition", "Retention"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Growth Hacking & Product Growth",
+          "url": "https://growthtribe.io/course/growth-hacking-course",
+          "provider": "GrowthTribe",
+          "rating": 4.6,
+          "students": 15000,
+          "duration": "6 semaines",
+          "price": {
+            "original": 599,
+            "current": 299,
+            "currency": "EUR"
+          },
+          "level": "Intermediate",
+          "description": "Cours intensif sur les stratégies de croissance avec cas pratiques et frameworks.",
+          "thumbnailUrl": "/img/growth-hacking.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Product Pricing & Monetization Strategies",
+          "url": "https://www.reforge.com/programs/product-pricing-monetization",
+          "provider": "Reforge",
+          "rating": 4.7,
+          "students": 8000,
+          "duration": "4 semaines",
+          "price": {
+            "original": 2000,
+            "current": 2000,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Programme premium sur les stratégies de pricing par des experts de Stripe, Uber, Netflix.",
+          "thumbnailUrl": "/img/pricing-strategy.jpg",
+          "isPremium": true
+        },
+        {
+          "type": "Project",
+          "title": "Stratégie de lancement produit",
+          "description": "Développez une stratégie go-to-market complète avec pricing, acquisition channels et métriques"
+        }
+      ]
+    },
+    {
+      "id": "leadership-communication",
+      "title": "Leadership & Communication",
+      "description": "Développez vos soft skills pour manager sans autorité et influencer les stakeholders",
+      "duration": "5-6 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Stakeholder Management", "Presentation Skills", "Negotiation", "Cross-functional Leadership", "Product Storytelling"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Strategic Thinking & Communication for Product Managers",
+          "url": "https://www.linkedin.com/learning/paths/become-a-product-manager",
+          "provider": "LinkedIn Learning",
+          "rating": 4.5,
+          "students": 42000,
+          "duration": "15 heures",
+          "price": {
+            "original": 29.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Learning path complet sur le leadership et la communication en product management.",
+          "thumbnailUrl": "/img/pm-leadership.jpg"
+        },
+        {
+          "type": "Book",
+          "title": "Escaping the Build Trap",
+          "author": "Melissa Perri",
+          "description": "Guide sur comment créer une culture produit et éviter les pièges du développement"
+        },
+        {
+          "type": "Project",
+          "title": "Présentation executive",
+          "description": "Préparez et présentez une business case pour un nouveau produit devant un comité de direction (simulation)"
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Professional Scrum Product Owner (PSPO I)",
+      "provider": "Scrum.org",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "1 mois",
+      "cost": 200,
+      "currency": "USD",
+      "renewalPeriod": "Lifetime"
+    },
+    {
+      "name": "Certified Product Manager (CPM)",
+      "provider": "Association of International Product Marketing and Management (AIPMM)",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-6 mois",
+      "cost": 3000,
+      "currency": "USD",
+      "renewalPeriod": "2 ans"
+    },
+    {
+      "name": "Google Analytics Individual Qualification",
+      "provider": "Google",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "2 semaines",
+      "cost": 0,
+      "currency": "USD",
+      "renewalPeriod": "1 an"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Analytics",
+      "tools": ["Google Analytics", "Mixpanel", "Amplitude", "Hotjar", "Tableau"]
+    },
+    {
+      "category": "Project Management", 
+      "tools": ["Jira", "Asana", "Trello", "Monday.com", "ClickUp"]
+    },
+    {
+      "category": "Design & Prototyping",
+      "tools": ["Figma", "Sketch", "InVision", "Miro", "Whimsical"]
+    },
+    {
+      "category": "Research",
+      "tools": ["UserTesting", "Typeform", "SurveyMonkey", "Calendly", "Zoom"]
+    },
+    {
+      "category": "Communication",
+      "tools": ["Slack", "Confluence", "Notion", "Loom", "PowerPoint"]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Associate Product Manager",
+      "experience": "0-2 ans",
+      "salary": {
+        "min": 60000,
+        "max": 100000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Support PM senior", "Analyse de données", "Gestion backlog", "Tests utilisateur"]
+    },
+    {
+      "level": "Product Manager",
+      "experience": "2-5 ans",
+      "salary": {
+        "min": 100000,
+        "max": 160000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Stratégie produit", "Roadmap", "Cross-functional leadership", "Go-to-market"]
+    },
+    {
+      "level": "Senior Product Manager",
+      "experience": "5-8 ans",
+      "salary": {
+        "min": 160000,
+        "max": 220000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Produits complexes", "Mentoring", "Vision long-terme", "P&L responsibility"]
+    },
+    {
+      "level": "Principal PM / Group PM",
+      "experience": "8-12 ans",
+      "salary": {
+        "min": 220000,
+        "max": 300000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Multiple produits", "Équipe PM", "Stratégie business", "Innovation"]
+    },
+    {
+      "level": "VP Product / CPO",
+      "experience": "12+ ans",
+      "salary": {
+        "min": 300000,
+        "max": 500000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Vision produit entreprise", "Leadership organisation", "Stratégie croissance", "Board reporting"]
+    }
+  ],
+  "industryFocus": [
+    {
+      "sector": "SaaS / B2B",
+      "skills": ["Enterprise sales", "Customer success", "Churn analysis", "Pricing tiers"]
+    },
+    {
+      "sector": "E-commerce",
+      "skills": ["Conversion optimization", "Personalization", "Supply chain", "Mobile commerce"]
+    },
+    {
+      "sector": "Fintech",
+      "skills": ["Regulatory compliance", "Security", "KYC/AML", "Payment systems"]
+    },
+    {
+      "sector": "Mobile Apps",
+      "skills": ["App store optimization", "Push notifications", "In-app purchases", "User onboarding"]
+    },
+    {
+      "sector": "Marketplace",
+      "skills": ["Two-sided markets", "Network effects", "Supply/demand balance", "Trust & safety"]
+    }
+  ]
+}

@@ -1,0 +1,641 @@
+{
+  "id": "qa-engineer",
+  "title": "QA Engineer",
+  "description": "Maîtrisez les tests manuels et automatisés, les frameworks de test modernes et les pratiques QA avec Selenium, Cypress, API Testing et CI/CD",
+  "category": "Quality Assurance",
+  "level": "Mid Level",
+  "totalDuration": "6-9 mois",
+  "avgSalary": {
+    "min": 80000,
+    "max": 160000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Élevée",
+  "tags": ["Testing", "Selenium", "Cypress", "API Testing", "Test Automation", "Java", "Python", "CI/CD"],
+  "lastUpdated": "2025-09-29",
+  "author": "Hirely.ma",
+  "steps": [
+    {
+      "id": "testing-fundamentals",
+      "title": "Fondamentaux des Tests & QA",
+      "description": "Apprenez les bases du testing, types de tests, cycles de vie QA et méthodologies",
+      "duration": "3-4 semaines",
+      "difficulty": "Beginner",
+      "skills": ["Software Testing Fundamentals", "STLC", "Test Case Design", "Bug Reporting", "Test Planning", "Agile Testing", "ISTQB Knowledge"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Software Testing Masterclass - 2024 Updated",
+          "url": "https://www.udemy.com/course/learn-software-testing-in-practical-hands-on-way/?couponCode=QA2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 189234,
+          "duration": "18 sections • 145 sessions • Durée totale: 28 h 45 min",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Cours complet sur les fondamentaux du testing : types, méthodes, documentation avec projets pratiques.",
+          "thumbnailUrl": "/img/testing-fundamentals.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Certification",
+          "title": "ISTQB Foundation Level",
+          "url": "https://www.istqb.org/certifications/foundation-level",
+          "provider": "ISTQB",
+          "rating": 4.7,
+          "students": 500000,
+          "duration": "40 heures d'étude",
+          "price": {
+            "original": 250,
+            "current": 250,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Certification internationale de référence en testing avec reconnaissance mondiale.",
+          "thumbnailUrl": "/img/istqb-foundation.jpg",
+          "isCertification": true
+        },
+        {
+          "type": "Project",
+          "title": "Plan de test complet",
+          "description": "Créez une stratégie de test complète pour une application web : test cases, matrices, rapport de bugs"
+        }
+      ]
+    },
+    {
+      "id": "manual-testing",
+      "title": "Tests Manuels Avancés",
+      "description": "Maîtrisez les techniques de test manuel, exploratory testing et outils de gestion",
+      "duration": "4-5 semaines",
+      "difficulty": "Beginner",
+      "skills": ["Manual Testing", "Exploratory Testing", "Usability Testing", "Cross-browser Testing", "Mobile Testing", "Test Management Tools", "Bug Tracking"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Complete Manual Testing Course + Agile + JIRA + API",
+          "url": "https://www.udemy.com/course/learn-manual-software-testing-step-by-step/?couponCode=MANUAL2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 124567,
+          "duration": "15 sections • 120 sessions • Durée totale: 24 h 30 min",
+          "price": {
+            "original": 74.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Testing manuel complet avec JIRA, TestRail, méthodes Agile et cas pratiques réels.",
+          "thumbnailUrl": "/img/manual-testing.jpg"
+        },
+        {
+          "type": "Tool",
+          "title": "JIRA & TestRail Mastery",
+          "url": "https://university.atlassian.com/student/catalog",
+          "provider": "Atlassian University",
+          "rating": 4.6,
+          "students": 45000,
+          "duration": "8 heures",
+          "price": {
+            "original": 0,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Formation officielle sur JIRA pour QA : bug tracking, test management, reporting.",
+          "thumbnailUrl": "/img/jira-qa.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Test d'application e-commerce",
+          "description": "Testing complet d'une app e-commerce : fonctionnel, UI/UX, performance, sécurité avec documentation"
+        }
+      ]
+    },
+    {
+      "id": "programming-foundations",
+      "title": "Fondamentaux de Programmation",
+      "description": "Apprenez Java ou Python pour l'automatisation des tests avec les bases de la POO",
+      "duration": "5-6 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Java/Python", "OOP Concepts", "Data Structures", "Exception Handling", "File Handling", "Database Basics", "Version Control Git"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Java Programming for Test Automation Engineers",
+          "url": "https://www.udemy.com/course/java-programming-for-software-testers/?couponCode=JAVA2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 89234,
+          "duration": "20 sections • 165 sessions • Durée totale: 35 h 20 min",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Java spécialisé pour QA : POO, collections, exceptions avec exemples test automation.",
+          "thumbnailUrl": "/img/java-qa.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Python for Test Automation",
+          "url": "https://www.udemy.com/course/python-for-testers/?couponCode=PY2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 67890,
+          "duration": "16 sections • 125 sessions • Durée totale: 28 h 15 min",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Python pour QA avec focus sur automation : basics, pytest, requests pour API testing.",
+          "thumbnailUrl": "/img/python-testing.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Utilitaires de test",
+          "description": "Développez des utilitaires Java/Python : générateur de données de test, parser de logs, helper functions"
+        }
+      ]
+    },
+    {
+      "id": "selenium-automation",
+      "title": "Test Automation avec Selenium",
+      "description": "Maîtrisez Selenium WebDriver pour l'automatisation des tests UI web",
+      "duration": "6-7 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Selenium WebDriver", "Page Object Model", "TestNG/JUnit", "Maven/Gradle", "Data-Driven Testing", "Cross-browser Testing", "Parallel Execution"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Selenium WebDriver with Java - Complete Guide + Frameworks",
+          "url": "https://www.udemy.com/course/selenium-real-time-examplesinterview-questions/?couponCode=SEL2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "25 sections • 195 sessions • Durée totale: 48 h 30 min",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Selenium complet : WebDriver, frameworks, POM, TestNG, Grid avec projets réels.",
+          "thumbnailUrl": "/img/selenium-complete.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Selenium Python Framework Development",
+          "url": "https://www.udemy.com/course/selenium-python-complete-framework-development/?couponCode=PYSEL2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 156789,
+          "duration": "18 sections • 145 sessions • Durée totale: 32 h 45 min",
+          "price": {
+            "original": 89.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Framework Selenium Python : pytest, allure reporting, CI/CD integration avec bonnes pratiques.",
+          "thumbnailUrl": "/img/selenium-python.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Framework d'automation complet",
+          "description": "Créez un framework Selenium robuste : POM, data-driven, reporting, parallel execution, CI integration"
+        }
+      ]
+    },
+    {
+      "id": "modern-automation-tools",
+      "title": "Outils d'Automation Modernes",
+      "description": "Explorez Cypress, Playwright et autres outils modernes pour l'automatisation",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Cypress", "Playwright", "WebDriverIO", "Modern Test Frameworks", "JavaScript for Testing", "Visual Testing", "Component Testing"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Cypress - Modern Web Automation Testing from Zero to Hero",
+          "url": "https://www.udemy.com/course/cypress-web-automation-testing-from-zero-to-hero/?couponCode=CYP2525",
+          "provider": "Udemy",
+          "rating": 4.7,
+          "students": 89456,
+          "duration": "14 sections • 95 sessions • Durée totale: 22 h 15 min",
+          "price": {
+            "original": 79.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Cypress complet : modern testing, CI/CD, visual testing avec projets pratiques récents.",
+          "thumbnailUrl": "/img/cypress-complete.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Playwright Test Automation",
+          "url": "https://www.udemy.com/course/playwright-tutorials-automation-testing/?couponCode=PLAY2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 34567,
+          "duration": "12 sections • 75 sessions • Durée totale: 18 h 30 min",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Playwright moderne : cross-browser, headless testing, mobile automation avec TypeScript.",
+          "thumbnailUrl": "/img/playwright-automation.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Suite de tests cross-browser",
+          "description": "Implémentez une suite de tests avec Cypress ET Playwright pour validation cross-browser complète"
+        }
+      ]
+    },
+    {
+      "id": "api-testing",
+      "title": "API Testing & Services",
+      "description": "Maîtrisez les tests d'API REST, GraphQL et microservices avec outils spécialisés",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["REST API Testing", "GraphQL Testing", "Postman", "REST Assured", "API Automation", "Performance Testing", "Security Testing"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "API Testing using Postman, Newman & REST Assured",
+          "url": "https://www.udemy.com/course/api-testing-using-postman-newman-rest-assured/?couponCode=API2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 123456,
+          "duration": "16 sections • 115 sessions • Durée totale: 26 h 45 min",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "API Testing complet : Postman, Newman, REST Assured avec automation et CI/CD integration.",
+          "thumbnailUrl": "/img/api-testing.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "GraphQL API Testing",
+          "url": "https://www.pluralsight.com/courses/graphql-api-testing",
+          "provider": "Pluralsight",
+          "rating": 4.3,
+          "students": 15678,
+          "duration": "4 heures",
+          "price": {
+            "original": 29.99,
+            "current": 29.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Tests GraphQL spécialisés : queries, mutations, subscriptions avec outils dédiés.",
+          "thumbnailUrl": "/img/graphql-testing.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Suite d'API testing automatisée",
+          "description": "Framework complet API testing : REST/GraphQL, data-driven, reporting, mock services, contract testing"
+        }
+      ]
+    },
+    {
+      "id": "performance-security-testing",
+      "title": "Performance & Security Testing",
+      "description": "Apprenez les tests de performance avec JMeter et les bases de la sécurité applicative",
+      "duration": "5-6 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Performance Testing", "JMeter", "LoadRunner", "Security Testing", "OWASP Top 10", "Load Testing", "Stress Testing", "Vulnerability Assessment"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "JMeter - Performance Testing Complete Guide",
+          "url": "https://www.udemy.com/course/jmeter-performance-testing-complete-guide/?couponCode=PERF2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 78901,
+          "duration": "12 sections • 85 sessions • Durée totale: 20 h 15 min",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "JMeter complet : load testing, stress testing, distributed testing avec analyse de résultats.",
+          "thumbnailUrl": "/img/jmeter-performance.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Web Application Security Testing",
+          "url": "https://www.coursera.org/learn/web-application-security-testing",
+          "provider": "Coursera",
+          "rating": 4.2,
+          "students": 23456,
+          "duration": "4 semaines",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Security testing : OWASP Top 10, vulnerability scanning, penetration testing basics.",
+          "thumbnailUrl": "/img/security-testing.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Test de performance complet",
+          "description": "Évaluation performance complète : load testing, bottleneck analysis, optimisation recommandations"
+        }
+      ]
+    },
+    {
+      "id": "ci-cd-devops-qa",
+      "title": "CI/CD & DevOps pour QA",
+      "description": "Intégrez les tests dans les pipelines CI/CD et maîtrisez les pratiques DevOps QA",
+      "duration": "4-5 semaines",
+      "difficulty": "Advanced",
+      "skills": ["CI/CD Integration", "Jenkins", "GitHub Actions", "Docker for Testing", "Test Environments", "Continuous Testing", "Quality Gates", "Test Reporting"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "DevOps for QA Engineers - CI/CD Pipeline Integration",
+          "url": "https://www.udemy.com/course/devops-for-qa-engineers/?couponCode=DEVQA2525",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 45678,
+          "duration": "10 sections • 68 sessions • Durée totale: 16 h 30 min",
+          "price": {
+            "original": 69.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "DevOps pour QA : Jenkins, Docker, Kubernetes, CI/CD pipelines avec test automation integration.",
+          "thumbnailUrl": "/img/devops-qa.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "GitHub Actions for Test Automation",
+          "url": "https://www.linkedin.com/learning/github-actions-for-ci-cd",
+          "provider": "LinkedIn Learning",
+          "rating": 4.5,
+          "students": 34000,
+          "duration": "3 heures",
+          "price": {
+            "original": 29.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "GitHub Actions pour automation : workflows, parallel testing, artifact management.",
+          "thumbnailUrl": "/img/github-actions-qa.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Pipeline CI/CD complet",
+          "description": "Pipeline DevOps intégré : build, test automation, deployment, quality gates avec reporting"
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "ISTQB Foundation Level",
+      "provider": "ISTQB",
+      "difficulty": "Beginner",
+      "estimatedStudyTime": "2-3 mois",
+      "cost": 250,
+      "currency": "USD",
+      "renewalPeriod": "Lifetime"
+    },
+    {
+      "name": "ISTQB Advanced Level Test Analyst",
+      "provider": "ISTQB",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 mois",
+      "cost": 350,
+      "currency": "USD",
+      "renewalPeriod": "Lifetime"
+    },
+    {
+      "name": "Certified Selenium Tester",
+      "provider": "Various Providers",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "2-3 mois",
+      "cost": 150,
+      "currency": "USD",
+      "renewalPeriod": "2 ans"
+    },
+    {
+      "name": "CSTE (Certified Software Tester)",
+      "provider": "QAI Global Institute",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "6-8 mois",
+      "cost": 450,
+      "currency": "USD",
+      "renewalPeriod": "3 ans"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Test Management",
+      "tools": ["JIRA", "TestRail", "Zephyr", "qTest", "Azure DevOps"]
+    },
+    {
+      "category": "Manual Testing",
+      "tools": ["BrowserStack", "Sauce Labs", "CrossBrowserTesting", "LambdaTest", "TestComplete"]
+    },
+    {
+      "category": "Web Automation",
+      "tools": ["Selenium WebDriver", "Cypress", "Playwright", "WebDriverIO", "TestCafe"]
+    },
+    {
+      "category": "Mobile Testing",
+      "tools": ["Appium", "Espresso", "XCUITest", "Detox", "Maestro"]
+    },
+    {
+      "category": "API Testing",
+      "tools": ["Postman", "REST Assured", "SoapUI", "Insomnia", "Karate DSL"]
+    },
+    {
+      "category": "Performance Testing",
+      "tools": ["JMeter", "LoadRunner", "Gatling", "K6", "BlazeMeter"]
+    },
+    {
+      "category": "Security Testing",
+      "tools": ["OWASP ZAP", "Burp Suite", "Nessus", "Veracode", "SonarQube"]
+    },
+    {
+      "category": "CI/CD",
+      "tools": ["Jenkins", "GitHub Actions", "GitLab CI", "Azure Pipelines", "CircleCI"]
+    }
+  ],
+  "testingTypes": [
+    {
+      "category": "Functional Testing",
+      "types": ["Unit Testing", "Integration Testing", "System Testing", "Acceptance Testing", "Regression Testing"],
+      "focus": "Feature correctness and business logic validation"
+    },
+    {
+      "category": "Non-Functional Testing",
+      "types": ["Performance Testing", "Security Testing", "Usability Testing", "Compatibility Testing", "Reliability Testing"],
+      "focus": "Quality attributes and system characteristics"
+    },
+    {
+      "category": "Specialized Testing",
+      "types": ["API Testing", "Mobile Testing", "Database Testing", "Accessibility Testing", "Localization Testing"],
+      "focus": "Domain-specific validation and compliance"
+    },
+    {
+      "category": "Testing Approaches",
+      "types": ["Black Box Testing", "White Box Testing", "Grey Box Testing", "Exploratory Testing", "Risk-Based Testing"],
+      "focus": "Different methodologies and strategies"
+    }
+  ],
+  "specializations": [
+    {
+      "area": "Test Automation",
+      "focus": ["Selenium/Cypress expertise", "Framework development", "CI/CD integration", "Parallel execution"],
+      "industries": ["SaaS", "E-commerce", "Fintech", "Healthcare"]
+    },
+    {
+      "area": "Performance Testing",
+      "focus": ["Load testing", "Stress testing", "Capacity planning", "Performance optimization"],
+      "industries": ["Banking", "E-commerce", "Gaming", "Cloud services"]
+    },
+    {
+      "area": "Security Testing",
+      "focus": ["Vulnerability assessment", "Penetration testing", "Security automation", "Compliance testing"],
+      "industries": ["Finance", "Healthcare", "Government", "Cybersecurity"]
+    },
+    {
+      "area": "Mobile Testing",
+      "focus": ["Native/Hybrid apps", "Cross-platform testing", "Device compatibility", "App store testing"],
+      "industries": ["Mobile apps", "Gaming", "Social media", "Retail"]
+    },
+    {
+      "area": "API Testing",
+      "focus": ["REST/GraphQL testing", "Microservices testing", "Contract testing", "Service virtualization"],
+      "industries": ["SaaS", "Microservices", "Cloud platforms", "Integration platforms"]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior QA Engineer",
+      "experience": "0-2 ans",
+      "salary": {
+        "min": 45000,
+        "max": 80000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Manual testing", "Test case execution", "Bug reporting", "Basic automation"]
+    },
+    {
+      "level": "QA Engineer",
+      "experience": "2-4 ans",
+      "salary": {
+        "min": 80000,
+        "max": 120000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Test planning", "Automation frameworks", "API testing", "Performance testing basics"]
+    },
+    {
+      "level": "Senior QA Engineer",
+      "experience": "4-7 ans",
+      "salary": {
+        "min": 120000,
+        "max": 160000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Test strategy", "Framework architecture", "Mentoring", "Cross-functional collaboration"]
+    },
+    {
+      "level": "QA Lead / Test Manager",
+      "experience": "7-10 ans",
+      "salary": {
+        "min": 160000,
+        "max": 200000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Team leadership", "Process improvement", "Tool selection", "Quality metrics"]
+    },
+    {
+      "level": "QA Director / Head of Quality",
+      "experience": "10+ ans",
+      "salary": {
+        "min": 200000,
+        "max": 280000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Quality strategy", "Organization-wide processes", "Budget management", "Vendor relationships"]
+    }
+  ],
+  "practicalProjects": [
+    {
+      "name": "E-commerce Testing Suite",
+      "description": "Suite complète de tests pour plateforme e-commerce : UI, API, performance, sécurité",
+      "techniques": ["Manual Testing", "Selenium", "API Testing", "Performance Testing"],
+      "duration": "3-4 semaines"
+    },
+    {
+      "name": "Mobile App Test Automation",
+      "description": "Framework d'automatisation pour app mobile : Appium, cross-platform, CI/CD integration",
+      "techniques": ["Mobile Testing", "Appium", "Cross-platform", "CI/CD"],
+      "duration": "4-5 semaines"
+    },
+    {
+      "name": "API Testing Framework",
+      "description": "Framework robuste pour tests API : REST/GraphQL, data-driven, contract testing",
+      "techniques": ["API Testing", "REST Assured", "Contract Testing", "Mock Services"],
+      "duration": "2-3 semaines"
+    },
+    {
+      "name": "Performance Testing Lab",
+      "description": "Laboratoire de tests de performance : load testing, bottleneck analysis, optimisation",
+      "techniques": ["JMeter", "Performance Analysis", "Load Testing", "Monitoring"],
+      "duration": "3-4 semaines"
+    },
+    {
+      "name": "CI/CD Quality Pipeline",
+      "description": "Pipeline DevOps intégré avec quality gates, test automation et reporting",
+      "techniques": ["Jenkins", "Docker", "Test Automation", "Quality Gates"],
+      "duration": "4-5 semaines"
+    }
+  ],
+  "industryApplications": [
+    {
+      "sector": "SaaS",
+      "focus": ["Multi-tenant testing", "API testing", "Performance at scale", "Integration testing"]
+    },
+    {
+      "sector": "E-commerce",
+      "focus": ["Transaction testing", "Load testing", "Cross-browser", "Payment gateway testing"]
+    },
+    {
+      "sector": "Finance",
+      "focus": ["Security testing", "Regulatory compliance", "Data integrity", "Performance testing"]
+    },
+    {
+      "sector": "Healthcare",
+      "focus": ["HIPAA compliance", "Data privacy", "Integration testing", "Regulatory validation"]
+    },
+    {
+      "sector": "Gaming",
+      "focus": ["Performance testing", "Cross-platform", "Real-time testing", "Load testing"]
+    }
+  ]
+}

@@ -1,0 +1,566 @@
+{
+  "id": "machine-learning-engineer",
+  "title": "Machine Learning Engineer",
+  "description": "Maîtrisez les algorithmes de Machine Learning, l'ingénierie des features et le déploiement de modèles avec Python, scikit-learn et les frameworks ML modernes",
+  "category": "Machine Learning",
+  "level": "Advanced",
+  "totalDuration": "8-12 mois",
+  "avgSalary": {
+    "min": 130000,
+    "max": 250000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Très Élevée",
+  "tags": ["Python", "Scikit-learn", "Machine Learning", "Feature Engineering", "Model Deployment", "MLOps", "Statistics"],
+  "lastUpdated": "2025-09-29",
+  "author": "Hirely.ma",
+  "steps": [
+    {
+      "id": "python-statistics",
+      "title": "Python & Statistiques pour ML",
+      "description": "Maîtrisez Python et les statistiques essentielles pour comprendre et implémenter les algorithmes ML",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Python", "NumPy", "Pandas", "Matplotlib", "Seaborn", "Statistics", "Probability", "Hypothesis Testing"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Python for Machine Learning & Data Science Masterclass",
+          "url": "https://www.udemy.com/course/python-for-machine-learning-data-science-masterclass/?couponCode=ML2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "22 sections • 185 sessions • Durée totale: 44 h 30 min",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Python complet pour ML : NumPy, Pandas, visualisation avec projets pratiques et datasets réels.",
+          "thumbnailUrl": "/img/python-ml-master.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Statistics and Probability for Machine Learning",
+          "url": "https://www.edx.org/course/introduction-to-probability",
+          "provider": "edX (MIT)",
+          "rating": 4.7,
+          "students": 89000,
+          "duration": "16 semaines",
+          "price": {
+            "original": 99.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Statistiques universitaires pour ML : distributions, tests d'hypothèses, théorème de Bayes.",
+          "thumbnailUrl": "/img/mit-statistics.jpg",
+          "isUniversity": true
+        },
+        {
+          "type": "Project",
+          "title": "Analyse statistique exploratoire",
+          "description": "Analysez un dataset complexe : distributions, corrélations, tests statistiques et insights business"
+        }
+      ]
+    },
+    {
+      "id": "supervised-learning",
+      "title": "Supervised Learning",
+      "description": "Maîtrisez les algorithmes de classification et régression avec scikit-learn",
+      "duration": "5-6 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["Linear Regression", "Logistic Regression", "Decision Trees", "Random Forest", "SVM", "Naive Bayes", "k-NN", "Cross-validation"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Machine Learning with Python: from Linear Models to Deep Learning",
+          "url": "https://www.edx.org/course/machine-learning-with-python-from-linear-models-to",
+          "provider": "edX (MIT)",
+          "rating": 4.8,
+          "students": 156000,
+          "duration": "15 semaines",
+          "price": {
+            "original": 99.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Cours MIT complet sur ML supervisé : théorie mathématique et implémentation Python.",
+          "thumbnailUrl": "/img/mit-ml.jpg",
+          "isUniversity": true
+        },
+        {
+          "type": "Course",
+          "title": "Supervised Learning with scikit-learn",
+          "url": "https://www.datacamp.com/courses/supervised-learning-with-scikit-learn",
+          "provider": "DataCamp",
+          "rating": 4.5,
+          "students": 78000,
+          "duration": "4 heures",
+          "price": {
+            "original": 29.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Formation pratique scikit-learn avec exercices interactifs et cas d'usage réels.",
+          "thumbnailUrl": "/img/sklearn-supervised.jpg",
+          "isInteractive": true
+        },
+        {
+          "type": "Project",
+          "title": "Prédiction de prix immobiliers",
+          "description": "Modèle de régression complet : preprocessing, feature selection, ensemble methods et évaluation"
+        }
+      ]
+    },
+    {
+      "id": "unsupervised-learning",
+      "title": "Unsupervised Learning",
+      "description": "Explorez le clustering, la réduction de dimensionnalité et la détection d'anomalies",
+      "duration": "4-5 semaines",
+      "difficulty": "Intermediate",
+      "skills": ["K-Means", "Hierarchical Clustering", "DBSCAN", "PCA", "t-SNE", "Anomaly Detection", "Association Rules", "Dimensionality Reduction"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Unsupervised Learning, Recommenders, Reinforcement Learning",
+          "url": "https://www.coursera.org/learn/unsupervised-learning-recommenders-reinforcement-learning",
+          "provider": "Coursera (Stanford - Andrew Ng)",
+          "rating": 4.8,
+          "students": 234000,
+          "duration": "3 semaines",
+          "price": {
+            "original": 79.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Cours Stanford sur l'apprentissage non supervisé par Andrew Ng avec implémentations.",
+          "thumbnailUrl": "/img/stanford-unsupervised.jpg",
+          "isLegendary": true
+        },
+        {
+          "type": "Course",
+          "title": "Cluster Analysis and Unsupervised Machine Learning",
+          "url": "https://www.udemy.com/course/cluster-analysis-and-unsupervised-machine-learning-in-python/?couponCode=CLUSTER2525",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 67890,
+          "duration": "12 sections • 85 sessions • Durée totale: 22 h 15 min",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Clustering avancé : K-means, DBSCAN, GMM avec applications business et visualisations.",
+          "thumbnailUrl": "/img/clustering-python.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Segmentation clients e-commerce",
+          "description": "Clustering client complet : RFM analysis, K-means, profiling segments et recommandations business"
+        }
+      ]
+    },
+    {
+      "id": "feature-engineering",
+      "title": "Feature Engineering & Selection",
+      "description": "Maîtrisez l'art de créer et sélectionner les features pour optimiser vos modèles",
+      "duration": "3-4 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Feature Creation", "Feature Selection", "Feature Scaling", "Encoding Techniques", "Handling Missing Data", "Feature Importance", "Automated Feature Engineering"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Feature Engineering for Machine Learning",
+          "url": "https://www.udemy.com/course/feature-engineering-for-machine-learning/?couponCode=FEAT2525",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 45678,
+          "duration": "15 sections • 95 sessions • Durée totale: 28 h 45 min",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Feature engineering complet : techniques avancées, automated FE et optimisation de performance.",
+          "thumbnailUrl": "/img/feature-engineering.jpg"
+        },
+        {
+          "type": "Book",
+          "title": "Feature Engineering for Machine Learning",
+          "author": "Alice Zheng & Amanda Casari",
+          "description": "Guide O'Reilly sur les techniques de feature engineering avec exemples Python pratiques"
+        },
+        {
+          "type": "Project",
+          "title": "Competition Kaggle",
+          "description": "Participez à une compétition Kaggle en vous concentrant sur l'ingénierie de features avancée"
+        }
+      ]
+    },
+    {
+      "id": "advanced-algorithms",
+      "title": "Algorithmes ML Avancés",
+      "description": "Explorez les algorithmes avancés : ensemble methods, gradient boosting et time series",
+      "duration": "6-7 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Ensemble Methods", "XGBoost", "LightGBM", "CatBoost", "Time Series Forecasting", "Bayesian Methods", "Meta-Learning", "AutoML"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Advanced Machine Learning and Signal Processing",
+          "url": "https://www.coursera.org/learn/advanced-machine-learning-signal-processing",
+          "provider": "Coursera (IBM)",
+          "rating": 4.3,
+          "students": 34567,
+          "duration": "4 semaines",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "ML avancé IBM : ensemble methods, boosting, stacking avec applications industrielles.",
+          "thumbnailUrl": "/img/ibm-advanced-ml.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "XGBoost, LightGBM, CatBoost - Complete Gradient Boosting",
+          "url": "https://www.udemy.com/course/xgboost-lightgbm-catboost-complete-gradient-boosting/?couponCode=BOOST2525",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 23456,
+          "duration": "10 sections • 65 sessions • Durée totale: 18 h 20 min",
+          "price": {
+            "original": 69.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Maîtrise complète des algorithmes de boosting modernes avec hyperparameter tuning.",
+          "thumbnailUrl": "/img/gradient-boosting.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Prévision de demande time series",
+          "description": "Modèle de forecasting avancé : ARIMA, Prophet, LSTM avec ensemble methods et validation temporelle"
+        }
+      ]
+    },
+    {
+      "id": "model-evaluation-optimization",
+      "title": "Évaluation & Optimisation de Modèles",
+      "description": "Apprenez les métriques avancées, validation et techniques d'optimisation des hyperparamètres",
+      "duration": "4-5 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Model Evaluation", "Cross-validation", "Hyperparameter Tuning", "Bias-Variance Tradeoff", "Model Interpretation", "SHAP", "LIME", "Bayesian Optimization"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Model Evaluation and Hyperparameter Tuning",
+          "url": "https://www.pluralsight.com/courses/model-evaluation-hyperparameter-tuning",
+          "provider": "Pluralsight",
+          "rating": 4.4,
+          "students": 15678,
+          "duration": "6 heures",
+          "price": {
+            "original": 29.99,
+            "current": 29.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Évaluation rigoureuse de modèles : métriques, validation strategies, hyperparameter optimization.",
+          "thumbnailUrl": "/img/model-evaluation.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Interpretable Machine Learning with Python",
+          "url": "https://www.datacamp.com/courses/machine-learning-interpretability",
+          "provider": "DataCamp",
+          "rating": 4.6,
+          "students": 28000,
+          "duration": "4 heures",
+          "price": {
+            "original": 29.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Interprétabilité des modèles ML : SHAP, LIME, feature importance avec exemples pratiques.",
+          "thumbnailUrl": "/img/ml-interpretability.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Modèle de crédit scoring",
+          "description": "Système complet de scoring : feature engineering, model selection, interprétabilité et validation réglementaire"
+        }
+      ]
+    },
+    {
+      "id": "mlops-production",
+      "title": "MLOps & Mise en Production",
+      "description": "Déployez et maintenez des modèles ML en production avec monitoring et CI/CD",
+      "duration": "5-6 semaines",
+      "difficulty": "Advanced",
+      "skills": ["Model Deployment", "REST APIs", "Docker", "Model Serving", "A/B Testing", "Model Monitoring", "Data Drift Detection", "CI/CD for ML"],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "MLOps | Machine Learning Operations",
+          "url": "https://www.udemy.com/course/mlops-machine-learning-operations/?couponCode=MLOPS2525",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 34567,
+          "duration": "16 sections • 105 sessions • Durée totale: 32 h 15 min",
+          "price": {
+            "original": 89.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "MLOps complet : déploiement, monitoring, versioning avec Docker, Kubernetes et cloud platforms.",
+          "thumbnailUrl": "/img/mlops-complete.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Machine Learning Model Deployment",
+          "url": "https://www.coursera.org/learn/machine-learning-model-deployment",
+          "provider": "Coursera",
+          "rating": 4.2,
+          "students": 19000,
+          "duration": "4 semaines",
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Déploiement de modèles : API REST, containerization, monitoring et maintenance en production.",
+          "thumbnailUrl": "/img/model-deployment.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "API ML en production",
+          "description": "Déployez une API ML complète : FastAPI, Docker, monitoring, logging et A/B testing framework"
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Google Cloud Professional Machine Learning Engineer",
+      "provider": "Google Cloud",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 mois",
+      "cost": 200,
+      "currency": "USD",
+      "renewalPeriod": "2 ans"
+    },
+    {
+      "name": "AWS Certified Machine Learning - Specialty",
+      "provider": "Amazon Web Services",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-5 mois",
+      "cost": 300,
+      "currency": "USD",
+      "renewalPeriod": "3 ans"
+    },
+    {
+      "name": "Microsoft Azure AI Engineer Associate",
+      "provider": "Microsoft",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-4 mois",
+      "cost": 165,
+      "currency": "USD",
+      "renewalPeriod": "1 an"
+    },
+    {
+      "name": "IBM Machine Learning Professional Certificate",
+      "provider": "IBM",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "4-6 mois",
+      "cost": 39,
+      "currency": "USD",
+      "renewalPeriod": "Lifetime"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Core Libraries",
+      "tools": ["Scikit-learn", "Pandas", "NumPy", "SciPy", "Statsmodels"]
+    },
+    {
+      "category": "Advanced ML",
+      "tools": ["XGBoost", "LightGBM", "CatBoost", "H2O.ai", "Auto-sklearn"]
+    },
+    {
+      "category": "Visualization",
+      "tools": ["Matplotlib", "Seaborn", "Plotly", "Yellowbrick", "MLxtend"]
+    },
+    {
+      "category": "Model Interpretation",
+      "tools": ["SHAP", "LIME", "ELI5", "Permutation Importance", "PDP"]
+    },
+    {
+      "category": "Experimentation",
+      "tools": ["MLflow", "Weights & Biases", "Neptune", "ClearML", "DVC"]
+    },
+    {
+      "category": "Deployment",
+      "tools": ["Flask", "FastAPI", "Docker", "Kubernetes", "Streamlit"]
+    },
+    {
+      "category": "Cloud Platforms",
+      "tools": ["AWS SageMaker", "Google AI Platform", "Azure ML", "Databricks", "Colab"]
+    },
+    {
+      "category": "Time Series",
+      "tools": ["Prophet", "Darts", "TSFresh", "Sktime", "Statsforecast"]
+    }
+  ],
+  "algorithmMastery": [
+    {
+      "category": "Regression",
+      "algorithms": ["Linear Regression", "Ridge/Lasso", "Elastic Net", "Polynomial Regression", "SVR"],
+      "useCases": ["Price prediction", "Demand forecasting", "Risk assessment", "Performance metrics"]
+    },
+    {
+      "category": "Classification",
+      "algorithms": ["Logistic Regression", "Random Forest", "SVM", "Naive Bayes", "k-NN"],
+      "useCases": ["Spam detection", "Medical diagnosis", "Fraud detection", "Customer churn"]
+    },
+    {
+      "category": "Ensemble Methods",
+      "algorithms": ["Random Forest", "AdaBoost", "Gradient Boosting", "XGBoost", "Voting Classifiers"],
+      "useCases": ["Competition winning", "High-stakes prediction", "Feature importance", "Robust models"]
+    },
+    {
+      "category": "Clustering",
+      "algorithms": ["K-Means", "Hierarchical", "DBSCAN", "Gaussian Mixture", "Spectral Clustering"],
+      "useCases": ["Customer segmentation", "Market research", "Anomaly detection", "Data exploration"]
+    },
+    {
+      "category": "Dimensionality Reduction",
+      "algorithms": ["PCA", "t-SNE", "UMAP", "Factor Analysis", "Independent Component Analysis"],
+      "useCases": ["Visualization", "Feature reduction", "Noise reduction", "Compression"]
+    }
+  ],
+  "specializations": [
+    {
+      "area": "Predictive Analytics",
+      "focus": ["Time series forecasting", "Demand prediction", "Risk modeling", "Trend analysis"],
+      "industries": ["Finance", "Retail", "Supply Chain", "Energy"]
+    },
+    {
+      "area": "Customer Analytics",
+      "focus": ["Segmentation", "Lifetime value", "Churn prediction", "Recommender systems"],
+      "industries": ["E-commerce", "Telecommunications", "Banking", "SaaS"]
+    },
+    {
+      "area": "Financial ML",
+      "focus": ["Algorithmic trading", "Risk assessment", "Fraud detection", "Credit scoring"],
+      "industries": ["Banking", "Insurance", "Fintech", "Investment"]
+    },
+    {
+      "area": "Healthcare Analytics",
+      "focus": ["Predictive diagnosis", "Drug discovery", "Clinical trials", "Patient outcomes"],
+      "industries": ["Pharma", "Healthcare", "Medical devices", "Biotechnology"]
+    },
+    {
+      "area": "Operations Research",
+      "focus": ["Optimization", "Resource allocation", "Supply chain", "Scheduling"],
+      "industries": ["Manufacturing", "Logistics", "Transportation", "Energy"]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior ML Engineer",
+      "experience": "0-2 ans",
+      "salary": {
+        "min": 70000,
+        "max": 130000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Model implementation", "Data preprocessing", "Basic feature engineering", "Model validation"]
+    },
+    {
+      "level": "ML Engineer",
+      "experience": "2-4 ans",
+      "salary": {
+        "min": 130000,
+        "max": 180000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["End-to-end ML projects", "Advanced algorithms", "Model optimization", "Production deployment"]
+    },
+    {
+      "level": "Senior ML Engineer",
+      "experience": "4-7 ans",
+      "salary": {
+        "min": 180000,
+        "max": 250000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["Complex ML systems", "Technical leadership", "Architecture design", "Research & innovation"]
+    },
+    {
+      "level": "Principal ML Engineer / ML Architect",
+      "experience": "7-10 ans",
+      "salary": {
+        "min": 250000,
+        "max": 320000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["ML strategy", "Cross-functional leadership", "Platform architecture", "Mentoring teams"]
+    },
+    {
+      "level": "Head of ML / VP Engineering",
+      "experience": "10+ ans",
+      "salary": {
+        "min": 320000,
+        "max": 450000,
+        "currency": "MAD"
+      },
+      "responsibilities": ["ML vision", "Team building", "Business strategy", "Executive decisions"]
+    }
+  ],
+  "practicalProjects": [
+    {
+      "name": "Customer Lifetime Value Prediction",
+      "description": "Prédisez la CLV avec régression avancée, feature engineering et segmentation client",
+      "techniques": ["Regression", "Feature Engineering", "Time Series", "Segmentation"],
+      "duration": "2-3 semaines"
+    },
+    {
+      "name": "Fraud Detection System",
+      "description": "Système de détection de fraude en temps réel avec gestion du déséquilibre des classes",
+      "techniques": ["Classification", "Anomaly Detection", "Ensemble Methods", "Real-time Processing"],
+      "duration": "3-4 semaines"
+    },
+    {
+      "name": "Demand Forecasting Platform",
+      "description": "Plateforme de prévision de demande multi-produits avec incertitude quantifiée",
+      "techniques": ["Time Series", "Ensemble Methods", "Uncertainty Quantification", "AutoML"],
+      "duration": "4-5 semaines"
+    },
+    {
+      "name": "Recommendation Engine",
+      "description": "Moteur de recommandation hybride avec A/B testing et évaluation business",
+      "techniques": ["Collaborative Filtering", "Matrix Factorization", "Hybrid Systems", "A/B Testing"],
+      "duration": "3-4 semaines"
+    },
+    {
+      "name": "Credit Risk Assessment",
+      "description": "Modèle de scoring crédit avec interprétabilité et conformité réglementaire",
+      "techniques": ["Classification", "Feature Selection", "Model Interpretation", "Regulatory Compliance"],
+      "duration": "4-5 semaines"
+    }
+  ]
+}
