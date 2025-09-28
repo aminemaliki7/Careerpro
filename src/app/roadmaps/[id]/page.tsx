@@ -1,3 +1,4 @@
+// File: src/app/roadmaps/[id]/page.tsx
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import {
@@ -5,22 +6,21 @@ import {
   DollarSign,
   TrendingUp,
   ArrowLeft,
-  Trophy,
   Users,
   Target
 } from 'lucide-react';
 import { getRoadmapById, getAllRoadmaps } from '@/lib/roadmaps';
+import type { Roadmap, RoadmapStep } from '@/types/roadmap';
 import CourseModalClient from './CourseModalClient';
 
 interface RoadmapDetailPageProps {
-  params: Promise<{
-    id: string;
-  }>;
+  params: Promise<{ id: string }>;
 }
 
 export default async function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
   const { id } = await params;
-  const roadmap = getRoadmapById(id);
+  const roadmap: Roadmap | undefined = getRoadmapById(id);
+
   if (!roadmap) {
     notFound();
   }
@@ -28,60 +28,50 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
   const formatSalary = (min: number, max: number, currency: string = 'USD') => {
     const formatter = new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency,
+      currency,
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
     return `${formatter.format(min)} - ${formatter.format(max)}`;
   };
 
-  const getDemandColor = (demand: string) => {
+  const getDemandColor = (demand: Roadmap['demandLevel']) => {
     switch (demand) {
-      case 'Very High':
-        return 'text-green-600 bg-green-100';
-      case 'High':
-        return 'text-blue-600 bg-blue-100';
-      case 'Medium':
-        return 'text-yellow-600 bg-yellow-100';
-      case 'Low':
-        return 'text-red-600 bg-red-100';
-      default:
-        return 'text-gray-600 bg-gray-100';
+      case 'Very High': return 'text-green-600 bg-green-100';
+      case 'High': return 'text-blue-600 bg-blue-100';
+      case 'Medium': return 'text-yellow-600 bg-yellow-100';
+      case 'Low': return 'text-red-600 bg-red-100';
+      default: return 'text-gray-600 bg-gray-100';
     }
   };
 
-  const getStepColor = (difficulty: string) => {
+  const getStepColor = (difficulty: RoadmapStep['difficulty']) => {
     switch (difficulty) {
-      case 'Beginner':
-        return 'bg-emerald-100 border-emerald-300 text-emerald-800';
-      case 'Intermediate':
-        return 'bg-amber-100 border-amber-300 text-amber-800';
-      case 'Advanced':
-        return 'bg-red-100 border-red-300 text-red-800';
-      default:
-        return 'bg-blue-100 border-blue-300 text-blue-800';
+      case 'Beginner': return 'bg-emerald-100 border-emerald-300 text-emerald-800';
+      case 'Intermediate': return 'bg-amber-100 border-amber-300 text-amber-800';
+      case 'Advanced': return 'bg-red-100 border-red-300 text-red-800';
+      default: return 'bg-blue-100 border-blue-300 text-blue-800';
     }
   };
 
   // Group steps into rows for visual flow
-  const createRoadmapFlow = () => {
-    const steps = roadmap.steps;
-    const rows: any[][] = [];
-    let currentRow: any[] = [];
-    
-    steps.forEach((step: any, index: number) => {
-      // Every 3 steps start a new row
+  const createRoadmapFlow = (): RoadmapStep[][] => {
+    const steps: RoadmapStep[] = roadmap.steps;
+    const rows: RoadmapStep[][] = [];
+    let currentRow: RoadmapStep[] = [];
+
+    steps.forEach((step, index) => {
       if (index > 0 && index % 3 === 0) {
         rows.push([...currentRow]);
         currentRow = [];
       }
       currentRow.push(step);
     });
-    
+
     if (currentRow.length > 0) {
       rows.push(currentRow);
     }
-    
+
     return rows;
   };
 
@@ -133,7 +123,7 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
                 Click on any step to discover recommended courses and resources.
               </p>
             </div>
-            
+
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white rounded-lg p-6 shadow-sm">
               <div className="text-center">
@@ -163,15 +153,16 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
         </div>
       </section>
 
+      {/* Visual Roadmap + Sidebar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid lg:grid-cols-4 gap-8">
-          {/* Main Content - Visual Roadmap */}
+          {/* Main Content */}
           <div className="lg:col-span-3">
             {/* Skills Overview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Skills in This Domain</h2>
               <div className="flex flex-wrap gap-2">
-                {roadmap.tags.map((skill: string, index: number) => (
+                {roadmap.tags.map((skill, index) => (
                   <span
                     key={`skill-${skill}-${index}`}
                     className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium"
@@ -185,98 +176,53 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
               </p>
             </div>
 
-            {/* Visual Learning Path */}
+            {/* Visual Roadmap Flow */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 overflow-x-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Career Development Path</h2>
-                <div className="flex items-center gap-4 text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-emerald-100 border border-emerald-300 rounded"></div>
-                    <span>Entry Level</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-amber-100 border border-amber-300 rounded"></div>
-                    <span>Mid Level</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-                    <span>Senior Level</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  💡 <strong>Click on any step</strong> to see recommended courses and learning resources for that specific skill area.
-                </p>
-              </div>
-
-              {/* Visual Roadmap Flow */}
-              <div className="relative min-w-max">
-                {roadmapFlow.map((row, rowIndex) => (
-                  <div key={rowIndex} className="relative mb-16">
-                    {/* Row connector line to next row */}
-                    {rowIndex < roadmapFlow.length - 1 && (
-                      <div className="absolute left-1/2 -bottom-8 w-0.5 h-8 bg-gray-300 transform -translate-x-0.5"></div>
-                    )}
-                    
-                    <div className="flex items-center justify-center gap-8 flex-wrap">
-                      {row.map((step, stepIndex) => (
-                        <CourseModalClient
-                          key={step.id}
-                          step={step}
-                          stepIndex={stepIndex}
-                          isLastInRow={stepIndex === row.length - 1}
-                          roadmapIndex={roadmap.steps.indexOf(step)}
-                          stepColor={getStepColor(step.difficulty)}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Static Progress Info */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="text-center text-gray-600">
-                  <p className="text-sm mb-2">📈 Follow this roadmap to build expertise in {roadmap.title}</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2 max-w-md mx-auto">
-                    <div className="bg-blue-500 h-2 rounded-full w-0 transition-all duration-300"></div>
+              {roadmapFlow.map((row, rowIndex) => (
+                <div key={rowIndex} className="relative mb-16">
+                  {rowIndex < roadmapFlow.length - 1 && (
+                    <div className="absolute left-1/2 -bottom-8 w-0.5 h-8 bg-gray-300 transform -translate-x-0.5"></div>
+                  )}
+                  <div className="flex items-center justify-center gap-8 flex-wrap">
+                    {row.map((step, stepIndex) => (
+                      <CourseModalClient
+                        key={step.id}
+                        step={step}
+                        stepIndex={stepIndex}
+                        isLastInRow={stepIndex === row.length - 1}
+                        roadmapIndex={roadmap.steps.indexOf(step)}
+                        stepColor={getStepColor(step.difficulty)}
+                      />
+                    ))}
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-6">
-            {/* Quick Info */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-lg font-bold text-gray-900 mb-4">Career Info</h3>
-              
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Learning Timeline</span>
                   <span className="font-semibold">{roadmap.totalDuration}</span>
                 </div>
-                
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Career Stages</span>
                   <span className="font-semibold">{roadmap.steps.length}</span>
                 </div>
-                
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Experience Level</span>
                   <span className="font-semibold">{roadmap.level}</span>
                 </div>
-                
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600">Market Demand</span>
                   <span className={`px-2 py-1 rounded text-sm font-medium ${getDemandColor(roadmap.demandLevel)}`}>
                     {roadmap.demandLevel}
                   </span>
                 </div>
-                
                 <div className="border-t pt-4">
                   <div className="text-gray-600 mb-1">Average Salary Range</div>
                   <div className="text-xl font-bold text-green-600">
@@ -284,47 +230,6 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
                   </div>
                   <div className="text-sm text-gray-500">per year</div>
                 </div>
-              </div>
-              
-              <div className="mt-6 pt-6 border-t">
-                <div className="text-xs text-gray-500 mb-2">Last updated: {new Date(roadmap.lastUpdated).toLocaleDateString()}</div>
-                <div className="text-xs text-gray-500">By: {roadmap.author}</div>
-              </div>
-              
-              <div className="mt-6 p-3 bg-blue-50 rounded-lg text-center">
-                <p className="text-sm text-blue-800 font-medium">Free Career Guidance</p>
-                <p className="text-xs text-blue-600 mt-1">Follow this roadmap at your own pace</p>
-              </div>
-            </div>
-
-            {/* Related Paths */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Explore More</h3>
-              <div className="space-y-3">
-                <Link
-                  href={`/roadmaps?category=${encodeURIComponent(roadmap.category)}`}
-                  className="block text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  → Other {roadmap.category} career paths
-                </Link>
-                <Link
-                  href={`/roadmaps?level=${encodeURIComponent(roadmap.level)}`}
-                  className="block text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  → More {roadmap.level} level paths
-                </Link>
-                <Link
-                  href={`/jobs?role=${encodeURIComponent(roadmap.title)}`}
-                  className="block text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  → Current {roadmap.title} job opportunities
-                </Link>
-                <Link
-                  href={`/blog?topic=${encodeURIComponent(roadmap.category)}`}
-                  className="block text-blue-600 hover:text-blue-800 text-sm"
-                >
-                  → {roadmap.category} industry insights
-                </Link>
               </div>
             </div>
           </div>

@@ -1,3 +1,5 @@
+import { ReactNode } from 'react'
+
 export interface BlogPost {
   title: string
   description: string
@@ -32,9 +34,8 @@ export interface BlogPostWithContent extends BlogPost {
   content: string
   readingTime: number
   roadmap: JobRoadmap
-  affiliateLink?: string; // Add this line
-  coverImage?: string; // 👈 add this
-
+  affiliateLink?: string
+  coverImage?: string
 }
 
 export interface JobRoadmap {
@@ -43,6 +44,10 @@ export interface JobRoadmap {
 }
 
 export interface RoadmapStep {
+  difficulty: ReactNode
+  duration: ReactNode
+  skills: string[] | ReactNode[]
+  alternatives: string[] | ReactNode[]
   stepNumber: number
   title: string
   description: string

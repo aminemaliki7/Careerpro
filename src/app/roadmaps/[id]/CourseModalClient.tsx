@@ -75,7 +75,6 @@ interface CourseModalClientProps {
 
 const CourseModalClient = ({
   step,
-  stepIndex,
   isLastInRow,
   roadmapIndex,
   stepColor

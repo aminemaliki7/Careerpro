@@ -2,27 +2,41 @@
 
 // Define a structure for resources that are NOT external courses (e.g., Books, Projects, Practice)
 export interface RoadmapResource {
-  type: 'Book' | 'Project' | 'Certification' | 'Practice';
+  type: 'Book' | 'Project' | 'Certification' | 'Practice' | 'Course';
   title: string;
   url?: string;
   description?: string;
+  
+  // Optional fields for courses
+  thumbnailUrl?: string;
+  provider?: string;
+  rating?: number;
+  students?: number;
+  duration?: string;
+  level?: 'Beginner' | 'Intermediate' | 'Advanced';
+  price?: {
+    current: number;
+    original: number;
+    currency: string;
+  };
+  isBestseller?: boolean;
+  isPopular?: boolean;
 }
 
 export interface RoadmapStep {
   id: string;
   title: string;
   description: string;
-  duration: string; // e.g., "2-3 months"
+  duration: string;
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   skills: string[];
-  
-  // Stores non-course resources
-  resources: RoadmapResource[]; 
-  
-  // Stores IDs used to fetch detailed course objects from centralized data
-  recommendedCourseIds: string[]; 
+  resources: RoadmapResource[];
+  recommendedCourseIds: string[];
   prerequisites?: string[];
+  stepNumber?: number;
+  estimatedTime?: string;
 }
+
 
 export interface Roadmap {
   id: string;
@@ -36,6 +50,7 @@ export interface Roadmap {
     max: number;
     currency: string;
   };
+
   demandLevel: 'Low' | 'Medium' | 'High' | 'Very High';
   steps: RoadmapStep[];
   tags: string[];
