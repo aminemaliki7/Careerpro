@@ -26,13 +26,21 @@
         {
           "type": "Course",
           "title": "HTML & CSS Complete Course",
-          "url": "https://example.com",
-          "description": "Comprehensive beginner-friendly course"
+          "url": "https://udemy.com/course/html-css-complete",
+          "provider": "Udemy",
+          "rating": 4.7,
+          "students": 85000,
+          "duration": "15 hours",
+          "price": { "original": 99.99, "current": 19.99, "currency": "USD" },
+          "level": "Beginner",
+          "description": "Comprehensive beginner-friendly course to master HTML & CSS.",
+          "thumbnailUrl": "/img/html-css-course.jpg",
+          "isBestseller": true
         },
         {
           "type": "Practice",
           "title": "Build 5 Static Websites",
-          "description": "Practice responsive layouts"
+          "description": "Practice responsive layouts and flexbox/grid concepts"
         }
       ]
     },
@@ -47,12 +55,21 @@
         {
           "type": "Course",
           "title": "Modern JavaScript Course",
-          "url": "https://example.com"
+          "url": "https://coursera.org/learn/modern-javascript",
+          "provider": "Coursera",
+          "rating": 4.8,
+          "students": 50000,
+          "duration": "20 hours",
+          "price": { "original": 49.99, "current": 0, "currency": "USD" },
+          "level": "Beginner",
+          "description": "Deep dive into modern JavaScript with practical exercises.",
+          "thumbnailUrl": "/img/javascript-course.jpg",
+          "isPopular": true
         },
         {
           "type": "Project",
           "title": "Interactive Calculator",
-          "description": "Build a functional calculator"
+          "description": "Build a fully functional calculator using vanilla JS"
         }
       ],
       "prerequisites": ["HTML & CSS Fundamentals"]
@@ -68,12 +85,20 @@
         {
           "type": "Course",
           "title": "React Complete Guide",
-          "url": "https://example.com"
+          "url": "https://pluralsight.com/courses/react-complete-guide",
+          "provider": "Pluralsight",
+          "rating": 4.6,
+          "students": 42000,
+          "duration": "25 hours",
+          "price": { "original": 39.99, "current": 39.99, "currency": "USD" },
+          "level": "Intermediate",
+          "description": "From basic components to hooks and state management.",
+          "thumbnailUrl": "/img/react-course.jpg"
         },
         {
           "type": "Project",
           "title": "Todo App with React",
-          "description": "Build a full-featured todo application"
+          "description": "Build a full-featured todo application to practice React skills"
         }
       ],
       "prerequisites": ["JavaScript Fundamentals"]
@@ -89,12 +114,20 @@
         {
           "type": "Course",
           "title": "Advanced React Patterns",
-          "url": "https://example.com"
+          "url": "https://linkedin.com/learning/advanced-react-patterns",
+          "provider": "LinkedIn Learning",
+          "rating": 4.5,
+          "students": 18000,
+          "duration": "12 hours",
+          "price": { "original": 29.99, "current": 0, "currency": "USD" },
+          "level": "Advanced",
+          "description": "Master advanced React concepts and TypeScript integration.",
+          "thumbnailUrl": "/img/advanced-react-course.jpg"
         },
         {
           "type": "Project",
           "title": "E-commerce Dashboard",
-          "description": "Complex React application with TypeScript"
+          "description": "Complex React application with TypeScript and context management"
         }
       ],
       "prerequisites": ["React Fundamentals"]

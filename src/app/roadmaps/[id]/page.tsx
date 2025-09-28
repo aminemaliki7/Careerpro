@@ -5,13 +5,12 @@ import {
   DollarSign,
   TrendingUp,
   ArrowLeft,
-  BookOpen,
-  ExternalLink,
   Trophy,
   Users,
   Target
 } from 'lucide-react';
 import { getRoadmapById, getAllRoadmaps } from '@/lib/roadmaps';
+import CourseModalClient from './CourseModalClient';
 
 interface RoadmapDetailPageProps {
   params: Promise<{
@@ -51,22 +50,45 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
     }
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const getStepColor = (difficulty: string) => {
     switch (difficulty) {
       case 'Beginner':
-        return 'text-green-600 bg-green-100';
+        return 'bg-emerald-100 border-emerald-300 text-emerald-800';
       case 'Intermediate':
-        return 'text-yellow-600 bg-yellow-100';
+        return 'bg-amber-100 border-amber-300 text-amber-800';
       case 'Advanced':
-        return 'text-red-600 bg-red-100';
+        return 'bg-red-100 border-red-300 text-red-800';
       default:
-        return 'text-gray-600 bg-gray-100';
+        return 'bg-blue-100 border-blue-300 text-blue-800';
     }
   };
 
+  // Group steps into rows for visual flow
+  const createRoadmapFlow = () => {
+    const steps = roadmap.steps;
+    const rows: any[][] = [];
+    let currentRow: any[] = [];
+    
+    steps.forEach((step: any, index: number) => {
+      // Every 3 steps start a new row
+      if (index > 0 && index % 3 === 0) {
+        rows.push([...currentRow]);
+        currentRow = [];
+      }
+      currentRow.push(step);
+    });
+    
+    if (currentRow.length > 0) {
+      rows.push(currentRow);
+    }
+    
+    return rows;
+  };
+
+  const roadmapFlow = createRoadmapFlow();
+
   return (
     <div className="min-h-screen bg-gray-50">
-      
       {/* Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -98,12 +120,20 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
             </div>
             
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              {roadmap.title} <span className="text-blue-600">Roadmap</span>
+              {roadmap.title} <span className="text-blue-600">Career Path</span>
             </h1>
             
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
               {roadmap.description}
             </p>
+            
+            <div className="bg-white/80 backdrop-blur-sm rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-700">
+                📚 <strong>Free guidance:</strong> This roadmap shows you the complete learning path to become a {roadmap.title}. 
+                Click on any step to discover recommended courses and resources.
+              </p>
+            </div>
+            
             {/* Quick Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 bg-white rounded-lg p-6 shadow-sm">
               <div className="text-center">
@@ -134,14 +164,14 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Main Content */}
-          <div className="lg:col-span-2">
+        <div className="grid lg:grid-cols-4 gap-8">
+          {/* Main Content - Visual Roadmap */}
+          <div className="lg:col-span-3">
             {/* Skills Overview */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Skills You&apos;ll Master</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Key Skills in This Domain</h2>
               <div className="flex flex-wrap gap-2">
-                {roadmap.tags.map((skill, index) => (
+                {roadmap.tags.map((skill: string, index: number) => (
                   <span
                     key={`skill-${skill}-${index}`}
                     className="px-3 py-2 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium"
@@ -150,134 +180,88 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
                   </span>
                 ))}
               </div>
+              <p className="text-sm text-gray-600 mt-4">
+                These are the core skills professionals in this domain typically master throughout their career journey.
+              </p>
             </div>
 
-            {/* Learning Path */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Learning Path</h2>
-              
-              <div className="space-y-6">
-                {roadmap.steps.map((step, index) => (
-                  <div key={step.id} className="relative">
-                    {/* Step Connector Line */}
-                    {index < roadmap.steps.length - 1 && (
-                      <div className="absolute left-6 top-16 w-0.5 h-16 bg-gray-200"></div>
+            {/* Visual Learning Path */}
+            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 overflow-x-auto">
+              <div className="flex items-center justify-between mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Career Development Path</h2>
+                <div className="flex items-center gap-4 text-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-emerald-100 border border-emerald-300 rounded"></div>
+                    <span>Entry Level</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-amber-100 border border-amber-300 rounded"></div>
+                    <span>Mid Level</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
+                    <span>Senior Level</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mb-6 p-4 bg-blue-50 rounded-lg">
+                <p className="text-sm text-blue-800">
+                  💡 <strong>Click on any step</strong> to see recommended courses and learning resources for that specific skill area.
+                </p>
+              </div>
+
+              {/* Visual Roadmap Flow */}
+              <div className="relative min-w-max">
+                {roadmapFlow.map((row, rowIndex) => (
+                  <div key={rowIndex} className="relative mb-16">
+                    {/* Row connector line to next row */}
+                    {rowIndex < roadmapFlow.length - 1 && (
+                      <div className="absolute left-1/2 -bottom-8 w-0.5 h-8 bg-gray-300 transform -translate-x-0.5"></div>
                     )}
                     
-                    <div className="flex gap-4">
-                      {/* Step Number */}
-                      <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold text-lg">
-                          {index + 1}
-                        </div>
-                      </div>
-                      
-                      {/* Step Content */}
-                      <div className="flex-1 bg-gray-50 rounded-lg p-6">
-                        <div className="flex items-start justify-between mb-3">
-                          <h3 className="text-xl font-bold text-gray-900">{step.title}</h3>
-                          <div className="flex items-center gap-2">
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getDifficultyColor(step.difficulty)}`}>
-                              {step.difficulty}
-                            </span>
-                            <span className="text-sm text-gray-500 flex items-center gap-1">
-                              <Clock className="w-4 h-4" />
-                              {step.duration}
-                            </span>
-                          </div>
-                        </div>
-                        
-                        <p className="text-gray-600 mb-4">{step.description}</p>
-                        
-                        {/* Prerequisites */}
-                        {step.prerequisites && step.prerequisites.length > 0 && (
-                          <div className="mb-4">
-                            <h4 className="text-sm font-semibold text-gray-700 mb-2">Prerequisites:</h4>
-                            <div className="flex flex-wrap gap-1">
-                              {step.prerequisites.map((prereq, prereqIndex) => (
-                                <span
-                                  key={`prereq-${prereq}-${prereqIndex}`}
-                                  className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded"
-                                >
-                                  {prereq}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        
-                        {/* Skills */}
-                        <div className="mb-4">
-                          <h4 className="text-sm font-semibold text-gray-700 mb-2">Skills you&apos;ll learn:</h4>
-                          <div className="flex flex-wrap gap-1">
-                            {step.skills.map((skill, skillIndex) => (
-                              <span
-                                key={`step-skill-${skill}-${skillIndex}`}
-                                className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded"
-                              >
-                                {skill}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        {/* Resources */}
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-700 mb-2">Learning Resources:</h4>
-                          <div className="space-y-2">
-                            {step.resources.map((resource, resourceIndex) => (
-                              <div
-                                key={`resource-${resource.title}-${resourceIndex}`}
-                                className="flex items-start gap-2 p-3 bg-white rounded border border-gray-200"
-                              >
-                                <BookOpen className="w-4 h-4 text-blue-600 mt-0.5" />
-                                <div className="flex-1">
-                                  <div className="flex items-center gap-2">
-                                    <span className="font-medium text-gray-900">{resource.title}</span>
-                                    <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">
-                                      {resource.type}
-                                    </span>
-                                    {resource.url && (
-                                      <a
-                                        href={resource.url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
-                                      >
-                                        <ExternalLink className="w-3 h-3" />
-                                      </a>
-                                    )}
-                                  </div>
-                                  {resource.description && (
-                                    <p className="text-sm text-gray-600 mt-1">{resource.description}</p>
-                                  )}
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+                    <div className="flex items-center justify-center gap-8 flex-wrap">
+                      {row.map((step, stepIndex) => (
+                        <CourseModalClient
+                          key={step.id}
+                          step={step}
+                          stepIndex={stepIndex}
+                          isLastInRow={stepIndex === row.length - 1}
+                          roadmapIndex={roadmap.steps.indexOf(step)}
+                          stepColor={getStepColor(step.difficulty)}
+                        />
+                      ))}
                     </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Static Progress Info */}
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <div className="text-center text-gray-600">
+                  <p className="text-sm mb-2">📈 Follow this roadmap to build expertise in {roadmap.title}</p>
+                  <div className="w-full bg-gray-200 rounded-full h-2 max-w-md mx-auto">
+                    <div className="bg-blue-500 h-2 rounded-full w-0 transition-all duration-300"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6"> {/* Added space-y-6 for consistent spacing */}
+          <div className="lg:col-span-1 space-y-6">
             {/* Quick Info */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Quick Info</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Career Info</h3>
               
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Total Duration</span>
+                  <span className="text-gray-600">Learning Timeline</span>
                   <span className="font-semibold">{roadmap.totalDuration}</span>
                 </div>
                 
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600">Learning Steps</span>
+                  <span className="text-gray-600">Career Stages</span>
                   <span className="font-semibold">{roadmap.steps.length}</span>
                 </div>
                 
@@ -307,42 +291,45 @@ export default async function RoadmapDetailPage({ params }: RoadmapDetailPagePro
                 <div className="text-xs text-gray-500">By: {roadmap.author}</div>
               </div>
               
-              <button className="w-full mt-6 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2">
-                <Trophy className="w-4 h-4" />
-                Start This Roadmap
-              </button>
+              <div className="mt-6 p-3 bg-blue-50 rounded-lg text-center">
+                <p className="text-sm text-blue-800 font-medium">Free Career Guidance</p>
+                <p className="text-xs text-blue-600 mt-1">Follow this roadmap at your own pace</p>
+              </div>
             </div>
 
             {/* Related Paths */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">Related Paths</h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Explore More</h3>
               <div className="space-y-3">
                 <Link
                   href={`/roadmaps?category=${encodeURIComponent(roadmap.category)}`}
                   className="block text-blue-600 hover:text-blue-800 text-sm"
                 >
-                  → View all {roadmap.category} roadmaps
+                  → Other {roadmap.category} career paths
                 </Link>
                 <Link
                   href={`/roadmaps?level=${encodeURIComponent(roadmap.level)}`}
                   className="block text-blue-600 hover:text-blue-800 text-sm"
                 >
-                  → Browse {roadmap.level} positions
+                  → More {roadmap.level} level paths
                 </Link>
                 <Link
                   href={`/jobs?role=${encodeURIComponent(roadmap.title)}`}
                   className="block text-blue-600 hover:text-blue-800 text-sm"
                 >
-                  → Find {roadmap.title} jobs
+                  → Current {roadmap.title} job opportunities
+                </Link>
+                <Link
+                  href={`/blog?topic=${encodeURIComponent(roadmap.category)}`}
+                  className="block text-blue-600 hover:text-blue-800 text-sm"
+                >
+                  → {roadmap.category} industry insights
                 </Link>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Affiliate Disclaimer Footer */}
-    
     </div>
   );
 }

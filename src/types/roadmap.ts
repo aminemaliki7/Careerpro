@@ -1,4 +1,13 @@
 // src/types/roadmap.ts
+
+// Define a structure for resources that are NOT external courses (e.g., Books, Projects, Practice)
+export interface RoadmapResource {
+  type: 'Book' | 'Project' | 'Certification' | 'Practice';
+  title: string;
+  url?: string;
+  description?: string;
+}
+
 export interface RoadmapStep {
   id: string;
   title: string;
@@ -6,12 +15,12 @@ export interface RoadmapStep {
   duration: string; // e.g., "2-3 months"
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   skills: string[];
-  resources: {
-    type: 'Course' | 'Book' | 'Project' | 'Certification' | 'Practice';
-    title: string;
-    url?: string;
-    description?: string;
-  }[];
+  
+  // Stores non-course resources
+  resources: RoadmapResource[]; 
+  
+  // Stores IDs used to fetch detailed course objects from centralized data
+  recommendedCourseIds: string[]; 
   prerequisites?: string[];
 }
 
