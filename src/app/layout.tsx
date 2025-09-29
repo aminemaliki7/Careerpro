@@ -2,8 +2,8 @@
 import { type Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Geist, Geist_Mono } from 'next/font/google';
-import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper'; // Import the new wrapper
-
+import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper';
+import Script from 'next/script'; // <-- import Script
 import './globals.css';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 
@@ -25,7 +25,6 @@ export const metadata: Metadata = {
   },
 };
 
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -34,8 +33,16 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          {/* Google AdSense */}
+          <Script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1955463530202020"
+            crossOrigin="anonymous"
+          />
+        </head>
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                  <GoogleAnalytics />
+          <GoogleAnalytics />
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>
       </html>
