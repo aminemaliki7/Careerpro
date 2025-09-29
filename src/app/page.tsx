@@ -90,6 +90,96 @@ export default async function HomePage() {
   </div>
 </section>
 
+
+{/* Featured Posts Section - Reduced top padding */}
+{featuredPosts.length > 0 && (
+  <section className="pt-16 pb-32 bg-gray-50">
+    <div className="max-w-7xl mx-auto px-6">
+      <div className="text-center mb-20">
+        <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
+          Insights
+        </h2>
+        <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
+          Career guidance, industry insights, and tech trends to help you stay ahead.
+        </p>
+      </div>
+      
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {featuredPosts.map((post, index) => (
+          <article
+            key={post.slug ? `post-${post.slug}-${index}` : `post-${index}`}
+            className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60"
+          >
+            {/* Cover Image */}
+            {post.coverImage && (
+             <div className="overflow-hidden">
+  <Image
+    src={post.coverImage}
+    alt={post.title}
+    width={600}
+    height={700}
+    className="w-full h-48 object-cover object-top transition-transform duration-500 group-hover:scale-105"
+  />
+</div>
+
+            )}
+
+            <div className="p-8">
+              {/* Meta info */}
+              <div className="flex items-center gap-4 text-xs text-gray-400 mb-6 font-medium">
+                <div className="flex items-center gap-1">
+                  <CalendarDays className="w-3 h-3" />
+                  {formatDate(post.publishedAt)}
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {Math.ceil(post.readingTime || 0)} min
+                </div>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl font-medium text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                <Link href={`/blog/${post.slug}`}>
+                  {post.title}
+                </Link>
+              </h3>
+
+              {/* Description */}
+              <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
+                {post.description}
+              </p>
+
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mb-8">
+                {post.tags.slice(0, 2).map((tag, tagIndex) => (
+                  <Link
+                    href={`/tags/${tag}`}
+                    key={`tag-${tag}-${tagIndex}`}
+                    className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors"
+                  >
+                    {tag}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Read more */}
+              <Link
+                href={`/blog/${post.slug}`}
+                className="group/link inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm"
+              >
+                Read article
+                <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+
+      
       {/* Jobs Section - Apple card design - Reduced top padding */}
       <section className="pt-16 pb-32 bg-white">
   <div className="max-w-7xl mx-auto px-6">
@@ -210,75 +300,7 @@ export default async function HomePage() {
   </div>
 </section>
 
-      {/* Featured Posts Section - Reduced top padding */}
-      {featuredPosts.length > 0 && (
-        <section className="pt-16 pb-32 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-                Insights
-              </h2>
-              <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
-                Career guidance and industry insights to help you succeed.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredPosts.map((post, index) => (
-                <article
-                  key={post.slug ? `post-${post.slug}-${index}` : `post-${index}`}
-                  className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60"
-                >
-                  {/* Meta info */}
-                  <div className="flex items-center gap-4 text-xs text-gray-400 mb-6 font-medium">
-                    <div className="flex items-center gap-1">
-                      <CalendarDays className="w-3 h-3" />
-                      {formatDate(post.publishedAt)}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3 h-3" />
-                      {Math.ceil(post.readingTime || 0)} min
-                    </div>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-xl font-medium text-gray-900 mb-4 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                    <Link href={`/blog/${post.slug}`}>
-                      {post.title}
-                    </Link>
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">
-                    {post.description}
-                  </p>
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {post.tags.slice(0, 2).map((tag, tagIndex) => (
-                      <span
-                        key={`tag-${tag}-${tagIndex}`}
-                        className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  {/* Read more */}
-                  <Link
-                    href={`/blog/${post.slug}`}
-                    className="group/link inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm"
-                  >
-                    Read article
-                    <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-                  </Link>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+      
 
       {/* Roadmaps Section - Reduced top padding */}
       <section className="pt-16 pb-32 bg-white">
