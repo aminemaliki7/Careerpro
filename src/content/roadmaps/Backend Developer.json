@@ -1,13 +1,13 @@
 {
   "id": "backend-developer",
   "title": "Backend Developer",
-  "description": "Develop robust and scalable backend applications with Java, Spring Boot, or Node.js.",
+  "description": "Develop robust and scalable backend applications with Java, Spring Boot, or Node.js. Focus on server-side logic, APIs, and database integration.",
   "category": "Development",
   "level": "Mid Level",
   "totalDuration": "7-10 months",
   "avgSalary": {
-    "min": 90000,
-    "max": 180000,
+    "min": 150000,
+    "max": 250000,
     "currency": "MAD"
   },
   "demandLevel": "High",
@@ -17,31 +17,34 @@
     "Node.js",
     "APIs",
     "SQL",
-    "Docker"
+    "NoSQL",
+    "Docker",
+    "Microservices"
   ],
-  "lastUpdated": "2025-09-28",
+  "lastUpdated": "2025-09-29",
   "author": "Hirely.ma",
   "steps": [
     {
       "id": "programming-basics",
       "title": "Programming Fundamentals",
-      "description": "Learn the core concepts with Java or Python.",
+      "description": "Learn the core concepts of Object-Oriented Programming (OOP), data structures, and algorithms using a language like Java or Python. This is the bedrock of all backend development.",
       "duration": "4-5 weeks",
       "difficulty": "Beginner",
       "skills": [
         "OOP",
         "Data Structures",
-        "Algorithms"
+        "Algorithms",
+        "Version Control (Git)"
       ],
       "resources": [
         {
           "type": "Course",
-          "title": "Java Masterclass 2025: 130+ Hours of Expert Lessons",
-          "url": "https://www.udemy.com/course/java-the-complete-java-developer-course/?couponCode=PMNVD2525",
+          "title": "The Complete Java Masterclass",
+          "url": "https://www.udemy.com/course/java-the-complete-java-developer-course/",
           "provider": "Udemy",
           "rating": 4.6,
           "students": 929734,
-          "duration": "45 sections • 736 sessions • Total duration: 135 h 21 min",
+          "duration": "135 h",
           "price": {
             "original": 64.99,
             "current": 11.99,
@@ -55,27 +58,28 @@
         {
           "type": "Practice",
           "title": "Mini-projects",
-          "description": "Implement simple algorithms in Java (calculator, CLI task management)."
+          "description": "Implement simple algorithms (e.g., calculator, command-line task management) to solidify your understanding of core concepts."
         }
       ]
     },
     {
       "id": "databases",
       "title": "Databases & SQL",
-      "description": "Master relational and NoSQL databases.",
+      "description": "Master relational and NoSQL databases, learning how to design schemas, write efficient queries, and manage data. Database proficiency is non-negotiable for a backend developer.",
       "duration": "3-4 weeks",
       "difficulty": "Beginner",
       "skills": [
         "SQL",
         "PostgreSQL",
         "MySQL",
-        "MongoDB"
+        "MongoDB",
+        "Database Design"
       ],
       "resources": [
         {
           "type": "Course",
-          "title": "SQL & PostgreSQL - Complete Mastery",
-          "url": "https://coursera.org/affiliate/sql-pro-id-456",
+          "title": "PostgreSQL for Everybody Specialization",
+          "url": "https://www.coursera.org/specializations/postgresql-for-everybody",
           "provider": "Coursera",
           "rating": 4.7,
           "students": 45000,
@@ -86,74 +90,93 @@
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Learn SQL with practical exercises on PostgreSQL (optional paid certification).",
+          "description": "This specialization from the University of Michigan provides a deep dive into using PostgreSQL, covering everything from database design to complex queries.",
           "thumbnailUrl": "/img/sql-postgre.jpg",
           "isPopular": true
         },
         {
           "type": "Project",
           "title": "Library Management",
-          "description": "Build a SQL database to manage books and loans via the command line."
+          "description": "Build a SQL database to manage books and loans via a command-line interface."
         }
       ]
     },
     {
       "id": "backend-frameworks",
-      "title": "Backend Frameworks",
-      "description": "Learn to create REST APIs with Spring Boot or Express.js.",
+      "title": "Backend Frameworks & APIs",
+      "description": "Learn to create robust RESTful APIs using a popular backend framework like Spring Boot (Java) or Express.js (Node.js). This phase focuses on building real-world web services.",
       "duration": "6-8 weeks",
       "difficulty": "Intermediate",
       "skills": [
         "Spring Boot",
-        "REST APIs",
-        "Express.js",
-        "Validation"
+        "Node.js",
+        "RESTful APIs",
+        "API Design",
+        "Express.js"
       ],
       "resources": [
         {
           "type": "Course",
-          "title": "Developing Robust REST APIs with Spring Boot",
-          "url": "https://pluralsight.com/affiliate/spring-api-id-789",
-          "provider": "Pluralsight",
-          "rating": 4.5,
+          "title": "Master Spring Boot Enterprise Development. Learn to build, deploy, and scale enterprise Spring Boot applications with microservices and cloud.",
+          "url": "https://www.coursera.org/specializations/spring-and-spring-boot-development",
+          "provider": "Udemy",
+          "rating": 4.6,
           "students": 22000,
-          "duration": "15 hours",
+          "duration": "15 h",
           "price": {
             "original": 29.99,
             "current": 29.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Focus on security, performance, and unit testing with Spring.",
+          "description": "A very popular course for mastering the latest versions of Spring Boot and Spring Framework to build REST APIs and web applications.",
           "thumbnailUrl": "/img/spring-boot-api.jpg"
         },
         {
           "type": "Project",
           "title": "User Management REST API",
-          "description": "Develop a complete CRUD API with Spring Boot, JWT security, and MySQL."
+          "description": "Develop a complete CRUD API with Spring Boot, JWT security, and a MySQL database."
+        },
+        {
+          "type": "Course",
+          "title": "Node.js, Express, MongoDB & More: The Complete Bootcamp",
+          "url": "https://www.udemy.com/course/nodejs-express-mongodb-bootcamp/",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 287000,
+          "duration": "42 h",
+          "price": {
+            "original": 159.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "All Levels",
+          "description": "Master Node.js by building a real-world RESTful API and web app.",
+          "thumbnailUrl": "/img/nodejs-bootcamp.jpg",
+          "isBestseller": true
         }
       ]
     },
     {
       "id": "advanced-backend",
-      "title": "Advanced Concepts",
-      "description": "Microservices, JWT Authentication, CI/CD, and Containerization.",
+      "title": "Advanced Concepts & Deployment",
+      "description": "Move beyond single applications to building scalable, resilient systems. Learn about microservices, containerization with Docker, and automated deployment pipelines.",
       "duration": "6-8 weeks",
       "difficulty": "Advanced",
       "skills": [
         "Microservices",
-        "JWT Auth",
+        "JWT Authentication",
         "Docker",
-        "Kubernetes",
-        "CI/CD"
+        "CI/CD",
+        "Cloud Deployment"
       ],
       "resources": [
         {
           "type": "Course",
-          "title": "Mastering Docker, Compose, and Kubernetes",
-          "url": "https://linkedin.com/affiliate/docker-k8s-id-012",
-          "provider": "LinkedIn Learning",
-          "rating": 4.4,
+          "title": "Docker and Kubernetes: The Complete Guide",
+          "url": "https://www.udemy.com/course/docker-and-kubernetes-the-complete-guide/",
+          "provider": "Udemy",
+          "rating": 4.5,
           "students": 15000,
           "duration": "8 hours",
           "price": {
@@ -167,9 +190,228 @@
         },
         {
           "type": "Project",
-          "title": "E-commerce Application",
-          "description": "Deploy an e-commerce microservice API using Docker and a CI/CD pipeline."
+          "title": "E-commerce Microservice API",
+          "description": "Develop a microservice API for an e-commerce platform and deploy it using Docker and a CI/CD pipeline."
         }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Oracle Certified Professional: Java SE Developer",
+      "provider": "Oracle",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 months",
+      "cost": 245,
+      "currency": "USD",
+      "renewalPeriod": "None"
+    },
+    {
+      "name": "AWS Certified Developer - Associate",
+      "provider": "Amazon Web Services",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "3-4 months",
+      "cost": 150,
+      "currency": "USD",
+      "renewalPeriod": "3 years"
+    },
+    {
+      "name": "Certified Node.js Developer (JSNAD)",
+      "provider": "OpenJS Foundation",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 months",
+      "cost": 300,
+      "currency": "USD",
+      "renewalPeriod": "3 years"
+    },
+    {
+      "name": "Microsoft Certified: Azure Developer Associate",
+      "provider": "Microsoft",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "3-5 months",
+      "cost": 165,
+      "currency": "USD",
+      "renewalPeriod": "1 year"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Programming Languages",
+      "tools": [
+        "Java",
+        "JavaScript (Node.js)",
+        "Python",
+        "C#",
+        "Go",
+        "PHP"
+      ]
+    },
+    {
+      "category": "Frameworks",
+      "tools": [
+        "Spring Boot",
+        "Express.js",
+        "Django",
+        "Flask",
+        "ASP.NET Core",
+        "Ruby on Rails"
+      ]
+    },
+    {
+      "category": "Databases",
+      "tools": [
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB",
+        "Redis",
+        "Elasticsearch",
+        "Microsoft SQL Server"
+      ]
+    },
+    {
+      "category": "Deployment & DevOps",
+      "tools": [
+        "Docker",
+        "Kubernetes",
+        "GitLab CI/CD",
+        "GitHub Actions",
+        "Jenkins",
+        "AWS",
+        "Azure",
+        "Google Cloud"
+      ]
+    },
+    {
+      "category": "API Management",
+      "tools": [
+        "Postman",
+        "Insomnia",
+        "Swagger/OpenAPI",
+        "GraphQL"
+      ]
+    },
+    {
+      "category": "Authentication",
+      "tools": [
+        "JWT",
+        "OAuth2",
+        "Passport.js",
+        "Spring Security"
+      ]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior Backend Developer",
+      "experience": "0-2 years",
+      "salary": {
+        "min": 80000,
+        "max": 140000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Write and maintain code for APIs",
+        "Implement new features under supervision",
+        "Debug and fix bugs",
+        "Participate in code reviews"
+      ]
+    },
+    {
+      "level": "Backend Developer",
+      "experience": "2-5 years",
+      "salary": {
+        "min": 150000,
+        "max": 220000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Design and develop complex APIs and microservices",
+        "Optimize database queries and system performance",
+        "Mentor junior developers",
+        "Lead small-to-medium-sized projects"
+      ]
+    },
+    {
+      "level": "Senior Backend Developer",
+      "experience": "5-8 years",
+      "salary": {
+        "min": 220000,
+        "max": 300000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Architect scalable and resilient systems",
+        "Lead technical direction and strategy",
+        "Design complex database schemas",
+        "Introduce new technologies and best practices"
+      ]
+    },
+    {
+      "level": "Principal Engineer / Architect",
+      "experience": "8+ years",
+      "salary": {
+        "min": 300000,
+        "max": 450000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Define the overall technical vision for the company",
+        "Solve high-level, complex architectural problems",
+        "Mentor engineering teams",
+        "Drive innovation and R&D"
+      ]
+    },
+    {
+      "level": "Head of Engineering / CTO",
+      "experience": "10+ years",
+      "salary": {
+        "min": 450000,
+        "max": 600000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Manage multiple engineering teams",
+        "Oversee all technical operations",
+        "Develop long-term product strategy",
+        "Represent the company's technology at an executive level"
+      ]
+    }
+  ],
+  "industryApplications": [
+    {
+      "sector": "E-commerce",
+      "applications": [
+        "Shopping cart services",
+        "Payment gateways",
+        "Order management systems",
+        "Inventory management"
+      ]
+    },
+    {
+      "sector": "FinTech",
+      "applications": [
+        "Transaction processing",
+        "Security and fraud detection",
+        "Account management",
+        "Trading platforms"
+      ]
+    },
+    {
+      "sector": "Social Media",
+      "applications": [
+        "User profile management",
+        "Content storage and delivery",
+        "Real-time chat features",
+        "Notification systems"
+      ]
+    },
+    {
+      "sector": "SaaS (Software as a Service)",
+      "applications": [
+        "Cloud-based software APIs",
+        "Subscription management",
+        "Data synchronization",
+        "Authentication services"
       ]
     }
   ]

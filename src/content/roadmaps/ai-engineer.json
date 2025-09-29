@@ -43,7 +43,7 @@
         {
           "type": "Course",
           "title": "Complete Python for Data Science & AI Development",
-          "url": "https://www.udemy.com/course/python-for-data-science-and-machine-learning-bootcamp/?couponCode=AI2525",
+          "url": "https://www.udemy.com/course/python-for-data-science-and-machine-learning-bootcamp/",
           "provider": "Udemy",
           "rating": 4.6,
           "students": 456789,
@@ -101,7 +101,7 @@
         {
           "type": "Course",
           "title": "Machine Learning A-Z: Python & R in Data Science",
-          "url": "https://www.udemy.com/course/machinelearning/?couponCode=ML2525",
+          "url": "https://www.udemy.com/course/machinelearning/",
           "provider": "Udemy",
           "rating": 4.5,
           "students": 876543,
@@ -180,7 +180,7 @@
         {
           "type": "Course",
           "title": "PyTorch for Deep Learning with Python Bootcamp",
-          "url": "https://www.udemy.com/course/pytorch-for-deep-learning-with-python-bootcamp/?couponCode=TORCH2525",
+          "url": "https://www.udemy.com/course/pytorch-for-deep-learning-with-python-bootcamp/",
           "provider": "Udemy",
           "rating": 4.6,
           "students": 234567,
@@ -220,7 +220,7 @@
         {
           "type": "Course",
           "title": "Complete Computer Vision & OpenCV Course",
-          "url": "https://www.udemy.com/course/python-for-computer-vision-with-opencv-and-deep-learning/?couponCode=CV2525",
+          "url": "https://www.udemy.com/course/python-for-computer-vision-with-opencv-and-deep-learning/",
           "provider": "Udemy",
           "rating": 4.5,
           "students": 189456,
@@ -279,7 +279,7 @@
         {
           "type": "Course",
           "title": "NLP with Python & Deep Learning Complete Course",
-          "url": "https://www.udemy.com/course/nlp-natural-language-processing-with-python/?couponCode=NLP2525",
+          "url": "https://www.udemy.com/course/nlp-natural-language-processing-with-python/",
           "provider": "Udemy",
           "rating": 4.4,
           "students": 167890,
@@ -296,7 +296,7 @@
         {
           "type": "Course",
           "title": "Hugging Face Transformers Course",
-          "url": "https://huggingface.co/course/chapter1/1",
+          "url": "https://huggingface.co/learn/nlp-course",
           "provider": "Hugging Face",
           "rating": 4.8,
           "students": 125000,
@@ -338,7 +338,7 @@
         {
           "type": "Course",
           "title": "MLOps Engineering at Scale",
-          "url": "https://www.udemy.com/course/mlops-course/?couponCode=MLOPS2525",
+          "url": "https://www.udemy.com/course/mlops-course/",
           "provider": "Udemy",
           "rating": 4.3,
           "students": 45678,
@@ -414,7 +414,7 @@
         {
           "type": "Course",
           "title": "Deep Reinforcement Learning",
-          "url": "https://www.udemy.com/course/deep-reinforcement-learning-in-python/?couponCode=RL2525",
+          "url": "https://www.udemy.com/course/deep-reinforcement-learning-in-python/",
           "provider": "Udemy",
           "rating": 4.4,
           "students": 78901,

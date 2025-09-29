@@ -40,7 +40,7 @@
         {
           "type": "Course",
           "title": "Microsoft Excel - Advanced Excel Formulas & Functions",
-          "url": "https://www.udemy.com/course/microsoft-excel-2013-advanced/?couponCode=EXCEL2525",
+          "url": "https://www.udemy.com/course/advanced-microsoft-excel-2013-online-excel-course/?couponCode=MT250929G1",
           "provider": "Udemy",
           "rating": 4.6,
           "students": 284567,
@@ -55,23 +55,26 @@
           "thumbnailUrl": "/img/excel-advanced.jpg",
           "isBestseller": true
         },
-        {
-          "type": "Course",
-          "title": "Statistics Fundamentals for Data Analysis",
-          "url": "https://www.khanacademy.org/math/statistics-probability",
-          "provider": "Khan Academy",
-          "rating": 4.8,
-          "students": 500000,
-          "duration": "Self-paced",
-          "price": {
-            "original": 0,
-            "current": 0,
-            "currency": "USD"
-          },
-          "level": "Beginner",
-          "description": "Complete free course on statistics and probability with interactive exercises.",
-          "thumbnailUrl": "/img/statistics-fundamentals.jpg"
-        },
+        
+       {
+  "type": "Course",
+  "title": "Statistics for Data Science with Python",
+  "url": "https://www.coursera.org/learn/statistics-for-data-science-python",
+  "provider": "Coursera (IBM)",
+  "rating": 4.5,
+  "students": null,
+  "duration": "1-3 months (approx.)",
+  "price": {
+    "original": 0,
+    "current": 0,
+    "currency": "USD"
+  },
+  "level": "Beginner",
+  "description": "This course provides a comprehensive introduction to statistics for data science, covering descriptive statistics, probability distributions, hypothesis testing, and regression analysis using Python.",
+  "thumbnailUrl": "/img/ibm-statistics.jpg",
+  "isFree": true,
+  "isPopular": true
+},
         {
           "type": "Project",
           "title": "Retail Sales Analysis",
@@ -210,22 +213,23 @@
       ],
       "resources": [
         {
-          "type": "Course",
-          "title": "Tableau Desktop Complete Course",
-          "url": "https://www.udemy.com/course/tableau-desktop-complete/?couponCode=TAB2525",
-          "provider": "Udemy",
-          "rating": 4.5,
-          "students": 156789,
-          "duration": "15 sections • 120 sessions • Total duration: 28 h 15 min",
-          "price": {
-            "original": 89.99,
-            "current": 13.99,
-            "currency": "USD"
-          },
-          "level": "Intermediate",
-          "description": "Master Tableau Desktop: advanced visualizations, calculations, and interactive dashboards.",
-          "thumbnailUrl": "/img/tableau-complete.jpg"
-        },
+  "type": "Course",
+  "title": "2025 Tableau Certified Data Analyst Training",
+  "url": "https://www.udemy.com/course/tableau-for-beginners/?couponCode=MT250929G1",
+  "provider": "Udemy",
+  "rating": 4.7,
+  "students": 93.616,
+  "duration": "40 h",
+  "price": {
+    "original": 69.99,
+    "current": 9.99,
+    "currency": "USD"
+  },
+  "level": "All Levels",
+  "description": "(+40 Hours of Content) Tableau Public, Desktop, Prep, Online, Server, Bridge, Certifications",
+  "thumbnailUrl": "/img/tableau-certified-associate.jpg",
+  "isBestseller": true
+},
         {
           "type": "Course",
           "title": "Microsoft Power BI Desktop for Business Intelligence",
@@ -288,23 +292,23 @@
           "description": "Advanced statistics for data science: regression, tests, time series with Python and R.",
           "thumbnailUrl": "/img/advanced-statistics.jpg"
         },
-        {
-          "type": "Course",
-          "title": "A/B Testing and Experimental Design",
-          "url": "https://www.coursera.org/learn/ab-testing",
-          "provider": "Coursera (UC San Diego)",
-          "rating": 4.3,
-          "students": 45000,
-          "duration": "4 weeks",
-          "price": {
-            "original": 49.99,
-            "current": 0,
-            "currency": "USD"
-          },
-          "level": "Advanced",
-          "description": "University course on A/B testing and experimental design with certificate.",
-          "thumbnailUrl": "/img/ab-testing.jpg"
-        },
+  {
+  "type": "Course",
+  "title": "Design of Experiments Specialization",
+  "url": "https://www.coursera.org/specializations/design-experiments",
+  "provider": "Coursera (Arizona State University)",
+  "rating": 4.7,
+  "students": 13966,
+  "duration": "4 months",
+  "price": {
+    "original": 49.99,
+    "current": 0,
+    "currency": "USD"
+  },
+  "level": "Beginner",
+  "description": "This specialization covers modern experimental techniques to improve existing products and processes. It's a comprehensive guide to planning, conducting, and analyzing experiments, a key skill for A/B testing.",
+  "thumbnailUrl": "/img/design-of-experiments.jpg"
+},
         {
           "type": "Project",
           "title": "Marketing Impact Study",
@@ -344,23 +348,23 @@
           "description": "Fundamentals of business analysis: processes, KPIs, and communication with stakeholders.",
           "thumbnailUrl": "/img/business-analysis.jpg"
         },
-        {
-          "type": "Course",
-          "title": "Data Storytelling & Presentation Skills",
-          "url": "https://www.udemy.com/course/data-storytelling/?couponCode=STORY2525",
-          "provider": "Udemy",
-          "rating": 4.4,
-          "students": 23456,
-          "duration": "8 sections • 45 sessions • Total duration: 12 h 30 min",
-          "price": {
-            "original": 54.99,
-            "current": 11.99,
-            "currency": "USD"
-          },
-          "level": "Intermediate",
-          "description": "Learn to present your analyses in a compelling and actionable way.",
-          "thumbnailUrl": "/img/data-storytelling.jpg"
-        },
+       {
+  "type": "Course",
+  "title": "Data Storytelling and Data Visualization Mastery",
+  "url": "https://www.udemy.com/course/mastering-the-art-of-data-visualization-2020/",
+  "provider": "Udemy",
+  "rating": 4.5,
+  "students": 11507,
+  "duration": "6 hours total, 30 lectures",
+  "price": {
+    "original": 129.99,
+    "current": null,
+    "currency": "USD"
+  },
+  "level": "All Levels",
+  "description": "A comprehensive course to learn the crucial skills to effectively communicate, persuade, and drive decisions with data through storytelling and data visualization.",
+  "thumbnailUrl": null
+},
         {
           "type": "Project",
           "title": "Executive Presentation",
