@@ -7,7 +7,7 @@ export interface RoadmapResource {
   url?: string;
   description?: string;
   
-  // Optional fields for courses
+  // Optional fields for courses and books
   thumbnailUrl?: string;
   provider?: string;
   rating?: number;
@@ -37,6 +37,45 @@ export interface RoadmapStep {
   estimatedTime?: string;
 }
 
+// ------------------- NEW DATA STRUCTURES -------------------
+
+export interface Certification {
+  name: string;
+  provider: string;
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Expert';
+  estimatedStudyTime: string;
+  cost: number;
+  currency: string;
+  renewalPeriod: string;
+}
+
+export interface ToolCategory {
+  category: string;
+  tools: string[];
+}
+
+export interface IndustryApplication {
+  sector: string;
+  applications: string[];
+}
+
+export interface CareerLevel {
+  level: string;
+  experience: string;
+  salary: {
+    min: number;
+    max: number;
+    currency: string;
+  };
+  responsibilities: string[];
+}
+
+export interface CommonProject {
+  name: string;
+  description: string;
+}
+
+// ------------------- UPDATED MAIN INTERFACE -------------------
 
 export interface Roadmap {
   id: string;
@@ -50,13 +89,19 @@ export interface Roadmap {
     max: number;
     currency: string;
   };
-
   demandLevel: 'Low' | 'Medium' | 'High' | 'Very High';
   steps: RoadmapStep[];
   tags: string[];
   lastUpdated: string;
   author: string;
   image?: string;
+  
+  // Add the new sections here
+  certifications?: Certification[];
+  tools?: ToolCategory[];
+  industryApplications?: IndustryApplication[];
+  careerProgression?: CareerLevel[];
+  commonProjects?: CommonProject[];
 }
 
 export interface RoadmapFilters {

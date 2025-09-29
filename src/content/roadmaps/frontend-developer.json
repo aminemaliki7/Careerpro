@@ -1,7 +1,7 @@
 {
   "id": "frontend-developer",
   "title": "Frontend Developer",
-  "description": "Master modern frontend development with React, TypeScript, and contemporary web technologies",
+  "description": "Master modern frontend development with React, TypeScript, and contemporary web technologies.",
   "category": "Development",
   "level": "Entry Level",
   "totalDuration": "6-8 months",
@@ -11,17 +11,29 @@
     "currency": "USD"
   },
   "demandLevel": "Very High",
-  "tags": ["React", "JavaScript", "HTML", "CSS", "TypeScript"],
+  "tags": [
+    "React",
+    "JavaScript",
+    "HTML",
+    "CSS",
+    "TypeScript"
+  ],
   "lastUpdated": "2024-12-01",
   "author": "Tech Career Hub",
   "steps": [
     {
       "id": "html-css-basics",
       "title": "HTML & CSS Fundamentals",
-      "description": "Learn the building blocks of web development",
+      "description": "Learn the building blocks of web development.",
       "duration": "3-4 weeks",
       "difficulty": "Beginner",
-      "skills": ["HTML5", "CSS3", "Responsive Design", "Flexbox", "CSS Grid"],
+      "skills": [
+        "HTML5",
+        "CSS3",
+        "Responsive Design",
+        "Flexbox",
+        "CSS Grid"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -31,7 +43,11 @@
           "rating": 4.7,
           "students": 85000,
           "duration": "15 hours",
-          "price": { "original": 99.99, "current": 19.99, "currency": "USD" },
+          "price": {
+            "original": 99.99,
+            "current": 19.99,
+            "currency": "USD"
+          },
           "level": "Beginner",
           "description": "Comprehensive beginner-friendly course to master HTML & CSS.",
           "thumbnailUrl": "/img/html-css-course.jpg",
@@ -40,17 +56,22 @@
         {
           "type": "Practice",
           "title": "Build 5 Static Websites",
-          "description": "Practice responsive layouts and flexbox/grid concepts"
+          "description": "Practice responsive layouts and flexbox/grid concepts."
         }
       ]
     },
     {
       "id": "javascript-fundamentals",
       "title": "JavaScript Fundamentals",
-      "description": "Master JavaScript programming concepts",
+      "description": "Master JavaScript programming concepts.",
       "duration": "4-6 weeks",
       "difficulty": "Beginner",
-      "skills": ["JavaScript ES6+", "DOM Manipulation", "Event Handling", "Async Programming"],
+      "skills": [
+        "JavaScript ES6+",
+        "DOM Manipulation",
+        "Event Handling",
+        "Async Programming"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -60,7 +81,11 @@
           "rating": 4.8,
           "students": 50000,
           "duration": "20 hours",
-          "price": { "original": 49.99, "current": 0, "currency": "USD" },
+          "price": {
+            "original": 49.99,
+            "current": 0,
+            "currency": "USD"
+          },
           "level": "Beginner",
           "description": "Deep dive into modern JavaScript with practical exercises.",
           "thumbnailUrl": "/img/javascript-course.jpg",
@@ -69,18 +94,26 @@
         {
           "type": "Project",
           "title": "Interactive Calculator",
-          "description": "Build a fully functional calculator using vanilla JS"
+          "description": "Build a fully functional calculator using vanilla JS."
         }
       ],
-      "prerequisites": ["HTML & CSS Fundamentals"]
+      "prerequisites": [
+        "HTML & CSS Fundamentals"
+      ]
     },
     {
       "id": "react-basics",
       "title": "React Fundamentals",
-      "description": "Learn React components, state, and hooks",
+      "description": "Learn React components, state, and hooks.",
       "duration": "4-5 weeks",
       "difficulty": "Intermediate",
-      "skills": ["React Components", "JSX", "State Management", "Hooks", "Props"],
+      "skills": [
+        "React Components",
+        "JSX",
+        "State Management",
+        "Hooks",
+        "Props"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -90,7 +123,11 @@
           "rating": 4.6,
           "students": 42000,
           "duration": "25 hours",
-          "price": { "original": 39.99, "current": 39.99, "currency": "USD" },
+          "price": {
+            "original": 39.99,
+            "current": 39.99,
+            "currency": "USD"
+          },
           "level": "Intermediate",
           "description": "From basic components to hooks and state management.",
           "thumbnailUrl": "/img/react-course.jpg"
@@ -98,18 +135,25 @@
         {
           "type": "Project",
           "title": "Todo App with React",
-          "description": "Build a full-featured todo application to practice React skills"
+          "description": "Build a full-featured todo application to practice React skills."
         }
       ],
-      "prerequisites": ["JavaScript Fundamentals"]
+      "prerequisites": [
+        "JavaScript Fundamentals"
+      ]
     },
     {
       "id": "advanced-react",
       "title": "Advanced React & TypeScript",
-      "description": "Master advanced React patterns and TypeScript",
+      "description": "Master advanced React patterns and TypeScript.",
       "duration": "3-4 weeks",
       "difficulty": "Advanced",
-      "skills": ["TypeScript", "Context API", "Custom Hooks", "Performance Optimization"],
+      "skills": [
+        "TypeScript",
+        "Context API",
+        "Custom Hooks",
+        "Performance Optimization"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -119,7 +163,11 @@
           "rating": 4.5,
           "students": 18000,
           "duration": "12 hours",
-          "price": { "original": 29.99, "current": 0, "currency": "USD" },
+          "price": {
+            "original": 29.99,
+            "current": 0,
+            "currency": "USD"
+          },
           "level": "Advanced",
           "description": "Master advanced React concepts and TypeScript integration.",
           "thumbnailUrl": "/img/advanced-react-course.jpg"
@@ -127,10 +175,12 @@
         {
           "type": "Project",
           "title": "E-commerce Dashboard",
-          "description": "Complex React application with TypeScript and context management"
+          "description": "Complex React application with TypeScript and context management."
         }
       ],
-      "prerequisites": ["React Fundamentals"]
+      "prerequisites": [
+        "React Fundamentals"
+      ]
     }
   ]
 }

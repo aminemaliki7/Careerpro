@@ -1,27 +1,38 @@
 {
   "id": "backend-developer",
   "title": "Backend Developer",
-  "description": "Développez des applications backend robustes et scalables avec Java, Spring Boot, ou Node.js",
-  "category": "Développement",
+  "description": "Develop robust and scalable backend applications with Java, Spring Boot, or Node.js.",
+  "category": "Development",
   "level": "Mid Level",
-  "totalDuration": "7-10 mois",
+  "totalDuration": "7-10 months",
   "avgSalary": {
     "min": 90000,
     "max": 180000,
     "currency": "MAD"
   },
-  "demandLevel": "Élevée",
-  "tags": ["Java", "Spring Boot", "Node.js", "APIs", "SQL", "Docker"],
+  "demandLevel": "High",
+  "tags": [
+    "Java",
+    "Spring Boot",
+    "Node.js",
+    "APIs",
+    "SQL",
+    "Docker"
+  ],
   "lastUpdated": "2025-09-28",
   "author": "Hirely.ma",
   "steps": [
     {
       "id": "programming-basics",
-      "title": "Bases de la programmation",
-      "description": "Apprenez les concepts fondamentaux avec Java ou Python",
-      "duration": "4-5 semaines",
+      "title": "Programming Fundamentals",
+      "description": "Learn the core concepts with Java or Python.",
+      "duration": "4-5 weeks",
       "difficulty": "Beginner",
-      "skills": ["POO", "Structures de données", "Algorithmes"],
+      "skills": [
+        "OOP",
+        "Data Structures",
+        "Algorithms"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -29,119 +40,135 @@
           "url": "https://www.udemy.com/course/java-the-complete-java-developer-course/?couponCode=PMNVD2525",
           "provider": "Udemy",
           "rating": 4.6,
-          "students": 929.734,
-          "duration": "45 sections • 736 sessions • Durée totale: 135 h 21 min",
+          "students": 929734,
+          "duration": "45 sections • 736 sessions • Total duration: 135 h 21 min",
           "price": {
             "original": 64.99,
             "current": 11.99,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Le cours le plus populaire pour maîtriser Java et la POO de zéro.",
+          "description": "The most popular course for mastering Java and OOP from scratch.",
           "thumbnailUrl": "/img/java-basics.jpg",
           "isBestseller": true
         },
         {
           "type": "Practice",
-          "title": "Mini-projets",
-          "description": "Implémentez des algorithmes simples en Java (calculatrice, gestion de tâches CLI)"
+          "title": "Mini-projects",
+          "description": "Implement simple algorithms in Java (calculator, CLI task management)."
         }
       ]
     },
     {
       "id": "databases",
-      "title": "Bases de données & SQL",
-      "description": "Maîtrisez les bases de données relationnelles et NoSQL",
-      "duration": "3-4 semaines",
+      "title": "Databases & SQL",
+      "description": "Master relational and NoSQL databases.",
+      "duration": "3-4 weeks",
       "difficulty": "Beginner",
-      "skills": ["SQL", "PostgreSQL", "MySQL", "MongoDB"],
+      "skills": [
+        "SQL",
+        "PostgreSQL",
+        "MySQL",
+        "MongoDB"
+      ],
       "resources": [
         {
           "type": "Course",
-          "title": "SQL & PostgreSQL - La Maîtrise Complète",
+          "title": "SQL & PostgreSQL - Complete Mastery",
           "url": "https://coursera.org/affiliate/sql-pro-id-456",
           "provider": "Coursera",
           "rating": 4.7,
           "students": 45000,
-          "duration": "10 semaines",
+          "duration": "10 weeks",
           "price": {
             "original": 49.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Apprenez le SQL avec des exercices pratiques sur PostgreSQL (certification payante optionnelle).",
+          "description": "Learn SQL with practical exercises on PostgreSQL (optional paid certification).",
           "thumbnailUrl": "/img/sql-postgre.jpg",
           "isPopular": true
         },
         {
           "type": "Project",
-          "title": "Gestion Bibliothèque",
-          "description": "Construisez une base SQL pour gérer livres et emprunts via la ligne de commande."
+          "title": "Library Management",
+          "description": "Build a SQL database to manage books and loans via the command line."
         }
       ]
     },
     {
       "id": "backend-frameworks",
-      "title": "Frameworks Backend",
-      "description": "Apprenez à créer des APIs REST avec Spring Boot ou Express.js",
-      "duration": "6-8 semaines",
+      "title": "Backend Frameworks",
+      "description": "Learn to create REST APIs with Spring Boot or Express.js.",
+      "duration": "6-8 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Spring Boot", "REST APIs", "Express.js", "Validation"],
+      "skills": [
+        "Spring Boot",
+        "REST APIs",
+        "Express.js",
+        "Validation"
+      ],
       "resources": [
         {
           "type": "Course",
-          "title": "Développer des API REST Robustes avec Spring Boot",
+          "title": "Developing Robust REST APIs with Spring Boot",
           "url": "https://pluralsight.com/affiliate/spring-api-id-789",
           "provider": "Pluralsight",
           "rating": 4.5,
           "students": 22000,
-          "duration": "15 heures",
+          "duration": "15 hours",
           "price": {
             "original": 29.99,
             "current": 29.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Axé sur la sécurité, la performance et les tests unitaires avec Spring.",
+          "description": "Focus on security, performance, and unit testing with Spring.",
           "thumbnailUrl": "/img/spring-boot-api.jpg"
         },
         {
           "type": "Project",
-          "title": "API REST de gestion utilisateurs",
-          "description": "Développez une API CRUD complète avec Spring Boot, sécurité JWT et MySQL."
+          "title": "User Management REST API",
+          "description": "Develop a complete CRUD API with Spring Boot, JWT security, and MySQL."
         }
       ]
     },
     {
       "id": "advanced-backend",
-      "title": "Concepts avancés",
-      "description": "Microservices, Authentification JWT, CI/CD et Conteneurisation",
-      "duration": "6-8 semaines",
+      "title": "Advanced Concepts",
+      "description": "Microservices, JWT Authentication, CI/CD, and Containerization.",
+      "duration": "6-8 weeks",
       "difficulty": "Advanced",
-      "skills": ["Microservices", "JWT Auth", "Docker", "Kubernetes", "CI/CD"],
+      "skills": [
+        "Microservices",
+        "JWT Auth",
+        "Docker",
+        "Kubernetes",
+        "CI/CD"
+      ],
       "resources": [
         {
           "type": "Course",
-          "title": "Maîtrise de Docker, Compose et Kubernetes",
+          "title": "Mastering Docker, Compose, and Kubernetes",
           "url": "https://linkedin.com/affiliate/docker-k8s-id-012",
           "provider": "LinkedIn Learning",
           "rating": 4.4,
           "students": 15000,
-          "duration": "8 heures",
+          "duration": "8 hours",
           "price": {
             "original": 29.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Comprenez les déploiements modernes et la gestion de conteneurs à grande échelle.",
+          "description": "Understand modern deployments and large-scale container management.",
           "thumbnailUrl": "/img/docker-k8s.jpg"
         },
         {
           "type": "Project",
-          "title": "Application E-commerce",
-          "description": "Déploiement d'une API microservice e-commerce utilisant Docker et une pipeline CI/CD."
+          "title": "E-commerce Application",
+          "description": "Deploy an e-commerce microservice API using Docker and a CI/CD pipeline."
         }
       ]
     }

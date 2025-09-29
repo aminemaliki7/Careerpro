@@ -1,27 +1,41 @@
 {
   "id": "data-analyst",
   "title": "Data Analyst",
-  "description": "Maîtrisez l'analyse de données, la visualisation et les statistiques avec Python, SQL, Tableau et Power BI pour transformer les données en insights business",
+  "description": "Master data analysis, visualization, and statistics with Python, SQL, Tableau, and Power BI to transform data into business insights.",
   "category": "Data & Analytics",
   "level": "Mid Level",
-  "totalDuration": "6-8 mois",
+  "totalDuration": "6-8 months",
   "avgSalary": {
     "min": 70000,
     "max": 140000,
     "currency": "MAD"
   },
-  "demandLevel": "Très Élevée",
-  "tags": ["Python", "SQL", "Tableau", "Statistics", "Excel", "Power BI", "Data Visualization"],
+  "demandLevel": "Very High",
+  "tags": [
+    "Python",
+    "SQL",
+    "Tableau",
+    "Statistics",
+    "Excel",
+    "Power BI",
+    "Data Visualization"
+  ],
   "lastUpdated": "2025-09-29",
   "author": "Hirely.ma",
   "steps": [
     {
       "id": "excel-fundamentals",
-      "title": "Maîtrise d'Excel & Fondamentaux",
-      "description": "Développez une expertise avancée d'Excel et les bases des statistiques descriptives",
-      "duration": "3-4 semaines",
+      "title": "Excel Mastery & Fundamentals",
+      "description": "Develop advanced expertise in Excel and the basics of descriptive statistics.",
+      "duration": "3-4 weeks",
       "difficulty": "Beginner",
-      "skills": ["Excel Avancé", "Pivot Tables", "Formules Complexes", "Statistiques Descriptives", "Data Cleaning"],
+      "skills": [
+        "Advanced Excel",
+        "Pivot Tables",
+        "Complex Formulas",
+        "Descriptive Statistics",
+        "Data Cleaning"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -30,14 +44,14 @@
           "provider": "Udemy",
           "rating": 4.6,
           "students": 284567,
-          "duration": "18 sections • 156 sessions • Durée totale: 32 h 15 min",
+          "duration": "18 sections • 156 sessions • Total duration: 32 h 15 min",
           "price": {
             "original": 84.99,
             "current": 13.99,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Maîtrisez Excel de A à Z : formules avancées, tableaux croisés dynamiques et macros.",
+          "description": "Master Excel from A to Z: advanced formulas, pivot tables, and macros.",
           "thumbnailUrl": "/img/excel-advanced.jpg",
           "isBestseller": true
         },
@@ -55,23 +69,30 @@
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Cours gratuit complet sur les statistiques et probabilités avec exercices interactifs.",
+          "description": "Complete free course on statistics and probability with interactive exercises.",
           "thumbnailUrl": "/img/statistics-fundamentals.jpg"
         },
         {
           "type": "Project",
-          "title": "Analyse de ventes retail",
-          "description": "Analysez un dataset de ventes avec Excel : tendances, saisonnalité, segments clients et dashboard interactif"
+          "title": "Retail Sales Analysis",
+          "description": "Analyze a sales dataset with Excel: trends, seasonality, customer segments, and an interactive dashboard."
         }
       ]
     },
     {
       "id": "sql-databases",
-      "title": "SQL & Gestion de Bases de Données",
-      "description": "Maîtrisez SQL pour l'extraction et manipulation de données dans différents SGBD",
-      "duration": "4-5 semaines",
+      "title": "SQL & Database Management",
+      "description": "Master SQL for data extraction and manipulation in different DBMS.",
+      "duration": "4-5 weeks",
       "difficulty": "Beginner",
-      "skills": ["SQL Queries", "Joins", "Window Functions", "PostgreSQL", "MySQL", "Data Warehouse Concepts"],
+      "skills": [
+        "SQL Queries",
+        "Joins",
+        "Window Functions",
+        "PostgreSQL",
+        "MySQL",
+        "Data Warehouse Concepts"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -80,14 +101,14 @@
           "provider": "Udemy",
           "rating": 4.7,
           "students": 389234,
-          "duration": "12 sections • 98 sessions • Durée totale: 18 h 45 min",
+          "duration": "12 sections • 98 sessions • Total duration: 18 h 45 min",
           "price": {
             "original": 79.99,
             "current": 12.99,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Cours SQL complet avec PostgreSQL, projets pratiques et certification.",
+          "description": "Complete SQL course with PostgreSQL, practical projects, and certification.",
           "thumbnailUrl": "/img/sql-bootcamp.jpg",
           "isBestseller": true
         },
@@ -98,30 +119,37 @@
           "provider": "SQLBolt",
           "rating": 4.5,
           "students": 0,
-          "duration": "2-3 heures",
+          "duration": "2-3 hours",
           "price": {
             "original": 0,
             "current": 0,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Tutorial interactif gratuit pour apprendre SQL avec des exercices progressifs.",
+          "description": "Free interactive tutorial to learn SQL with progressive exercises.",
           "thumbnailUrl": "/img/sqlbolt.jpg"
         },
         {
           "type": "Project",
-          "title": "Base de données e-commerce",
-          "description": "Créez et requêtez une base de données complète : clients, commandes, produits avec analyses complexes"
+          "title": "E-commerce Database",
+          "description": "Create and query a complete database: customers, orders, products with complex analyses."
         }
       ]
     },
     {
       "id": "python-data-analysis",
-      "title": "Python pour l'Analyse de Données",
-      "description": "Apprenez Python avec pandas, numpy et les libraries d'analyse de données",
-      "duration": "5-6 semaines",
+      "title": "Python for Data Analysis",
+      "description": "Learn Python with pandas, numpy, and data analysis libraries.",
+      "duration": "5-6 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Python", "Pandas", "NumPy", "Data Cleaning", "Exploratory Data Analysis", "Statistical Analysis"],
+      "skills": [
+        "Python",
+        "Pandas",
+        "NumPy",
+        "Data Cleaning",
+        "Exploratory Data Analysis",
+        "Statistical Analysis"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -130,14 +158,14 @@
           "provider": "Udemy",
           "rating": 4.6,
           "students": 567891,
-          "duration": "25 sections • 165 sessions • Durée totale: 52 h 30 min",
+          "duration": "25 sections • 165 sessions • Total duration: 52 h 30 min",
           "price": {
             "original": 94.99,
             "current": 14.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Formation complète Python pour data science avec pandas, matplotlib, seaborn.",
+          "description": "Complete Python training for data science with pandas, matplotlib, seaborn.",
           "thumbnailUrl": "/img/python-data-science.jpg",
           "isBestseller": true
         },
@@ -148,31 +176,38 @@
           "provider": "freeCodeCamp",
           "rating": 4.8,
           "students": 200000,
-          "duration": "300 heures",
+          "duration": "300 hours",
           "price": {
             "original": 0,
             "current": 0,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Certification gratuite en analyse de données avec Python, pandas et matplotlib.",
+          "description": "Free certification in data analysis with Python, pandas, and matplotlib.",
           "thumbnailUrl": "/img/freecodecamp-python.jpg",
           "isCertification": true
         },
         {
           "type": "Project",
-          "title": "Analyse financière actions",
-          "description": "Analysez les données boursières avec Python : tendances, corrélations, volatilité et prédictions"
+          "title": "Financial Stock Analysis",
+          "description": "Analyze stock market data with Python: trends, correlations, volatility, and predictions."
         }
       ]
     },
     {
       "id": "data-visualization",
-      "title": "Visualisation de Données",
-      "description": "Créez des visualisations impactantes avec Tableau, Power BI et Python",
-      "duration": "4-5 semaines",
+      "title": "Data Visualization",
+      "description": "Create impactful visualizations with Tableau, Power BI, and Python.",
+      "duration": "4-5 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Tableau", "Power BI", "Matplotlib", "Seaborn", "Dashboard Design", "Storytelling with Data"],
+      "skills": [
+        "Tableau",
+        "Power BI",
+        "Matplotlib",
+        "Seaborn",
+        "Dashboard Design",
+        "Storytelling with Data"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -181,14 +216,14 @@
           "provider": "Udemy",
           "rating": 4.5,
           "students": 156789,
-          "duration": "15 sections • 120 sessions • Durée totale: 28 h 15 min",
+          "duration": "15 sections • 120 sessions • Total duration: 28 h 15 min",
           "price": {
             "original": 89.99,
             "current": 13.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Maîtrisez Tableau Desktop : visualisations avancées, calculations et dashboards interactifs.",
+          "description": "Master Tableau Desktop: advanced visualizations, calculations, and interactive dashboards.",
           "thumbnailUrl": "/img/tableau-complete.jpg"
         },
         {
@@ -198,36 +233,43 @@
           "provider": "Udemy",
           "rating": 4.4,
           "students": 234567,
-          "duration": "12 sections • 95 sessions • Durée totale: 22 h 45 min",
+          "duration": "12 sections • 95 sessions • Total duration: 22 h 45 min",
           "price": {
             "original": 74.99,
             "current": 12.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Formation Power BI complète : DAX, Power Query, visualisations et partage cloud.",
+          "description": "Complete Power BI training: DAX, Power Query, visualizations, and cloud sharing.",
           "thumbnailUrl": "/img/power-bi-complete.jpg"
         },
         {
           "type": "Book",
           "title": "Storytelling with Data",
           "author": "Cole Nussbaumer Knaflic",
-          "description": "Guide référence sur l'art de présenter les données de manière convaincante"
+          "description": "Reference guide on the art of presenting data in a compelling way."
         },
         {
           "type": "Project",
-          "title": "Dashboard business intelligence",
-          "description": "Créez un dashboard complet avec KPIs, filtres interactifs et storytelling pour une entreprise"
+          "title": "Business Intelligence Dashboard",
+          "description": "Create a complete dashboard with KPIs, interactive filters, and storytelling for a business."
         }
       ]
     },
     {
       "id": "advanced-analytics",
-      "title": "Analyses Statistiques Avancées",
-      "description": "Approfondissez les statistiques, tests d'hypothèses et analyses prédictives",
-      "duration": "5-6 semaines",
+      "title": "Advanced Statistical Analysis",
+      "description": "Deepen your knowledge of statistics, hypothesis testing, and predictive analytics.",
+      "duration": "5-6 weeks",
       "difficulty": "Advanced",
-      "skills": ["Statistical Testing", "Regression Analysis", "Time Series", "A/B Testing", "Predictive Analytics", "R Programming"],
+      "skills": [
+        "Statistical Testing",
+        "Regression Analysis",
+        "Time Series",
+        "A/B Testing",
+        "Predictive Analytics",
+        "R Programming"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -236,14 +278,14 @@
           "provider": "Udemy",
           "rating": 4.6,
           "students": 125467,
-          "duration": "20 sections • 145 sessions • Durée totale: 35 h 20 min",
+          "duration": "20 sections • 145 sessions • Total duration: 35 h 20 min",
           "price": {
             "original": 79.99,
             "current": 13.99,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Statistiques avancées pour data science : régression, tests, time series avec Python et R.",
+          "description": "Advanced statistics for data science: regression, tests, time series with Python and R.",
           "thumbnailUrl": "/img/advanced-statistics.jpg"
         },
         {
@@ -253,30 +295,37 @@
           "provider": "Coursera (UC San Diego)",
           "rating": 4.3,
           "students": 45000,
-          "duration": "4 semaines",
+          "duration": "4 weeks",
           "price": {
             "original": 49.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Cours universitaire sur les tests A/B et design expérimental avec certificat.",
+          "description": "University course on A/B testing and experimental design with certificate.",
           "thumbnailUrl": "/img/ab-testing.jpg"
         },
         {
           "type": "Project",
-          "title": "Étude d'impact marketing",
-          "description": "Menez une analyse complète d'A/B test : design, collecte, analyse statistique et recommandations"
+          "title": "Marketing Impact Study",
+          "description": "Conduct a complete A/B test analysis: design, data collection, statistical analysis, and recommendations."
         }
       ]
     },
     {
       "id": "business-intelligence",
       "title": "Business Intelligence & Communication",
-      "description": "Développez vos compétences business et communication pour présenter vos analyses",
-      "duration": "3-4 semaines",
+      "description": "Develop your business and communication skills to present your analyses.",
+      "duration": "3-4 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Business Acumen", "Presentation Skills", "Report Writing", "KPI Design", "Data Governance", "Client Management"],
+      "skills": [
+        "Business Acumen",
+        "Presentation Skills",
+        "Report Writing",
+        "KPI Design",
+        "Data Governance",
+        "Client Management"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -285,14 +334,14 @@
           "provider": "LinkedIn Learning",
           "rating": 4.5,
           "students": 67000,
-          "duration": "8 heures",
+          "duration": "8 hours",
           "price": {
             "original": 29.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Fondamentaux de l'analyse business : processus, KPIs et communication avec stakeholders.",
+          "description": "Fundamentals of business analysis: processes, KPIs, and communication with stakeholders.",
           "thumbnailUrl": "/img/business-analysis.jpg"
         },
         {
@@ -302,20 +351,20 @@
           "provider": "Udemy",
           "rating": 4.4,
           "students": 23456,
-          "duration": "8 sections • 45 sessions • Durée totale: 12 h 30 min",
+          "duration": "8 sections • 45 sessions • Total duration: 12 h 30 min",
           "price": {
             "original": 54.99,
             "current": 11.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Apprenez à présenter vos analyses de manière convaincante et actionnable.",
+          "description": "Learn to present your analyses in a compelling and actionable way.",
           "thumbnailUrl": "/img/data-storytelling.jpg"
         },
         {
           "type": "Project",
-          "title": "Présentation executive",
-          "description": "Préparez et présentez une analyse stratégique complète devant un comité de direction (simulation)"
+          "title": "Executive Presentation",
+          "description": "Prepare and present a complete strategic analysis to a management committee (simulation)."
         }
       ]
     }
@@ -325,25 +374,25 @@
       "name": "Tableau Desktop Certified Associate",
       "provider": "Tableau",
       "difficulty": "Intermediate",
-      "estimatedStudyTime": "2-3 mois",
+      "estimatedStudyTime": "2-3 months",
       "cost": 250,
       "currency": "USD",
-      "renewalPeriod": "3 ans"
+      "renewalPeriod": "3 years"
     },
     {
       "name": "Microsoft Certified: Data Analyst Associate",
       "provider": "Microsoft",
       "difficulty": "Intermediate",
-      "estimatedStudyTime": "2-3 mois",
+      "estimatedStudyTime": "2-3 months",
       "cost": 165,
       "currency": "USD",
-      "renewalPeriod": "1 an"
+      "renewalPeriod": "1 year"
     },
     {
       "name": "Google Data Analytics Certificate",
       "provider": "Google",
       "difficulty": "Beginner",
-      "estimatedStudyTime": "3-6 mois",
+      "estimatedStudyTime": "3-6 months",
       "cost": 39,
       "currency": "USD",
       "renewalPeriod": "Lifetime"
@@ -352,136 +401,225 @@
       "name": "SAS Certified Statistical Business Analyst",
       "provider": "SAS",
       "difficulty": "Advanced",
-      "estimatedStudyTime": "4-6 mois",
+      "estimatedStudyTime": "4-6 months",
       "cost": 180,
       "currency": "USD",
-      "renewalPeriod": "3 ans"
+      "renewalPeriod": "3 years"
     }
   ],
   "tools": [
     {
       "category": "Spreadsheets",
-      "tools": ["Microsoft Excel", "Google Sheets", "LibreOffice Calc"]
+      "tools": [
+        "Microsoft Excel",
+        "Google Sheets",
+        "LibreOffice Calc"
+      ]
     },
     {
       "category": "Databases & SQL",
-      "tools": ["PostgreSQL", "MySQL", "SQLite", "BigQuery", "Snowflake"]
+      "tools": [
+        "PostgreSQL",
+        "MySQL",
+        "SQLite",
+        "BigQuery",
+        "Snowflake"
+      ]
     },
     {
       "category": "Programming",
-      "tools": ["Python", "R", "Pandas", "NumPy", "Jupyter Notebook"]
+      "tools": [
+        "Python",
+        "R",
+        "Pandas",
+        "NumPy",
+        "Jupyter Notebook"
+      ]
     },
     {
       "category": "Visualization",
-      "tools": ["Tableau", "Power BI", "Matplotlib", "Seaborn", "Plotly"]
+      "tools": [
+        "Tableau",
+        "Power BI",
+        "Matplotlib",
+        "Seaborn",
+        "Plotly"
+      ]
     },
     {
       "category": "Statistical Analysis",
-      "tools": ["SPSS", "SAS", "Stata", "Minitab", "RStudio"]
+      "tools": [
+        "SPSS",
+        "SAS",
+        "Stata",
+        "Minitab",
+        "RStudio"
+      ]
     },
     {
       "category": "Cloud Platforms",
-      "tools": ["Google Analytics", "AWS", "Azure", "Google Cloud", "Databricks"]
+      "tools": [
+        "Google Analytics",
+        "AWS",
+        "Azure",
+        "Google Cloud",
+        "Databricks"
+      ]
     }
   ],
   "industryApplications": [
     {
       "sector": "E-commerce",
-      "skills": ["Customer segmentation", "Conversion analysis", "Cohort analysis", "Personalization"]
+      "skills": [
+        "Customer segmentation",
+        "Conversion analysis",
+        "Cohort analysis",
+        "Personalization"
+      ]
     },
     {
       "sector": "Finance",
-      "skills": ["Risk analysis", "Fraud detection", "Portfolio optimization", "Credit scoring"]
+      "skills": [
+        "Risk analysis",
+        "Fraud detection",
+        "Portfolio optimization",
+        "Credit scoring"
+      ]
     },
     {
       "sector": "Marketing",
-      "skills": ["Campaign analysis", "Attribution modeling", "Customer lifetime value", "A/B testing"]
+      "skills": [
+        "Campaign analysis",
+        "Attribution modeling",
+        "Customer lifetime value",
+        "A/B testing"
+      ]
     },
     {
       "sector": "Healthcare",
-      "skills": ["Clinical data analysis", "Epidemiological studies", "Treatment effectiveness", "Cost analysis"]
+      "skills": [
+        "Clinical data analysis",
+        "Epidemiological studies",
+        "Treatment effectiveness",
+        "Cost analysis"
+      ]
     },
     {
       "sector": "Supply Chain",
-      "skills": ["Demand forecasting", "Inventory optimization", "Supplier analysis", "Logistics optimization"]
+      "skills": [
+        "Demand forecasting",
+        "Inventory optimization",
+        "Supplier analysis",
+        "Logistics optimization"
+      ]
     },
     {
       "sector": "HR Analytics",
-      "skills": ["Talent analytics", "Retention analysis", "Performance metrics", "Recruitment optimization"]
+      "skills": [
+        "Talent analytics",
+        "Retention analysis",
+        "Performance metrics",
+        "Recruitment optimization"
+      ]
     }
   ],
   "careerProgression": [
     {
       "level": "Junior Data Analyst",
-      "experience": "0-2 ans",
+      "experience": "0-2 years",
       "salary": {
         "min": 45000,
         "max": 70000,
         "currency": "MAD"
       },
-      "responsibilities": ["Reporting basique", "Requêtes SQL", "Dashboards simples", "Support analyse"]
+      "responsibilities": [
+        "Basic reporting",
+        "SQL queries",
+        "Simple dashboards",
+        "Analysis support"
+      ]
     },
     {
       "level": "Data Analyst",
-      "experience": "2-4 ans",
+      "experience": "2-4 years",
       "salary": {
         "min": 70000,
         "max": 110000,
         "currency": "MAD"
       },
-      "responsibilities": ["Analyses complexes", "Python/R", "Visualisations avancées", "A/B testing"]
+      "responsibilities": [
+        "Complex analyses",
+        "Python/R",
+        "Advanced visualizations",
+        "A/B testing"
+      ]
     },
     {
       "level": "Senior Data Analyst",
-      "experience": "4-7 ans",
+      "experience": "4-7 years",
       "salary": {
         "min": 110000,
         "max": 140000,
         "currency": "MAD"
       },
-      "responsibilities": ["Analyses prédictives", "Mentoring", "Stratégie data", "Cross-functional leadership"]
+      "responsibilities": [
+        "Predictive analyses",
+        "Mentoring",
+        "Data strategy",
+        "Cross-functional leadership"
+      ]
     },
     {
       "level": "Lead Data Analyst / Analytics Manager",
-      "experience": "7-10 ans",
+      "experience": "7-10 years",
       "salary": {
         "min": 140000,
         "max": 180000,
         "currency": "MAD"
       },
-      "responsibilities": ["Équipe analysts", "Roadmap analytics", "Business partnership", "Data strategy"]
+      "responsibilities": [
+        "Team of analysts",
+        "Analytics roadmap",
+        "Business partnership",
+        "Data strategy"
+      ]
     },
     {
       "level": "Director of Analytics / Head of Data",
-      "experience": "10+ ans",
+      "experience": "10+ years",
       "salary": {
         "min": 180000,
         "max": 250000,
         "currency": "MAD"
       },
-      "responsibilities": ["Organisation data", "Data governance", "Analytics vision", "Executive reporting"]
+      "responsibilities": [
+        "Data organization",
+        "Data governance",
+        "Analytics vision",
+        "Executive reporting"
+      ]
     }
   ],
   "commonProjects": [
     {
       "name": "Customer Segmentation Analysis",
-      "description": "Segmentez les clients par comportement d'achat avec clustering (K-means) et recommandations business"
+      "description": "Segment customers by purchasing behavior with clustering (K-means) and business recommendations."
     },
     {
       "name": "Sales Forecasting Model",
-      "description": "Prédisez les ventes futures avec time series analysis et évaluez la précision du modèle"
+      "description": "Predict future sales with time series analysis and evaluate model accuracy."
     },
     {
       "name": "Marketing Attribution Analysis",
-      "description": "Analysez l'impact des différents canaux marketing sur les conversions avec modèles d'attribution"
+      "description": "Analyze the impact of different marketing channels on conversions with attribution models."
     },
     {
       "name": "Financial Risk Dashboard",
-      "description": "Créez un dashboard temps réel pour monitoring des KPIs financiers et alertes automatiques"
+      "description": "Create a real-time dashboard for monitoring financial KPIs and automatic alerts."
     },
     {
       "name": "A/B Test Campaign Analysis",
-      "description": "Concevez et analysez un test A/B complet : sample size, randomisation, analyse statistique"
+      "description": "Design and analyze a complete A/B test: sample size, randomization, statistical analysis."
     }
   ]
 }

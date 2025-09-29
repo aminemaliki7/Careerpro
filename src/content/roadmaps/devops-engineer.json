@@ -1,27 +1,41 @@
 {
   "id": "devops-engineer",
   "title": "DevOps Engineer",
-  "description": "Maîtrisez l'infrastructure cloud, l'automatisation et les pratiques DevOps avec AWS, Docker, Kubernetes et Terraform",
+  "description": "Master cloud infrastructure, automation, and DevOps practices with AWS, Docker, Kubernetes, and Terraform.",
   "category": "Infrastructure & Operations",
   "level": "Mid Level",
-  "totalDuration": "8-12 mois",
+  "totalDuration": "8-12 months",
   "avgSalary": {
     "min": 120000,
     "max": 200000,
     "currency": "MAD"
   },
-  "demandLevel": "Très Élevée",
-  "tags": ["AWS", "Docker", "Kubernetes", "Terraform", "Jenkins", "Monitoring", "Linux"],
+  "demandLevel": "Very High",
+  "tags": [
+    "AWS",
+    "Docker",
+    "Kubernetes",
+    "Terraform",
+    "Jenkins",
+    "Monitoring",
+    "Linux"
+  ],
   "lastUpdated": "2025-09-29",
   "author": "Hirely.ma",
   "steps": [
     {
       "id": "linux-basics",
-      "title": "Fondamentaux Linux & Scripting",
-      "description": "Maîtrisez l'administration système Linux et l'automatisation avec Bash",
-      "duration": "3-4 semaines",
+      "title": "Linux & Scripting Fundamentals",
+      "description": "Master Linux system administration and automation with Bash.",
+      "duration": "3-4 weeks",
       "difficulty": "Beginner",
-      "skills": ["Linux Administration", "Bash Scripting", "SSH", "Cron Jobs", "File Permissions"],
+      "skills": [
+        "Linux Administration",
+        "Bash Scripting",
+        "SSH",
+        "Cron Jobs",
+        "File Permissions"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -30,31 +44,38 @@
           "provider": "Udemy",
           "rating": 4.7,
           "students": 156789,
-          "duration": "20 sections • 180 sessions • Durée totale: 45 h 30 min",
+          "duration": "20 sections • 180 sessions • Total duration: 45 h 30 min",
           "price": {
             "original": 79.99,
             "current": 13.99,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Cours complet couvrant l'administration Linux, les scripts Bash et la sécurité système.",
+          "description": "Complete course covering Linux administration, Bash scripts, and system security.",
           "thumbnailUrl": "/img/linux-admin.jpg",
           "isBestseller": true
         },
         {
           "type": "Practice",
-          "title": "Scripts d'automatisation",
-          "description": "Créez des scripts pour la sauvegarde automatique, monitoring système et déploiement basique"
+          "title": "Automation Scripts",
+          "description": "Create scripts for automatic backup, system monitoring, and basic deployment."
         }
       ]
     },
     {
       "id": "cloud-fundamentals",
       "title": "Cloud Computing - AWS Essentials",
-      "description": "Découvrez les services cloud AWS et l'infrastructure as Code",
-      "duration": "4-5 semaines",
+      "description": "Discover AWS cloud services and Infrastructure as Code.",
+      "duration": "4-5 weeks",
       "difficulty": "Beginner",
-      "skills": ["AWS EC2", "S3", "IAM", "VPC", "CloudFormation", "AWS CLI"],
+      "skills": [
+        "AWS EC2",
+        "S3",
+        "IAM",
+        "VPC",
+        "CloudFormation",
+        "AWS CLI"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -63,31 +84,37 @@
           "provider": "A Cloud Guru",
           "rating": 4.8,
           "students": 78000,
-          "duration": "25 heures",
+          "duration": "25 hours",
           "price": {
             "original": 49.99,
             "current": 29.99,
             "currency": "USD"
           },
           "level": "Beginner",
-          "description": "Formation AWS complète avec labs pratiques et préparation certification.",
+          "description": "Complete AWS training with practical labs and certification preparation.",
           "thumbnailUrl": "/img/aws-fundamentals.jpg",
           "isPopular": true
         },
         {
           "type": "Project",
-          "title": "Infrastructure Web 3-Tiers sur AWS",
-          "description": "Déployez une application web avec Load Balancer, Auto Scaling et base de données RDS"
+          "title": "3-Tier Web Infrastructure on AWS",
+          "description": "Deploy a web application with Load Balancer, Auto Scaling, and RDS database."
         }
       ]
     },
     {
       "id": "containerization",
-      "title": "Conteneurisation & Orchestration",
-      "description": "Maîtrisez Docker et Kubernetes pour le déploiement d'applications",
-      "duration": "5-6 semaines",
+      "title": "Containerization & Orchestration",
+      "description": "Master Docker and Kubernetes for application deployment.",
+      "duration": "5-6 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Docker", "Docker Compose", "Kubernetes", "Helm", "Container Registry"],
+      "skills": [
+        "Docker",
+        "Docker Compose",
+        "Kubernetes",
+        "Helm",
+        "Container Registry"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -96,31 +123,38 @@
           "provider": "Udemy",
           "rating": 4.6,
           "students": 234567,
-          "duration": "22 sections • 300 sessions • Durée totale: 55 h 15 min",
+          "duration": "22 sections • 300 sessions • Total duration: 55 h 15 min",
           "price": {
             "original": 94.99,
             "current": 15.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Formation complète Docker et Kubernetes avec projets pratiques et déploiements production.",
+          "description": "Complete Docker and Kubernetes training with practical projects and production deployments.",
           "thumbnailUrl": "/img/docker-kubernetes.jpg",
           "isBestseller": true
         },
         {
           "type": "Project",
-          "title": "Cluster Kubernetes Multi-Services",
-          "description": "Déployez une application microservices complète avec Ingress, monitoring et scaling automatique"
+          "title": "Multi-Service Kubernetes Cluster",
+          "description": "Deploy a complete microservices application with Ingress, monitoring, and automatic scaling."
         }
       ]
     },
     {
       "id": "iac-automation",
       "title": "Infrastructure as Code & CI/CD",
-      "description": "Automatisez l'infrastructure avec Terraform et les pipelines avec Jenkins/GitLab",
-      "duration": "6-7 semaines",
+      "description": "Automate infrastructure with Terraform and pipelines with Jenkins/GitLab.",
+      "duration": "6-7 weeks",
       "difficulty": "Intermediate",
-      "skills": ["Terraform", "Ansible", "Jenkins", "GitLab CI", "GitHub Actions", "Pipeline as Code"],
+      "skills": [
+        "Terraform",
+        "Ansible",
+        "Jenkins",
+        "GitLab CI",
+        "GitHub Actions",
+        "Pipeline as Code"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -129,14 +163,14 @@
           "provider": "Pluralsight",
           "rating": 4.7,
           "students": 45000,
-          "duration": "18 heures",
+          "duration": "18 hours",
           "price": {
             "original": 39.99,
             "current": 39.99,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Maîtrisez Terraform pour automatiser AWS, Azure et GCP avec bonnes pratiques.",
+          "description": "Master Terraform to automate AWS, Azure, and GCP with best practices.",
           "thumbnailUrl": "/img/terraform-iac.jpg"
         },
         {
@@ -146,30 +180,37 @@
           "provider": "Coursera",
           "rating": 4.5,
           "students": 32000,
-          "duration": "12 semaines",
+          "duration": "12 weeks",
           "price": {
             "original": 49.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Intermediate",
-          "description": "Créez des pipelines CI/CD robustes avec tests automatisés et déploiements multi-environnements.",
+          "description": "Create robust CI/CD pipelines with automated tests and multi-environment deployments.",
           "thumbnailUrl": "/img/jenkins-cicd.jpg"
         },
         {
           "type": "Project",
-          "title": "Pipeline CI/CD Complète",
-          "description": "Infrastructure Terraform + Pipeline Jenkins pour une app Node.js avec tests, sécurité et déploiement Kubernetes"
+          "title": "Complete CI/CD Pipeline",
+          "description": "Terraform Infrastructure + Jenkins Pipeline for a Node.js app with testing, security, and Kubernetes deployment."
         }
       ]
     },
     {
       "id": "monitoring-security",
-      "title": "Monitoring, Logging & Sécurité",
-      "description": "Implémentez l'observabilité complète et sécurisez votre infrastructure",
-      "duration": "5-6 semaines",
+      "title": "Monitoring, Logging & Security",
+      "description": "Implement complete observability and secure your infrastructure.",
+      "duration": "5-6 weeks",
       "difficulty": "Advanced",
-      "skills": ["Prometheus", "Grafana", "ELK Stack", "CloudWatch", "Security Best Practices", "Backup Strategies"],
+      "skills": [
+        "Prometheus",
+        "Grafana",
+        "ELK Stack",
+        "CloudWatch",
+        "Security Best Practices",
+        "Backup Strategies"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -178,14 +219,14 @@
           "provider": "Linux Academy",
           "rating": 4.6,
           "students": 28000,
-          "duration": "20 heures",
+          "duration": "20 hours",
           "price": {
             "original": 49.99,
             "current": 34.99,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Stack monitoring complète avec alerting intelligent et dashboards avancés.",
+          "description": "Complete monitoring stack with smart alerting and advanced dashboards.",
           "thumbnailUrl": "/img/monitoring-stack.jpg"
         },
         {
@@ -195,30 +236,37 @@
           "provider": "Cybrary",
           "rating": 4.4,
           "students": 19000,
-          "duration": "15 heures",
+          "duration": "15 hours",
           "price": {
             "original": 29.99,
             "current": 0,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Intégrez la sécurité dans vos pipelines DevOps avec scanning automatisé.",
+          "description": "Integrate security into your DevOps pipelines with automated scanning.",
           "thumbnailUrl": "/img/devsecops.jpg"
         },
         {
           "type": "Project",
-          "title": "Plateforme de Monitoring Production",
-          "description": "Stack complète de monitoring avec Prometheus/Grafana, logs centralisés ELK, alerting Slack et dashboards métiers"
+          "title": "Production Monitoring Platform",
+          "description": "Complete monitoring stack with Prometheus/Grafana, centralized ELK logs, Slack alerting, and business dashboards."
         }
       ]
     },
     {
       "id": "advanced-devops",
-      "title": "DevOps Avancé & Cloud Native",
-      "description": "Service Mesh, GitOps, Multi-Cloud et optimisation des coûts",
-      "duration": "6-8 semaines",
+      "title": "Advanced DevOps & Cloud Native",
+      "description": "Service Mesh, GitOps, Multi-Cloud, and cost optimization.",
+      "duration": "6-8 weeks",
       "difficulty": "Advanced",
-      "skills": ["Istio", "ArgoCD", "GitOps", "Multi-Cloud", "Cost Optimization", "Chaos Engineering"],
+      "skills": [
+        "Istio",
+        "ArgoCD",
+        "GitOps",
+        "Multi-Cloud",
+        "Cost Optimization",
+        "Chaos Engineering"
+      ],
       "resources": [
         {
           "type": "Course",
@@ -227,14 +275,14 @@
           "provider": "CNCF",
           "rating": 4.8,
           "students": 15000,
-          "duration": "25 heures",
+          "duration": "25 hours",
           "price": {
             "original": 199.99,
             "current": 99.99,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Maîtrisez Istio, ArgoCD et les patterns GitOps pour des déploiements cloud-native.",
+          "description": "Master Istio, ArgoCD, and GitOps patterns for cloud-native deployments.",
           "thumbnailUrl": "/img/k8s-advanced.jpg",
           "isPopular": true
         },
@@ -245,20 +293,20 @@
           "provider": "Cloud Academy",
           "rating": 4.5,
           "students": 12000,
-          "duration": "12 heures",
+          "duration": "12 hours",
           "price": {
             "original": 79.99,
             "current": 59.99,
             "currency": "USD"
           },
           "level": "Advanced",
-          "description": "Architectures multi-cloud avec AWS/Azure/GCP et optimisation des coûts.",
+          "description": "Multi-cloud architectures with AWS/Azure/GCP and cost optimization.",
           "thumbnailUrl": "/img/multicloud.jpg"
         },
         {
           "type": "Project",
-          "title": "Plateforme Cloud-Native Enterprise",
-          "description": "Architecture complète avec Service Mesh, GitOps, Multi-environnements et disaster recovery cross-cloud"
+          "title": "Enterprise Cloud-Native Platform",
+          "description": "Complete architecture with Service Mesh, GitOps, Multi-environments, and cross-cloud disaster recovery."
         }
       ]
     }
@@ -268,60 +316,72 @@
       "name": "AWS Solutions Architect Associate",
       "provider": "Amazon Web Services",
       "difficulty": "Intermediate",
-      "estimatedStudyTime": "2-3 mois",
+      "estimatedStudyTime": "2-3 months",
       "cost": 150,
       "currency": "USD",
-      "renewalPeriod": "3 ans"
+      "renewalPeriod": "3 years"
     },
     {
       "name": "Certified Kubernetes Administrator (CKA)",
       "provider": "Cloud Native Computing Foundation",
       "difficulty": "Advanced",
-      "estimatedStudyTime": "3-4 mois",
+      "estimatedStudyTime": "3-4 months",
       "cost": 395,
       "currency": "USD",
-      "renewalPeriod": "3 ans"
+      "renewalPeriod": "3 years"
     },
     {
       "name": "HashiCorp Certified: Terraform Associate",
       "provider": "HashiCorp",
       "difficulty": "Intermediate",
-      "estimatedStudyTime": "1-2 mois",
+      "estimatedStudyTime": "1-2 months",
       "cost": 70,
       "currency": "USD",
-      "renewalPeriod": "2 ans"
+      "renewalPeriod": "2 years"
     }
   ],
   "careerProgression": [
     {
       "level": "Junior DevOps Engineer",
-      "experience": "0-2 ans",
+      "experience": "0-2 years",
       "salary": {
         "min": 80000,
         "max": 120000,
         "currency": "MAD"
       },
-      "responsibilities": ["Infrastructure basique", "Déploiements assistés", "Monitoring simple"]
+      "responsibilities": [
+        "Basic infrastructure",
+        "Assisted deployments",
+        "Simple monitoring"
+      ]
     },
     {
       "level": "DevOps Engineer",
-      "experience": "2-5 ans",
+      "experience": "2-5 years",
       "salary": {
         "min": 120000,
         "max": 180000,
         "currency": "MAD"
       },
-      "responsibilities": ["Pipelines CI/CD", "Infrastructure as Code", "Automatisation complète"]
+      "responsibilities": [
+        "CI/CD pipelines",
+        "Infrastructure as Code",
+        "Complete automation"
+      ]
     },
     {
       "level": "Senior DevOps Engineer / SRE",
-      "experience": "5+ ans",
+      "experience": "5+ years",
       "salary": {
         "min": 180000,
         "max": 250000,
         "currency": "MAD"
       },
-      "responsibilities": ["Architecture cloud", "Lead technique", "Optimisation performance"]
+      "responsibilities": [
+        "Cloud architecture",
+        "Technical lead",
+        "Performance optimization"
+      ]
     }
   ]
 }
