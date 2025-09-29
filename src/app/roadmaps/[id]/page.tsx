@@ -1,7 +1,6 @@
 // File: src/app/roadmaps/[id]/page.tsx
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image'; // pour optimiser les images si nécessaire
 import {
   Clock,
   DollarSign,
@@ -15,11 +14,11 @@ import type { Roadmap, RoadmapStep } from '@/types/roadmap';
 import CourseModalClient from './CourseModalClient';
 
 interface RoadmapDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
-  const { id } = params;
+export default async function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {
+  const { id } = await params;
   const roadmap: Roadmap | undefined = getRoadmapById(id);
 
   if (!roadmap) {
