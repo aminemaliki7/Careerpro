@@ -49,18 +49,17 @@ export default async function HomePage() {
   <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
     {/* Main headline */}
     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-4 tracking-tight leading-none">
-      Get Hired
+     Hirely. 
       <br />
      <span className="font-medium text-[#1E40AF]">
-  Faster
+  Quickly.
 </span>
 
     </h1>
     
     {/* Subtitle */}
     <p className="text-xl sm:text-2xl text-gray-500 mb-8 font-light max-w-2xl mx-auto leading-relaxed">
-      The most intuitive way to discover opportunities, 
-      master skills, and accelerate your career.
+      The fastest way to discover opportunities, learn skills, stay updated on tech, and grow your career
     </p>
     
     {/* CTA Buttons */}
