@@ -213,11 +213,16 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                 className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-w-[180px] text-gray-800"
               >
                 <option value="">All Topics</option>
-                {allTags.map(tag => (
-                  <option key={tag} value={tag}>
-                    {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </option>
-                ))}
+               {allTags
+  ?.filter((tag): tag is string => typeof tag === "string" && tag.trim() !== "")
+  .map(tag => (
+    <option key={tag} value={tag}>
+      {tag
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, l => l.toUpperCase())}
+    </option>
+  ))}
+
               </select>
             </div>
 
@@ -296,11 +301,12 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                 {/* Cover Image - Mobile Optimized */}
                 {post.coverImage && (
                   <div className="aspect-video w-full overflow-hidden">
-                    <img
-                      src={post.coverImage}
-                      alt={post.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                    />
+                   <img
+  src={post.coverImage}
+  alt={post.title}
+  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
+/>
+
                   </div>
                 )}
 
@@ -338,23 +344,23 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     {post.description}
                   </p>
 
-                  {/* Tags - Mobile Optimized */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {post.tags.slice(0, 2).map((tag, tagIndex) => (
-                      <button
-                        key={`${post.slug}-${tag}-${tagIndex}`}
-                        onClick={() => setSelectedTag(tag)}
-                        className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
-                      >
-                        #{tag}
-                      </button>
-                    ))}
-                    {post.tags.length > 2 && (
-                      <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                        +{post.tags.length - 2}
-                      </span>
-                    )}
-                  </div>
+                {/* Tags - Mobile Optimized */}
+<div className="flex flex-wrap gap-1.5 mb-4">
+  {(post.tags ?? []).slice(0, 2).map((tag, tagIndex) => (
+    <button
+      key={`${post.slug}-${tag}-${tagIndex}`}
+      onClick={() => setSelectedTag(tag)}
+      className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
+    >
+      #{tag}
+    </button>
+  ))}
+  {(post.tags ?? []).length > 2 && (
+    <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+      +{(post.tags ?? []).length - 2}
+    </span>
+  )}
+</div>
 
                   {/* Footer: Author & Read More - Mobile Optimized */}
                   <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100">

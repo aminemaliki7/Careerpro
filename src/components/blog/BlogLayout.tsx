@@ -93,7 +93,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 .mobile-optimized-prose {
                   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
                   color: #1a202c;
-                  line-height: 1.8;
+                  line-height: 1.5;
                 }
                 
                 .animate-fade-in {
@@ -117,9 +117,9 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 .onsaas-prose h4 {
                   color: #1a202c;
                   font-weight: 700;
-                  line-height: 1.3;
-                  margin-top: 3rem;
-                  margin-bottom: 1.5rem;
+                  line-height: 1.2;
+                  margin-top: 1rem;
+                  margin-bottom: 0.5 rem;
                   scroll-margin-top: 120px;
                 }
                 
@@ -359,7 +359,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                       <img
                         src={post.coverImage}
                         alt={post.title}
-                        className="w-full h-64 sm:h-80 object-cover"
+                        className="w-full h-64 sm:h-100 object-cover object-top rounded-xl shadow-lg"
                       />
                       <div className="cover-image-overlay">
                         <div className="click-indicator">
