@@ -18,68 +18,89 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="py-24 md:py-32">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6">
-              Tech jobs,
-              <span className="text-blue-600"> made simple</span>
-            </h1>
-            <p className="text-lg md:text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
-              Find opportunities. Learn strategies. Land your dream role.
-            </p>
+      <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+        {/* Subtle background pattern */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20"></div>
+        
+        <div className="relative z-10 text-center max-w-5xl mx-auto px-6">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 tracking-tight leading-none">
+            Tech jobs,
+            <br />
+            <span className="font-medium text-blue-700">made simple</span>
+          </h1>
+          <p className="text-lg md:text-xl text-gray-500 mb-12 font-light max-w-2xl mx-auto leading-relaxed">
+            Find opportunities. Learn strategies. Land your dream role.
+          </p>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 animate-bounce bottom-16 sm:bottom-8">
+          <div className="w-6 h-10 border-2 border-gray-300 rounded-full flex justify-center">
+            <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
           </div>
         </div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-16 pb-32 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">10K+</div>
-              <div className="text-sm text-gray-600">Active Jobs</div>
+              <div className="text-sm text-gray-500 font-light">Active Jobs</div>
             </div>
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">500+</div>
-              <div className="text-sm text-gray-600">Companies</div>
+              <div className="text-sm text-gray-500 font-light">Companies</div>
             </div>
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">150+</div>
-              <div className="text-sm text-gray-600">Countries</div>
+              <div className="text-sm text-gray-500 font-light">Countries</div>
             </div>
             <div className="text-center">
               <div className="text-4xl md:text-5xl font-bold text-blue-600 mb-2">24/7</div>
-              <div className="text-sm text-gray-600">Updated</div>
+              <div className="text-sm text-gray-500 font-light">Updated</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Grid */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="pt-16 pb-32 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
+              What we offer
+            </h2>
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl">
-              <Target className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Curated Jobs</h3>
-              <p className="text-gray-600">
+            <div className="bg-white rounded-3xl border border-gray-200 hover:border-gray-300 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60">
+              <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                <Target className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Curated Jobs</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Verified opportunities from startups to Fortune 500. Direct connections to hiring managers.
               </p>
             </div>
             
-            <div className="bg-white p-8 rounded-2xl">
-              <Shield className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Expert Guides</h3>
-              <p className="text-gray-600">
+            <div className="bg-white rounded-3xl border border-gray-200 hover:border-gray-300 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60">
+              <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                <Shield className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Expert Guides</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Battle-tested strategies for resumes, interviews, and salary negotiation.
               </p>
             </div>
             
-            <div className="bg-white p-8 rounded-2xl">
-              <Users className="w-10 h-10 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">Career Paths</h3>
-              <p className="text-gray-600">
+            <div className="bg-white rounded-3xl border border-gray-200 hover:border-gray-300 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60">
+              <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                <Users className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-900 mb-4">Career Paths</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Clear roadmaps for every tech role. From junior dev to tech lead.
               </p>
             </div>
