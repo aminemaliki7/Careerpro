@@ -29,7 +29,7 @@ export default function ContactPage() {
             Get in touch
           </h1>
           <p className="text-lg md:text-xl text-gray-500 font-light max-w-2xl mx-auto leading-relaxed">
-            Have a question about your career or want to collaborate? We're here to help.
+            Have a question about your career or want to collaborate? We&aposre here to help.
           </p>
         </div>
       </section>

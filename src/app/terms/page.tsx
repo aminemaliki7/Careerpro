@@ -180,7 +180,7 @@ export default function TermsPage() {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">7. Disclaimers</h2>
               <div className="bg-yellow-50 rounded-2xl p-8 border border-yellow-200">
                 <p className="text-gray-700 leading-relaxed mb-4">
-                  <strong className="text-gray-900">Our services are provided "as is" without warranties of any kind.</strong> We do not guarantee:
+                  <strong className="text-gray-900">Our services are provided &apos as is &apos  without warranties of any kind.</strong> We do not guarantee:
                 </p>
                 <div className="space-y-2 ml-4">
                   <p className="text-gray-700 leading-relaxed">• The accuracy or completeness of job listings</p>
@@ -242,7 +242,7 @@ export default function TermsPage() {
             <div className="mb-16">
               <h2 className="text-3xl font-bold text-gray-900 mb-6">12. Changes to Terms</h2>
               <p className="text-gray-600 leading-relaxed mb-4">
-                We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect.
+                We reserve the right to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days&apos; notice prior to any new terms taking effect.
               </p>
               <p className="text-gray-600 leading-relaxed">
                 Your continued use of the platform after any changes constitutes acceptance of the new Terms.
@@ -279,7 +279,7 @@ export default function TermsPage() {
             Your trust matters to us
           </h2>
           <p className="text-gray-600 mb-8 leading-relaxed">
-            We're committed to transparency and protecting your rights while using our platform.
+            We&apos;re committed to transparency and protecting your rights while using our platform.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

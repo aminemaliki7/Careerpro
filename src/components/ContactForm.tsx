@@ -137,7 +137,7 @@ export default function ContactForm() {
           <div>
             <h4 className="font-medium text-green-900 mb-1">Message sent successfully!</h4>
             <p className="text-sm text-green-700">
-              We'll get back to you within 24 hours.
+              We&apos;ll get back to you within 24 hours.
             </p>
           </div>
         </div>
