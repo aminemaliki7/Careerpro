@@ -1,12 +1,14 @@
+// src/app/contact/page.tsx
 import { Metadata } from 'next'
-import { Clock, MapPin } from 'lucide-react'
+import ContactForm from '@/components/ContactForm'
+import { Clock, MapPin, Mail, MessageSquare } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Hirely Morocco',
+  title: 'Contact Us | Hirely',
   description: 'Get in touch for career advice, collaborations, or feedback. We personally respond to every message within 24 hours.',
   keywords: 'contact, career advice, tech jobs, collaboration',
   openGraph: {
-    title: 'Contact Us | Hirely Morocco',
+    title: 'Contact Us | Hirely',
     description: 'Get in touch for career advice, collaborations, or feedback.',
     type: 'website',
   },
@@ -14,104 +16,90 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Get in Touch
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20"></div>
+        
+        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+          <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-8">
+            <MessageSquare className="w-8 h-8 text-blue-600" />
+          </div>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-none">
+            Get in touch
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Have a question about your career or want to collaborate? 
-            Send us a message via the form below. We personally respond to every message within 24 hours.
+          <p className="text-lg md:text-xl text-gray-500 font-light max-w-2xl mx-auto leading-relaxed">
+            Have a question about your career or want to collaborate? We're here to help.
           </p>
         </div>
+      </section>
 
-        <div className="grid md:grid-cols-1 gap-12">
-          {/* Contact Form */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">
-              Send a Message
-            </h2>
-            
-            <form className="space-y-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Your full name"
-                />
+      {/* Main Content */}
+      <section className="pt-16 pb-32">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="grid lg:grid-cols-3 gap-12">
+            {/* Contact Form */}
+            <div className="lg:col-span-2">
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 md:p-12">
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                  Send us a message
+                </h2>
+                <p className="text-gray-600 mb-8">
+                  We personally respond to every message within 24 hours
+                </p>
+                
+                <ContactForm />
               </div>
-
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject *
-                </label>
-                <select
-                  id="subject"
-                  name="subject"
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="">Select a topic</option>
-                  <option value="career-advice">Career Advice</option>
-                  <option value="collaboration">Collaboration</option>
-                  <option value="feedback">Feedback</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message *
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={6}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Tell us about your situation, question, or proposal..."
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
-
-          {/* Location / Info */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <div className="flex items-center gap-3 mb-4">
-              <MapPin className="w-6 h-6 text-blue-600" />
-              <h3 className="text-lg font-semibold text-gray-900">
-                Location
-              </h3>
             </div>
-            <p className="text-gray-700">
-              Based in Morocco 🇲🇦<br />
-              Available for remote consultations worldwide
-            </p>
 
-            <div className="mt-6 bg-blue-50 rounded-lg p-4 flex items-center gap-3">
-              <Clock className="w-6 h-6 text-blue-600" />
-              <p className="text-gray-700">
-                Quick Response: We personally respond to every message within 24 hours
-              </p>
+            {/* Contact Info */}
+            <div className="space-y-6">
+              {/* Response Time */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 hover:border-gray-300 transition-all duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
+                  <Clock className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Quick Response
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  We respond to every message within 24 hours
+                </p>
+              </div>
+
+              {/* Location */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 hover:border-gray-300 transition-all duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
+                  <MapPin className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Location
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Based in Morocco 🇲🇦<br />
+                  Remote consultations available 🌍
+                </p>
+              </div>
+
+              {/* Email */}
+              <div className="bg-white rounded-3xl border border-gray-200 p-8 hover:border-gray-300 transition-all duration-300">
+                <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center mb-4">
+                  <Mail className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Email
+                </h3>
+                <a 
+                  href="mailto:contact@hirely.com" 
+                  className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                >
+                  contact@hirely.com
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }
