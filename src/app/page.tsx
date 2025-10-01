@@ -409,6 +409,7 @@ export default async function HomePage() {
             No spam, just quality content. Unsubscribe anytime.
           </p>
         </div>
+        
       </section>
     </div>
   );
