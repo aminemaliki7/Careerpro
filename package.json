@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^6.10.1",
+    "@google/generative-ai": "^0.24.1",
     "@mdx-js/loader": "^3.1.1",
     "@mdx-js/mdx": "^3.1.1",
     "@mdx-js/react": "^3.1.1",
@@ -24,8 +25,11 @@
     "gray-matter": "^4.0.3",
     "gtag": "^1.0.1",
     "lucide-react": "^0.544.0",
+    "mammoth": "^1.11.0",
     "next": "15.5.3",
     "next-seo": "^6.8.0",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^3.11.174",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-tsparticles": "^2.12.2",
@@ -35,17 +39,20 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.1",
     "shiki": "^3.13.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/mdx": "^2.0.13",
     "@types/node": "^20.19.14",
+    "@types/pdf-parse": "^1.1.5",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "patch-package": "^8.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   },
