@@ -13,15 +13,15 @@ async function extractWithPdfJs(buffer: Buffer): Promise<string> {
     // Import pdfjs-dist dynamically
     const pdfjsLib = await import('pdfjs-dist');
     
-    // Disable worker for serverless environment
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    // Set worker source for serverless environment
+    // Use CDN-hosted worker for Vercel compatibility
+    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
     
     const uint8Array = new Uint8Array(buffer);
     const loadingTask = pdfjsLib.getDocument({
       data: uint8Array,
       useWorkerFetch: false,
       isEvalSupported: false,
-      useSystemFonts: false,
     });
     
     const pdf = await loadingTask.promise;
