@@ -87,16 +87,15 @@ export default function EasyApplyModal({
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.error || 'Failed to parse DOCX file');
+          throw new Error(data.error || 'Unable to read the file. Please try pasting your CV text.');
         }
 
         return data.text;
       } catch (err) {
-        console.error('File parsing error:', err);
         throw err;
       }
     } else {
-      throw new Error('Unsupported file type. Only DOCX or TXT files are allowed.');
+      throw new Error('Unable to read the file. Please try pasting your CV text.');
     }
   };
 
