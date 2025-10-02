@@ -14,6 +14,8 @@ const nextConfig = {
   // Experimental features for better performance
   experimental: {
     mdxRs: true,
+    // Externalize packages that don't work well in serverless
+    serverComponentsExternalPackages: ['pdfjs-dist', 'mammoth', 'pdf-parse'],
   },
  
   // Image optimization configuration
@@ -60,24 +62,34 @@ const nextConfig = {
  
   // Output configuration for Vercel
   output: 'standalone',
-  
+ 
   // Fix workspace root warning
   outputFileTracingRoot: path.join(__dirname),
-  
-  // Webpack configuration for pdf-parse in serverless environment
+ 
+  // Webpack configuration optimized for Vercel serverless
   webpack: (config, { isServer }) => {
     if (isServer) {
-      // Externalize pdf-parse and its dependencies for serverless
+      // Externalize problematic dependencies for serverless
       config.externals = config.externals || [];
-      config.externals.push({
-        'canvas': 'commonjs canvas',
-      });
-      
-      // Handle pdf-parse native dependencies
+      config.externals.push(
+        'canvas',
+        'sharp',
+      );
+     
+      // Handle pdf-parse and pdfjs-dist native dependencies
       config.resolve = config.resolve || {};
       config.resolve.alias = config.resolve.alias || {};
       config.resolve.alias.canvas = false;
+      
+      // Ensure proper module resolution for pdfjs-dist
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        path: false,
+        crypto: false,
+      };
     }
+    
     return config;
   },
 }

@@ -1,4 +1,4 @@
-// PRODUCTION-READY VERSION - Multiple PDF parsing strategies with fallback
+// PRODUCTION-READY VERSION - Vercel-compatible PDF parsing
 import { NextRequest, NextResponse } from 'next/server';
 import mammoth from 'mammoth';
 
@@ -6,61 +6,73 @@ export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Extracts text from PDF using pdf-parse (primary method)
+ * Extracts text from PDF using pdfjs-dist (Vercel-compatible)
  */
-async function extractWithPdfParse(buffer: Buffer): Promise<string> {
-  const pdfParse = (await import('pdf-parse')).default;
-  const data = await pdfParse(buffer, { max: 0 });
-  
-  if (!data.text || data.text.trim().length < 10) {
-    throw new Error('PDF appears to be empty');
+async function extractWithPdfJs(buffer: Buffer): Promise<string> {
+  try {
+    // Import pdfjs-dist dynamically
+    const pdfjsLib = await import('pdfjs-dist');
+    
+    // Disable worker for serverless environment
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    
+    const uint8Array = new Uint8Array(buffer);
+    const loadingTask = pdfjsLib.getDocument({
+      data: uint8Array,
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      useSystemFonts: false,
+    });
+    
+    const pdf = await loadingTask.promise;
+    let fullText = '';
+    
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const pageText = textContent.items
+        .map((item: unknown) => {
+          // Handle both TextItem and TextMarkedContent types
+          if (item && typeof item === 'object' && 'str' in item) {
+            return (item as { str: string }).str;
+          }
+          return '';
+        })
+        .join(' ');
+      fullText += pageText + '\n\n';
+    }
+    
+    const trimmedText = fullText.trim();
+    if (!trimmedText || trimmedText.length < 10) {
+      throw new Error('PDF appears to be empty');
+    }
+    
+    console.log(`✅ pdfjs-dist: extracted ${trimmedText.length} characters (${pdf.numPages} pages)`);
+    return trimmedText;
+  } catch (error) {
+    console.error('❌ pdfjs-dist error:', error);
+    throw error;
   }
-  
-  console.log(`✅ pdf-parse: extracted ${data.text.length} characters (${data.numpages} pages)`);
-  return data.text.trim();
 }
 
 /**
- * Extracts text from PDF using pdfjs-dist (fallback method)
+ * Extracts text from PDF using pdf-parse (local development fallback)
  */
-async function extractWithPdfJs(buffer: Buffer): Promise<string> {
-  const pdfjsLib = await import('pdfjs-dist');
-  
-  // Disable worker for serverless
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
-  
-  const uint8Array = new Uint8Array(buffer);
-  const loadingTask = pdfjsLib.getDocument({
-    data: uint8Array,
-    useWorkerFetch: false,
-    isEvalSupported: false,
-  });
-  
-  const pdf = await loadingTask.promise;
-  let fullText = '';
-  
-  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-    const page = await pdf.getPage(pageNum);
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items
-      .map((item) => {
-        // Handle both TextItem and TextMarkedContent types
-        if ('str' in item) {
-          return item.str;
-        }
-        return '';
-      })
-      .join(' ');
-    fullText += pageText + '\n\n';
+async function extractWithPdfParse(buffer: Buffer): Promise<string> {
+  try {
+    const pdfParse = (await import('pdf-parse')).default;
+    const data = await pdfParse(buffer, { max: 0 });
+    
+    if (!data.text || data.text.trim().length < 10) {
+      throw new Error('PDF appears to be empty');
+    }
+    
+    console.log(`✅ pdf-parse: extracted ${data.text.length} characters (${data.numpages} pages)`);
+    return data.text.trim();
+  } catch (error) {
+    console.error('❌ pdf-parse error:', error);
+    throw error;
   }
-  
-  const trimmedText = fullText.trim();
-  if (!trimmedText || trimmedText.length < 10) {
-    throw new Error('PDF appears to be empty');
-  }
-  
-  console.log(`✅ pdfjs-dist: extracted ${trimmedText.length} characters (${pdf.numPages} pages)`);
-  return trimmedText;
 }
 
 /**
@@ -69,31 +81,39 @@ async function extractWithPdfJs(buffer: Buffer): Promise<string> {
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   console.log('🔍 Extracting PDF from buffer, size:', buffer.length, 'bytes');
   
-  // Try pdf-parse first (faster and better quality)
-  try {
-    return await extractWithPdfParse(buffer);
-  } catch (pdfParseError) {
-    console.warn('⚠️ pdf-parse failed, trying pdfjs-dist fallback...');
-    console.warn('pdf-parse error details:', JSON.stringify(pdfParseError, Object.getOwnPropertyNames(pdfParseError)));
-    
-    // Fallback to pdfjs-dist
+  // Check if we're on Vercel (production) or local development
+  const isVercel = process.env.VERCEL === '1';
+  
+  if (isVercel) {
+    // On Vercel: Only use pdfjs-dist (pdf-parse doesn't work)
+    console.log('🌐 Running on Vercel - using pdfjs-dist');
     try {
       return await extractWithPdfJs(buffer);
-    } catch (pdfjsError) {
-      console.error('❌ Both PDF methods failed');
-      console.error('pdf-parse error:', JSON.stringify(pdfParseError, Object.getOwnPropertyNames(pdfParseError)));
-      console.error('pdfjs-dist error:', JSON.stringify(pdfjsError, Object.getOwnPropertyNames(pdfjsError)));
+    } catch (error) {
+      console.error('❌ PDF extraction failed on Vercel');
+      throw new Error(`Failed to extract text from PDF: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    }
+  } else {
+    // Local development: Try pdf-parse first (faster), then pdfjs-dist
+    console.log('💻 Running locally - trying pdf-parse first');
+    try {
+      return await extractWithPdfParse(buffer);
+    } catch (pdfParseError) {
+      console.warn('⚠️ pdf-parse failed, trying pdfjs-dist fallback...');
       
-      // Check for specific error types
-      if (pdfParseError instanceof Error) {
-        if (pdfParseError.message.includes('password')) {
+      try {
+        return await extractWithPdfJs(buffer);
+      } catch (pdfjsError) {
+        console.error('❌ Both PDF methods failed');
+        
+        // Check for specific error types
+        if (pdfParseError instanceof Error && pdfParseError.message.includes('password')) {
           throw new Error('This PDF is password protected. Please use an unprotected file.');
         }
+        
+        const errorDetails = `pdf-parse: ${pdfParseError instanceof Error ? pdfParseError.message : String(pdfParseError)}, pdfjs: ${pdfjsError instanceof Error ? pdfjsError.message : String(pdfjsError)}`;
+        throw new Error(`Failed to extract text from PDF. Debug: ${errorDetails}`);
       }
-      
-      // Include actual error details for debugging
-      const errorDetails = `pdf-parse: ${pdfParseError instanceof Error ? pdfParseError.message : String(pdfParseError)}, pdfjs: ${pdfjsError instanceof Error ? pdfjsError.message : String(pdfjsError)}`;
-      throw new Error(`Failed to extract text from PDF. Debug: ${errorDetails}`);
     }
   }
 }
@@ -123,7 +143,8 @@ async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
  * Main handler for the /api/parse-cv POST request.
  */
 export async function POST(request: NextRequest) {
-  console.log('🚀 parse-cv API called - Multi-strategy version');
+  console.log('🚀 parse-cv API called - Vercel-compatible version');
+  console.log('Environment:', process.env.VERCEL === '1' ? 'Vercel (Production)' : 'Local Development');
   
   try {
     const formData = await request.formData();
