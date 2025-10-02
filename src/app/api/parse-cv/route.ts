@@ -6,30 +6,84 @@ export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Extracts text from PDF using pdfjs-dist (Vercel-compatible)
+ * Extracts text from PDF using pdfjs-dist v4+ (Vercel-compatible)
+ * This runs WITHOUT web workers, making it serverless-friendly
  */
 async function extractWithPdfJs(buffer: Buffer): Promise<string> {
   try {
-    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf');
+    // Dynamic import for serverless compatibility
+    const pdfjsLib = await import('pdfjs-dist');
 
-    // Disable worker in serverless environments
-    pdfjsLib.GlobalWorkerOptions.workerSrc = null;
+    // CRITICAL: Completely disable worker for serverless environments
+    // Setting to empty string prevents worker initialization
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+    
+    // Also set workerPort to null to ensure no worker communication
+    if ('workerPort' in pdfjsLib.GlobalWorkerOptions) {
+      pdfjsLib.GlobalWorkerOptions.workerPort = null;
+    }
 
     const uint8Array = new Uint8Array(buffer);
-    const loadingTask = pdfjsLib.getDocument({ data: uint8Array });
+    
+    // Load PDF with ALL serverless-friendly options
+    const loadingTask = pdfjsLib.getDocument({
+      data: uint8Array,
+      // Disable worker features
+      useWorkerFetch: false,
+      isEvalSupported: false,
+      // Disable streaming (serverless environments don't support it well)
+      disableAutoFetch: true,
+      disableStream: true,
+      // Use system fonts to avoid font loading issues
+      useSystemFonts: true,
+      // Disable font face to avoid DOM/canvas issues
+      disableFontFace: true,
+      // Set verbosity for debugging (remove in production)
+      verbosity: 0, // 0 = errors only
+    });
+
     const pdf = await loadingTask.promise;
+    console.log(`📄 PDF loaded: ${pdf.numPages} pages`);
 
     let fullText = '';
+    
     for (let i = 1; i <= pdf.numPages; i++) {
       const page = await pdf.getPage(i);
       const content = await page.getTextContent();
-      fullText += content.items.map((item) => item.str).join(' ') + '\n\n';
+      
+      // Extract text from items
+      const pageText = content.items
+        .map((item) => {
+          // Handle both TextItem and TextMarkedContent
+          // TextItem has 'str' property, TextMarkedContent does not
+          if ('str' in item) {
+            return (item as { str: string }).str;
+          }
+          return '';
+        })
+        .filter(Boolean)
+        .join(' ');
+      
+      fullText += pageText + '\n\n';
+      
+      // Clean up page resources
+      page.cleanup();
     }
 
-    return fullText.trim();
+    // Clean up document
+    await pdf.destroy();
+
+    const result = fullText.trim();
+    console.log(`✅ pdfjs-dist: extracted ${result.length} characters`);
+    
+    if (result.length < 10) {
+      throw new Error('PDF appears to be empty or contains only images');
+    }
+
+    return result;
   } catch (err) {
-    console.error('❌ PDF extraction failed', err);
-    throw err;
+    console.error('❌ PDF extraction failed:', err);
+    throw new Error(`PDF parsing error: ${err instanceof Error ? err.message : 'Unknown error'}`);
   }
 }
 
@@ -68,7 +122,7 @@ async function extractTextFromPDF(buffer: Buffer): Promise<string> {
     console.log('💻 Running locally - trying pdf-parse first');
     try {
       return await extractWithPdfParse(buffer);
-    } catch {
+    } catch (localError) {
       console.warn('⚠️ pdf-parse failed, using pdfjs-dist fallback');
       return await extractWithPdfJs(buffer);
     }
