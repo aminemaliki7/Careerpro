@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
   description: 'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
   icons: {
-    icon: '/images/blog/logo.svg',
+    icon: '/images/blog/logo1.svg',
   },
 };
 
