@@ -239,7 +239,6 @@ export default async function HomePage() {
               </div>
               {job.salary_range && (
                 <div className="flex items-center text-green-600 text-sm font-medium">
-                  <DollarSign className="w-4 h-4 mr-2 text-green-500" />
                   {job.salary_range}
                 </div>
               )}
