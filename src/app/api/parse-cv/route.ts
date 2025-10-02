@@ -1,4 +1,4 @@
-// FIXED VERSION - Works around pdf-parse debug mode issue
+// PRODUCTION-READY VERSION - Multiple PDF parsing strategies with fallback
 import { NextRequest, NextResponse } from 'next/server';
 import mammoth from 'mammoth';
 
@@ -6,38 +6,92 @@ export const runtime = 'nodejs';
 export const maxDuration = 30;
 
 /**
- * Extracts text content from a PDF file buffer using pdf-parse.
- * Dynamically imports pdf-parse to avoid module-level debug code execution.
+ * Extracts text from PDF using pdf-parse (primary method)
+ */
+async function extractWithPdfParse(buffer: Buffer): Promise<string> {
+  const pdfParse = (await import('pdf-parse')).default;
+  const data = await pdfParse(buffer, { max: 0 });
+  
+  if (!data.text || data.text.trim().length < 10) {
+    throw new Error('PDF appears to be empty');
+  }
+  
+  console.log(`✅ pdf-parse: extracted ${data.text.length} characters (${data.numpages} pages)`);
+  return data.text.trim();
+}
+
+/**
+ * Extracts text from PDF using pdfjs-dist (fallback method)
+ */
+async function extractWithPdfJs(buffer: Buffer): Promise<string> {
+  const pdfjsLib = await import('pdfjs-dist');
+  
+  // Disable worker for serverless
+  pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+  
+  const uint8Array = new Uint8Array(buffer);
+  const loadingTask = pdfjsLib.getDocument({
+    data: uint8Array,
+    useWorkerFetch: false,
+    isEvalSupported: false,
+  });
+  
+  const pdf = await loadingTask.promise;
+  let fullText = '';
+  
+  for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+    const page = await pdf.getPage(pageNum);
+    const textContent = await page.getTextContent();
+    const pageText = textContent.items
+      .map((item) => {
+        // Handle both TextItem and TextMarkedContent types
+        if ('str' in item) {
+          return item.str;
+        }
+        return '';
+      })
+      .join(' ');
+    fullText += pageText + '\n\n';
+  }
+  
+  const trimmedText = fullText.trim();
+  if (!trimmedText || trimmedText.length < 10) {
+    throw new Error('PDF appears to be empty');
+  }
+  
+  console.log(`✅ pdfjs-dist: extracted ${trimmedText.length} characters (${pdf.numPages} pages)`);
+  return trimmedText;
+}
+
+/**
+ * Extracts text content from a PDF file buffer with fallback strategies.
  */
 async function extractTextFromPDF(buffer: Buffer): Promise<string> {
+  console.log('🔍 Extracting PDF from buffer, size:', buffer.length, 'bytes');
+  
+  // Try pdf-parse first (faster and better quality)
   try {
-    console.log('🔍 Extracting PDF from buffer, size:', buffer.length, 'bytes');
+    return await extractWithPdfParse(buffer);
+  } catch (pdfParseError) {
+    console.warn('⚠️ pdf-parse failed, trying pdfjs-dist fallback...', pdfParseError);
     
-    // Dynamic import to bypass the debug mode check at module load
-    const pdfParse = (await import('pdf-parse')).default;
-    
-    // Pass empty options object to force in-memory processing
-    const data = await pdfParse(buffer, {});
-    
-    if (!data.text || data.text.trim().length < 10) {
-      throw new Error('PDF appears to be empty or contains only images.');
-    }
-
-    console.log(`✅ Successfully extracted ${data.text.length} characters from PDF (${data.numpages} pages)`);
-    return data.text.trim();
-  } catch (err) {
-    console.error('❌ PDF parsing error:', err);
-    
-    if (err instanceof Error) {
-      if (err.message.includes('password')) {
-        throw new Error('This PDF is password protected. Please use an unprotected file.');
+    // Fallback to pdfjs-dist
+    try {
+      return await extractWithPdfJs(buffer);
+    } catch (pdfjsError) {
+      console.error('❌ Both PDF methods failed');
+      console.error('pdf-parse error:', pdfParseError);
+      console.error('pdfjs-dist error:', pdfjsError);
+      
+      // Check for specific error types
+      if (pdfParseError instanceof Error) {
+        if (pdfParseError.message.includes('password')) {
+          throw new Error('This PDF is password protected. Please use an unprotected file.');
+        }
       }
-      if (err.message.includes('ENOENT')) {
-        throw new Error('PDF parsing library error. Please try again or use a different file format.');
-      }
+      
+      throw new Error('Failed to extract text from PDF. The file may be image-based, corrupted, or in an unsupported format.');
     }
-    
-    throw new Error('Failed to extract text from PDF. The file may be image-based or corrupted.');
   }
 }
 
@@ -66,7 +120,7 @@ async function extractTextFromDOCX(buffer: Buffer): Promise<string> {
  * Main handler for the /api/parse-cv POST request.
  */
 export async function POST(request: NextRequest) {
-  console.log('🚀 parse-cv API called - Fixed version with dynamic import');
+  console.log('🚀 parse-cv API called - Multi-strategy version');
   
   try {
     const formData = await request.formData();
@@ -94,7 +148,7 @@ export async function POST(request: NextRequest) {
     const fileName = file.name.toLowerCase();
     const fileType = file.type;
 
-    // Convert file to buffer for processing libraries
+    // Convert file to buffer
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
     console.log('✅ File converted to buffer');
@@ -144,10 +198,20 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('❌ Parse CV API error:', error);
     
+    // Enhanced error logging for production debugging
+    if (error instanceof Error) {
+      console.error('Error name:', error.name);
+      console.error('Error message:', error.message);
+      console.error('Error stack:', error.stack);
+    }
+    
     const errorMessage = error instanceof Error ? error.message : 'Failed to parse file';
     
     return NextResponse.json(
-      { error: errorMessage },
+      { 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? String(error) : undefined
+      },
       { status: 500 }
     );
   }
