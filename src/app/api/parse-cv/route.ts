@@ -73,15 +73,16 @@ async function extractTextFromPDF(buffer: Buffer): Promise<string> {
   try {
     return await extractWithPdfParse(buffer);
   } catch (pdfParseError) {
-    console.warn('⚠️ pdf-parse failed, trying pdfjs-dist fallback...', pdfParseError);
+    console.warn('⚠️ pdf-parse failed, trying pdfjs-dist fallback...');
+    console.warn('pdf-parse error details:', JSON.stringify(pdfParseError, Object.getOwnPropertyNames(pdfParseError)));
     
     // Fallback to pdfjs-dist
     try {
       return await extractWithPdfJs(buffer);
     } catch (pdfjsError) {
       console.error('❌ Both PDF methods failed');
-      console.error('pdf-parse error:', pdfParseError);
-      console.error('pdfjs-dist error:', pdfjsError);
+      console.error('pdf-parse error:', JSON.stringify(pdfParseError, Object.getOwnPropertyNames(pdfParseError)));
+      console.error('pdfjs-dist error:', JSON.stringify(pdfjsError, Object.getOwnPropertyNames(pdfjsError)));
       
       // Check for specific error types
       if (pdfParseError instanceof Error) {
@@ -90,7 +91,9 @@ async function extractTextFromPDF(buffer: Buffer): Promise<string> {
         }
       }
       
-      throw new Error('Failed to extract text from PDF. The file may be image-based, corrupted, or in an unsupported format.');
+      // Include actual error details for debugging
+      const errorDetails = `pdf-parse: ${pdfParseError instanceof Error ? pdfParseError.message : String(pdfParseError)}, pdfjs: ${pdfjsError instanceof Error ? pdfjsError.message : String(pdfjsError)}`;
+      throw new Error(`Failed to extract text from PDF. Debug: ${errorDetails}`);
     }
   }
 }
