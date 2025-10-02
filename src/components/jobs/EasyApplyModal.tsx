@@ -71,33 +71,36 @@ export default function EasyApplyModal({
     const fileType = file.type;
     const fileName = file.name.toLowerCase();
 
+    // Only allow DOCX and TXT
     if (fileType === 'text/plain' || fileName.endsWith('.txt')) {
       return await file.text();
-    }
+    } else if (fileName.endsWith('.docx')) {
+      const formData = new FormData();
+      formData.append('file', file);
 
-    const formData = new FormData();
-    formData.append('file', file);
+      try {
+        const response = await fetch('/api/parse-cv', {
+          method: 'POST',
+          body: formData,
+        });
 
-    try {
-      const response = await fetch('/api/parse-cv', {
-        method: 'POST',
-        body: formData,
-      });
+        const data = await response.json();
 
-      const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to parse DOCX file');
+        }
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to parse file');
+        return data.text;
+      } catch (err) {
+        console.error('File parsing error:', err);
+        throw err;
       }
-
-      return data.text;
-    } catch (err) {
-      console.error('File parsing error:', err);
-      throw err;
+    } else {
+      throw new Error('Unsupported file type. Only DOCX or TXT files are allowed.');
     }
   };
 
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+ const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -333,7 +336,7 @@ export default function EasyApplyModal({
                   </label>
                   <p className="text-gray-400 mt-2 font-light">or paste your CV text below</p>
                   <p className="text-xs text-gray-400 mt-4 font-light">
-                    Supported formats: PDF, DOCX, TXT (max 10MB)
+                    Supported formats: DOCX, TXT (max 10MB)
                   </p>
                   {cvFile && !parsing && (
                     <div className="mt-6 inline-flex items-center bg-green-50 text-green-700 px-5 py-3 rounded-full shadow-sm">
