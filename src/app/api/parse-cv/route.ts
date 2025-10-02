@@ -1,6 +1,8 @@
 // PRODUCTION-READY VERSION - Vercel-compatible PDF parsing
 import { NextRequest, NextResponse } from 'next/server';
 import mammoth from 'mammoth';
+import type { TextContent, TextItem } from 'pdfjs-dist/types/src/display/api';
+
 
 export const runtime = 'nodejs';
 export const maxDuration = 30;
@@ -10,44 +12,42 @@ export const maxDuration = 30;
  */
 async function extractWithPdfJs(buffer: Buffer): Promise<string> {
   try {
-    // Import pdfjs-dist dynamically
-    const pdfjsLib = await import('pdfjs-dist');
-    
-    // Set worker source for serverless environment
-    // Use CDN-hosted worker for Vercel compatibility
-    pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs`;
-    
+    const pdfjsLib = await import('pdfjs-dist/legacy/build/pdf.mjs');
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '';
+
     const uint8Array = new Uint8Array(buffer);
     const loadingTask = pdfjsLib.getDocument({
       data: uint8Array,
       useWorkerFetch: false,
       isEvalSupported: false,
+      disableFontFace: true,
     });
-    
+
     const pdf = await loadingTask.promise;
     let fullText = '';
-    
+
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
-      const textContent = await page.getTextContent();
+      const textContent: TextContent = await page.getTextContent();
+
       const pageText = textContent.items
-        .map((item: unknown) => {
-          // Handle both TextItem and TextMarkedContent types
-          if (item && typeof item === 'object' && 'str' in item) {
-            return (item as { str: string }).str;
-          }
-          return '';
+        .map((item) => {
+          const textItem = item as TextItem;
+          return textItem.str ?? '';
         })
         .join(' ');
+
       fullText += pageText + '\n\n';
     }
-    
+
     const trimmedText = fullText.trim();
     if (!trimmedText || trimmedText.length < 10) {
       throw new Error('PDF appears to be empty');
     }
-    
-    console.log(`✅ pdfjs-dist: extracted ${trimmedText.length} characters (${pdf.numPages} pages)`);
+
+    console.log(
+      `✅ pdfjs-dist: extracted ${trimmedText.length} characters (${pdf.numPages} pages)`
+    );
     return trimmedText;
   } catch (error) {
     console.error('❌ pdfjs-dist error:', error);
