@@ -6,6 +6,7 @@ import { getFeaturedPosts } from '@/lib/posts';
 import { supabase } from '@/lib/supabase';
 import { getAllRoadmaps } from '@/lib/roadmaps';
 import NewsletterCTA from '@/components/NewsletterCTA';
+import RecruiterButton from '@/components/RecruiterButton';
 
 // This is now an asynchronous Server Component
 export default async function HomePage() {
@@ -47,6 +48,7 @@ export default async function HomePage() {
   <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20"></div>
   
   <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
+    
     {/* Main headline */}
     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-4 tracking-tight leading-none">
      Hirely. 
@@ -79,15 +81,18 @@ export default async function HomePage() {
         View Roadmaps
         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
       </Link>
+                  <RecruiterButton />
+
     </div>
   </div>
   
   {/* Scroll indicator */}
-  <div className="absolute left-1/2 transform -translate-x-1/2 animate-bounce bottom-16 sm:bottom-8">
+  <div className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 animate-bounce bottom-16 sm:bottom-8">
   <div className="w-6 h-10 border-2 border-gray-300 rounded-full flex justify-center">
     <div className="w-1 h-3 bg-gray-400 rounded-full mt-2 animate-pulse"></div>
   </div>
 </div>
+
 
 </section>
 
@@ -184,16 +189,19 @@ export default async function HomePage() {
       {/* Jobs Section - Apple card design - Reduced top padding */}
       <section className="pt-16 pb-32 bg-white">
   <div className="max-w-7xl mx-auto px-6">
-    {/* Section header */}
+    {/* Section header with recruiter button */}
     <div className="text-center mb-20">
       <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
         Opportunities
       </h2>
-      <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
+      <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-8">
         Handpicked positions from innovative companies that value talent and growth.
       </p>
-    </div>
+      
+               <RecruiterButton />
 
+
+    </div>
     {/* Jobs grid */}
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {featuredJobs.map((job) => (
