@@ -23,7 +23,7 @@ export default function AboutPage() {
             About Hirely
           </h1>
           <p className="text-xl text-gray-600 font-light leading-relaxed">
-            We're building a better way to connect tech talent with opportunities. No noise, no spam—just real jobs, clear guidance, and tools that actually help.
+            We&apos;re building a better way to connect tech talent with opportunities. No noise, no spam—just real jobs, clear guidance, and tools that actually help.
           </p>
         </div>
       </section>
@@ -34,13 +34,13 @@ export default function AboutPage() {
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Our Story</h2>
           <div className="prose prose-lg max-w-none text-gray-700 space-y-6">
             <p>
-              Job hunting in tech shouldn't feel like a full-time job. Yet for too many people, it does. Endless applications that go nowhere. Job boards cluttered with outdated listings. Career advice that's either too generic or just plain wrong.
+              Job hunting in tech shouldn&apos;t feel like a full-time job. Yet for too many people, it does. Endless applications that go nowhere. Job boards cluttered with outdated listings. Career advice that&apos;s either too generic or just plain wrong.
             </p>
             <p>
-              We started Hirely because we've been there. We know what it's like to send out hundreds of applications and hear nothing back. We know the frustration of finding a "perfect" job posting only to discover it was filled months ago.
+              We started Hirely because we&apos;ve been there. We know what it&apos;s like to send out hundreds of applications and hear nothing back. We know the frustration of finding a &quot;perfect&quot; job posting only to discover it was filled months ago.
             </p>
             <p>
-              So we built something different. A platform where jobs are actually verified. Where career guidance comes from people who've done the work, not just written about it. Where you can map your path forward without paying for expensive bootcamps or courses.
+              So we built something different. A platform where jobs are actually verified. Where career guidance comes from people who&apos;ve done the work, not just written about it. Where you can map your path forward without paying for expensive bootcamps or courses.
             </p>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default function AboutPage() {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
               <p className="text-gray-600 leading-relaxed">
-                A world where finding your next tech role is straightforward, transparent, and doesn't require gaming algorithms or paying gatekeepers.
+                A world where finding your next tech role is straightforward, transparent, and doesn&apos;t require gaming algorithms or paying gatekeepers.
               </p>
             </div>
 
@@ -109,7 +109,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Curate Real Opportunities</h3>
                 <p className="text-gray-600">
-                  Every job on our platform is verified. We review each posting before it goes live to ensure it's legitimate, current, and detailed enough to be useful.
+                  Every job on our platform is verified. We review each posting before it goes live to ensure it&apos;s legitimate, current, and detailed enough to be useful.
                 </p>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function AboutPage() {
               <div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Provide Clear Guidance</h3>
                 <p className="text-gray-600">
-                  Our blog features practical advice from people who've actually hired (or been hired) in tech. No fluff, no outdated wisdom—just what works right now.
+                  Our blog features practical advice from people who&apos;ve actually hired (or been hired) in tech. No fluff, no outdated wisdom—just what works right now.
                 </p>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function AboutPage() {
               <h2 className="text-3xl font-bold text-gray-900">For Recruiters</h2>
             </div>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              We're building a high-quality talent pool. If you're hiring for a legitimate tech role, we want to help you find the right people—without the noise of unqualified applicants.
+              We&apos;re building a high-quality talent pool. If you&apos;re hiring for a legitimate tech role, we want to help you find the right people—without the noise of unqualified applicants.
             </p>
             <Link
               href="/recruiter/add-job"
