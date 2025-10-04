@@ -13,10 +13,12 @@ export default async function HomePage() {
   const featuredPosts = getFeaturedPosts();
   const allRoadmaps = getAllRoadmaps();
   const recentRoadmaps = allRoadmaps.slice(0, 6);
+  
 
   const { data: featuredJobs, error } = await supabase
     .from('jobs')
     .select('*')
+    .eq('status', 'approved')  // ADD THIS LINE - only approved jobs
     .order('posted_date', { ascending: false })
     .limit(3);
 
