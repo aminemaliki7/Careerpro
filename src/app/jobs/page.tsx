@@ -71,23 +71,24 @@ export default function JobsPage() {
     fetchJobs();
   }, []);
 
-  const fetchJobs = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('jobs')
-        .select('*')
-        .order('posted_date', { ascending: false });
+ const fetchJobs = async () => {
+  try {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('jobs')
+      .select('*')
+      .eq('status', 'approved') // ADD THIS LINE
+      .order('posted_date', { ascending: false });
 
-      if (error) throw error;
-      setJobs(data || []);
-    } catch (err) {
-      setError('Error loading job listings');
-      console.error('Error fetching jobs:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (error) throw error;
+    setJobs(data || []);
+  } catch (err) {
+    setError('Error loading job listings');
+    console.error('Error fetching jobs:', err);
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleJobPosted = () => {
     fetchJobs();

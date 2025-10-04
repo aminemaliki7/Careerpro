@@ -21,6 +21,7 @@ interface Job {
   slug?: string
   posted_date?: string
   updated_date?: string
+  status?: 'pending' | 'approved' | 'rejected'  // ADD THIS LINE
 }
 
 interface JobFormProps {
@@ -107,7 +108,8 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
           .filter((s: string) => s.length > 0),
         slug: generateSlug(formData.title, formData.company),
         posted_date: initialData?.posted_date || new Date().toISOString(),
-        updated_date: new Date().toISOString()
+        updated_date: new Date().toISOString(),
+        status: isEditing ? initialData?.status : 'pending'
       }
 
       const isPostRequest = !isEditing
@@ -121,6 +123,10 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
       })
 
       if (response.ok) {
+        // Show success message for new jobs
+        if (!isEditing) {
+          alert('Job submitted successfully! It will be reviewed before being published.');
+        }
         router.push('/admin')
         router.refresh()
       } else {

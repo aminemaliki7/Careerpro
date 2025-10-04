@@ -21,6 +21,8 @@ export interface Job {
   posted_date: string;
   updated_date?: string;
   
+  status?: 'pending' | 'approved' | 'rejected';
+
   // Optional fields for future enhancements
   company_size?: string;
   work_authorization?: string[];
@@ -28,6 +30,9 @@ export interface Job {
   company_logo_url?: string;
   seniority_level?: string;
   employment_status?: string;
+
+
+  
 }
 
 // More specific types for better type safety
