@@ -46,56 +46,50 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Mission, Vision, Values */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-12">
-            {/* Mission */}
-            <div>
-              <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center mb-6">
-                <Target className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
-              <p className="text-gray-600 leading-relaxed">
-                Make tech careers accessible to everyone by providing honest job listings, practical guidance, and clear learning paths—all in one place.
-              </p>
-            </div>
+     {/* Mission, Vision, Values */}
+<section className="py-20 bg-gray-50 flex items-center justify-center">
+  <div className="max-w-7xl mx-auto px-6 text-center">
+    <h2 className="text-3xl font-bold text-gray-900 mb-12">Mission, Vision & Values</h2>
 
-            {/* Vision */}
-            <div>
-              <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center mb-6">
-                <Lightbulb className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
-              <p className="text-gray-600 leading-relaxed">
-                A world where finding your next tech role is straightforward, transparent, and doesn&apos;t require gaming algorithms or paying gatekeepers.
-              </p>
-            </div>
-
-            {/* Values */}
-            <div>
-              <div className="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center mb-6">
-                <Heart className="w-6 h-6 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h3>
-              <ul className="text-gray-600 leading-relaxed space-y-2">
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Transparency over hype</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>Quality over quantity</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="mr-2">•</span>
-                  <span>People over profit</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+    <div className="grid md:grid-cols-3 gap-12 justify-items-center">
+      {/* Mission */}
+      <div className="max-w-sm">
+        <div className="w-12 h-12 bg-blue-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+          <Target className="w-6 h-6 text-white" />
         </div>
-      </section>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Mission</h3>
+        <p className="text-gray-600 leading-relaxed">
+          Make tech careers accessible to everyone by providing honest job listings, practical guidance, and clear learning paths, all in one place.
+        </p>
+      </div>
+
+      {/* Vision */}
+      <div className="max-w-sm">
+        <div className="w-12 h-12 bg-purple-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+          <Lightbulb className="w-6 h-6 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Vision</h3>
+        <p className="text-gray-600 leading-relaxed">
+          A world where finding your next tech role is straightforward, transparent, and doesn&apos;t require gaming algorithms or paying gatekeepers.
+        </p>
+      </div>
+
+      {/* Values */}
+      <div className="max-w-sm">
+        <div className="w-12 h-12 bg-green-600 rounded-2xl flex items-center justify-center mb-6 mx-auto">
+          <Heart className="w-6 h-6 text-white" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-900 mb-4">Our Values</h3>
+        <ul className="text-gray-600 leading-relaxed space-y-2 text-left inline-block">
+          <li>• Transparency over hype</li>
+          <li>• Quality over quantity</li>
+          <li>• People over profit</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
 
       {/* What We Do */}
       <section className="py-20 bg-white">
