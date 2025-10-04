@@ -3,31 +3,30 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-// Define the Job interface for type safety
 interface Job {
-  title: string;
-  company: string;
-  location: string;
-  type: string;
-  experience_level: string;
-  salary_range: string;
-  description: string;
-  requirements: string[];
-  benefits: string[];
-  skills: string[];
-  remote: boolean;
-  featured: boolean;
-  contact_email: string;
-  application_url: string;
-  slug?: string;
-  posted_date?: string;
-  updated_date?: string;
+  title: string
+  company: string
+  location: string
+  type: string
+  experience_level: string
+  salary_range: string
+  description: string
+  requirements: string[]
+  benefits: string[]
+  skills: string[]
+  remote: boolean
+  featured: boolean
+  contact_email: string
+  application_url: string
+  slug?: string
+  posted_date?: string
+  updated_date?: string
 }
 
 interface JobFormProps {
-  initialData?: Partial<Job>;
-  isEditing?: boolean;
-  slug?: string;
+  initialData?: Partial<Job>
+  isEditing?: boolean
+  slug?: string
 }
 
 export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) {
@@ -72,6 +71,25 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
     setLoading(true)
     setErrorMessage(null)
 
+    // Client-side validation for required fields
+    if (
+      !formData.title.trim() ||
+      !formData.company.trim() ||
+      !formData.location.trim() ||
+      !formData.type.trim() ||
+      !formData.description.trim() ||
+      !formData.requirements.trim() ||
+      !formData.experience_level.trim() ||
+      !formData.contact_email.trim() ||
+      !formData.application_url.trim()
+    ) {
+      setErrorMessage(
+        "Please fill all required fields: Title, Company, Location, Type, Description, Requirements, Experience Level, Contact Email, and Application URL."
+      )
+      setLoading(false)
+      return
+    }
+
     try {
       const jobData: Job = {
         ...formData,
@@ -87,23 +105,19 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
           .split(',')
           .map((s: string) => s.trim())
           .filter((s: string) => s.length > 0),
-        // Add the slug and dates for the database
         slug: generateSlug(formData.title, formData.company),
         posted_date: initialData?.posted_date || new Date().toISOString(),
         updated_date: new Date().toISOString()
       }
 
-      // Determine the API endpoint and method
       const isPostRequest = !isEditing
       const apiEndpoint = isPostRequest ? '/api/admin/jobs' : `/api/admin/jobs/${slug}`
       const method = isPostRequest ? 'POST' : 'PUT'
 
       const response = await fetch(apiEndpoint, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(jobData), // Send the complete jobData object
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jobData),
       })
 
       if (response.ok) {
@@ -111,201 +125,185 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
         router.refresh()
       } else {
         const errorData = await response.json()
-        setErrorMessage(errorData.error || 'Erreur inconnue')
+        setErrorMessage(errorData.error || 'Unknown error')
       }
     } catch (error) {
-      console.error('Erreur sauvegarde:', error)
-      setErrorMessage('Erreur lors de la sauvegarde. Veuillez réessayer.')
+      console.error('Save error:', error)
+      setErrorMessage('Failed to save. Please try again.')
     } finally {
       setLoading(false)
     }
   }
-  
+
   return (
-    <div className="bg-white shadow rounded-lg">
-      <form onSubmit={handleSubmit} className="p-6 space-y-6">
-        {/* Your form fields... */}
+    <div className="max-w-3xl mx-auto my-12 bg-white shadow-xl rounded-2xl p-6 sm:p-8">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Job title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Titre du poste *
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Job Title *</label>
           <input
             type="text"
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-            placeholder="ex: Développeur Frontend Senior"
+            placeholder="Ex: Senior Frontend Developer"
           />
         </div>
 
+        {/* Company */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Entreprise *
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Company *</label>
           <input
             type="text"
             value={formData.company}
             onChange={(e) => setFormData({ ...formData, company: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-            placeholder="ex: TechCorp"
+            placeholder="Ex: TechCorp"
           />
         </div>
 
+        {/* Location */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Localisation *
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Location *</label>
           <input
             type="text"
             value={formData.location}
             onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
-            placeholder="ex: Paris, France ou Remote"
+            placeholder="Ex: Rabat, Morocco or Remote"
           />
         </div>
 
+        {/* Job type */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Type de contrat *
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Job Type *</label>
           <select
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
-            <option value="Full-time">CDI / Temps plein</option>
-            <option value="Part-time">Temps partiel</option>
-            <option value="Contract">Contrat</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
             <option value="Freelance">Freelance</option>
-            <option value="Internship">Stage</option>
+            <option value="Internship">Internship</option>
           </select>
         </div>
 
+        {/* Experience level */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Niveau d&apos;expérience
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Experience Level *</label>
           <input
             type="text"
             value={formData.experience_level}
             onChange={(e) => setFormData({ ...formData, experience_level: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="ex: Senior, Mid-level, Junior"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Ex: Senior, Mid-level, Junior"
+            required
           />
         </div>
 
+        {/* Salary range */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Fourchette salariale
-          </label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Salary Range</label>
           <input
             type="text"
             value={formData.salary_range}
             onChange={(e) => setFormData({ ...formData, salary_range: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="ex: 50k€ - 70k€ ou Selon profil"
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder=""
           />
         </div>
 
+        {/* Contact & Apply */}
         <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Contact & Candidature</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Contact & Application</h3>
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email de contact
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Contact Email *</label>
               <input
                 type="email"
                 value={formData.contact_email}
                 onChange={(e) => setFormData({ ...formData, contact_email: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="recrutement@entreprise.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="recruitment@company.com"
+                required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                URL de candidature
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Application URL *</label>
               <input
                 type="url"
                 value={formData.application_url}
                 onChange={(e) => setFormData({ ...formData, application_url: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="https://entreprise.com/jobs/apply"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="https://company.com/jobs/apply"
+                required
               />
             </div>
           </div>
         </div>
 
+        {/* Job description */}
         <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Description du poste</h3>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description complète *
-            </label>
-            <textarea
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              rows={8}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              required
-              placeholder="Décrivez le poste, les responsabilités, l'environnement de travail..."
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Job Description *</label>
+          <textarea
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            rows={8}
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+            placeholder="Describe the job, responsibilities, and work environment..."
+          />
         </div>
 
+        {/* Requirements & Skills */}
         <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Compétences & Exigences</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-4">Requirements & Skills</h3>
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Exigences (une par ligne)
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Requirements (one per line) *</label>
               <textarea
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
                 rows={6}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Diplôme en informatique ou équivalent&#10;3+ ans d'expérience en React&#10;Maîtrise de TypeScript&#10;Anglais professionnel"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Computer Science degree or equivalent&#10;3+ years React experience&#10;TypeScript mastery&#10;Professional English"
+                required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Compétences techniques (séparées par des virgules)
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Technical Skills (comma separated)</label>
               <input
                 type="text"
                 value={formData.skills}
                 onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="React, TypeScript, Node.js, PostgreSQL, Docker"
               />
             </div>
           </div>
         </div>
 
+        {/* Benefits */}
         <div className="border-b border-gray-200 pb-6">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Avantages</h3>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Avantages proposés (un par ligne)
-            </label>
-            <textarea
-              value={formData.benefits}
-              onChange={(e) => setFormData({ ...formData, benefits: e.target.value })}
-              rows={5}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Salaire compétitif&#10;Mutuelle prise en charge&#10;Tickets restaurant&#10;Télétravail flexible&#10;Formation continue"
-            />
-          </div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">Benefits (one per line)</label>
+          <textarea
+            value={formData.benefits}
+            onChange={(e) => setFormData({ ...formData, benefits: e.target.value })}
+            rows={5}
+            className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Competitive salary&#10;Health insurance&#10;Meal vouchers&#10;Flexible remote work&#10;Continuous training"
+          />
         </div>
 
+        {/* Options */}
         <div className="pb-6">
           <h3 className="text-lg font-medium text-gray-900 mb-4">Options</h3>
           <div className="flex items-center space-x-6">
@@ -317,9 +315,7 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
                 onChange={(e) => setFormData({ ...formData, remote: e.target.checked })}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="remote" className="ml-2 text-sm text-gray-700">
-                Télétravail possible
-              </label>
+              <label htmlFor="remote" className="ml-2 text-sm text-gray-700">Remote possible</label>
             </div>
 
             <div className="flex items-center">
@@ -330,24 +326,22 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
                 onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
                 className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
-              <label htmlFor="featured" className="ml-2 text-sm text-gray-700">
-                Job mis en avant
-              </label>
+              <label htmlFor="featured" className="ml-2 text-sm text-gray-700">Featured job</label>
             </div>
           </div>
         </div>
 
         {/* Error Modal */}
         {errorMessage && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-xl max-w-sm mx-auto">
-              <h4 className="text-lg font-bold text-red-600">Erreur</h4>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="bg-white p-6 rounded-xl shadow-xl max-w-sm mx-auto">
+              <h4 className="text-lg font-bold text-red-600">Error</h4>
               <p className="mt-2 text-gray-700">{errorMessage}</p>
               <button
                 onClick={() => setErrorMessage(null)}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
+                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition"
               >
-                Fermer
+                Close
               </button>
             </div>
           </div>
@@ -358,16 +352,16 @@ export function JobForm({ initialData, isEditing = false, slug }: JobFormProps) 
           <button
             type="button"
             onClick={() => router.back()}
-            className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 border border-gray-300 rounded-xl text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"
           >
-            Annuler
+            Cancel
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="px-6 py-2 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            {loading ? 'Sauvegarde...' : (isEditing ? 'Mettre à jour' : 'Créer le job')}
+            {loading ? 'Saving...' : (isEditing ? 'Update Job' : 'Create Job')}
           </button>
         </div>
       </form>

@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { Job, getJobRegion, formatExperienceLevel, GLOBAL_REGIONS } from '@/types/job';
-import RecruiterJobModal from '@/components/jobs/RecruiterJobModal';
 
 // Add globe icon for regions
 const GlobeIcon = ({ className }: { className: string }) => (
@@ -203,12 +202,7 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Recruiter Modal */}
-      <RecruiterJobModal
-        isOpen={isRecruiterModalOpen}
-        onClose={() => setIsRecruiterModalOpen(false)}
-        onSuccess={handleJobPosted}
-      />
+     
 
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
@@ -235,15 +229,7 @@ export default function JobsPage() {
 
             {/* Recruiter Button */}
             <div className="mt-4">
-              <button
-                onClick={() => setIsRecruiterModalOpen(true)}
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg"
-              >
-                <svg className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                Are you a recruiter? Post a Job
-              </button>
+              
             </div>
           </div>
         </div>
