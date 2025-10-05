@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import { Menu, X } from 'lucide-react';
 import {
   SignInButton,
@@ -13,6 +14,7 @@ import CircuitLogo from './CircuitLogo';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -41,16 +43,25 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className="text-gray-700 hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
-              >
-                {item.name}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-400 via-blue-500 to-violet-500 transition-all duration-300 group-hover:w-full"></span>
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`${
+                    isActive ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'
+                  } px-3 py-2 text-sm font-medium transition-colors duration-200 relative group`}
+                >
+                  {item.name}
+                  <span
+                    className={`absolute bottom-0 left-0 ${
+                      isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                    } h-0.5 bg-gradient-to-r from-emerald-400 via-blue-500 to-violet-500 transition-all duration-300`}
+                  ></span>
+                </Link>
+              );
+            })}
           </nav>
 
           {/* Auth & CTA Section - desktop */}
@@ -95,16 +106,23 @@ export default function Header() {
         {isMenuOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 bg-white/95 backdrop-blur-sm">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-gray-700 hover:text-blue-600 hover:bg-blue-50 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
-                >
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`${
+                      isActive
+                        ? 'text-blue-600 bg-blue-50'
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                    } block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200`}
+                  >
+                    {item.name}
+                  </Link>
+                );
+              })}
 
               {/* Mobile Auth Buttons */}
               <div className="mt-4 space-y-2 border-t border-gray-200 pt-4">
