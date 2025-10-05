@@ -236,17 +236,19 @@ export default async function JobDetailsPage({
               </a>
             )}
 
-            {/* Easy Apply Button (Premium) */}
-            <div className="flex-1">
-              <EasyApplyButton 
-                jobTitle={typedJob.title}
-                company={typedJob.company}
-                requirements={typedJob.requirements}
-                description={typedJob.description}
-                contactEmail={typedJob.contact_email}
-                skills={typedJob.skills}
-              />
-            </div>
+            {/* Easy Apply Button (Premium) - Shows when email doesn't exist */}
+            {!typedJob.contact_email && (
+              <div className="flex-1">
+                <EasyApplyButton 
+                  jobTitle={typedJob.title}
+                  company={typedJob.company}
+                  requirements={typedJob.requirements}
+                  description={typedJob.description}
+                  contactEmail={typedJob.contact_email}
+                  skills={typedJob.skills}
+                />
+              </div>
+            )}
 
             {/* Apply Now Button */}
             {typedJob.application_url && (
