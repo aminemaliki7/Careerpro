@@ -27,7 +27,7 @@ export default function RecruiterButton() {
             isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full'
           }`}
         >
-          Post a Job
+          Post a Job 
         </span>
       </span>
     </Link>
