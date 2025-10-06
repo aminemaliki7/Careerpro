@@ -1,0 +1,232 @@
+---
+title: "What You Should Actually Know About SQL Before Your Next Interview"
+description: "Interviewers aren't testing if you memorized syntax. They're checking if you understand how databases actually work. Here's what separates candidates who get offers from those who don't."
+publishedAt: "2025-10-06"
+tags: ["sql", "interviews", "career", "databases", "tech-jobs"]
+slug: "sql-interview-prep-guide"
+featured: true
+coverImage: "/images/sql-interview-prep.jpg"
+---
+
+## The Question That Reveals Everything
+
+You're in a technical interview. The interviewer pulls up a code editor and asks: "Write a query to find the second highest salary from an employees table."
+
+You know this one. You've seen it in interview prep guides. You write:
+
+```sql
+SELECT MAX(salary) 
+FROM employees 
+WHERE salary < (SELECT MAX(salary) FROM employees);
+```
+
+The interviewer nods. "That works. Now, what if there are millions of employees and this query needs to run hundreds of times per second?"
+
+Suddenly, it's not about syntax anymore. It's about indexes, query optimization, and understanding how databases actually work under the hood.
+
+This is where most candidates stumble. And this is exactly what interviewers are looking for.
+
+## What Interviewers Are Really Testing
+
+After reviewing hundreds of SQL interview experiences from Moroccan developers interviewing at local companies and international firms, a pattern emerges. Interviewers aren't checking if you memorized JOIN syntax or can recite the difference between WHERE and HAVING.
+
+They're testing three things: Do you understand how databases actually work? Can you write queries that perform well at scale? And do you know when SQL is the right tool versus when it's not?
+
+The syntax is table stakes. The understanding is what gets you hired.
+
+## The Concepts That Separate Junior from Senior
+
+Let's talk about what you actually need to know. Not in the "memorize this list" way, but in the "deeply understand this concept" way that lets you handle curveball questions.
+
+### Indexes: The Concept Everyone Claims to Understand
+
+Ask most developers about indexes and they'll say "indexes make queries faster." Ask them when NOT to use an index and you'll get blank stares.
+
+Here's what interviewers want to know: You understand that an index is essentially a separate data structure that speeds up reads but slows down writes. You know that `WHERE`, `JOIN`, and `ORDER BY` clauses benefit from indexes. You recognize that adding indexes to every column is actually counterproductive. You can explain the difference between clustered and non-clustered indexes. And you understand when a database will ignore your index entirely.
+
+In interviews, this often comes up as: "Your users are complaining that searching for products by category is slow. The products table has 10 million rows. What do you do?"
+
+The junior answer: "Add an index on the category column."
+
+The senior answer: "First, I'd check the execution plan to confirm category is actually the bottleneck. If it is, yes, an index on category would help. But I'd also consider if we're returning too much data, whether category has high or low cardinality—if there are only 5 categories total, a full table scan might actually be faster than using the index. I'd also check if there are existing composite indexes that could be reordered to include category."
+
+See the difference? It's not about knowing indexes exist. It's about knowing when and why they matter.
+
+### JOINs: Beyond LEFT and INNER
+
+Everyone knows `INNER JOIN` returns matching rows and `LEFT JOIN` returns all rows from the left table. But here's what trips people up in interviews.
+
+Understanding NULL behavior in JOINs and how it affects your results. Knowing that join order matters for performance, even though it shouldn't theoretically. Recognizing when a subquery is actually clearer than multiple joins. Understanding the difference between `LEFT JOIN` with a `WHERE` condition versus with an `ON` condition. And being able to explain what's happening when you join three or more tables.
+
+A common interview question: "We have users, orders, and products tables. Write a query to find users who have never ordered a specific product."
+
+Most candidates immediately reach for a `NOT EXISTS` or `NOT IN`. But can you explain why `LEFT JOIN` with a `NULL` check might be more performant? Can you discuss the edge cases?
+
+```sql
+SELECT u.user_id, u.name
+FROM users u
+LEFT JOIN orders o ON u.user_id = o.user_id
+LEFT JOIN order_items oi ON o.order_id = oi.order_id AND oi.product_id = 123
+WHERE oi.order_item_id IS NULL;
+```
+
+The interviewer might then ask: "What if a user has never placed ANY order? Does this query still work?" If you can spot that this query would incorrectly include those users and explain how to fix it, you're demonstrating real understanding.
+
+### Window Functions: The Senior Developer Secret Weapon
+
+Here's an uncomfortable truth: if you don't know window functions, you'll struggle with mid-level and senior SQL interviews. They're not advanced—they're essential.
+
+Window functions let you perform calculations across related rows without collapsing them into groups. They're perfect for ranking, running totals, moving averages, comparing rows to previous or next rows, and calculating percentiles or distribution.
+
+Remember that "second highest salary" question from the beginning? Here's the senior developer answer:
+
+```sql
+SELECT DISTINCT salary
+FROM (
+  SELECT salary, DENSE_RANK() OVER (ORDER BY salary DESC) as rank
+  FROM employees
+) ranked
+WHERE rank = 2;
+```
+
+This handles edge cases like ties, is more readable, and performs better at scale.
+
+Interviewers love window functions because they reveal who has moved beyond basic SQL into real-world data analysis. Expect questions like: "Show the sales for each month along with the running total for the year" or "For each employee, show their salary and how it compares to the average salary in their department."
+
+### Query Performance: Thinking Like the Database
+
+This is where interviews get interesting. The interviewer shows you a slow query and asks you to fix it.
+
+The candidates who get offers don't just guess. They methodically analyze using execution plans (EXPLAIN in PostgreSQL, EXPLAIN ANALYZE in MySQL), looking for table scans where indexes should be used, checking for unnecessary sorting operations, identifying missing indexes or unused indexes, and spotting inefficient subqueries that could be rewritten.
+
+A typical scenario: "This query takes 30 seconds on our production database. How would you optimize it?"
+
+```sql
+SELECT p.product_name, COUNT(*) as order_count
+FROM products p
+WHERE p.product_id IN (
+  SELECT oi.product_id 
+  FROM order_items oi
+  WHERE oi.created_at > '2025-01-01'
+)
+GROUP BY p.product_name
+ORDER BY order_count DESC;
+```
+
+Can you spot the issues? The subquery executes for every product, there's no index consideration mentioned, and we're ordering after grouping which might be unnecessary if we only need top N.
+
+A better approach:
+
+```sql
+SELECT p.product_name, COUNT(*) as order_count
+FROM products p
+INNER JOIN order_items oi ON p.product_id = oi.product_id
+WHERE oi.created_at > '2025-01-01'
+GROUP BY p.product_id, p.product_name
+ORDER BY order_count DESC
+LIMIT 10;
+```
+
+Being able to explain WHY this is better—not just that it is better—is what interviewers are listening for.
+
+## The Scenarios That Reveal Understanding
+
+Beyond specific concepts, interviewers often present scenarios that test your judgment and problem-solving approach.
+
+### Data Integrity Questions
+
+"We have an orders table and an order_items table. How do you ensure that every order_item belongs to a valid order?"
+
+This tests if you understand foreign keys, cascading deletes, transaction isolation levels, and when to enforce constraints at the database level versus application level.
+
+### Normalization and Denormalization
+
+"Should we store the customer's city in the orders table or join to the customers table each time?"
+
+There's no single right answer, which is the point. Can you discuss the tradeoffs? Normalized data avoids redundancy and update anomalies. Denormalized data improves read performance and simplifies queries. The right choice depends on read/write ratio, consistency requirements, and scale.
+
+### Handling NULL Values
+
+"A customer's phone number is optional. How should we store that in the database? How do we query for customers without phone numbers?"
+
+NULLs are deceptively tricky. Understanding that `NULL != NULL` (it's unknown), knowing that `COUNT(column)` excludes NULLs but `COUNT(*)` doesn't, and being able to use `COALESCE` and `NULLIF` appropriately all demonstrate SQL maturity.
+
+## Common Mistakes That Cost Job Offers
+
+Let's talk about the mistakes that make interviewers wince.
+
+**Using `SELECT *` in production code.** It's lazy, it breaks when columns change, and it transfers unnecessary data. Always specify columns.
+
+**Not handling NULL values.** Forgetting that `WHERE column != 'value'` excludes NULLs, or that aggregating over NULLs can produce unexpected results.
+
+**Ignoring transactions.** When asked about updating related tables, candidates often write separate UPDATE statements without mentioning transactions or what happens if one fails.
+
+**Overusing subqueries.** Candidates who just learned subqueries use them everywhere, even when a simple JOIN would be clearer and faster.
+
+**Not thinking about edge cases.** What if the table is empty? What if all values are NULL? What if there's a tie? Interviewers notice when you don't consider these.
+
+## Questions You Should Ask
+
+Here's a perspective shift: good SQL interviews are conversations, not interrogations. You should be asking questions too.
+
+When given a query problem, ask about the data volume, query frequency, acceptable response time, data update frequency, and existing indexes or constraints.
+
+This shows you think about real-world context, not just academic SQL puzzles. It also often reveals hints about the expected solution.
+
+## The Moroccan Context
+
+For developers in Morocco interviewing with international companies (especially European clients common in nearshoring), there are a few specific considerations.
+
+Many European companies use PostgreSQL, which has excellent compliance with SQL standards but also powerful extensions. Familiarize yourself with PostgreSQL-specific features like JSONB, array operations, and full-text search if you're targeting these roles.
+
+French companies particularly value data integrity and correctness over pure performance. Be prepared to discuss constraints, transactions, and ACID properties in detail.
+
+When interviewing with Moroccan startups or growing tech companies, you might encounter a mix of MySQL (legacy) and PostgreSQL (newer projects). Being comfortable with both is valuable. Understanding the differences—especially around string comparison, date handling, and transaction behavior—shows practical experience.
+
+## How to Actually Prepare
+
+Reading this post is a start, but SQL is a doing skill, not a knowing skill. Here's how to prepare effectively.
+
+Set up a local database (PostgreSQL is recommended) with realistic data. Use datasets like the Sakila sample database or create your own based on a domain you understand. Then practice writing queries without looking up syntax.
+
+More importantly, look at your query execution plans. Run EXPLAIN on everything. Get comfortable reading execution plans and identifying bottlenecks. This single skill will set you apart in interviews.
+
+Work through real interview questions, but don't just solve them—solve them multiple ways. For each problem, write three different queries that produce the same result. Then analyze which is best and why.
+
+Study other people's SQL code. GitHub is full of projects with database queries. Read them critically. Why did they structure it that way? Could it be more efficient? What edge cases might break it?
+
+Finally, build something. Create a small project that requires complex queries. An analytics dashboard, a reporting system, anything that forces you to write real SQL for real problems. Interview questions feel different when you've solved similar problems in production.
+
+## The Day Before Your Interview
+
+Let's be practical. You have an SQL interview tomorrow. What should you review?
+
+Refresh the basics: JOIN types and when to use each, GROUP BY and HAVING, aggregate functions (COUNT, SUM, AVG, MAX, MIN), and subqueries versus CTEs.
+
+Make sure you can write from memory: a query with multiple JOINs, a query using a window function for ranking, a query with a correlated subquery, and a query using CASE statements for conditional logic.
+
+Review your past projects. Be ready to discuss SQL challenges you've faced, performance issues you've solved, and schema design decisions you've made.
+
+Most importantly, get a good night's sleep. SQL interviews test clear thinking under pressure. Being rested matters more than cramming one more concept.
+
+## Beyond the Interview
+
+Here's something most interview prep guides don't tell you: the SQL you need to know for interviews is different from the SQL you'll use on the job.
+
+Interviews focus on algorithmic problem-solving with SQL. Production work is more about data integrity, maintainability, and performance optimization over time. Both are important, but don't mistake interview skills for job skills.
+
+The best developers continue learning SQL throughout their careers. Databases evolve, new features emerge, and your understanding deepens with experience. The interview is just the beginning.
+
+## Final Thoughts
+
+SQL interviews feel intimidating because they test both knowledge and problem-solving simultaneously. You need to know the syntax AND figure out the approach AND consider performance AND handle edge cases—all while someone watches and evaluates.
+
+But here's the truth: interviewers aren't trying to trick you. They want to see how you think, how you approach problems, and whether you understand databases beyond surface-level syntax.
+
+The candidates who do well aren't always the ones who know the most SQL. They're the ones who think clearly, ask good questions, consider tradeoffs, and communicate their reasoning.
+
+Master the concepts in this post—not by memorizing, but by understanding deeply and practicing extensively. When you can explain not just WHAT a query does but WHY it's written that way and WHEN you'd use a different approach, you're ready.
+
+The interview question is never just about writing a query. It's about demonstrating that you understand databases, performance, tradeoffs, and real-world constraints.
+
+Are you ready to show them what you know?
