@@ -1,0 +1,912 @@
+{
+  "id": "it-auditor",
+  "title": "IT Auditor",
+  "description": "Master IT auditing, cybersecurity compliance, risk assessment, and governance frameworks to evaluate and strengthen organizational IT controls and security posture.",
+  "category": "Information Technology & Cybersecurity",
+  "level": "Intermediate to Advanced",
+  "totalDuration": "12-18 months",
+  "avgSalary": {
+    "min": 120000,
+    "max": 250000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Very High",
+  "tags": [
+    "IT Audit",
+    "Cybersecurity",
+    "Risk Management",
+    "Compliance",
+    "COBIT",
+    "ISO 27001",
+    "SOC 2",
+    "NIST",
+    "GRC"
+  ],
+  "lastUpdated": "2025-10-06",
+  "author": "Hirely.ma",
+  "steps": [
+    {
+      "id": "it-fundamentals",
+      "title": "IT Fundamentals & Infrastructure",
+      "description": "Build foundational knowledge in IT systems, networks, databases, and enterprise architecture.",
+      "duration": "6-8 weeks",
+      "difficulty": "Beginner",
+      "skills": [
+        "IT Infrastructure",
+        "Networking Basics",
+        "Operating Systems",
+        "Database Management",
+        "Cloud Computing Basics",
+        "System Architecture"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "CompTIA IT Fundamentals (ITF+)",
+          "url": "https://www.udemy.com/course/comptia-it-fundamentals-fc0-u61/",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 89000,
+          "duration": "12 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Complete IT fundamentals covering hardware, software, networking, and security basics.",
+          "thumbnailUrl": "/img/itf-plus.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Google IT Support Professional Certificate",
+          "url": "https://www.coursera.org/professional-certificates/google-it-support",
+          "provider": "Coursera (Google)",
+          "rating": 4.7,
+          "students": 2800000,
+          "duration": "6 months (10h/week)",
+          "price": {
+            "original": 49,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Comprehensive IT support fundamentals: networking, operating systems, system administration, and security.",
+          "thumbnailUrl": "/img/google-it-support.jpg",
+          "isSpecialization": true
+        },
+        {
+          "type": "Project",
+          "title": "Network Documentation Project",
+          "description": "Document a complete IT infrastructure including network topology, systems inventory, and data flows."
+        }
+      ]
+    },
+    {
+      "id": "accounting-financial-basics",
+      "title": "Accounting & Financial Controls",
+      "description": "Learn accounting principles and financial controls essential for IT audit work.",
+      "duration": "4-6 weeks",
+      "difficulty": "Beginner",
+      "skills": [
+        "Financial Accounting",
+        "Internal Controls",
+        "Financial Reporting",
+        "SOX Compliance",
+        "Audit Fundamentals",
+        "Financial Analysis"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Introduction to Financial Accounting",
+          "url": "https://www.coursera.org/learn/wharton-accounting",
+          "provider": "Coursera (University of Pennsylvania - Wharton)",
+          "rating": 4.7,
+          "students": 680000,
+          "duration": "4 weeks (5-7h/week)",
+          "price": {
+            "original": 49,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Essential accounting principles, financial statements, and internal control frameworks from Wharton.",
+          "thumbnailUrl": "/img/wharton-accounting.jpg",
+          "isUniversity": true
+        },
+        {
+          "type": "Course",
+          "title": "Accounting & Bookkeeping Masterclass - Beginner to Advanced",
+          "url": "https://www.udemy.com/course/accounting-for-entrepreneurs/",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 104.273,
+          "duration": "10 hours",
+          "price": {
+            "original": 84.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Learn accounting basics, financial statements, and business analysis for IT professionals.",
+          "thumbnailUrl": "/img/accounting-basics.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Control Assessment",
+          "description": "Perform a complete internal control assessment for a sample business process."
+        }
+      ]
+    },
+    {
+      "id": "cybersecurity-fundamentals",
+      "title": "Cybersecurity Fundamentals",
+      "description": "Master core cybersecurity concepts, threats, vulnerabilities, and protection mechanisms.",
+      "duration": "6-8 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "Information Security",
+        "Threat Analysis",
+        "Security Controls",
+        "Vulnerability Assessment",
+        "Cryptography",
+        "Network Security",
+        "Access Management"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "CompTIA Security+ Complete Training Course",
+          "url": "https://www.udemy.com/course/securityplus/",
+          "provider": "Udemy (Jason Dion)",
+          "rating": 4.7,
+          "students": 2500000,
+          "duration": "22 hours",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete Security+ (SY0-701) bootcamp covering threats, attacks, cryptography, and security architecture.",
+          "thumbnailUrl": "/img/security-plus.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Project",
+          "title": "Security Assessment Report",
+          "description": "Conduct a comprehensive security assessment and create a professional audit report with findings and recommendations."
+        }
+      ]
+    },
+    {
+      "id": "it-audit-frameworks",
+      "title": "IT Audit Frameworks & Standards",
+      "description": "Learn major IT audit frameworks: COBIT, ISO 27001, NIST, and audit methodologies.",
+      "duration": "8-10 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "COBIT Framework",
+        "ISO 27001",
+        "NIST Cybersecurity Framework",
+        "Audit Planning",
+        "Evidence Collection",
+        "Audit Documentation",
+        "Risk-based Auditing"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "The Comprehensive IT-Audit Course",
+          "url": "https://www.udemy.com/course/it-audit-course/",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 25000,
+          "duration": "38 hours",
+          "price": {
+            "original": 89.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete IT audit training: CISA, SOX, COBIT implementation, IT risk management, and security auditing.",
+          "thumbnailUrl": "/img/it-audit-comprehensive.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "IT Audit Complete Course",
+          "url": "https://www.udemy.com/course/it-audit-complete-course/",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 18000,
+          "duration": "25 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Learn ITGC, ITAC, SOX Audit, SOC Audit, and GRC with practical testing procedures.",
+          "thumbnailUrl": "/img/it-audit-complete.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "COBIT-based IT Governance Assessment",
+          "description": "Perform a complete IT governance assessment using COBIT framework with maturity ratings."
+        }
+      ]
+    },
+    {
+      "id": "compliance-regulations",
+      "title": "Compliance & Regulatory Requirements",
+      "description": "Master compliance frameworks including SOX, GDPR, PCI-DSS, HIPAA, and SOC 2.",
+      "duration": "6-8 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "SOX Compliance",
+        "GDPR",
+        "PCI-DSS",
+        "HIPAA",
+        "SOC 2",
+        "Data Privacy",
+        "Regulatory Compliance",
+        "Privacy Controls"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "How to Perform an IT Audit",
+          "url": "https://www.udemy.com/course/how-to-perform-an-it-audit/",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 15000,
+          "duration": "16 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Learn IT governance, frameworks, infrastructure controls, application testing, and audit procedures.",
+          "thumbnailUrl": "/img/perform-it-audit.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "GDPR Data Protection Certification Course",
+          "url": "https://www.udemy.com/course/2018-general-data-protection-regulation/?couponCode=MT251006G1",
+          "provider": "Udemy",
+          "rating": 3.9,
+          "students": 10.685,
+          "duration": "11 hours",
+          "price": {
+            "original": 69.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete GDPR training covering data protection, privacy by design, and compliance requirements.",
+          "thumbnailUrl": "/img/gdpr-course.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Multi-Framework Compliance Gap Analysis",
+          "description": "Conduct gap analysis for an organization across multiple compliance frameworks with remediation roadmap."
+        }
+      ]
+    },
+    {
+      "id": "risk-management",
+      "title": "IT Risk Management & GRC",
+      "description": "Develop expertise in risk assessment, management, and GRC (Governance, Risk, Compliance) tools.",
+      "duration": "6-8 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "Risk Assessment",
+        "Risk Analysis",
+        "GRC Tools",
+        "Third-party Risk",
+        "Business Continuity",
+        "Disaster Recovery",
+        "Risk Mitigation",
+        "Control Testing"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Comprehensive IT Audit for Non-IT Auditor",
+          "url": "https://www.udemy.com/course/comprehensive-it-audit-for-non-it-auditor/",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 22000,
+          "duration": "42 hours",
+          "price": {
+            "original": 94.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "All 14 IT audit domains from general IT controls to advanced IT controls with audit programs.",
+          "thumbnailUrl": "/img/comprehensive-it-audit.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Risk Management in IT Projects",
+          "url": "https://www.coursera.org/learn/project-risk-management-",
+          "provider": "Coursera (University of Virginia - Darden)",
+          "rating": 4.6,
+          "students": 45000,
+          "duration": "4 weeks (3-5h/week)",
+          "price": {
+            "original": 49,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "University-level IT risk management including assessment frameworks and mitigation strategies.",
+          "thumbnailUrl": "/img/risk-management-darden.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Enterprise Risk Assessment",
+          "description": "Conduct complete enterprise IT risk assessment with heat maps, risk register, and executive dashboard."
+        }
+      ]
+    },
+    {
+      "id": "audit-techniques-tools",
+      "title": "Advanced Audit Techniques & Tools",
+      "description": "Master audit software, data analytics, and advanced testing techniques.",
+      "duration": "6-8 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "ACL Analytics",
+        "IDEA Software",
+        "SQL for Auditing",
+        "Data Analytics",
+        "Continuous Auditing",
+        "Automated Testing",
+        "Audit Sampling",
+        "Evidence Analysis"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Information Systems Auditor",
+          "url": "https://www.udemy.com/course/information-systems-auditor-c/",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 12000,
+          "duration": "18 hours",
+          "price": {
+            "original": 89.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Information systems auditing covering security management, data protection, and audit policy making.",
+          "thumbnailUrl": "/img/info-systems-auditor.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "SQL for Data Analysis",
+          "url": "https://www.udacity.com/course/sql-for-data-analysis--ud198",
+          "provider": "Udacity",
+          "rating": 4.5,
+          "students": 85000,
+          "duration": "4 weeks",
+          "price": {
+            "original": 0,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Master SQL for data analysis including joins, aggregations, subqueries, and window functions.",
+          "thumbnailUrl": "/img/sql-analysis.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Data-Driven Audit Project",
+          "description": "Perform comprehensive data analytics audit including anomaly detection, trend analysis, and fraud indicators."
+        }
+      ]
+    },
+    {
+      "id": "specialized-audits",
+      "title": "Specialized IT Audit Domains",
+      "description": "Specialize in cloud, application, database, and infrastructure audits.",
+      "duration": "8-10 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "Cloud Audit",
+        "Application Security Audit",
+        "Database Audit",
+        "Network Audit",
+        "Penetration Testing Basics",
+        "DevOps Security",
+        "API Security",
+        "Blockchain Audit"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "IT Audit: Cybersecurity Audit Project",
+          "url": "https://www.udemy.com/course/cybersecurity-audit-fundamentals/",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 8500,
+          "duration": "12 hours",
+          "price": {
+            "original": 79.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Perform cybersecurity audits and information security audits with practical project-based learning.",
+          "thumbnailUrl": "/img/cybersecurity-audit.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "AWS Security Fundamentals",
+          "url": "https://www.udemy.com/course/aws-certified-security-specialty/",
+          "provider": "Coursera (AWS)",
+          "rating": 4.6,
+          "students": 125000,
+          "duration": "4 weeks (3-5h/week)",
+          "price": {
+            "original": 49,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Official AWS training on cloud security including IAM, data protection, and compliance.",
+          "thumbnailUrl": "/img/aws-security.jpg",
+          "isOfficial": true
+        },
+        {
+          "type": "Project",
+          "title": "Multi-Platform Cloud Audit",
+          "description": "Execute complete cloud infrastructure audit across multiple platforms with security scorecard and remediation plan."
+        }
+      ]
+    },
+    {
+      "id": "cisa-preparation",
+      "title": "CISA Certification Preparation",
+      "description": "Prepare for the CISA exam - the gold standard certification for IT auditors.",
+      "duration": "8-12 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "CISA Exam Domains",
+        "Information System Auditing",
+        "IT Governance",
+        "Information Systems Acquisition",
+        "Information Systems Operations",
+        "Information Asset Protection"
+      ],
+      "resources": [
+        {
+          "type": "Specialization",
+          "title": "CISA: Certified Information Systems Auditor",
+          "url": "https://www.coursera.org/specializations/packt-cisa-certified-information-systems-auditor",
+          "provider": "Coursera (Packt)",
+          "rating": 4.3,
+          "students": 15000,
+          "duration": "3 months (5h/week)",
+          "price": {
+            "original": 49,
+            "current": 0,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete CISA exam preparation covering all five domains with modern technologies like cloud and virtualization.",
+          "thumbnailUrl": "/img/cisa-coursera.jpg",
+          "isSpecialization": true
+        },
+        {
+          "type": "Course",
+          "title": "CISA Certification Masterclass: Full Course & 1400q",
+          "url": "https://www.udemy.com/course/information-system-auditing-course-cisa-isaca/",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 35000,
+          "duration": "45 hours",
+          "price": {
+            "original": 99.99,
+            "current": 17.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete CISA preparation with full course coverage, 1400+ practice questions, and detailed notes.",
+          "thumbnailUrl": "/img/cisa-masterclass.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Official",
+          "title": "ISACA CISA Review Course",
+          "url": "https://www.isaca.org/credentialing/cisa",
+          "provider": "ISACA",
+          "rating": 4.8,
+          "students": 150000,
+          "duration": "Self-paced",
+          "price": {
+            "original": 795,
+            "current": 795,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Official ISACA CISA review course with exam prep materials from the certification provider.",
+          "thumbnailUrl": "/img/cisa-official.jpg",
+          "isOfficial": true,
+          "isPremium": true
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "Certified Information Systems Auditor (CISA)",
+      "provider": "ISACA",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "6-9 months",
+      "cost": 575,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "Gold standard certification for IT audit professionals"
+    },
+    {
+      "name": "Certified in Risk and Information Systems Control (CRISC)",
+      "provider": "ISACA",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 months",
+      "cost": 575,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "Specialized in IT risk management and control"
+    },
+    {
+      "name": "Certified Information Security Manager (CISM)",
+      "provider": "ISACA",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "6-8 months",
+      "cost": 575,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "Management-focused information security certification"
+    },
+    {
+      "name": "Certified Internal Auditor (CIA)",
+      "provider": "IIA (Institute of Internal Auditors)",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "6-12 months",
+      "cost": 1150,
+      "currency": "USD",
+      "renewalPeriod": "Continuous (CPE)",
+      "description": "Premier certification for internal audit professionals"
+    },
+    {
+      "name": "CompTIA Security+",
+      "provider": "CompTIA",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "3-4 months",
+      "cost": 392,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "Entry-level security certification"
+    },
+    {
+      "name": "Certified Cloud Security Professional (CCSP)",
+      "provider": "(ISC)²",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "4-6 months",
+      "cost": 599,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "Cloud security expertise certification"
+    },
+    {
+      "name": "ISO 27001 Lead Auditor",
+      "provider": "Various (PECB, BSI, etc.)",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "2-3 months",
+      "cost": 1500,
+      "currency": "USD",
+      "renewalPeriod": "3 years",
+      "description": "ISO 27001 audit certification"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Audit Software",
+      "tools": [
+        "ACL Analytics",
+        "IDEA (CaseWare)",
+        "TeamMate+",
+        "AuditBoard",
+        "Galvanize HighBond"
+      ]
+    },
+    {
+      "category": "GRC Platforms",
+      "tools": [
+        "RSA Archer",
+        "ServiceNow GRC",
+        "MetricStream",
+        "LogicManager",
+        "SAP GRC"
+      ]
+    },
+    {
+      "category": "Security Testing",
+      "tools": [
+        "Nessus",
+        "Qualys",
+        "Burp Suite",
+        "Nmap",
+        "Wireshark"
+      ]
+    },
+    {
+      "category": "Compliance Tools",
+      "tools": [
+        "Vanta",
+        "Drata",
+        "Secureframe",
+        "Tugboat Logic",
+        "A-LIGN"
+      ]
+    },
+    {
+      "category": "Data Analytics",
+      "tools": [
+        "SQL",
+        "Python (Pandas)",
+        "Power BI",
+        "Tableau",
+        "Excel Advanced"
+      ]
+    },
+    {
+      "category": "Documentation",
+      "tools": [
+        "Microsoft Visio",
+        "Lucidchart",
+        "Confluence",
+        "SharePoint",
+        "OneNote"
+      ]
+    },
+    {
+      "category": "Cloud Audit",
+      "tools": [
+        "AWS CloudTrail",
+        "Azure Security Center",
+        "GCP Security Command Center",
+        "Prisma Cloud",
+        "CloudCheckr"
+      ]
+    },
+    {
+      "category": "SIEM & Monitoring",
+      "tools": [
+        "Splunk",
+        "IBM QRadar",
+        "ArcSight",
+        "LogRhythm",
+        "Elastic Stack"
+      ]
+    }
+  ],
+  "specializations": [
+    {
+      "area": "SOX Compliance Audit",
+      "applications": [
+        "Financial controls testing",
+        "ITGC assessments",
+        "Change management audit",
+        "Access control reviews",
+        "SOX 404 compliance"
+      ],
+      "keySkills": [
+        "COSO Framework",
+        "ITGC",
+        "Financial reporting controls",
+        "Control testing",
+        "Walkthrough procedures"
+      ]
+    },
+    {
+      "area": "Cloud Security Audit",
+      "applications": [
+        "AWS/Azure/GCP audits",
+        "Cloud compliance",
+        "SaaS security reviews",
+        "Multi-cloud governance",
+        "Cloud migration assessments"
+      ],
+      "keySkills": [
+        "Cloud architecture",
+        "CSA CCM",
+        "Cloud compliance",
+        "IAM auditing",
+        "Container security"
+      ]
+    },
+    {
+      "area": "Cybersecurity Audit",
+      "applications": [
+        "Security posture assessment",
+        "Penetration test reviews",
+        "Incident response audit",
+        "Security architecture review",
+        "Threat management audit"
+      ],
+      "keySkills": [
+        "Security frameworks",
+        "Vulnerability assessment",
+        "Security controls testing",
+        "Risk assessment",
+        "Security metrics"
+      ]
+    },
+    {
+      "area": "Privacy & Data Protection Audit",
+      "applications": [
+        "GDPR compliance",
+        "CCPA audits",
+        "Data privacy assessments",
+        "Data governance reviews",
+        "Privacy impact assessments"
+      ],
+      "keySkills": [
+        "Privacy regulations",
+        "Data classification",
+        "Privacy controls",
+        "Data lifecycle",
+        "Privacy by design"
+      ]
+    },
+    {
+      "area": "Third-Party Risk Audit",
+      "applications": [
+        "Vendor assessments",
+        "SOC report reviews",
+        "Supply chain security",
+        "Outsourcing audits",
+        "Partner risk management"
+      ],
+      "keySkills": [
+        "Vendor risk assessment",
+        "SOC report analysis",
+        "Contract review",
+        "Due diligence",
+        "Continuous monitoring"
+      ]
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior IT Auditor",
+      "experience": "0-2 years",
+      "salary": {
+        "min": 60000,
+        "max": 120000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Control testing",
+        "Documentation review",
+        "Evidence collection",
+        "Audit workpapers"
+      ]
+    },
+    {
+      "level": "IT Auditor",
+      "experience": "2-4 years",
+      "salary": {
+        "min": 120000,
+        "max": 180000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Audit planning",
+        "Risk assessment",
+        "Control evaluation",
+        "Report writing"
+      ]
+    },
+    {
+      "level": "Senior IT Auditor",
+      "experience": "4-7 years",
+      "salary": {
+        "min": 180000,
+        "max": 250000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Audit management",
+        "Client relationships",
+        "Team supervision",
+        "Complex audits"
+      ]
+    },
+    {
+      "level": "IT Audit Manager",
+      "experience": "7-10 years",
+      "salary": {
+        "min": 250000,
+        "max": 350000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Audit strategy",
+        "Portfolio management",
+        "Staff development",
+        "Stakeholder management"
+      ]
+    },
+    {
+      "level": "Director of IT Audit / CISO",
+      "experience": "10+ years",
+      "salary": {
+        "min": 350000,
+        "max": 500000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Audit program leadership",
+        "Enterprise risk oversight",
+        "Board reporting",
+        "Strategic planning"
+      ]
+    }
+  ],
+  "industryApplications": [
+    {
+      "sector": "Financial Services",
+      "applications": [
+        "SOX compliance",
+        "Payment systems audit",
+        "Trading platform security",
+        "Core banking systems"
+      ]
+    },
+    {
+      "sector": "Healthcare",
+      "applications": [
+        "HIPAA compliance",
+        "EHR system audits",
+        "Medical device security",
+        "Patient data protection"
+      ]
+    },
+    {
+      "sector": "Technology",
+      "applications": [
+        "SaaS platform audits",
+        "SOC 2 Type II",
+        "DevOps security",
+        "Cloud infrastructure"
+      ]
+    },
+    {
+      "sector": "Retail & E-commerce",
+      "applications": [
+        "PCI-DSS compliance",
+        "E-commerce platform security",
+        "Payment gateway audits",
+        "Customer data protection"
+      ]
+    },
+    {
+      "sector": "Government & Public Sector",
+      "applications": [
+        "FISMA compliance",
+        "Government IT audits",
+        "Public infrastructure security",
+        "Cybersecurity frameworks"
+      ]
+    }
+  ]
+}
