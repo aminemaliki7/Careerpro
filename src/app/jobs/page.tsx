@@ -239,291 +239,276 @@ export default function JobsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
-          {/* Filters Section - Mobile Only */}
-          <div className="lg:hidden">
-            <div className="bg-white rounded-lg shadow-sm border p-4 flex flex-wrap items-center justify-start gap-4">
-              <div className="flex items-center text-gray-900 font-semibold text-base whitespace-nowrap">
-                <FilterIcon className="h-5 w-5 mr-2 text-gray-500" />
-                Filters:
-              </div>
+        {/* Filters Section - Mobile Only */}
+<div className="lg:hidden mb-6">
+  <div className="bg-white rounded-xl shadow-sm border p-4 flex flex-wrap items-center justify-start gap-3">
+    <div className="flex items-center text-gray-900 font-semibold text-base whitespace-nowrap">
+      <FilterIcon className="h-5 w-5 mr-2 text-gray-500" />
+      Filters
+    </div>
 
-              {/* Type Filter */}
-              <select
-                value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
-                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Type</option>
-                {jobTypes.map(type => (
-                  <option key={type} value={type}>{type}</option>
-                ))}
-              </select>
+    {/* Type Filter */}
+    <select
+      value={selectedType}
+      onChange={(e) => setSelectedType(e.target.value)}
+      className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Type</option>
+      {jobTypes.map((type) => (
+        <option key={type} value={type}>
+          {type}
+        </option>
+      ))}
+    </select>
 
-              {/* Location Filter */}
-              <select
-                value={selectedLocation}
-                onChange={(e) => setSelectedLocation(e.target.value)}
-                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Location</option>
-                {locations.map(location => (
-                  <option key={location} value={location}>{location}</option>
-                ))}
-              </select>
+    {/* Location Filter */}
+    <select
+      value={selectedLocation}
+      onChange={(e) => setSelectedLocation(e.target.value)}
+      className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Location</option>
+      {locations.map((location) => (
+        <option key={location} value={location}>
+          {location}
+        </option>
+      ))}
+    </select>
 
-              {/* Region Filter */}
-              <select
-                value={selectedRegion}
-                onChange={(e) => setSelectedRegion(e.target.value)}
-                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Region</option>
-                {GLOBAL_REGIONS.map(region => (
-                  <option key={region.value} value={region.value}>
-                    {region.label}
-                  </option>
-                ))}
-              </select>
+    {/* Region Filter */}
+    <select
+      value={selectedRegion}
+      onChange={(e) => setSelectedRegion(e.target.value)}
+      className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Region</option>
+      {GLOBAL_REGIONS.map((region) => (
+        <option key={region.value} value={region.value}>
+          {region.label}
+        </option>
+      ))}
+    </select>
 
-              {/* Experience Filter */}
-              <select
-                value={selectedExperience}
-                onChange={(e) => setSelectedExperience(e.target.value)}
-                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Experience</option>
-                <option value="Entry Level">Entry Level</option>
-                <option value="Junior">Junior</option>
-                <option value="Mid-Level">Mid-Level</option>
-                <option value="Senior">Senior</option>
-                <option value="Lead">Lead / Expert</option>
-                <option value="Manager">Manager</option>
-                <option value="Director">Director</option>
-                {experienceLevels.map(level => (
-                  <option key={level} value={level}>{level}</option>
-                ))}
-              </select>
+    {/* Experience Filter */}
+    <select
+      value={selectedExperience}
+      onChange={(e) => setSelectedExperience(e.target.value)}
+      className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Experience</option>
+      <option value="Entry Level">Entry Level</option>
+      <option value="Junior">Junior</option>
+      <option value="Mid-Level">Mid-Level</option>
+      <option value="Senior">Senior</option>
+      <option value="Lead">Lead / Expert</option>
+      <option value="Manager">Manager</option>
+      <option value="Director">Director</option>
+      {experienceLevels.map((level) => (
+        <option key={level} value={level}>
+          {level}
+        </option>
+      ))}
+    </select>
 
-              {/* Salary Range Filter */}
-              <select
-                value={selectedSalaryRange}
-                onChange={(e) => setSelectedSalaryRange(e.target.value)}
-                className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="">Salary</option>
-                <option value="< 30k">Less than $30k</option>
-                <option value="30k - 40k">$30k - $40k</option>
-                <option value="40k - 50k">$40k - $50k</option>
-                <option value="50k - 60k">$50k - $60k</option>
-                <option value="60k - 80k">$60k - $80k</option>
-                <option value="80k - 100k">$80k - $100k</option>
-                <option value="> 100k">More than $100k</option>
-                {salaryRanges.map(range => (
-                  <option key={range} value={range}>{range}</option>
-                ))}
-              </select>
+    {/* Salary Range */}
+    <select
+      value={selectedSalaryRange}
+      onChange={(e) => setSelectedSalaryRange(e.target.value)}
+      className="flex-1 min-w-[120px] border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Salary</option>
+      <option value="< 30k">Less than $30k</option>
+      <option value="30k - 40k">$30k - $40k</option>
+      <option value="40k - 50k">$40k - $50k</option>
+      <option value="50k - 60k">$50k - $60k</option>
+      <option value="60k - 80k">$60k - $80k</option>
+      <option value="80k - 100k">$80k - $100k</option>
+      <option value="> 100k">More than $100k</option>
+      {salaryRanges.map((range) => (
+        <option key={range} value={range}>
+          {range}
+        </option>
+      ))}
+    </select>
 
-              {/* Remote Checkbox */}
-              <label className="flex items-center text-sm text-gray-700 whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  checked={remoteOnly}
-                  onChange={(e) => setRemoteOnly(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2">Remote</span>
-              </label>
+    {/* Checkboxes */}
+    <div className="flex items-center gap-4 w-full mt-2">
+      <label className="flex items-center text-sm text-gray-700">
+        <input
+          type="checkbox"
+          checked={remoteOnly}
+          onChange={(e) => setRemoteOnly(e.target.checked)}
+          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        <span className="ml-2">Remote</span>
+      </label>
+      <label className="flex items-center text-sm text-gray-700">
+        <input
+          type="checkbox"
+          checked={featuredOnly}
+          onChange={(e) => setFeaturedOnly(e.target.checked)}
+          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        <span className="ml-2">Featured</span>
+      </label>
+    </div>
+  </div>
+</div>
 
-              {/* Featured Checkbox */}
-              <label className="flex items-center text-sm text-gray-700 whitespace-nowrap">
-                <input
-                  type="checkbox"
-                  checked={featuredOnly}
-                  onChange={(e) => setFeaturedOnly(e.target.checked)}
-                  className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                />
-                <span className="ml-2">Featured</span>
-              </label>
-            </div>
+{/* Filters Sidebar - Desktop Only */}
+<div className="hidden lg:block lg:col-span-1">
+  <div className="bg-white rounded-xl shadow-md border p-4 sticky top-12">
+    <h2 className="text-md font-semibold text-gray-900 mb-3 flex items-center">
+      <FilterIcon className="h-4 w-4 mr-2" />
+      Filters
+    </h2>
+
+    <div className="space-y-4">
+      {/* Job Type */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Job Type</label>
+        <select
+          value={selectedType}
+          onChange={(e) => setSelectedType(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All types</option>
+          {jobTypes.map((type) => (
+            <option key={type} value={type}>{type}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Location */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">City / Location</label>
+        <select
+          value={selectedLocation}
+          onChange={(e) => setSelectedLocation(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All cities</option>
+          {locations.map((location) => (
+            <option key={location} value={location}>{location}</option>
+          ))}
+        </select>
+      </div>
+
+      {/* Global Region */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">🌍 Global Region</label>
+        <select
+          value={selectedRegion}
+          onChange={(e) => setSelectedRegion(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All regions</option>
+          {GLOBAL_REGIONS.map((region) => (
+            <option key={region.value} value={region.value}>{region.label}</option>
+          ))}
+        </select>
+        {selectedRegion && (
+          <div className="mt-1 text-xs text-gray-500">
+            <strong>Countries:</strong> {GLOBAL_REGIONS.find((r) => r.value === selectedRegion)?.countries.join(", ")}
           </div>
+        )}
+      </div>
 
-          {/* Filters Sidebar - Desktop Only */}
-          <div className="hidden lg:block lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-sm border p-6 sticky top-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <FilterIcon className="h-5 w-5 mr-2" />
-                Filters
-              </h2>
-              
-              <div className="space-y-6">
-                {/* Job Type Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Job Type
-                  </label>
-                  <select
-                    value={selectedType}
-                    onChange={(e) => setSelectedType(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All types</option>
-                    {jobTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
-                </div>
+      {/* Experience */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Experience Level</label>
+        <select
+          value={selectedExperience}
+          onChange={(e) => setSelectedExperience(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All levels</option>
+          <option value="Entry Level">Entry Level</option>
+          <option value="Junior">Junior</option>
+          <option value="Mid-Level">Mid-Level</option>
+          <option value="Senior">Senior</option>
+          <option value="Lead">Lead / Expert</option>
+          <option value="Manager">Manager</option>
+          <option value="Director">Director</option>
+        </select>
+      </div>
 
-                {/* Location Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    City / Location
-                  </label>
-                  <select
-                    value={selectedLocation}
-                    onChange={(e) => setSelectedLocation(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All cities</option>
-                    {locations.map(location => (
-                      <option key={location} value={location}>{location}</option>
-                    ))}
-                  </select>
-                </div>
+      {/* Salary */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Salary Range</label>
+        <select
+          value={selectedSalaryRange}
+          onChange={(e) => setSelectedSalaryRange(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="">All salaries</option>
+          <option value="< 30k">Less than $30k</option>
+          <option value="30k - 40k">$30k - $40k</option>
+          <option value="40k - 50k">$40k - $50k</option>
+          <option value="50k - 60k">$50k - $60k</option>
+          <option value="60k - 80k">$60k - $80k</option>
+          <option value="80k - 100k">$80k - $100k</option>
+          <option value="> 100k">More than $100k</option>
+        </select>
+      </div>
 
-                {/* Global Region Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    🌍 Global Region
-                  </label>
-                  <select
-                    value={selectedRegion}
-                    onChange={(e) => setSelectedRegion(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All regions</option>
-                    {GLOBAL_REGIONS.map(region => (
-                      <option key={region.value} value={region.value}>
-                        {region.label}
-                      </option>
-                    ))}
-                  </select>
-                  {selectedRegion && (
-                    <div className="mt-2 text-xs text-gray-500">
-                      <strong>Countries included:</strong> {GLOBAL_REGIONS.find(r => r.value === selectedRegion)?.countries.join(', ')}
-                    </div>
-                  )}
-                </div>
+      {/* Checkboxes */}
+      <div className="space-y-2">
+        <label className="flex items-center text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={remoteOnly}
+            onChange={(e) => setRemoteOnly(e.target.checked)}
+            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="ml-2">Remote only</span>
+        </label>
 
-                {/* Experience Level Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Experience Level
-                  </label>
-                  <select
-                    value={selectedExperience}
-                    onChange={(e) => setSelectedExperience(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All levels</option>
-                    <option value="Entry Level">Entry Level</option>
-                    <option value="Junior">Junior (1-3 years)</option>
-                    <option value="Mid-Level">Mid-Level (3-5 years)</option>
-                    <option value="Senior">Senior (5+ years)</option>
-                    <option value="Lead">Lead / Expert (8+ years)</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Director">Director</option>
-                    {experienceLevels.map(level => (
-                      <option key={level} value={level}>{level}</option>
-                    ))}
-                  </select>
-                </div>
+        <label className="flex items-center text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={featuredOnly}
+            onChange={(e) => setFeaturedOnly(e.target.checked)}
+            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+          />
+          <span className="ml-2">Featured jobs</span>
+        </label>
+      </div>
 
-                {/* Salary Range Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Salary Range
-                  </label>
-                  <select
-                    value={selectedSalaryRange}
-                    onChange={(e) => setSelectedSalaryRange(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All salaries</option>
-                    <option value="< 30k">Less than $30k</option>
-                    <option value="30k - 40k">$30k - $40k</option>
-                    <option value="40k - 50k">$40k - $50k</option>
-                    <option value="50k - 60k">$50k - $60k</option>
-                    <option value="60k - 80k">$60k - $80k</option>
-                    <option value="80k - 100k">$80k - $100k</option>
-                    <option value="> 100k">More than $100k</option>
-                    {salaryRanges.map(range => (
-                      <option key={range} value={range}>{range}</option>
-                    ))}
-                  </select>
-                </div>
+      {/* Sort */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Sort by</label>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          className="w-full border border-gray-300 rounded-md px-2 py-1 text-sm focus:ring-1 focus:ring-blue-500"
+        >
+          <option value="posted_date">Date Posted</option>
+          <option value="title">Title</option>
+          <option value="company">Company</option>
+        </select>
+      </div>
 
-                {/* Remote Work Filter */}
-                <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={remoteOnly}
-                      onChange={(e) => setRemoteOnly(e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Remote only</span>
-                  </label>
-                </div>
-
-                {/* Featured Jobs Filter */}
-                <div>
-                  <label className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={featuredOnly}
-                      onChange={(e) => setFeaturedOnly(e.target.checked)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    />
-                    <span className="ml-2 text-sm text-gray-700">Featured jobs</span>
-                  </label>
-                </div>
-
-                {/* Sort Options */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Sort by
-                  </label>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="posted_date">Date Posted</option>
-                    <option value="title">Title</option>
-                    <option value="company">Company</option>
-                  </select>
-                </div>
-
-                {/* Clear Filters */}
-                <button
-                  onClick={() => {
-                    setSearchTerm('');
-                    setSelectedType('');
-                    setSelectedLocation('');
-                    setSelectedRegion('');
-                    setSelectedExperience('');
-                    setSelectedSalaryRange('');
-                    setRemoteOnly(false);
-                    setFeaturedOnly(false);
-                    setSortBy('posted_date');
-                  }}
-                  className="w-full px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
-                >
-                  Clear filters
-                </button>
-              </div>
-            </div>
-          </div>
+      {/* Clear Filters */}
+      <button
+        onClick={() => {
+          setSearchTerm("");
+          setSelectedType("");
+          setSelectedLocation("");
+          setSelectedRegion("");
+          setSelectedExperience("");
+          setSelectedSalaryRange("");
+          setRemoteOnly(false);
+          setFeaturedOnly(false);
+          setSortBy("posted_date");
+        }}
+        className="w-full px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded-md hover:bg-gray-50"
+      >
+        Clear filters
+      </button>
+    </div>
+  </div>
+</div>
 
           {/* Jobs List */}
           <div className="lg:col-span-3">
