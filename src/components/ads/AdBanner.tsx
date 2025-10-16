@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: unknown[];
+    adsbygoogle?: Array<Record<string, unknown>>;
   }
 }
 
@@ -24,7 +24,12 @@ export default function AdBanner({
 }: AdBannerProps) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      (window.adsbygoogle = window.adsbygoogle || []).push({});
+      window.adsbygoogle = window.adsbygoogle || [];
+      try {
+        window.adsbygoogle.push({});
+      } catch (err) {
+        console.error('Adsense push error:', err);
+      }
     }
   }, []);
 
