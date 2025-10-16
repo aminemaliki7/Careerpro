@@ -34,19 +34,22 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <head>
-          {/* Google AdSense script */}
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {/* Google Analytics */}
+          <GoogleAnalytics />
+
+          {/* Google AdSense script (must load after DOM is interactive) */}
           <Script
+            id="adsbygoogle-init"
             async
             src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1955463530202020"
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />
-        </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <GoogleAnalytics />
+
+          {/* Your app layout */}
           <ClientLayoutWrapper>
             {children}
           </ClientLayoutWrapper>
