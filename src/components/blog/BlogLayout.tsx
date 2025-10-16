@@ -3,6 +3,8 @@
 import { ReactNode, useEffect, useState } from "react";
 import { CalendarDays, User } from "lucide-react";
 import type { BlogPostWithContent } from "@/types/blog";
+import AdBanner from "@/components/ads/AdBanner";
+import { AD_SLOTS } from "@/config/adSlots";
 
 interface BlogLayoutProps {
   post: BlogPostWithContent;
@@ -84,7 +86,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
       {/* Main Content Layout */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1  gap-12">
+        <div className="grid grid-cols-1 gap-12">
           {/* Article Content */}
           <main className="lg:col-span-8">
             <article className="onsaas-prose prose prose-lg max-w-none">
@@ -379,12 +381,17 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
               {children}
             </article>
+
+            {/* 🎯 SINGLE AD: After Article Content */}
+            <div className="mt-16 mb-12">
+              <AdBanner 
+                dataAdSlot={AD_SLOTS.BLOG_TOP}
+                dataAdFormat="auto"
+                className="my-8"
+              />
+            </div>
           </main>
-
-          
         </div>
-
-      
       </div>
     </div>
   );

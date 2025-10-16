@@ -88,12 +88,12 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 🎯 AD #1: After Hero Section (High Visibility) */}
+      {/* 🎯 SINGLE AD: After Hero Section */}
       <div className="max-w-7xl mx-auto px-6">
         <AdBanner 
           dataAdSlot={AD_SLOTS.HOMEPAGE_TOP}
-          dataAdFormat="horizontal"
-          className="my-12"
+          dataAdFormat="auto"
+          className="my-16"
         />
       </div>
 
@@ -175,15 +175,6 @@ export default async function HomePage() {
           </div>
         </section>
       )}
-
-      {/* 🎯 AD #2: Between Sections (Natural Break) */}
-      <div className="max-w-7xl mx-auto px-6 bg-white">
-        <AdBanner 
-          dataAdSlot={AD_SLOTS.HOMEPAGE_MIDDLE}
-          dataAdFormat="horizontal"
-          className="my-12"
-        />
-      </div>
 
       {/* Jobs Section */}
       <section className="pt-16 pb-32 bg-white">
@@ -372,15 +363,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* 🎯 AD #3: Before Newsletter (Bottom of Page) */}
-      <div className="max-w-7xl mx-auto px-6 bg-white">
-        <AdBanner 
-          dataAdSlot={AD_SLOTS.HOMEPAGE_BOTTOM}
-          dataAdFormat="horizontal"
-          className="my-12"
-        />
-      </div>
 
       {/* Newsletter CTA */}
       <section className="pt-16 pb-32 bg-black text-white relative overflow-hidden">
