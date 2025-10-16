@@ -28,3 +28,8 @@ body {
 .cl-dev-banner {
   display: none !important;
 }
+.ad-container {
+  text-align: center;
+  margin: 2rem auto;
+  max-width: 900px;
+}
