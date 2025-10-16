@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 declare global {
   interface Window {
@@ -23,19 +23,54 @@ export default function AdBanner({
   className = '',
   style = { display: 'block' }
 }: AdBannerProps) {
+  const [isAdLoaded, setIsAdLoaded] = useState(false);
+  const [showAd, setShowAd] = useState(true);
+  const adRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.adsbygoogle = window.adsbygoogle || [];
+      
       try {
         window.adsbygoogle.push({});
+        
+        // Check if ad loaded after a short delay
+        const checkAdLoad = setTimeout(() => {
+          if (adRef.current) {
+            const insElement = adRef.current.querySelector('ins');
+            
+            // Check if ad has content (AdSense adds data-ad-status attribute)
+            const adStatus = insElement?.getAttribute('data-ad-status');
+            const hasContent = insElement && (
+              adStatus === 'filled' || 
+              insElement.innerHTML.trim() !== '' ||
+              insElement.clientHeight > 0
+            );
+            
+            if (hasContent) {
+              setIsAdLoaded(true);
+            } else {
+              // Hide the ad container if no ad loaded
+              setShowAd(false);
+            }
+          }
+        }, 1000);
+
+        return () => clearTimeout(checkAdLoad);
       } catch (err) {
         console.error('Adsense push error:', err);
+        setShowAd(false);
       }
     }
   }, []);
 
+  // Don't render anything if ad shouldn't be shown
+  if (!showAd) {
+    return null;
+  }
+
   return (
-    <div className={`ad-wrapper ${className}`}>
+    <div ref={adRef} className={`ad-wrapper ${className}`}>
       {/* Native-styled container that matches your site design */}
       <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300">
         {/* Subtle "Sponsored" label - chess.com style */}
@@ -58,11 +93,13 @@ export default function AdBanner({
         </div>
 
         {/* Optional: Add a subtle bottom border or decoration */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-center text-xs text-gray-400">
-            Support our platform by checking out our partners
-          </p>
-        </div>
+        {isAdLoaded && (
+          <div className="mt-4 pt-4 border-t border-gray-100">
+            <p className="text-center text-xs text-gray-400">
+              Support our platform by checking out our partners
+            </p>
+          </div>
+        )}
       </div>
 
       <style jsx>{`
