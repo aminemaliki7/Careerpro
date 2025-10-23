@@ -33,3 +33,16 @@ body {
   margin: 2rem auto;
   max-width: 900px;
 }
+@keyframes spin-diamond {
+  0% { 
+    transform: rotateY(0deg) rotateX(0deg); 
+  }
+  100% { 
+    transform: rotateY(360deg) rotateX(360deg); 
+  }
+}
+
+.animate-spin-diamond {
+  animation: spin-diamond 8s linear infinite;
+  transform-style: preserve-3d;
+}
