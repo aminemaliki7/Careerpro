@@ -7,8 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { getAllRoadmaps } from '@/lib/roadmaps';
 import NewsletterCTA from '@/components/NewsletterCTA';
 import RecruiterButton from '@/components/RecruiterButton';
-import AdBanner from '@/components/ads/AdBanner';
-import { AD_SLOTS } from '@/config/adSlots';
+
 
 export default async function HomePage() {
   const featuredPosts = getFeaturedPosts();
@@ -88,14 +87,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 🎯 SINGLE AD: After Hero Section */}
-      <div className="max-w-7xl mx-auto px-6">
-        <AdBanner 
-          dataAdSlot={AD_SLOTS.HOMEPAGE_TOP}
-          dataAdFormat="auto"
-          className="my-16"
-        />
-      </div>
 
       {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (

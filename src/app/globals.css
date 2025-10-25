@@ -33,16 +33,25 @@ body {
   margin: 2rem auto;
   max-width: 900px;
 }
-@keyframes spin-diamond {
-  0% { 
-    transform: rotateY(0deg) rotateX(0deg); 
-  }
-  100% { 
-    transform: rotateY(360deg) rotateX(360deg); 
-  }
+partners-section {
+  padding: 4rem 0;
+  background-color: var(--background);
+  text-align: center;
 }
 
-.animate-spin-diamond {
-  animation: spin-diamond 8s linear infinite;
-  transform-style: preserve-3d;
+.partners-section h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 1.5rem;
+}
+
+.partner-logo {
+  height: 3rem;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.partner-logo:hover {
+  filter: grayscale(0%);
 }
