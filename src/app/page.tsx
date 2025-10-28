@@ -164,54 +164,33 @@ export default async function HomePage() {
               ))}
             </div>
 
-            {/* Partners Section - Integrated */}
+            {/* Partners Section - Updated with Real Udemy Logo */}
             <div className="mt-32 pt-16 border-t border-gray-200">
               <div className="text-center mb-12">
                 <p className="text-sm text-gray-400 font-medium mb-8 uppercase tracking-wider">
                   Our Partners
                 </p>
                 
-                <div className="flex justify-center">
+                <div className="flex justify-center items-center">
                   <a 
                     href="https://www.udemy.com" 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="group block"
+                    className="group block transition-all duration-300 hover:scale-105"
                   >
-                    <div className="animate-spin-diamond" style={{ transformStyle: 'preserve-3d' }}>
-                      <svg 
-                        width="120" 
-                        height="120" 
-                        viewBox="0 0 120 120" 
-                        fill="none" 
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="drop-shadow-xl"
-                      >
-                        <rect 
-                          x="60" 
-                          y="8" 
-                          width="74" 
-                          height="74" 
-                          transform="rotate(45 60 8)" 
-                          fill="#A435F0"
-                          className="group-hover:fill-[#8710D8] transition-colors duration-300"
-                          rx="6"
-                        />
-                        <text 
-                          x="60" 
-                          y="68" 
-                          textAnchor="middle" 
-                          fill="white" 
-                          fontSize="32" 
-                          fontWeight="bold" 
-                          fontFamily="Arial, sans-serif"
-                        >
-                          U
-                        </text>
-                      </svg>
-                    </div>
+                    <Image
+                      src="https://www.udemy.com/staticx/udemy/images/v7/logo-udemy.svg"
+                      alt="Udemy - Online Learning Platform"
+                      width={140}
+                      height={40}
+                      className="opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+                    />
                   </a>
                 </div>
+                
+                <p className="text-xs text-gray-400 mt-6">
+                  Trusted learning platform with over 250,000 courses
+                </p>
               </div>
             </div>
           </div>
