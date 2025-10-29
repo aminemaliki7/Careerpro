@@ -1,0 +1,1374 @@
+{
+  "id": "fullstack-devops-qa-hybrid",
+  "title": "Full-Stack + DevOps + QA Hybrid Engineer",
+  "description": "Master the complete software delivery lifecycle: build backend/frontend applications, implement automated testing, and deploy to production with CI/CD and cloud infrastructure.",
+  "category": "Hybrid Engineering",
+  "level": "Advanced",
+  "totalDuration": "12-18 months",
+  "avgSalary": {
+    "min": 120000,
+    "max": 250000,
+    "currency": "MAD"
+  },
+  "demandLevel": "Very High",
+  "tags": [
+    "Full-Stack",
+    "DevOps",
+    "QA",
+    "Java",
+    "Spring Boot",
+    "Node.js",
+    "React",
+    "Angular",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "AWS",
+    "Testing"
+  ],
+  "lastUpdated": "2025-10-29",
+  "author": "Hirely.ma",
+  "marketInsight": "Companies increasingly seek 'unicorn developers' who can build, test, and deploy end-to-end. This hybrid role commands premium salaries and offers maximum job security.",
+  "steps": [
+    {
+      "id": "programming-fundamentals",
+      "title": "Programming Foundations & Java Mastery",
+      "description": "Master Java programming from basics to advanced concepts - the foundation for backend development.",
+      "duration": "6-8 weeks",
+      "difficulty": "Beginner",
+      "skills": [
+        "Java Fundamentals",
+        "OOP Principles",
+        "Data Structures",
+        "Algorithms",
+        "Exception Handling",
+        "Collections Framework",
+        "Multithreading",
+        "JDBC Basics"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Complete Java Programming - Beginner to Expert",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.1559908&u=https%3A%2F%2Fwww.udemy.com%2Fcomplete-java-programming-beginner-to-expert&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 156789,
+          "duration": "45 hours",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Complete Java mastery from zero to hero: OOP, collections, multithreading, JDBC with real projects.",
+          "thumbnailUrl": "/img/java-complete.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Project",
+          "title": "Library Management System",
+          "description": "Build a console-based library management system with CRUD operations, file handling, and data validation"
+        }
+      ]
+    },
+    {
+      "id": "backend-spring-boot",
+      "title": "Backend Development with Spring Boot",
+      "description": "Master Spring Boot framework for building enterprise-grade REST APIs and microservices.",
+      "duration": "8-10 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "Spring Boot",
+        "Spring MVC",
+        "REST API Development",
+        "Spring Data JPA",
+        "Spring Security",
+        "Microservices Architecture",
+        "Service Discovery",
+        "API Gateway"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "REST API Development with Spring Boot",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.4277290&u=https%3A%2F%2Fwww.udemy.com%2Frest-api-development-with-spring-boot&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 89234,
+          "duration": "28 hours",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Build production-ready REST APIs with Spring Boot, JPA, Security, validation and testing.",
+          "thumbnailUrl": "/img/spring-rest.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Learn Microservices with Spring Boot and Spring Cloud",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.1382914&u=https%3A%2F%2Fwww.udemy.com%2Flearn-microservices-with-spring-boot-and-spring-cloud&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "42 hours",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete microservices architecture: Spring Cloud, Eureka, API Gateway, distributed tracing.",
+          "thumbnailUrl": "/img/microservices-spring.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Spring WebFlux Patterns",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.4651564&u=https%3A%2F%2Fwww.udemy.com%2Fspring-webflux-patterns&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 12345,
+          "duration": "16 hours",
+          "price": {
+            "original": 69.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Reactive programming with Spring WebFlux for high-performance scalable applications.",
+          "thumbnailUrl": "/img/webflux.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "E-commerce Backend Microservices",
+          "description": "Build complete e-commerce backend: product service, order service, user service, payment gateway integration"
+        }
+      ]
+    },
+    {
+      "id": "nodejs-backend",
+      "title": "Node.js Backend Development",
+      "description": "Learn Node.js and Express for building fast, scalable backend applications and APIs.",
+      "duration": "6-7 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "Node.js Fundamentals",
+        "Express.js",
+        "RESTful APIs",
+        "Authentication & Authorization",
+        "JWT",
+        "MongoDB Integration",
+        "Error Handling",
+        "Async/Await"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Node.js Master Class",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.1638522&u=https%3A%2F%2Fwww.udemy.com%2Fnodejs-master-class&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 178901,
+          "duration": "35 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete Node.js course: Express, MongoDB, authentication, real-time apps, deployment.",
+          "thumbnailUrl": "/img/nodejs-master.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Node.js Advanced Course",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.5228176&u=https%3A%2F%2Fwww.udemy.com%2Fnodejs-ru&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 45678,
+          "duration": "22 hours",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Advanced Node.js patterns, scalability, performance optimization, microservices.",
+          "thumbnailUrl": "/img/nodejs-advanced.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Social Media API",
+          "description": "Build a complete social media backend: user profiles, posts, comments, likes, real-time notifications"
+        }
+      ]
+    },
+    {
+      "id": "database-mastery",
+      "title": "Database Design & Management",
+      "description": "Master both SQL (PostgreSQL, MySQL) and NoSQL (MongoDB) databases for versatile data storage.",
+      "duration": "5-6 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "PostgreSQL",
+        "MongoDB",
+        "MySQL",
+        "Database Design",
+        "Query Optimization",
+        "Indexing",
+        "Transactions",
+        "Data Modeling",
+        "Replication",
+        "Backup & Recovery"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "PostgreSQL Database Administration Masterclass",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.5211342&u=https%3A%2F%2Fwww.udemy.com%2Fpostgresql-database-administration-masterclass&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 67890,
+          "duration": "24 hours",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete PostgreSQL: design, optimization, administration, replication, performance tuning.",
+          "thumbnailUrl": "/img/postgresql.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "MongoDB Essentials",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.1623512&u=https%3A%2F%2Fwww.udemy.com%2Fmongodb-essentials-m&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 89012,
+          "duration": "18 hours",
+          "price": {
+            "original": 74.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Master MongoDB: CRUD operations, aggregation, indexing, replication, sharding.",
+          "thumbnailUrl": "/img/mongodb.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "MySQL DBA for Beginners",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.2967048&u=https%3A%2F%2Fwww.udemy.com%2Fmysql-dba-for-beginners&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.3,
+          "students": 34567,
+          "duration": "14 hours",
+          "price": {
+            "original": 69.99,
+            "current": 11.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "MySQL fundamentals, queries, joins, optimization, backup, recovery.",
+          "thumbnailUrl": "/img/mysql.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Multi-Database Application",
+          "description": "Build an app using both SQL and NoSQL: user data in PostgreSQL, sessions in MongoDB, caching with Redis"
+        }
+      ]
+    },
+    {
+      "id": "frontend-modern",
+      "title": "Modern Frontend Development",
+      "description": "Master React and Angular for building dynamic, responsive user interfaces.",
+      "duration": "8-10 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "HTML5 & CSS3",
+        "JavaScript ES6+",
+        "React.js",
+        "React Hooks",
+        "Redux",
+        "Next.js",
+        "Angular",
+        "TypeScript",
+        "Responsive Design",
+        "State Management"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Beginner's Web Development Bundle: HTML, CSS & JavaScript",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.4687212&u=https%3A%2F%2Fwww.udemy.com%2Fbeginners-web-development-bundle-html-css-and-javascript&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 123456,
+          "duration": "32 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Complete web development foundations: HTML5, CSS3, JavaScript ES6+ with projects.",
+          "thumbnailUrl": "/img/web-basics.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Maîtrisez JavaScript de ES6 à ES9",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3107506&u=https%3A%2F%2Fwww.udemy.com%2Fmaitrisez-javascript-de-es6-a-es9-cours-28-exercices&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 45678,
+          "duration": "16 hours",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Modern JavaScript mastery: ES6-ES9 features, async/await, modules, classes.",
+          "thumbnailUrl": "/img/js-es6.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "React Complete Guide - Next.js, TypeScript, Git",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.6869187&u=https%3A%2F%2Fwww.udemy.com%2Freact-complete-react-guide-incl-nextjs-typescript-git&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.7,
+          "students": 289345,
+          "duration": "52 hours",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete React ecosystem: Hooks, Context, Redux, Next.js, TypeScript with modern practices.",
+          "thumbnailUrl": "/img/react-complete.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Angular Complete Course",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.1407832&u=https%3A%2F%2Fwww.udemy.com%2Fangular5&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 456789,
+          "duration": "38 hours",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Master Angular: components, services, routing, forms, RxJS, NgRx state management.",
+          "thumbnailUrl": "/img/angular.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "React Native + TypeScript - Complete Guide",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.6870617&u=https%3A%2F%2Fwww.udemy.com%2Freact-native-typescript-the-complete-guide&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 67890,
+          "duration": "28 hours",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Build mobile apps with React Native and TypeScript for iOS and Android.",
+          "thumbnailUrl": "/img/react-native.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Full-Featured E-commerce Frontend",
+          "description": "Build a complete e-commerce UI: product catalog, cart, checkout, user dashboard with React/Angular"
+        }
+      ]
+    },
+    {
+      "id": "fullstack-integration",
+      "title": "Full-Stack Integration",
+      "description": "Connect frontend and backend to build complete full-stack applications.",
+      "duration": "6-7 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "MERN Stack",
+        "Java Full-Stack",
+        "API Integration",
+        "Authentication Flow",
+        "State Management",
+        "JWT Implementation",
+        "WebSocket",
+        "File Upload",
+        "Payment Integration"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "MERN Stack - Complete Full-Stack Apps from Scratch",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3713170&u=https%3A%2F%2Fwww.udemy.com%2Fmern-stack-complete-full-stack-apps-from-scratch&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "44 hours",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete MERN stack: MongoDB, Express, React, Node.js with authentication, deployment.",
+          "thumbnailUrl": "/img/mern-stack.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Java Full-Stack: Spring Boot and React",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.4483770&u=https%3A%2F%2Fwww.udemy.com%2Fjava-full-stack-spring-boot-and-react-inc-jwtrouterredux&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 156789,
+          "duration": "36 hours",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Java full-stack development: Spring Boot backend, React frontend, JWT, Redux integration.",
+          "thumbnailUrl": "/img/java-react.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Complete SaaS Application",
+          "description": "Build a full SaaS platform: user management, subscription billing, dashboard, analytics, notifications"
+        }
+      ]
+    },
+    {
+      "id": "automated-testing",
+      "title": "Automated Testing & QA",
+      "description": "Master automated testing for web applications and APIs with Selenium, pytest, and modern testing frameworks.",
+      "duration": "6-7 weeks",
+      "difficulty": "Intermediate",
+      "skills": [
+        "Test Automation",
+        "Selenium WebDriver",
+        "pytest",
+        "JUnit",
+        "API Testing",
+        "Postman",
+        "REST Assured",
+        "Robot Framework",
+        "Test-Driven Development",
+        "Behavior-Driven Development"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Selenium WebDriver with Java",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.6183131&u=https%3A%2F%2Fwww.udemy.com%2Fselenium-webdriver-with-java-w&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 189234,
+          "duration": "42 hours",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete Selenium automation: WebDriver, TestNG, frameworks, CI/CD integration.",
+          "thumbnailUrl": "/img/selenium-java.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Selenium Python de Cero",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.2856546&u=https%3A%2F%2Fwww.udemy.com%2Fselenium-python-de-cero&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 78901,
+          "duration": "28 hours",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Selenium with Python: pytest, Page Object Model, data-driven testing, reporting.",
+          "thumbnailUrl": "/img/selenium-python.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "API Testing: Postman, REST Assured, Jenkins, Git, AI",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3548460&u=https%3A%2F%2Fwww.udemy.com%2Fapi-testing-postman-restassured-jenkins-git-ai&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 145678,
+          "duration": "32 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete API testing: Postman, REST Assured, automation, CI/CD, AI-powered testing.",
+          "thumbnailUrl": "/img/api-testing.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "Robot Framework Complete Guide",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.863338&u=https%3A%2F%2Fwww.udemy.com%2Frobot-framework-2&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 56789,
+          "duration": "18 hours",
+          "price": {
+            "original": 74.99,
+            "current": 12.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Robot Framework for test automation: web, API, mobile testing with keyword-driven approach.",
+          "thumbnailUrl": "/img/robot-framework.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Complete Test Automation Suite",
+          "description": "Build comprehensive test automation: UI tests, API tests, integration tests, performance tests with CI/CD"
+        }
+      ]
+    },
+    {
+      "id": "containerization-orchestration",
+      "title": "Docker & Kubernetes",
+      "description": "Master containerization and orchestration for scalable application deployment.",
+      "duration": "6-7 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "Docker",
+        "Docker Compose",
+        "Container Orchestration",
+        "Kubernetes",
+        "EKS",
+        "Pods & Deployments",
+        "Services & Ingress",
+        "ConfigMaps & Secrets",
+        "Helm Charts",
+        "Container Security"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Docker Complete Course",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3096964&u=https%3A%2F%2Fwww.udemy.com%2Fdocker-complete&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.7,
+          "students": 234567,
+          "duration": "38 hours",
+          "price": {
+            "original": 89.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Complete Docker mastery: containers, images, volumes, networks, compose, registry, best practices.",
+          "thumbnailUrl": "/img/docker-complete.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "AWS EKS Kubernetes - DevOps & Microservices",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3028312&u=https%3A%2F%2Fwww.udemy.com%2Faws-eks-kubernetes-masterclass-devops-microservices&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 178901,
+          "duration": "48 hours",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete Kubernetes on AWS EKS: deployments, services, ingress, monitoring, microservices.",
+          "thumbnailUrl": "/img/eks-kubernetes.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Project",
+          "title": "Microservices on Kubernetes",
+          "description": "Deploy complete microservices architecture on Kubernetes: multiple services, load balancing, auto-scaling"
+        }
+      ]
+    },
+    {
+      "id": "ci-cd-automation",
+      "title": "CI/CD Pipeline & Automation",
+      "description": "Implement continuous integration and deployment pipelines with modern tools.",
+      "duration": "5-6 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "CI/CD Concepts",
+        "GitHub Actions",
+        "Jenkins",
+        "GitLab CI",
+        "Pipeline as Code",
+        "Automated Testing",
+        "Deployment Strategies",
+        "Blue-Green Deployment",
+        "Canary Releases",
+        "Rollback Strategies"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "Git & GitHub Actions for CI/CD",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.5785578&u=https%3A%2F%2Fwww.udemy.com%2Fgit-github-actions-for-ci-cd&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 123456,
+          "duration": "24 hours",
+          "price": {
+            "original": 79.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "Master Git and GitHub Actions: workflows, CI/CD pipelines, automation, deployment strategies.",
+          "thumbnailUrl": "/img/github-actions.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "DevOps CI/CD with Jenkins",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.2691860&u=https%3A%2F%2Fwww.udemy.com%2Fdevops-cicd-with-jenkins&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 189234,
+          "duration": "32 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete Jenkins CI/CD: pipeline creation, integration with Docker, Kubernetes, automated testing.",
+          "thumbnailUrl": "/img/jenkins-cicd.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "DevOps Complete Course - Zero to Hero",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.5129416&u=https%3A%2F%2Fwww.udemy.com%2Fdevops-complete-course-zero-to-hero&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.7,
+          "students": 267890,
+          "duration": "56 hours",
+          "price": {
+            "original": 99.99,
+            "current": 16.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete DevOps journey: Git, Docker, Kubernetes, Jenkins, monitoring, security, best practices.",
+          "thumbnailUrl": "/img/devops-complete.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Project",
+          "title": "End-to-End CI/CD Pipeline",
+          "description": "Build complete CI/CD pipeline: code commit → build → test → containerize → deploy to Kubernetes → monitor"
+        }
+      ]
+    },
+    {
+      "id": "cloud-platforms",
+      "title": "Cloud Platforms & Deployment",
+      "description": "Master AWS, Azure, and GCP for cloud-native application deployment and management.",
+      "duration": "8-10 weeks",
+      "difficulty": "Advanced",
+      "skills": [
+        "AWS Services",
+        "EC2 & S3",
+        "Lambda & Serverless",
+        "RDS & DynamoDB",
+        "Azure Fundamentals",
+        "Google Cloud Platform",
+        "Cloud Architecture",
+        "Infrastructure as Code",
+        "Cost Optimization",
+        "Cloud Security"
+      ],
+      "resources": [
+        {
+          "type": "Course",
+          "title": "AWS Certified Developer Associate - Step by Step",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3594850&u=https%3A%2F%2Fwww.udemy.com%2Faws-certified-developer-associate-step-by-step&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.6,
+          "students": 234567,
+          "duration": "45 hours",
+          "price": {
+            "original": 94.99,
+            "current": 15.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Complete AWS for developers: EC2, S3, Lambda, RDS, API Gateway, CloudFormation, deployment.",
+          "thumbnailUrl": "/img/aws-developer.jpg",
+          "isBestseller": true
+        },
+        {
+          "type": "Course",
+          "title": "AWS Masterclass: Serverless with Lambda & Aurora",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.2234206&u=https%3A%2F%2Fwww.udemy.com%2Faws-masterclass-go-serverless-with-aws-lambda-aws-aurora&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 89234,
+          "duration": "28 hours",
+          "price": {
+            "original": 84.99,
+            "current": 14.99,
+            "currency": "USD"
+          },
+          "level": "Advanced",
+          "description": "Serverless architecture on AWS: Lambda, API Gateway, DynamoDB, Aurora, event-driven apps.",
+          "thumbnailUrl": "/img/aws-serverless.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "AZ-900: Fundamentos Azure",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.6361695&u=https%3A%2F%2Fwww.udemy.com%2Faz-900-fundamentos-azure&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.5,
+          "students": 156789,
+          "duration": "22 hours",
+          "price": {
+            "original": 74.99,
+            "current": 13.99,
+            "currency": "USD"
+          },
+          "level": "Beginner",
+          "description": "Azure fundamentals: compute, storage, networking, security, pricing for certification prep.",
+          "thumbnailUrl": "/img/azure-fundamentals.jpg"
+        },
+        {
+          "type": "Course",
+          "title": "Google Cloud Platform (GCP) Practice Test",
+          "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.6133653&u=https%3A%2F%2Fwww.udemy.com%2Fgoogle-cloud-platform-gcp-practice-test&intsrc=APIG_26324",
+          "provider": "Udemy",
+          "rating": 4.4,
+          "students": 45678,
+          "duration": "8 hours",
+          "price": {
+            "original": 49.99,
+            "current": 11.99,
+            "currency": "USD"
+          },
+          "level": "Intermediate",
+          "description": "GCP certification practice: Compute Engine, Cloud Storage, Kubernetes Engine, networking.",
+          "thumbnailUrl": "/img/gcp-practice.jpg"
+        },
+        {
+          "type": "Project",
+          "title": "Multi-Cloud Application Deployment",
+          "description": "Deploy the same application on AWS, Azure, and GCP: compare services, costs, performance"
+        }
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "name": "AWS Certified Developer - Associate",
+      "provider": "Amazon Web Services",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "2-3 months",
+      "cost": 150,
+      "currency": "USD",
+      "renewalPeriod": "3 years"
+    },
+    {
+      "name": "Certified Kubernetes Administrator (CKA)",
+      "provider": "Cloud Native Computing Foundation",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-4 months",
+      "cost": 395,
+      "currency": "USD",
+      "renewalPeriod": "3 years"
+    },
+    {
+      "name": "Azure Developer Associate",
+      "provider": "Microsoft",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "2-3 months",
+      "cost": 165,
+      "currency": "USD",
+      "renewalPeriod": "1 year"
+    },
+    {
+      "name": "ISTQB Foundation Level",
+      "provider": "ISTQB",
+      "difficulty": "Beginner",
+      "estimatedStudyTime": "2-3 months",
+      "cost": 250,
+      "currency": "USD",
+      "renewalPeriod": "Lifetime"
+    },
+    {
+      "name": "Docker Certified Associate",
+      "provider": "Docker Inc",
+      "difficulty": "Intermediate",
+      "estimatedStudyTime": "2-3 months",
+      "cost": 195,
+      "currency": "USD",
+      "renewalPeriod": "2 years"
+    },
+    {
+      "name": "Google Cloud Professional Developer",
+      "provider": "Google Cloud",
+      "difficulty": "Advanced",
+      "estimatedStudyTime": "3-4 months",
+      "cost": 200,
+      "currency": "USD",
+      "renewalPeriod": "2 years"
+    }
+  ],
+  "tools": [
+    {
+      "category": "Backend Frameworks",
+      "tools": [
+        "Spring Boot",
+        "Spring Cloud",
+        "Express.js",
+        "NestJS",
+        "Django",
+        "FastAPI"
+      ]
+    },
+    {
+      "category": "Frontend Frameworks",
+      "tools": [
+        "React.js",
+        "Next.js",
+        "Angular",
+        "Vue.js",
+        "Svelte",
+        "React Native"
+      ]
+    },
+    {
+      "category": "Databases",
+      "tools": [
+        "PostgreSQL",
+        "MongoDB",
+        "MySQL",
+        "Redis",
+        "Cassandra",
+        "DynamoDB"
+      ]
+    },
+    {
+      "category": "Testing Tools",
+      "tools": [
+        "Selenium",
+        "Cypress",
+        "Jest",
+        "JUnit",
+        "pytest",
+        "Postman",
+        "REST Assured"
+      ]
+    },
+    {
+      "category": "Containerization",
+      "tools": [
+        "Docker",
+        "Kubernetes",
+        "Docker Compose",
+        "Helm",
+        "Podman",
+        "containerd"
+      ]
+    },
+    {
+      "category": "CI/CD",
+      "tools": [
+        "GitHub Actions",
+        "Jenkins",
+        "GitLab CI",
+        "CircleCI",
+        "Travis CI",
+        "ArgoCD"
+      ]
+    },
+    {
+      "category": "Cloud Platforms",
+      "tools": [
+        "AWS",
+        "Azure",
+        "Google Cloud",
+        "DigitalOcean",
+        "Heroku",
+        "Vercel"
+      ]
+    },
+    {
+      "category": "Monitoring & Logging",
+      "tools": [
+        "Prometheus",
+        "Grafana",
+        "ELK Stack",
+        "DataDog",
+        "New Relic",
+        "CloudWatch"
+      ]
+    },
+    {
+      "category": "Version Control",
+      "tools": [
+        "Git",
+        "GitHub",
+        "GitLab",
+        "Bitbucket",
+        "Azure Repos"
+      ]
+    },
+    {
+      "category": "Infrastructure as Code",
+      "tools": [
+        "Terraform",
+        "Ansible",
+        "CloudFormation",
+        "Pulumi",
+        "Chef",
+        "Puppet"
+      ]
+    }
+  ],
+  "specializations": [
+    {
+      "area": "Backend-Heavy Full-Stack",
+      "focus": [
+        "Microservices architecture",
+        "API design & scalability",
+        "Database optimization",
+        "System design"
+      ],
+      "industries": [
+        "Fintech",
+        "SaaS",
+        "Enterprise",
+        "Healthcare"
+      ],
+      "salaryBonus": "+15-20%"
+    },
+    {
+      "area": "Frontend-Heavy Full-Stack",
+      "focus": [
+        "Advanced React/Angular",
+        "UI/UX implementation",
+        "Performance optimization",
+        "Mobile development"
+      ],
+      "industries": [
+        "E-commerce",
+        "Social Media",
+        "Gaming",
+        "Consumer Apps"
+      ],
+      "salaryBonus": "+10-15%"
+    },
+    {
+      "area": "DevOps-Heavy Hybrid",
+      "focus": [
+        "Infrastructure automation",
+        "CI/CD mastery",
+        "Cloud architecture",
+        "Container orchestration"
+      ],
+      "industries": [
+        "Cloud Services",
+        "SaaS",
+        "Startups",
+        "Tech Companies"
+      ],
+      "salaryBonus": "+20-25%"
+    },
+    {
+      "area": "QA-Heavy Hybrid",
+      "focus": [
+        "Test automation frameworks",
+        "Quality engineering",
+        "Performance testing",
+        "Security testing"
+      ],
+      "industries": [
+        "Banking",
+        "Healthcare",
+        "E-commerce",
+        "Compliance-heavy"
+      ],
+      "salaryBonus": "+10-15%"
+    },
+    {
+      "area": "Cloud-Native Specialist",
+      "focus": [
+        "Multi-cloud expertise",
+        "Serverless architecture",
+        "Cloud-native patterns",
+        "Cost optimization"
+      ],
+      "industries": [
+        "Cloud Providers",
+        "Consulting",
+        "Enterprise",
+        "Startups"
+      ],
+      "salaryBonus": "+25-30%"
+    }
+  ],
+  "careerProgression": [
+    {
+      "level": "Junior Full-Stack Developer",
+      "experience": "0-2 years",
+      "salary": {
+        "min": 60000,
+        "max": 100000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Basic feature development",
+        "Bug fixes",
+        "Simple API integrations",
+        "Writing unit tests"
+      ]
+    },
+    {
+      "level": "Full-Stack Developer",
+      "experience": "2-4 years",
+      "salary": {
+        "min": 100000,
+        "max": 150000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Complete feature development",
+        "Database design",
+        "API development",
+        "Basic DevOps tasks"
+      ]
+    },
+    {
+      "level": "Senior Full-Stack + DevOps Engineer",
+      "experience": "4-7 years",
+      "salary": {
+        "min": 150000,
+        "max": 200000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Architecture decisions",
+        "CI/CD pipeline management",
+        "Cloud infrastructure",
+        "Team mentoring"
+      ]
+    },
+    {
+      "level": "Lead Hybrid Engineer / Tech Lead",
+      "experience": "7-10 years",
+      "salary": {
+        "min": 200000,
+        "max": 280000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "System architecture",
+        "Team leadership",
+        "Technology strategy",
+        "Cross-team collaboration"
+      ]
+    },
+    {
+      "level": "Principal Engineer / Engineering Manager",
+      "experience": "10+ years",
+      "salary": {
+        "min": 280000,
+        "max": 400000,
+        "currency": "MAD"
+      },
+      "responsibilities": [
+        "Organization-wide architecture",
+        "Technology roadmap",
+        "Multiple team management",
+        "Strategic planning"
+      ]
+    }
+  ],
+  "practicalProjects": [
+    {
+      "name": "Complete E-commerce Platform",
+      "description": "Full-stack e-commerce: backend API, frontend UI, payment integration, automated tests, Docker deployment",
+      "techniques": [
+        "Spring Boot/Node.js",
+        "React/Angular",
+        "PostgreSQL",
+        "Selenium",
+        "Docker",
+        "CI/CD"
+      ],
+      "duration": "6-8 weeks",
+      "complexity": "High"
+    },
+    {
+      "name": "Microservices SaaS Application",
+      "description": "Multi-tenant SaaS with microservices: user service, billing service, analytics, API gateway, K8s deployment",
+      "techniques": [
+        "Spring Cloud",
+        "React",
+        "MongoDB",
+        "Kubernetes",
+        "GitHub Actions",
+        "AWS"
+      ],
+      "duration": "8-10 weeks",
+      "complexity": "Very High"
+    },
+    {
+      "name": "Real-time Chat Application",
+      "description": "Full-stack chat app: WebSocket backend, React frontend, MongoDB, Redis, Docker, automated testing",
+      "techniques": [
+        "Node.js",
+        "WebSocket",
+        "React",
+        "Redis",
+        "Docker",
+        "Jest"
+      ],
+      "duration": "4-5 weeks",
+      "complexity": "Medium"
+    },
+    {
+      "name": "DevOps Platform Dashboard",
+      "description": "Build a DevOps dashboard: CI/CD monitoring, deployment status, resource usage, logs aggregation",
+      "techniques": [
+        "Node.js",
+        "React",
+        "Prometheus",
+        "Grafana",
+        "Kubernetes",
+        "Docker"
+      ],
+      "duration": "5-6 weeks",
+      "complexity": "High"
+    },
+    {
+      "name": "Cloud-Native Blog Platform",
+      "description": "Serverless blog: Lambda functions, S3 storage, API Gateway, CloudFront CDN, automated deployment",
+      "techniques": [
+        "AWS Lambda",
+        "Next.js",
+        "DynamoDB",
+        "CloudFormation",
+        "GitHub Actions"
+      ],
+      "duration": "3-4 weeks",
+      "complexity": "Medium"
+    },
+    {
+      "name": "Complete CI/CD Pipeline Implementation",
+      "description": "Enterprise CI/CD: multi-stage pipeline, automated testing, security scanning, K8s deployment, rollback",
+      "techniques": [
+        "Jenkins",
+        "Docker",
+        "Kubernetes",
+        "SonarQube",
+        "Selenium",
+        "Terraform"
+      ],
+      "duration": "4-5 weeks",
+      "complexity": "Very High"
+    }
+  ],
+  "industryApplications": [
+    {
+      "sector": "Fintech",
+      "focus": [
+        "Payment processing systems",
+        "Security compliance",
+        "Real-time transactions",
+        "Regulatory requirements"
+      ],
+      "demandLevel": "Very High",
+      "avgSalary": "+20% above average"
+    },
+    {
+      "sector": "E-commerce",
+      "focus": [
+        "Scalable platforms",
+        "Inventory management",
+        "Payment gateway integration",
+        "Performance optimization"
+      ],
+      "demandLevel": "Very High",
+      "avgSalary": "+15% above average"
+    },
+    {
+      "sector": "SaaS",
+      "focus": [
+        "Multi-tenant architecture",
+        "Subscription billing",
+        "API development",
+        "Cloud-native deployment"
+      ],
+      "demandLevel": "Extremely High",
+      "avgSalary": "+25% above average"
+    },
+    {
+      "sector": "Healthcare",
+      "focus": [
+        "HIPAA compliance",
+        "Data security",
+        "Integration systems",
+        "Regulatory validation"
+      ],
+      "demandLevel": "High",
+      "avgSalary": "+15% above average"
+    },
+    {
+      "sector": "Startups",
+      "focus": [
+        "Rapid development",
+        "MVP building",
+        "Full ownership",
+        "Multiple responsibilities"
+      ],
+      "demandLevel": "Extremely High",
+      "avgSalary": "Variable (equity compensation)"
+    },
+    {
+      "sector": "Enterprise",
+      "focus": [
+        "Legacy system modernization",
+        "Large-scale architecture",
+        "Integration complexity",
+        "Compliance & security"
+      ],
+      "demandLevel": "High",
+      "avgSalary": "+10% above average"
+    }
+  ],
+  "keySkillCombinations": [
+    {
+      "combination": "Java + Spring Boot + React + Docker + AWS",
+      "demandLevel": "Extremely High",
+      "description": "Most requested enterprise stack for scalable applications",
+      "industries": ["Enterprise", "Fintech", "SaaS"]
+    },
+    {
+      "combination": "Node.js + React + MongoDB + Kubernetes + GCP",
+      "demandLevel": "Very High",
+      "description": "Modern MERN stack with cloud-native deployment",
+      "industries": ["Startups", "SaaS", "E-commerce"]
+    },
+    {
+      "combination": "Python + FastAPI + React + Docker + Azure",
+      "demandLevel": "High",
+      "description": "Data-heavy applications with modern deployment",
+      "industries": ["Data Analytics", "AI/ML", "Healthcare"]
+    },
+    {
+      "combination": "Any Backend + Angular + PostgreSQL + Jenkins + AWS",
+      "demandLevel": "High",
+      "description": "Enterprise-grade applications with robust CI/CD",
+      "industries": ["Banking", "Insurance", "Government"]
+    }
+  ],
+  "learningPath": {
+    "phase1": {
+      "name": "Foundation (Months 1-4)",
+      "focus": "Programming, Backend, Database basics",
+      "outcome": "Can build simple backend APIs"
+    },
+    "phase2": {
+      "name": "Full-Stack Development (Months 5-8)",
+      "focus": "Frontend frameworks, Full-stack integration",
+      "outcome": "Can build complete web applications"
+    },
+    "phase3": {
+      "name": "Testing & Quality (Months 9-10)",
+      "focus": "Automated testing, QA practices",
+      "outcome": "Can implement comprehensive test suites"
+    },
+    "phase4": {
+      "name": "DevOps & Deployment (Months 11-14)",
+      "focus": "Docker, Kubernetes, CI/CD pipelines",
+      "outcome": "Can deploy and manage applications in production"
+    },
+    "phase5": {
+      "name": "Cloud Mastery (Months 15-18)",
+      "focus": "Multi-cloud deployment, advanced patterns",
+      "outcome": "Can architect and deploy cloud-native systems"
+    }
+  },
+  "jobMarketInsights": {
+    "morocco": {
+      "demand": "Rapidly Growing",
+      "topCities": ["Casablanca", "Rabat", "Marrakech", "Tangier"],
+      "topCompanies": [
+        "Capgemini",
+        "Sopra Steria",
+        "CGI",
+        "Accenture",
+        "Local Startups"
+      ],
+      "remoteOpportunities": "Very High"
+    },
+    "international": {
+      "demand": "Extremely High",
+      "regions": ["Europe", "North America", "Middle East"],
+      "remoteWork": "Excellent opportunities for remote work with international companies",
+      "salaryPotential": "3-5x Morocco salaries for remote positions"
+    }
+  },
+  "successMetrics": {
+    "junior": [
+      "Complete 3+ full-stack projects",
+      "Contribute to open source",
+      "Build personal portfolio",
+      "Pass 1-2 certifications"
+    ],
+    "mid": [
+      "Lead project development",
+      "Implement CI/CD pipelines",
+      "Mentor junior developers",
+      "Deploy to production"
+    ],
+    "senior": [
+      "Design system architecture",
+      "Optimize performance",
+      "Lead technical decisions",
+      "Cross-functional collaboration"
+    ]
+  },
+  "whyThisRoadmap": {
+    "marketDemand": "Companies desperately need engineers who can handle the entire stack - from code to deployment. This 'unicorn' skill set commands premium salaries.",
+    "jobSecurity": "With skills across development, testing, and operations, you're irreplaceable. Multiple specializations mean multiple career paths.",
+    "salary": "Hybrid engineers earn 30-50% more than single-discipline developers due to broader impact and reduced team dependencies.",
+    "flexibility": "Work as full-stack developer, DevOps engineer, or QA automation - or combine all three. Maximum career flexibility.",
+    "remote": "These skills are perfect for remote work with international companies offering premium compensation.",
+    "future": "As teams become leaner, companies increasingly seek developers who can 'do it all' - this is the future of software engineering."
+  }
+}
