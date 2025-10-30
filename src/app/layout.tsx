@@ -24,6 +24,60 @@ export const metadata: Metadata = {
   icons: {
     icon: '/images/blog/logo.svg',
   },
+  // Google Search Console Verification
+  verification: {
+    google: '00c4fbab1e48645b',
+  },
+  // Métadonnées SEO avancées
+  metadataBase: new URL('https://hirely.ma'),
+  alternates: {
+    canonical: 'https://hirely.ma',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: 'https://hirely.ma',
+    siteName: 'Hirely.ma',
+    title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
+    description:
+      'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+    images: [
+      {
+        url: '/images/blog/logo.svg',
+        width: 1200,
+        height: 630,
+        alt: 'Hirely.ma - Tech Jobs Platform',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
+    description:
+      'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+    images: ['/images/blog/logo.svg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  keywords: [
+    'tech jobs Morocco',
+    'IT jobs',
+    'career roadmaps',
+    'software engineer jobs',
+    'DevOps jobs',
+    'QA jobs',
+    'Morocco tech careers',
+    'job board',
+  ],
 };
 
 export default function RootLayout({
@@ -34,6 +88,28 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          {/* JSON-LD Schema pour améliorer le SEO */}
+          <Script
+            id="schema-org"
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'Hirely.ma',
+                url: 'https://hirely.ma',
+                description:
+                  'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+                potentialAction: {
+                  '@type': 'SearchAction',
+                  target: 'https://hirely.ma/jobs?search={search_term_string}',
+                  'query-input': 'required name=search_term_string',
+                },
+              }),
+            }}
+          />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
@@ -50,9 +126,7 @@ export default function RootLayout({
           />
 
           {/* Your app layout */}
-          <ClientLayoutWrapper>
-            {children}
-          </ClientLayoutWrapper>
+          <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>
       </html>
     </ClerkProvider>
