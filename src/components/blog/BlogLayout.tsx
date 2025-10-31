@@ -90,7 +90,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           {/* Article Content */}
           <main className="lg:col-span-8">
             <article className="onsaas-prose prose prose-lg max-w-none">
-              {/* Enhanced mobile styles with animations */}
+              {/* Enhanced mobile styles with animations - REDUCED SPACING */}
               <style jsx global>{`
                 .mobile-optimized-prose {
                   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
@@ -120,8 +120,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   color: #1a202c;
                   font-weight: 700;
                   line-height: 1.2;
-                  margin-top: 1rem;
-                  margin-bottom: 0.5 rem;
+                  margin-top: 1.5rem;
+                  margin-bottom: 0.75rem;
                   scroll-margin-top: 120px;
                 }
                 
@@ -135,6 +135,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   color: #2d3748;
                   border-bottom: 1px solid #e2e8f0;
                   padding-bottom: 0.5rem;
+                  margin-top: 2rem;
                 }
                 
                 .onsaas-prose h3 {
@@ -143,22 +144,23 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 }
                 
                 .onsaas-prose p {
-                  margin-bottom: 1.75rem;
+                  margin-bottom: 1rem;
                   color: #4a5568;
                   font-size: 1.125rem;
-                  line-height: 1.8;
+                  line-height: 1.7;
                 }
                 
                 .onsaas-prose ul,
                 .onsaas-prose ol {
-                  margin-bottom: 2rem;
+                  margin-bottom: 1.25rem;
+                  margin-top: 0.75rem;
                   padding-left: 2rem;
                 }
                 
                 .onsaas-prose li {
-                  margin-bottom: 0.75rem;
+                  margin-bottom: 0.5rem;
                   color: #4a5568;
-                  line-height: 1.7;
+                  line-height: 1.6;
                 }
                 
                 .onsaas-prose li::marker {
@@ -181,7 +183,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 .onsaas-prose blockquote {
                   border-left: 4px solid #667eea;
                   padding-left: 1.5rem;
-                  margin: 2rem 0;
+                  margin: 1.5rem 0;
                   color: #2d3748;
                   font-style: italic;
                   background: #f7fafc;
@@ -204,7 +206,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   padding: 1.5rem;
                   border-radius: 0.75rem;
                   overflow-x: auto;
-                  margin: 2rem 0;
+                  margin: 1.5rem 0;
                   font-size: 0.875rem;
                   line-height: 1.6;
                 }
@@ -221,7 +223,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 .onsaas-prose img {
                   border-radius: 0.75rem;
                   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-                  margin: 2.5rem 0;
+                  margin: 2rem 0;
                   width: 100%;
                 }
 
@@ -289,7 +291,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 .onsaas-prose table {
                   width: 100%;
                   border-collapse: collapse;
-                  margin: 2rem 0;
+                  margin: 1.5rem 0;
                   border-radius: 0.5rem;
                   overflow: hidden;
                   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -316,6 +318,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   
                   .onsaas-prose h2 {
                     font-size: 1.75rem;
+                    margin-top: 1.5rem;
                   }
                   
                   .onsaas-prose h3 {
@@ -324,20 +327,37 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   
                   .onsaas-prose p {
                     font-size: 1.1rem;
+                    margin-bottom: 0.875rem;
+                  }
+
+                  .onsaas-prose ul,
+                  .onsaas-prose ol {
+                    margin-bottom: 1rem;
+                    margin-top: 0.5rem;
+                  }
+
+                  .onsaas-prose li {
+                    margin-bottom: 0.4rem;
                   }
                   
                   .onsaas-prose pre {
                     padding: 1rem;
                     font-size: 0.8rem;
+                    margin: 1.25rem 0;
                   }
                   
                   .onsaas-prose table {
                     font-size: 0.875rem;
+                    margin: 1.25rem 0;
                   }
                   
                   .onsaas-prose th,
                   .onsaas-prose td {
                     padding: 0.75rem;
+                  }
+
+                  .onsaas-prose blockquote {
+                    margin: 1.25rem 0;
                   }
 
                   .click-indicator {

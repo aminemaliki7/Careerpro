@@ -14,9 +14,16 @@ const rehypePrettyCodeOptions = {
 }
 
 export async function compileMDX(source: string) {
-  const compiledSource = await compile(source, {
+  // Normalize whitespace in source before compilation
+  const normalizedSource = source
+    .replace(/\n{3,}/g, '\n\n') // Replace 3+ newlines with 2
+    .trim();
+
+  const compiledSource = await compile(normalizedSource, {
     outputFormat: 'function-body',
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [
+      remarkGfm,
+    ],
     rehypePlugins: [
       rehypeSlug,
       [rehypeAutolinkHeadings, { behavior: 'wrap' }],

@@ -69,7 +69,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <BlogLayout post={post}>
       <div 
-        className="whitespace-pre-wrap"
         dangerouslySetInnerHTML={{ __html: post.content }} 
       />
     </BlogLayout>
