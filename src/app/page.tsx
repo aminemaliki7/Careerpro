@@ -8,6 +8,37 @@ import { getAllRoadmaps } from '@/lib/roadmaps';
 import NewsletterCTA from '@/components/NewsletterCTA';
 import RecruiterButton from '@/components/RecruiterButton';
 
+export const metadata = {
+  title: "Hirely – Tech Jobs, Roadmaps & Career Insights for Developers",
+  description:
+    "Hirely is your hub for discovering tech jobs, learning through roadmaps, and staying updated on the latest industry trends. Build your skills and career faster.",
+  openGraph: {
+    title: "Hirely – Tech Jobs, Roadmaps & Career Insights",
+    description:
+      "Discover jobs, learning paths, and insights to grow your tech career.",
+    url: "https://hirely.ma",
+    siteName: "Hirely",
+    images: [
+      {
+        url: "https://hirely.ma/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Hirely – Tech Careers Platform",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hirely – Tech Jobs & Roadmaps",
+    description:
+      "Find your next opportunity, learn new skills, and stay ahead in tech.",
+    images: ["https://hirely.ma/og-image.jpg"],
+  },
+};
+
+
 
 export default async function HomePage() {
   const featuredPosts = getFeaturedPosts();
@@ -94,8 +125,10 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-                Insights
-              </h2>
+  Tech Insights & Career Guides
+</h2>
+
+              
               <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
                 Career guidance, industry insights, and tech trends to help you stay ahead.
               </p>
@@ -202,8 +235,9 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-              Opportunities
-            </h2>
+  Latest Tech Jobs & Opportunities
+</h2>
+
             <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-8">
               Handpicked positions from innovative companies that value talent and growth.
             </p>
@@ -315,8 +349,9 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row items-end justify-between mb-20">
             <div>
               <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-                Roadmaps
-              </h2>
+  Engineers Roadmaps
+</h2>
+
               <p className="text-xl text-gray-500 font-light max-w-2xl">
                 Structured learning paths designed to take you from beginner to expert.
               </p>
@@ -414,3 +449,21 @@ export default async function HomePage() {
     </div>
   );
 }
+<script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: "Hirely",
+      url: "https://hirely.ma",
+      logo: "https://hirely.ma/logo.png",
+      sameAs: [
+        "https://www.linkedin.com/company/hirely-ma/",
+        "https://twitter.com/hirely_ma"
+      ],
+      description:
+        "Hirely is a Morocco-based global platform for tech jobs, roadmaps, and learning resources.",
+    }),
+  }}
+/>
