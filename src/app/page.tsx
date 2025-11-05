@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, MapPin, DollarSign, Award } from 'lucide-react';
+import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, MapPin, DollarSign, Award, Headphones } from 'lucide-react';
 import { getFeaturedPosts } from '@/lib/posts';
 import { supabase } from '@/lib/supabase';
 import { getAllRoadmaps } from '@/lib/roadmaps';
@@ -125,13 +125,18 @@ export default async function HomePage() {
           <div className="max-w-7xl mx-auto px-6">
             <div className="text-center mb-20">
               <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-  Tech Insights & Career Guides
-</h2>
-
+                Tech Insights & Career Guides
+              </h2>
               
-              <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto">
+              <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-3">
                 Career guidance, industry insights, and tech trends to help you stay ahead.
               </p>
+              
+              {/* Podcast-style badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 rounded-full">
+                <Headphones className="w-4 h-4 text-purple-600" />
+                <span className="text-sm font-medium text-purple-900">Now available in audio format</span>
+              </div>
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -140,8 +145,8 @@ export default async function HomePage() {
                   key={post.slug ? `post-${post.slug}-${index}` : `post-${index}`}
                   className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60"
                 >
-                  {post.coverImage && (
-                    <div className="overflow-hidden">
+                  <div className="relative overflow-hidden">
+                    {post.coverImage && (
                       <Image
                         src={post.coverImage}
                         alt={post.title}
@@ -149,8 +154,16 @@ export default async function HomePage() {
                         height={700}
                         className="w-full h-48 object-cover object-top transition-transform duration-500 group-hover:scale-105"
                       />
-                    </div>
-                  )}
+                    )}
+                    
+                    {/* Audio badge overlay - only show if post has audio */}
+                    {post.audioUrl && (
+                      <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                        <Headphones className="w-3.5 h-3.5 text-purple-600" />
+                        <span className="text-xs font-medium text-gray-900">Audio</span>
+                      </div>
+                    )}
+                  </div>
 
                   <div className="p-8">
                     <div className="flex items-center gap-4 text-xs text-gray-400 mb-6 font-medium">
@@ -160,6 +173,7 @@ export default async function HomePage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <Clock className="w-3 h-3" />
+                        {post.audioDuration ? `${Math.ceil(post.audioDuration / 60)} min` : '5 min read'}
                       </div>
                     </div>
 
@@ -189,7 +203,7 @@ export default async function HomePage() {
                       href={`/blog/${post.slug}`}
                       className="group/link inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm"
                     >
-                      Read article
+                      {post.audioUrl ? 'Read or Listen' : 'Read article'}
                       <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                   </div>
@@ -235,8 +249,8 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-  Latest Tech Jobs & Opportunities
-</h2>
+              Latest Tech Jobs & Opportunities
+            </h2>
 
             <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-8">
               Handpicked positions from innovative companies that value talent and growth.
@@ -349,8 +363,8 @@ export default async function HomePage() {
           <div className="flex flex-col sm:flex-row items-end justify-between mb-20">
             <div>
               <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-  Engineers Roadmaps
-</h2>
+                Engineers Roadmaps
+              </h2>
 
               <p className="text-xl text-gray-500 font-light max-w-2xl">
                 Structured learning paths designed to take you from beginner to expert.
@@ -449,21 +463,3 @@ export default async function HomePage() {
     </div>
   );
 }
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: "Hirely",
-      url: "https://hirely.ma",
-      logo: "https://hirely.ma/logo.png",
-      sameAs: [
-        "https://www.linkedin.com/company/hirely-ma/",
-        "https://twitter.com/hirely_ma"
-      ],
-      description:
-        "Hirely is a Morocco-based global platform for tech jobs, roadmaps, and learning resources.",
-    }),
-  }}
-/>

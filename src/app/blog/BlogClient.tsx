@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, CalendarDays, Clock, User, ArrowRight, Tag, TrendingUp, Star, Filter, X } from 'lucide-react';
+import { Search, CalendarDays, Clock, User, ArrowRight, Tag, TrendingUp, Star, Filter, X, Headphones } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 
 interface BlogClientProps {
@@ -39,6 +39,11 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
 
     return posts;
   }, [allPosts, featuredPosts, searchTerm, selectedTag, showFeaturedOnly]);
+
+  // Count posts with audio
+  const postsWithAudio = useMemo(() => {
+    return allPosts.filter(post => post.audioUrl).length;
+  }, [allPosts]);
 
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString('en-US', {
@@ -79,6 +84,11 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                 <Star className="w-4 h-4" />
                 <span>{featuredPosts.length} Featured</span>
               </div>
+              <div className="w-px h-4 bg-blue-400"></div>
+              <div className="flex items-center gap-2">
+                <Headphones className="w-4 h-4" />
+                <span>{postsWithAudio} With Audio</span>
+              </div>
             </div>
           </div>
         </div>
@@ -87,7 +97,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
       {/* Mobile Header - Minimal */}
       <div className="sm:hidden bg-white border-b border-gray-200 px-3 py-4">
         <h1 className="text-lg font-bold text-gray-900">Career Articles</h1>
-        <p className="text-sm text-gray-600">{allPosts.length} articles • {featuredPosts.length} featured</p>
+        <p className="text-sm text-gray-600">{allPosts.length} articles • {postsWithAudio} with audio</p>
       </div>
 
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
@@ -213,16 +223,15 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                 className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-w-[180px] text-gray-800"
               >
                 <option value="">All Topics</option>
-               {allTags
-  ?.filter((tag): tag is string => typeof tag === "string" && tag.trim() !== "")
-  .map(tag => (
-    <option key={tag} value={tag}>
-      {tag
-        .replace(/-/g, " ")
-        .replace(/\b\w/g, l => l.toUpperCase())}
-    </option>
-  ))}
-
+                {allTags
+                  ?.filter((tag): tag is string => typeof tag === "string" && tag.trim() !== "")
+                  .map(tag => (
+                    <option key={tag} value={tag}>
+                      {tag
+                        .replace(/-/g, " ")
+                        .replace(/\b\w/g, l => l.toUpperCase())}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -255,7 +264,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             <div className="flex flex-wrap gap-2">
               {searchTerm && (
                 <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  Search: &quot{searchTerm}&quot
+                  Search: &quot;{searchTerm}&quot;
                   <button onClick={() => setSearchTerm('')} className="hover:text-blue-600">
                     <X className="w-4 h-4" />
                   </button>
@@ -300,13 +309,20 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
               >
                 {/* Cover Image - Mobile Optimized */}
                 {post.coverImage && (
-                  <div className="aspect-video w-full overflow-hidden">
-                   <img
-  src={post.coverImage}
-  alt={post.title}
-  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
-/>
-
+                  <div className="aspect-video w-full overflow-hidden relative">
+                    <img
+                      src={post.coverImage}
+                      alt={post.title}
+                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
+                    />
+                    
+                    {/* Audio badge overlay */}
+                    {post.audioUrl && (
+                      <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-md flex items-center gap-1">
+                        <Headphones className="w-3 h-3 text-purple-600" />
+                        <span className="text-[10px] font-medium text-gray-900">Audio</span>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -328,7 +344,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     </div>
                     <div className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5" />
-                      <span>{Math.ceil(post.readingTime || 5)}m read</span>
+                      <span>{post.audioDuration ? `${Math.ceil(post.audioDuration / 60)}m` : `${Math.ceil(post.readingTime || 5)}m read`}</span>
                     </div>
                   </div>
 
@@ -344,23 +360,23 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     {post.description}
                   </p>
 
-                {/* Tags - Mobile Optimized */}
-<div className="flex flex-wrap gap-1.5 mb-4">
-  {(post.tags ?? []).slice(0, 2).map((tag, tagIndex) => (
-    <button
-      key={`${post.slug}-${tag}-${tagIndex}`}
-      onClick={() => setSelectedTag(tag)}
-      className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
-    >
-      #{tag}
-    </button>
-  ))}
-  {(post.tags ?? []).length > 2 && (
-    <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-      +{(post.tags ?? []).length - 2}
-    </span>
-  )}
-</div>
+                  {/* Tags - Mobile Optimized */}
+                  <div className="flex flex-wrap gap-1.5 mb-4">
+                    {(post.tags ?? []).slice(0, 2).map((tag, tagIndex) => (
+                      <button
+                        key={`${post.slug}-${tag}-${tagIndex}`}
+                        onClick={() => setSelectedTag(tag)}
+                        className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
+                      >
+                        #{tag}
+                      </button>
+                    ))}
+                    {(post.tags ?? []).length > 2 && (
+                      <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                        +{(post.tags ?? []).length - 2}
+                      </span>
+                    )}
+                  </div>
 
                   {/* Footer: Author & Read More - Mobile Optimized */}
                   <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100">
@@ -372,7 +388,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                       href={`/blog/${post.slug}`}
                       className="inline-flex items-center gap-1 text-blue-600 text-sm font-semibold hover:text-blue-800 transition-colors"
                     >
-                      <span className="hidden sm:inline">Read More</span>
+                      <span className="hidden sm:inline">{post.audioUrl ? 'Read/Listen' : 'Read More'}</span>
                       <span className="sm:hidden">Read</span>
                       <ArrowRight className="w-4 h-4" />
                     </Link>
