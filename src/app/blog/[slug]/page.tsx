@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import BlogLayout from '@/components/blog/BlogLayout';
+import { AudioPlayer } from '@/components/blog/AudioPlayer';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -69,28 +70,36 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
  
   return (
     <BlogLayout post={post}>
+      {/* Audio Player - Only shows if audioUrl exists in frontmatter */}
+      {post.audioUrl && (
+        <AudioPlayer 
+          audioUrl={post.audioUrl}
+          title={post.title}
+          duration={post.audioDuration}
+        />
+      )}
+
       <div 
         className="prose max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }} 
       />
 
-      {/* Added Roadmap Section */}
+      {/* Roadmap Section */}
       <div className="mt-12 border-t border-gray-200 pt-8 text-center">
-  <h3 className="text-lg font-semibold text-gray-800 mb-3">
-    🚀 For engineers who want direction
-  </h3>
-  <p className="text-gray-600 mb-4">
-    Explore our <span className="font-medium text-gray-900">career roadmaps</span> — designed to help you grow from junior to expert, step by step.
-  </p>
-  
-  <Link
-    href="/roadmaps"
-    className="inline-block bg-gray-900 !text-white px-6 py-2 rounded-xl transform transition-all duration-200 hover:scale-105 hover:bg-gray-800"
-  >
-    View Roadmaps →
-  </Link>
-</div>
-
+        <h3 className="text-lg font-semibold text-gray-800 mb-3">
+          🚀 For engineers who want direction
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Explore our <span className="font-medium text-gray-900">career roadmaps</span> — designed to help you grow from junior to expert, step by step.
+        </p>
+        
+        <Link
+          href="/roadmaps"
+          className="inline-block bg-gray-900 !text-white px-6 py-2 rounded-xl transform transition-all duration-200 hover:scale-105 hover:bg-gray-800"
+        >
+          View Roadmaps →
+        </Link>
+      </div>
     </BlogLayout>
   );
 }

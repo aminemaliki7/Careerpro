@@ -14,6 +14,8 @@ export interface BlogPost {
   readingTime?: number
   roadmap?: JobRoadmap
   affiliateCourseLinks?: AffiliateCourseLink[]
+  audioUrl?: string;
+  audioDuration?: number; // in seconds
 }
 
 export interface BlogMetadata {
