@@ -153,14 +153,14 @@ export default function EasyApplyModal({
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate email');
+        throw new Error('Failed to generate email');
       }
 
       setGeneratedEmail(data.emailContent);
       setCurrentStep(3);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate email. Please try again.');
-      console.error('Generation error:', err);
+      setError('Failed to generate email. Please try again.');
+      console.error('Generation error:');
     } finally {
       setLoading(false);
     }
