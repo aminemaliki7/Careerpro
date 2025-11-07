@@ -3,7 +3,6 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
 
-// Re-using types from your project
 interface Job {
   id: string;
   title: string;
@@ -23,23 +22,41 @@ interface Job {
   benefits: string[];
 }
 
-// Re-using utility functions from your project
+// Utility functions
 const getJobRegion = (location: string) => {
-  // This is a placeholder. You'll need to define this logic in your project.
-  return 'North America'; 
+  return 'North America';
 };
 
 const formatExperienceLevel = (level: string) => {
-  if (level === 'entry') return 'Entry Level';
-  if (level === 'mid') return 'Mid Level';
-  if (level === 'senior') return 'Senior Level';
-  return level;
+  const levels: Record<string, string> = {
+    entry: 'Entry Level',
+    mid: 'Mid Level',
+    senior: 'Senior Level'
+  };
+  return levels[level] || level;
 };
 
-// GLOBAL_REGIONS placeholder
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffTime = Math.abs(now.getTime() - date.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays === 1) return "Today";
+  if (diffDays === 2) return 'Yesterday';
+  if (diffDays <= 7) return `${diffDays} days ago`;
+  if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  
+  return date.toLocaleDateString('en-US', { 
+    month: 'short', 
+    day: 'numeric', 
+    year: 'numeric' 
+  });
+};
+
 const GLOBAL_REGIONS = [{ value: 'North America', label: 'North America' }];
 
-// SVG Icons - all are the same as provided
+// Icon Components (condensed for brevity)
 const MapPinIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -137,36 +154,31 @@ const SparklesIcon = ({ className }: { className: string }) => (
   </svg>
 );
 
-
-// FIX: Updated for Next.js 15 - params is now a Promise
 export default async function JobDetailsPage({ 
   params 
 }: { 
   params: Promise<{ id: string }> 
 }) {
   const { id } = await params;
-  
 
-  const { data: job, error } = await supabase.from('jobs').select('*').eq('id', id).single();
+  const { data: job, error } = await supabase
+    .from('jobs')
+    .select('*')
+    .eq('id', id)
+    .single();
+
   if (error || !job) notFound();
 
   const typedJob: Job = job;
 
-  const { data: relatedJobs } = await supabase.from('jobs').select('id, title, company, location, type').neq('id', id).limit(3);
+  const { data: relatedJobs } = await supabase
+    .from('jobs')
+    .select('id, title, company, location, type')
+    .neq('id', id)
+    .limit(3);
 
   const jobRegion = getJobRegion(typedJob.location);
   const regionInfo = GLOBAL_REGIONS.find(r => r.value === jobRegion);
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now.getTime() - date.getTime());
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays === 1) return "Today";
-    if (diffDays === 2) return 'Yesterday';
-    if (diffDays <= 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString('en-US');
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -179,6 +191,7 @@ export default async function JobDetailsPage({
               Back to jobs
             </Link>
           </nav>
+
           <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-0">
             <div className="flex-1 space-y-2">
               <div className="flex items-center mb-2 flex-wrap gap-2">
@@ -211,33 +224,31 @@ export default async function JobDetailsPage({
                   </div>
                 )}
               </div>
-              <div className="mt-2 text-sm text-gray-500">Posted {formatDate(typedJob.posted_date)}</div>
+              <div className="mt-2 text-sm text-gray-500">
+                Posted {formatDate(typedJob.posted_date)}
+              </div>
             </div>
+
             <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-2">
-              <button className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50">
+              <button 
+                className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
+                aria-label="Share job"
+              >
                 <ShareIcon className="h-5 w-5" />
               </button>
-              <button className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50">
+              <button 
+                className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
+                aria-label="Save job"
+              >
                 <BookmarkIcon className="h-5 w-5" />
               </button>
             </div>
           </div>
 
-          {/* Application Action Buttons */}
+          {/* FIXED: Application Action Buttons with Correct Logic */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
-            {/* Contact Company Button */}
+            {/* Priority 1: Easy Apply with AI (when contact email exists) */}
             {typedJob.contact_email && (
-              <a
-                href={`mailto:${typedJob.contact_email}`}
-                className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-              >
-                <EnvelopeIcon className="h-5 w-5" />
-                Contact Company
-              </a>
-            )}
-
-            {/* Easy Apply Button (Premium) - Shows when email doesn't exist */}
-            {!typedJob.contact_email && (
               <div className="flex-1">
                 <EasyApplyButton 
                   jobTitle={typedJob.title}
@@ -250,7 +261,17 @@ export default async function JobDetailsPage({
               </div>
             )}
 
-            {/* Apply Now Button */}
+            {/* Priority 2: Direct Email (fallback if no Easy Apply)// no it should existe even if the easy apply existe too */}
+          {typedJob.contact_email && (
+    <a
+      href={`mailto:${typedJob.contact_email}`}
+      className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+    >
+      <EnvelopeIcon className="h-5 w-5" />
+      Contact Company
+    </a>
+  )}
+            {/* Priority 3: External Application Link */}
             {typedJob.application_url && (
               <a
                 href={typedJob.application_url}
@@ -259,8 +280,16 @@ export default async function JobDetailsPage({
                 className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
               >
                 <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-                Apply Now
+                Apply on Company Site
               </a>
+            )}
+
+            {/* Fallback: No application method available */}
+            {!typedJob.contact_email && !typedJob.application_url && (
+              <div className="flex-1 px-6 py-3 bg-gray-100 text-gray-500 rounded-lg font-medium flex items-center justify-center gap-2 cursor-not-allowed">
+                <EnvelopeIcon className="h-5 w-5" />
+                Contact information not available
+              </div>
             )}
           </div>
         </div>
@@ -269,7 +298,7 @@ export default async function JobDetailsPage({
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left / Main */}
+          {/* Left / Main Content */}
           <div className="lg:col-span-2 space-y-8 w-full">
             {/* Job Tags */}
             <div className="flex flex-wrap gap-2 w-full">
@@ -363,7 +392,7 @@ export default async function JobDetailsPage({
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6 w-full lg:sticky lg:top-24">
+          <div className="space-y-6 w-full lg:sticky lg:top-24 lg:self-start">
             {/* Related Jobs */}
             {relatedJobs && relatedJobs.length > 0 && (
               <div className="bg-white rounded-xl shadow-sm border p-6">
@@ -371,14 +400,43 @@ export default async function JobDetailsPage({
                 <ul className="space-y-3">
                   {relatedJobs.map(job => (
                     <li key={job.id}>
-                      <Link href={`/jobs/${job.id}`} className="hover:text-blue-600">
-                        {job.title} - {job.company}
+                      <Link 
+                        href={`/jobs/${job.id}`} 
+                        className="block hover:text-blue-600 transition-colors"
+                      >
+                        <div className="font-medium">{job.title}</div>
+                        <div className="text-sm text-gray-500">{job.company}</div>
+                        <div className="text-xs text-gray-400 mt-1">
+                          {job.location} • {job.type}
+                        </div>
                       </Link>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+
+            {/* Application Tips (NEW) */}
+            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-sm border-2 border-purple-200 p-6">
+              <div className="flex items-center mb-3">
+                <SparklesIcon className="h-6 w-6 text-purple-600 mr-2" />
+                <h3 className="font-semibold text-gray-900">Application Tips</h3>
+              </div>
+              <ul className="space-y-2 text-sm text-gray-700">
+                <li className="flex items-start">
+                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <span>Use AI Easy Apply for personalized emails</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <span>Highlight relevant skills from the job description</span>
+                </li>
+                <li className="flex items-start">
+                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
+                  <span>Follow up within 3-5 business days</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </div>
