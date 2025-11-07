@@ -1,7 +1,7 @@
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, CalendarDays, Clock, User, ArrowRight, Tag, TrendingUp, Star, Filter, X, Headphones } from 'lucide-react';
+import { Search, CalendarDays, Clock, User, ArrowRight, Tag, TrendingUp, Star, Filter, X, Headphones, Play, Pause, Volume2, Music, BookOpen, SkipBack, SkipForward } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 
 interface BlogClientProps {
@@ -14,6 +14,12 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
   const [selectedTag, setSelectedTag] = useState('');
   const [showFeaturedOnly, setShowFeaturedOnly] = useState(false);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+  const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   // Extract all unique tags
   const allTags = useMemo(() => {
@@ -25,16 +31,18 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
   const filteredPosts = useMemo(() => {
     let posts = showFeaturedOnly ? featuredPosts : allPosts;
 
-    if (searchTerm) {
+    if (searchTerm && searchTerm.trim() !== '') {
+      const search = searchTerm.toLowerCase().trim();
       posts = posts.filter(post =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+        (post.title && post.title.toLowerCase().includes(search)) ||
+        (post.description && post.description.toLowerCase().includes(search)) ||
+        (post.tags && post.tags.some(tag => tag && tag.toLowerCase().includes(search))) ||
+        (post.author && post.author.toLowerCase().includes(search))
       );
     }
 
-    if (selectedTag) {
-      posts = posts.filter(post => post.tags.includes(selectedTag));
+    if (selectedTag && selectedTag.trim() !== '') {
+      posts = posts.filter(post => post.tags && post.tags.includes(selectedTag));
     }
 
     return posts;
@@ -45,12 +53,22 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
     return allPosts.filter(post => post.audioUrl).length;
   }, [allPosts]);
 
+  const currentPost = useMemo(() => {
+    return allPosts.find(post => post.slug === currentlyPlaying);
+  }, [currentlyPlaying, allPosts]);
+
   const formatDate = (dateString: string) =>
     new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
     });
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const clearFilters = () => {
     setSearchTerm('');
@@ -59,380 +77,441 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
     setShowMobileFilters(false);
   };
 
+  const handlePlayPause = (post: BlogPostWithContent, e?: React.MouseEvent) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    
+    if (!post.audioUrl) return;
+
+    if (currentlyPlaying === post.slug) {
+      if (isPlaying) {
+        audioRef.current?.pause();
+        setIsPlaying(false);
+      } else {
+        audioRef.current?.play();
+        setIsPlaying(true);
+      }
+    } else {
+      setCurrentlyPlaying(post.slug);
+      setIsPlaying(true);
+    }
+  };
+
+  const handleSkipForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.min(audioRef.current.currentTime + 15, duration);
+    }
+  };
+
+  const handleSkipBackward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = Math.max(audioRef.current.currentTime - 15, 0);
+    }
+  };
+
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const time = parseFloat(e.target.value);
+    if (audioRef.current) {
+      audioRef.current.currentTime = time;
+      setCurrentTime(time);
+    }
+  };
+
+  useEffect(() => {
+    if (currentlyPlaying && currentPost?.audioUrl) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+      
+      const audio = new Audio(currentPost.audioUrl);
+      audioRef.current = audio;
+
+      audio.addEventListener('loadedmetadata', () => {
+        setDuration(audio.duration);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        setCurrentTime(audio.currentTime);
+      });
+
+      audio.addEventListener('ended', () => {
+        setIsPlaying(false);
+        setCurrentTime(0);
+      });
+
+      if (isPlaying) {
+        audio.play();
+      }
+
+      return () => {
+        audio.pause();
+        audio.remove();
+      };
+    }
+  }, [currentlyPlaying, currentPost]);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.play();
+      } else {
+        audioRef.current.pause();
+      }
+    }
+  }, [isPlaying]);
+
   const activeFiltersCount = [searchTerm, selectedTag, showFeaturedOnly].filter(Boolean).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Desktop Only Hero Section */}
-      <section className="hidden sm:block bg-gradient-to-br from-blue-600 to-blue-800 text-white py-6 sm:py-8 lg:py-12">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 leading-tight">
-              Career Blog
-            </h1>
-            <p className="text-base md:text-lg text-blue-100 mb-4 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
-              Tips and strategies to advance your tech career
-            </p>
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-900 to-black pb-32">
+      {/* Spotify-Style Hero Section */}
+      <section className="relative bg-gradient-to-b from-blue-600 via-blue-700 to-gray-900 text-white py-12 sm:py-16 lg:py-20 overflow-hidden">
+        {/* Spotify-style blur effect */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-gray-900 opacity-60"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-end gap-6">
+            {/* Podcast Cover Art */}
+            <div className="hidden sm:block w-48 h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-2xl flex items-center justify-center flex-shrink-0">
+              <Headphones className="w-24 h-24 lg:w-28 lg:h-28 text-white/90" />
+            </div>
             
-            <div className="flex items-center justify-center gap-6 text-blue-100 text-sm">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4" />
-                <span>{allPosts.length} Articles</span>
+            {/* Title Info */}
+            <div className="flex-1 pb-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Music className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Podcast Series</span>
               </div>
-              <div className="w-px h-4 bg-blue-400"></div>
-              <div className="flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                <span>{featuredPosts.length} Featured</span>
-              </div>
-              <div className="w-px h-4 bg-blue-400"></div>
-              <div className="flex items-center gap-2">
-                <Headphones className="w-4 h-4" />
-                <span>{postsWithAudio} With Audio</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black mb-4 leading-tight">
+                Career Insights
+              </h1>
+              <p className="text-base lg:text-lg text-gray-200 mb-6 max-w-2xl">
+                Listen to expert advice on job searching, career growth, and tech industry trends
+              </p>
+              
+              <div className="flex flex-wrap items-center gap-4 text-sm font-medium">
+                <span className="flex items-center gap-2">
+                  <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center">
+                    <User className="w-4 h-4 text-blue-600" />
+                  </div>
+                  Career Hub
+                </span>
+                <span>•</span>
+                <span>{allPosts.length} episodes</span>
+                <span>•</span>
+                <span className="flex items-center gap-1">
+                  <Headphones className="w-4 h-4" />
+                  {postsWithAudio} with audio
+                </span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Mobile Header - Minimal */}
-      <div className="sm:hidden bg-white border-b border-gray-200 px-3 py-4">
-        <h1 className="text-lg font-bold text-gray-900">Career Articles</h1>
-        <p className="text-sm text-gray-600">{allPosts.length} articles • {postsWithAudio} with audio</p>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-6 sm:py-8 lg:py-12">
-        {/* Mobile Search Bar */}
-        <div className="lg:hidden mb-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Search Bar - Spotify Style */}
+        <div className="mb-8">
+          <div className="relative max-w-md">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search articles..."
+              placeholder="Search episodes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+              className="w-full pl-12 pr-4 py-3 bg-gray-800 text-white border-0 rounded-full focus:ring-2 focus:ring-white focus:bg-gray-750 transition-all placeholder-gray-400"
             />
           </div>
         </div>
 
-        {/* Mobile Filter Button */}
-        <div className="lg:hidden mb-6">
+        {/* Filter Pills - Spotify Style */}
+        <div className="flex flex-wrap gap-2 mb-8">
           <button
-            onClick={() => setShowMobileFilters(!showMobileFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors w-full justify-center relative"
+            onClick={() => setShowFeaturedOnly(!showFeaturedOnly)}
+            className={`px-4 py-2 rounded-full font-medium transition-all ${
+              showFeaturedOnly
+                ? 'bg-white text-black'
+                : 'bg-gray-800 text-white hover:bg-gray-750'
+            }`}
           >
-            <Filter className="w-5 h-5" />
-            <span>Filters</span>
-            {activeFiltersCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {activeFiltersCount}
-              </span>
-            )}
+            <Star className={`w-4 h-4 inline mr-1 ${showFeaturedOnly ? 'fill-current' : ''}`} />
+            Featured
           </button>
-        </div>
-
-        {/* Mobile Filters Panel */}
-        {showMobileFilters && (
-          <div className="lg:hidden fixed inset-0 z-50 bg-black bg-opacity-50" onClick={() => setShowMobileFilters(false)}>
-            <div 
-              className="fixed bottom-0 left-0 right-0 bg-white rounded-t-2xl p-6 max-h-[80vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+          
+          {allTags.slice(0, 5).map(tag => (
+            <button
+              key={tag}
+              onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
+              className={`px-4 py-2 rounded-full font-medium transition-all ${
+                selectedTag === tag
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-800 text-white hover:bg-gray-750'
+              }`}
             >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-gray-900">Filter Articles</h3>
-                <button
-                  onClick={() => setShowMobileFilters(false)}
-                  className="p-2 hover:bg-gray-100 rounded-full"
-                >
-                  <X className="w-5 h-5 text-gray-500" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {/* Tag Filter */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Topic</label>
-                  <select
-                    value={selectedTag}
-                    onChange={(e) => setSelectedTag(e.target.value)}
-                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-gray-800"
-                  >
-                    <option value="">All Topics</option>
-                    {allTags.map(tag => (
-                      <option key={tag} value={tag}>
-                        {tag.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Featured Filter */}
-                <div>
-                  <label className="flex items-center gap-3 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={showFeaturedOnly}
-                      onChange={(e) => setShowFeaturedOnly(e.target.checked)}
-                      className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                    <span className="text-gray-800 font-medium">Show Featured Only</span>
-                  </label>
-                </div>
-
-                {/* Actions */}
-                <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  <button
-                    onClick={clearFilters}
-                    className="flex-1 px-4 py-3 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Clear All
-                  </button>
-                  <button
-                    onClick={() => setShowMobileFilters(false)}
-                    className="flex-1 px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Apply Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Desktop Search and Filters */}
-        <div className="hidden lg:block bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search Bar */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search articles, topics, or keywords..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-
-            {/* Tag Filter */}
-            <div className="relative">
-              <Tag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
-              <select
-                value={selectedTag}
-                onChange={(e) => setSelectedTag(e.target.value)}
-                className="pl-10 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white min-w-[180px] text-gray-800"
-              >
-                <option value="">All Topics</option>
-                {allTags
-                  ?.filter((tag): tag is string => typeof tag === "string" && tag.trim() !== "")
-                  .map(tag => (
-                    <option key={tag} value={tag}>
-                      {tag
-                        .replace(/-/g, " ")
-                        .replace(/\b\w/g, l => l.toUpperCase())}
-                    </option>
-                  ))}
-              </select>
-            </div>
-
-            {/* Featured Filter */}
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={showFeaturedOnly}
-                onChange={(e) => setShowFeaturedOnly(e.target.checked)}
-                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <span className="text-gray-800 font-medium">Featured Only</span>
-            </label>
-
-            {/* Clear Filters */}
-            {(searchTerm || selectedTag || showFeaturedOnly) && (
-              <button
-                onClick={clearFilters}
-                className="px-4 py-2 text-gray-700 hover:text-gray-900 transition-colors"
-              >
-                Clear All
-              </button>
-            )}
-          </div>
+              {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+            </button>
+          ))}
+          
+          {(searchTerm || selectedTag || showFeaturedOnly) && (
+            <button
+              onClick={clearFilters}
+              className="px-4 py-2 rounded-full font-medium bg-gray-800 text-white hover:bg-gray-750 transition-all flex items-center gap-1"
+            >
+              <X className="w-4 h-4" />
+              Clear
+            </button>
+          )}
         </div>
-
-        {/* Active Filters Display - Mobile */}
-        {(searchTerm || selectedTag || showFeaturedOnly) && (
-          <div className="lg:hidden mb-4">
-            <div className="flex flex-wrap gap-2">
-              {searchTerm && (
-                <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  Search: &quot;{searchTerm}&quot;
-                  <button onClick={() => setSearchTerm('')} className="hover:text-blue-600">
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              )}
-              {selectedTag && (
-                <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  {selectedTag.replace('-', ' ')}
-                  <button onClick={() => setSelectedTag('')} className="hover:text-blue-600">
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              )}
-              {showFeaturedOnly && (
-                <span className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full">
-                  Featured
-                  <button onClick={() => setShowFeaturedOnly(false)} className="hover:text-blue-600">
-                    <X className="w-4 h-4" />
-                  </button>
-                </span>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Results Count */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-700 text-sm sm:text-base">
-            Showing {filteredPosts.length} {filteredPosts.length === 1 ? 'article' : 'articles'}
-            {searchTerm && ` for "${searchTerm}"`}
-            {selectedTag && ` in "${selectedTag.replace('-', ' ')}"`}
+        <div className="mb-6">
+          <h2 className="text-2xl font-bold text-white">
+            {selectedTag ? selectedTag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'All Episodes'}
+          </h2>
+          <p className="text-gray-400 text-sm mt-1">
+            {filteredPosts.length} {filteredPosts.length === 1 ? 'episode' : 'episodes'}
           </p>
         </div>
 
-        {/* Articles Grid - Mobile Optimized */}
+        {/* Episodes List - Spotify Style */}
         {filteredPosts.length > 0 ? (
-          <div className="grid gap-4 sm:gap-6 md:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-3">
             {filteredPosts.map((post, index) => (
-              <article
+              <div
                 key={post.slug || `post-${index}`}
-                className="bg-white rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200 group flex flex-col h-full overflow-hidden"
+                onMouseEnter={() => setHoveredCard(post.slug)}
+                onMouseLeave={() => setHoveredCard(null)}
+                className="group"
               >
-                {/* Cover Image - Mobile Optimized */}
-                {post.coverImage && (
-                  <div className="aspect-video w-full overflow-hidden relative">
-                    <img
-                      src={post.coverImage}
-                      alt={post.title}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-200"
-                    />
-                    
-                    {/* Audio badge overlay */}
-                    {post.audioUrl && (
-                      <div className="absolute top-2 right-2 bg-white/95 backdrop-blur-sm px-2 py-1 rounded-full shadow-md flex items-center gap-1">
-                        <Headphones className="w-3 h-3 text-purple-600" />
-                        <span className="text-[10px] font-medium text-gray-900">Audio</span>
+                <div className={`rounded-lg p-4 transition-all duration-200 border ${
+                  currentlyPlaying === post.slug
+                    ? 'bg-gray-800 border-blue-500'
+                    : 'bg-gray-800/40 hover:bg-gray-800 border-transparent hover:border-gray-700'
+                }`}>
+                  <div className="flex items-center gap-4">
+                    {/* Episode Number/Play Button */}
+                    <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center">
+                      {post.audioUrl ? (
+                        <button
+                          onClick={(e) => handlePlayPause(post, e)}
+                          className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition-transform"
+                        >
+                          {currentlyPlaying === post.slug && isPlaying ? (
+                            <Pause className="w-5 h-5 text-black" fill="currentColor" />
+                          ) : (
+                            <Play className="w-5 h-5 text-black ml-0.5" fill="currentColor" />
+                          )}
+                        </button>
+                      ) : (
+                        <span className="text-gray-400 font-medium text-lg">
+                          {index + 1}
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Cover Art */}
+                    {post.coverImage && (
+                      <div className="w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 rounded overflow-hidden">
+                        <img
+                          src={post.coverImage}
+                          alt={post.title}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
                     )}
-                  </div>
-                )}
 
-                <div className="p-4 sm:p-5 flex-1 flex flex-col">
-                  {/* Featured Badge */}
-                  {post.featured && (
-                    <div className="flex items-center gap-1 mb-3">
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                      <span className="text-xs font-medium text-yellow-700 uppercase tracking-wide">Featured</span>
+                    {/* Episode Info */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-white font-semibold text-base sm:text-lg mb-1 truncate">
+                        {post.title}
+                      </h3>
+                      <p className="text-gray-400 text-sm truncate mb-2">
+                        {post.description}
+                      </p>
+                      <div className="flex items-center gap-3 text-xs text-gray-500">
+                        {post.audioUrl && (
+                          <span className="flex items-center gap-1 text-green-500">
+                            <Headphones className="w-3.5 h-3.5" />
+                            Audio
+                          </span>
+                        )}
+                        {post.featured && (
+                          <span className="flex items-center gap-1 text-yellow-500">
+                            <Star className="w-3.5 h-3.5 fill-current" />
+                            Featured
+                          </span>
+                        )}
+                        <span>{formatDate(post.publishedAt)}</span>
+                        <span>•</span>
+                        <span>{post.audioDuration ? `${Math.ceil(post.audioDuration / 60)} min` : `${Math.ceil(post.readingTime || 5)} min read`}</span>
+                      </div>
                     </div>
-                  )}
 
-                  {/* Article Meta - Mobile Optimized */}
-                  <div className="flex items-center gap-3 text-xs text-gray-600 mb-3">
-                    <div className="flex items-center gap-1">
-                      <CalendarDays className="w-3.5 h-3.5" />
-                      <span className="hidden sm:inline">{formatDate(post.publishedAt)}</span>
-                      <span className="sm:hidden">{formatDate(post.publishedAt).replace(',', '')}</span>
+                    {/* Tags (Desktop) */}
+                    <div className="hidden lg:flex items-center gap-2">
+                      {(post.tags ?? []).slice(0, 2).map((tag, tagIndex) => (
+                        <span
+                          key={`${post.slug}-${tag}-${tagIndex}`}
+                          className="px-3 py-1 bg-gray-700 text-gray-300 text-xs rounded-full"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>{post.audioDuration ? `${Math.ceil(post.audioDuration / 60)}m` : `${Math.ceil(post.readingTime || 5)}m read`}</span>
-                    </div>
-                  </div>
 
-                  {/* Title - Mobile Optimized */}
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors leading-tight line-clamp-2">
-                    <Link href={`/blog/${post.slug}`} className="hover:underline">
-                      {post.title}
-                    </Link>
-                  </h2>
-
-                  {/* Description - Mobile Optimized */}
-                  <p className="text-gray-600 mb-4 text-sm sm:text-base leading-relaxed line-clamp-3">
-                    {post.description}
-                  </p>
-
-                  {/* Tags - Mobile Optimized */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {(post.tags ?? []).slice(0, 2).map((tag, tagIndex) => (
-                      <button
-                        key={`${post.slug}-${tag}-${tagIndex}`}
-                        onClick={() => setSelectedTag(tag)}
-                        className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs rounded-full hover:bg-blue-100 transition-colors"
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-2">
+                      {post.audioUrl && (
+                        <button
+                          onClick={(e) => handlePlayPause(post, e)}
+                          className="hidden sm:flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-full font-medium transition-all"
+                        >
+                          <Headphones className="w-4 h-4" />
+                          Listen
+                        </button>
+                      )}
+                      <Link
+                        href={`/blog/${post.slug}`}
+                        className="flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-full font-medium transition-all"
                       >
-                        #{tag}
-                      </button>
-                    ))}
-                    {(post.tags ?? []).length > 2 && (
-                      <span className="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                        +{(post.tags ?? []).length - 2}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Footer: Author & Read More - Mobile Optimized */}
-                  <div className="mt-auto flex items-center justify-between pt-2 border-t border-gray-100">
-                    <div className="flex items-center gap-1.5 text-xs text-gray-600">
-                      <User className="w-3.5 h-3.5" />
-                      <span className="truncate max-w-[100px] sm:max-w-none">{post.author}</span>
+                        <BookOpen className="w-4 h-4" />
+                        <span className="hidden sm:inline">Read</span>
+                      </Link>
                     </div>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="inline-flex items-center gap-1 text-blue-600 text-sm font-semibold hover:text-blue-800 transition-colors"
-                    >
-                      <span className="hidden sm:inline">{post.audioUrl ? 'Read/Listen' : 'Read More'}</span>
-                      <span className="sm:hidden">Read</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
                   </div>
                 </div>
-              </article>
+              </div>
             ))}
           </div>
         ) : (
-          /* No Results - Mobile Optimized */
-          <div className="text-center py-12 sm:py-16">
-            <Search className="w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">No articles found</h3>
-            <p className="text-gray-600 mb-6 text-sm sm:text-base max-w-md mx-auto">
-              Try adjusting your search terms or filters to find what you&apos;re looking for.
+          /* No Results */
+          <div className="text-center py-16">
+            <div className="w-20 h-20 bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search className="w-10 h-10 text-gray-600" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">No episodes found</h3>
+            <p className="text-gray-400 mb-6 max-w-md mx-auto">
+              Try adjusting your search or filters to find what you're looking for.
             </p>
             <button
               onClick={clearFilters}
-              className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="bg-white text-black px-8 py-3 rounded-full font-semibold hover:scale-105 transition-transform"
             >
-              Clear all filters
+              Clear filters
             </button>
           </div>
         )}
 
-        {/* Newsletter CTA - Mobile Optimized */}
-        <section className="mt-12 sm:mt-16 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-white text-center">
-          <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4">Never Miss Career Tips</h3>
-          <p className="text-blue-50 mb-6 max-w-2xl mx-auto text-sm sm:text-base leading-relaxed">
-            Get weekly insights on job searching, career advancement, and industry trends delivered to your inbox.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="px-4 py-3 rounded-lg flex-1 text-gray-900 text-base"
-            />
-            <button className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors whitespace-nowrap">
-              Subscribe
-            </button>
+        {/* Newsletter CTA - Spotify Style */}
+        <section className="mt-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 sm:p-12 text-white text-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative">
+            <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Volume2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-3xl sm:text-4xl font-black mb-4">Never Miss an Episode</h3>
+            <p className="text-white/90 mb-8 max-w-2xl mx-auto text-lg">
+              Get weekly career insights and new episodes delivered straight to your inbox.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="px-6 py-4 rounded-full flex-1 text-gray-900 text-base border-0 focus:ring-4 focus:ring-white/50"
+              />
+              <button className="bg-black text-white px-8 py-4 rounded-full font-bold hover:scale-105 transition-transform whitespace-nowrap">
+                Subscribe Free
+              </button>
+            </div>
+            <p className="text-white/70 text-sm mt-4">Join 1,000+ listeners. Unsubscribe anytime.</p>
           </div>
-          <p className="text-blue-200 text-xs sm:text-sm mt-3">Join 1,000+ professionals. No spam ever.</p>
         </section>
       </div>
+
+      {/* Spotify-Style Now Playing Bar */}
+      {currentlyPlaying && currentPost && (
+        <div className="fixed bottom-0 left-0 right-0 bg-gray-900 border-t border-gray-800 px-4 py-3 z-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex items-center gap-4">
+              {/* Now Playing Info */}
+              <div className="flex items-center gap-3 flex-1 min-w-0">
+                {currentPost.coverImage && (
+                  <img
+                    src={currentPost.coverImage}
+                    alt={currentPost.title}
+                    className="w-14 h-14 rounded object-cover flex-shrink-0"
+                  />
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-white font-semibold text-sm truncate">
+                    {currentPost.title}
+                  </p>
+                  <p className="text-gray-400 text-xs truncate">
+                    {currentPost.author}
+                  </p>
+                </div>
+              </div>
+
+              {/* Player Controls */}
+              <div className="flex flex-col items-center gap-2 flex-1 max-w-2xl">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={handleSkipBackward}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <SkipBack className="w-5 h-5" />
+                  </button>
+                  <button
+                    onClick={(e) => handlePlayPause(currentPost, e)}
+                    className="w-10 h-10 bg-white rounded-full flex items-center justify-center hover:scale-105 transition-transform"
+                  >
+                    {isPlaying ? (
+                      <Pause className="w-5 h-5 text-black" fill="currentColor" />
+                    ) : (
+                      <Play className="w-5 h-5 text-black ml-0.5" fill="currentColor" />
+                    )}
+                  </button>
+                  <button
+                    onClick={handleSkipForward}
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
+                    <SkipForward className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="w-full flex items-center gap-2">
+                  <span className="text-xs text-gray-400 min-w-[40px] text-right">
+                    {formatTime(currentTime)}
+                  </span>
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer"
+                  />
+                  <span className="text-xs text-gray-400 min-w-[40px]">
+                    {formatTime(duration)}
+                  </span>
+                </div>
+              </div>
+
+              {/* Read Article Button */}
+              <div className="flex items-center gap-3 flex-1 justify-end">
+                <Link
+                  href={`/blog/${currentPost.slug}`}
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-medium transition-colors"
+                >
+                  <BookOpen className="w-4 h-4" />
+                  Read Article
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
