@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import BlogLayout from '@/components/blog/BlogLayout';
-import { AudioPlayer } from '@/components/blog/AudioPlayer';
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -70,14 +69,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
  
   return (
     <BlogLayout post={post}>
-      {/* Audio Player - Only shows if audioUrl exists in frontmatter */}
-      {post.audioUrl && (
-        <AudioPlayer 
-          audioUrl={post.audioUrl}
-          title={post.title}
-          duration={post.audioDuration}
-        />
-      )}
+      
 
       <div 
         className="prose max-w-none"

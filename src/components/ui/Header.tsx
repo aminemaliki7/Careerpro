@@ -20,7 +20,7 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Blog', href: '/blog' },
+    { name: 'Talks', href: '/blog' },
     { name: 'Roadmaps', href: '/roadmaps' },
     { name: 'Jobs', href: '/jobs' },
     { name: 'About', href: '/about' },
