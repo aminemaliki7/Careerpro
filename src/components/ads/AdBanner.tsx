@@ -25,41 +25,82 @@ export default function AdBanner({
 }: AdBannerProps) {
   const [isAdLoaded, setIsAdLoaded] = useState(false);
   const [showAd, setShowAd] = useState(true);
+  const [isChecking, setIsChecking] = useState(true);
   const adRef = useRef<HTMLDivElement>(null);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
+    // Prevent double initialization in development
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
     if (typeof window !== 'undefined') {
       window.adsbygoogle = window.adsbygoogle || [];
       
       try {
         window.adsbygoogle.push({});
         
-        // Check if ad loaded after a short delay
-        const checkAdLoad = setTimeout(() => {
-          if (adRef.current) {
-            const insElement = adRef.current.querySelector('ins');
+        // Check ad status multiple times for better detection
+        const checkAdLoad = () => {
+          if (!adRef.current) return;
+          
+          const insElement = adRef.current.querySelector('ins.adsbygoogle');
+          
+          if (!insElement) {
+            setShowAd(false);
+            setIsChecking(false);
+            return;
+          }
+
+          const adStatus = insElement.getAttribute('data-ad-status');
+          const hasHeight = insElement.clientHeight > 0;
+          const hasContent = insElement.innerHTML.trim() !== '';
+          
+          // Ad successfully loaded
+          if (adStatus === 'filled' || (hasHeight && hasContent)) {
+            setIsAdLoaded(true);
+            setShowAd(true);
+            setIsChecking(false);
+            return true;
+          }
+          
+          // Ad explicitly failed
+          if (adStatus === 'unfilled') {
+            setShowAd(false);
+            setIsChecking(false);
+            return true;
+          }
+          
+          return false;
+        };
+
+        // Initial check after 1 second
+        const timer1 = setTimeout(() => {
+          if (!checkAdLoad()) {
+            // Second check after 2.5 seconds if first check was inconclusive
+            const timer2 = setTimeout(() => {
+              if (!checkAdLoad()) {
+                // Final check after 4 seconds - if still no ad, hide it
+                const timer3 = setTimeout(() => {
+                  checkAdLoad();
+                  // If still loading after 4 seconds, assume no ad
+                  setShowAd(false);
+                  setIsChecking(false);
+                }, 4000);
+                
+                return () => clearTimeout(timer3);
+              }
+            }, 2500);
             
-            // Check if ad has content (AdSense adds data-ad-status attribute)
-            const adStatus = insElement?.getAttribute('data-ad-status');
-            const hasContent = insElement && (
-              adStatus === 'filled' || 
-              insElement.innerHTML.trim() !== '' ||
-              insElement.clientHeight > 0
-            );
-            
-            if (hasContent) {
-              setIsAdLoaded(true);
-            } else {
-              // Hide the ad container if no ad loaded
-              setShowAd(false);
-            }
+            return () => clearTimeout(timer2);
           }
         }, 1000);
 
-        return () => clearTimeout(checkAdLoad);
+        return () => clearTimeout(timer1);
       } catch (err) {
-        console.error('Adsense push error:', err);
+        console.error('AdSense error:', err);
         setShowAd(false);
+        setIsChecking(false);
       }
     }
   }, []);
@@ -72,14 +113,14 @@ export default function AdBanner({
   return (
     <div ref={adRef} className={`ad-wrapper ${className}`}>
       {/* Native-styled container that matches your site design */}
-      <div className="bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300">
+      <div className={`bg-white rounded-3xl border border-gray-200 p-6 sm:p-8 shadow-sm hover:shadow-md transition-all duration-300 ${isChecking && !isAdLoaded ? 'opacity-0' : 'opacity-100'}`}>
         {/* Subtle "Sponsored" label - chess.com style */}
         <div className="flex items-center justify-center mb-4">
           <span className="text-xs font-medium text-gray-400 uppercase tracking-wider">
             Sponsored
           </span>
         </div>
-
+        
         {/* Ad container with your site's styling */}
         <div className="flex justify-center items-center min-h-[250px]">
           <ins
@@ -91,7 +132,7 @@ export default function AdBanner({
             data-full-width-responsive={dataFullWidthResponsive.toString()}
           ></ins>
         </div>
-
+        
         {/* Optional: Add a subtle bottom border or decoration */}
         {isAdLoaded && (
           <div className="mt-4 pt-4 border-t border-gray-100">
@@ -101,18 +142,19 @@ export default function AdBanner({
           </div>
         )}
       </div>
-
+      
       <style jsx>{`
         .ad-wrapper {
           margin: 3rem auto;
           max-width: 100%;
+          transition: opacity 0.3s ease, max-height 0.3s ease;
         }
-
+        
         /* Smooth fade-in animation */
         .ad-wrapper > div {
           animation: fadeInUp 0.6s ease-out;
         }
-
+        
         @keyframes fadeInUp {
           from {
             opacity: 0;
@@ -123,17 +165,25 @@ export default function AdBanner({
             transform: translateY(0);
           }
         }
-
+        
         /* Mobile optimizations */
         @media (max-width: 768px) {
           .ad-wrapper {
             margin: 2rem auto;
           }
         }
-
+        
         /* Make ad blend with content on hover */
         .ad-wrapper:hover > div {
           border-color: #d1d5db;
+        }
+
+        /* Hide container smoothly when no ad */
+        .ad-wrapper:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+          max-height: 0;
+          opacity: 0;
+          margin: 0;
+          overflow: hidden;
         }
       `}</style>
     </div>

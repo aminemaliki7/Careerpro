@@ -24,15 +24,55 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
 /* Add to your globals.css */
 .cl-dev-banner {
   display: none !important;
 }
+
 .ad-container {
   text-align: center;
   margin: 2rem auto;
   max-width: 900px;
+  transition: all 0.3s ease;
 }
+
+/* Collapse empty ad containers - CRITICAL FIX */
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+  min-height: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Hide ads while loading to prevent white space */
+ins.adsbygoogle:not([data-ad-status="filled"]) {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* Show ads once filled */
+ins.adsbygoogle[data-ad-status="filled"] {
+  max-height: 600px;
+  opacity: 1;
+  display: block !important;
+}
+
+/* Prevent layout shift while ads load */
+ins.adsbygoogle {
+  display: block;
+}
+
+/* Hide parent container if ad failed */
+.ad-container:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+  display: none;
+  margin: 0;
+  padding: 0;
+}
+
 partners-section {
   padding: 4rem 0;
   background-color: var(--background);
