@@ -391,7 +391,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">No episodes found</h3>
             <p className="text-gray-400 mb-6 max-w-md mx-auto">
-              Try adjusting your search or filters to find what you're looking for.
+              Try adjusting your search or filters to find what you&apos;re looking for.
             </p>
             <button
               onClick={clearFilters}
