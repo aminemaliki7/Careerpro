@@ -68,7 +68,7 @@ export default function Footer() {
 
  const socialLinks = [
   { name: 'X', href: 'https://x.com/SerenithHQ', icon: Twitter }, // your X page
-  { name: 'LinkedIn', href: 'https://linkedin.com', icon: Linkedin },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/hirely-ma', icon: Linkedin },
   { 
     name: 'Instagram', 
     href: 'https://www.instagram.com/hirely_ai', 
