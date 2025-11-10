@@ -1,7 +1,7 @@
 // src/app/page.tsx
 import Link from 'next/link';
 import Image from 'next/image';
-import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, MapPin, DollarSign, Award, Headphones } from 'lucide-react';
+import { CalendarDays, Clock, ArrowRight, Briefcase, TrendingUp, ExternalLink, MapPin, Headphones, Play, Volume2 } from 'lucide-react';
 import { getFeaturedPosts } from '@/lib/posts';
 import { supabase } from '@/lib/supabase';
 import { getAllRoadmaps } from '@/lib/roadmaps';
@@ -37,8 +37,6 @@ export const metadata = {
     images: ["https://hirely.ma/og-image.jpg"],
   },
 };
-
-
 
 export default async function HomePage() {
   const featuredPosts = getFeaturedPosts();
@@ -76,7 +74,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative min-h-[85vh] flex items-start justify-center pt-12 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-purple-50/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-gray-50/20"></div>
         
         <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-4 tracking-tight leading-none">
@@ -118,24 +116,135 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Podcast Feature Highlight */}
+      <section className="py-20 bg-white border-y border-gray-100">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            {/* Left side - Content */}
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-100 rounded-full mb-6">
+                <Volume2 className="w-3.5 h-3.5 text-blue-600" />
+                <span className="text-xs font-semibold text-blue-900 uppercase tracking-wide">Audio Available</span>
+              </div>
+              
+              <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Listen or Read.
+                <br />
+                <span className="text-gray-500 font-light">Your Choice.</span>
+              </h2>
+              
+              <p className="text-lg text-gray-600 mb-10 leading-relaxed">
+                We&apos;re the first tech career platform to offer all our insights in audio format. Learn on your commute, during workouts, or whenever reading isn&apos;t convenient.
+              </p>
+              
+              <div className="space-y-6 mb-10">
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <Headphones className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">30+ Audio Episodes</h3>
+                    <p className="text-gray-600 text-sm">Expert career advice you can listen to anywhere</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <Play className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Instant Format Switch</h3>
+                    <p className="text-gray-600 text-sm">Toggle between audio and text with one click</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center flex-shrink-0">
+                    <Clock className="w-6 h-6 text-gray-700" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1">Learn on Your Schedule</h3>
+                    <p className="text-gray-600 text-sm">5-20 minute episodes that fit your day</p>
+                  </div>
+                </div>
+              </div>
+              
+              <Link
+                href="/blog"
+                className="group inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 transition-colors text-lg"
+              >
+                <Headphones className="w-5 h-5" />
+                Start Listening
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+            
+            {/* Right side - Simple Visual */}
+            <div className="relative">
+              <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-3xl p-12 border border-gray-200">
+                <div className="bg-white rounded-2xl p-8 shadow-lg">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center">
+                      <Headphones className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-xs text-gray-500 mb-1">EPISODE 30</div>
+                      <h4 className="font-bold text-gray-900">Career Insights</h4>
+                    </div>
+                  </div>
+                  
+                  <h3 className="font-semibold text-gray-900 mb-6 leading-snug">
+                    Mental Health for High-Performing Professionals
+                  </h3>
+                  
+                  <div className="mb-6">
+                    <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-blue-600 rounded-full" style={{ width: '40%' }}></div>
+                    </div>
+                    <div className="flex justify-between text-xs text-gray-500 mt-2">
+                      <span>7:12</span>
+                      <span>17:00</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-center gap-6">
+                    <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                      <svg className="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/>
+                      </svg>
+                    </button>
+                    <button className="w-14 h-14 rounded-full bg-blue-600 flex items-center justify-center hover:bg-blue-700 transition-all shadow-lg">
+                      <Play className="w-6 h-6 text-white ml-0.5" fill="white" />
+                    </button>
+                    <button className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
+                      <svg className="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M16 18h2V6h-2zm-3.5-6L4 6v12z"/>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Featured Posts Section */}
       {featuredPosts.length > 0 && (
-        <section className="pt-16 pb-32 bg-gray-50">
+        <section className="pt-24 pb-32 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center mb-20">
-              <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-                Tech Insights & Career Guides
+            <div className="text-center mb-16">
+              <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-4">
+                Latest Career Insights
               </h2>
               
-              <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-3">
-                Career guidance, industry insights, and tech trends to help you stay ahead.
+              <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-6">
+                Career guidance and tech industry insights—available in audio and text
               </p>
               
-              {/* Podcast-style badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-100 rounded-full">
-                <Headphones className="w-4 h-4 text-purple-600" />
-                <span className="text-sm font-medium text-purple-900">Now available in audio format</span>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm">
+                <Headphones className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700">30 episodes available</span>
               </div>
             </div>
             
@@ -143,7 +252,7 @@ export default async function HomePage() {
               {featuredPosts.map((post, index) => (
                 <article
                   key={post.slug ? `post-${post.slug}-${index}` : `post-${index}`}
-                  className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60"
+                  className="group bg-white rounded-3xl border border-gray-200 hover:border-blue-200 overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-blue-50 transform hover:-translate-y-1"
                 >
                   <div className="relative overflow-hidden">
                     {post.coverImage && (
@@ -156,11 +265,10 @@ export default async function HomePage() {
                       />
                     )}
                     
-                    {/* Audio badge overlay - only show if post has audio */}
                     {post.audioUrl && (
-                      <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
-                        <Headphones className="w-3.5 h-3.5 text-purple-600" />
-                        <span className="text-xs font-medium text-gray-900">Audio</span>
+                      <div className="absolute top-3 right-3 bg-blue-600 px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                        <Headphones className="w-3.5 h-3.5 text-white" />
+                        <span className="text-xs font-bold text-white uppercase tracking-wide">Audio</span>
                       </div>
                     )}
                   </div>
@@ -172,7 +280,7 @@ export default async function HomePage() {
                         {formatDate(post.publishedAt)}
                       </div>
                       <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
+                        {post.audioUrl ? <Headphones className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
                         {post.audioDuration ? `${Math.ceil(post.audioDuration / 60)} min` : '5 min read'}
                       </div>
                     </div>
@@ -192,7 +300,7 @@ export default async function HomePage() {
                         <Link
                           href={`/tags/${tag}`}
                           key={`tag-${tag}-${tagIndex}`}
-                          className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full hover:bg-gray-200 transition-colors"
+                          className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full hover:bg-blue-50 hover:text-blue-600 transition-colors"
                         >
                           {tag}
                         </Link>
@@ -203,7 +311,14 @@ export default async function HomePage() {
                       href={`/blog/${post.slug}`}
                       className="group/link inline-flex items-center gap-2 text-blue-600 font-medium hover:text-blue-700 transition-colors text-sm"
                     >
-                      {post.audioUrl ? 'Read or Listen' : 'Read article'}
+                      {post.audioUrl ? (
+                        <>
+                          <Play className="w-4 h-4" />
+                          Listen or Read
+                        </>
+                      ) : (
+                        'Read Article'
+                      )}
                       <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
                     </Link>
                   </div>
@@ -211,7 +326,18 @@ export default async function HomePage() {
               ))}
             </div>
 
-            {/* Partners Section - Updated with Real Udemy Logo */}
+            <div className="text-center mt-16">
+              <Link
+                href="/blog"
+                className="group inline-flex items-center gap-2 bg-black text-white px-8 py-4 rounded-full font-medium hover:bg-gray-800 transition-all duration-300 text-lg shadow-lg hover:shadow-xl transform hover:scale-105"
+              >
+                <Headphones className="w-5 h-5" />
+                Browse All Episodes
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Partners Section */}
             <div className="mt-32 pt-16 border-t border-gray-200">
               <div className="text-center mb-12">
                 <p className="text-sm text-gray-400 font-medium mb-8 uppercase tracking-wider">
@@ -245,7 +371,7 @@ export default async function HomePage() {
       )}
 
       {/* Jobs Section */}
-      <section className="pt-16 pb-32 bg-white">
+      <section className="pt-24 pb-32 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
@@ -358,7 +484,7 @@ export default async function HomePage() {
       </section>
 
       {/* Roadmaps Section */}
-      <section className="pt-16 pb-32 bg-white">
+      <section className="pt-24 pb-32 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col sm:flex-row items-end justify-between mb-20">
             <div>
@@ -435,29 +561,31 @@ export default async function HomePage() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="pt-16 pb-32 bg-black text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20"></div>
+      <section className="pt-24 pb-32 bg-black text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-gray-900/20"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto text-center px-6">
           <div className="mb-8">
             <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
-              <TrendingUp className="w-8 h-8 text-white" />
+              <Headphones className="w-8 h-8 text-white" />
             </div>
           </div>
           
           <h2 className="text-4xl sm:text-5xl font-light mb-6">
-            Stay Ahead
+            Never Miss an Episode
           </h2>
           <p className="text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
-            Get weekly insights, job alerts, and career tips delivered to your inbox. 
-            Join over 1,000 professionals already in the know.
+            Get weekly career insights, new podcast episodes, and job opportunities delivered to your inbox. 
+            Join 1,000+ professionals already listening.
           </p>
           
           <NewsletterCTA />
           
-          <p className="text-gray-400 text-sm mt-6">
-            No spam, just quality content. Unsubscribe anytime.
-          </p>
+          <div className="flex items-center justify-center gap-8 mt-8 text-sm text-gray-400">
+            <span>✓ No spam, ever</span>
+            <span>✓ Unsubscribe anytime</span>
+            <span>✓ Weekly updates</span>
+          </div>
         </div>
       </section>
     </div>
