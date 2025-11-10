@@ -3,6 +3,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { Search, CalendarDays, Clock, User, ArrowRight, Tag, TrendingUp, Star, Filter, X, Headphones, Play, Pause, Volume2, Music, BookOpen, SkipBack, SkipForward } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
+import Image from "next/image";
 
 interface BlogClientProps {
   allPosts: BlogPostWithContent[];
@@ -300,9 +301,17 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-end gap-6">
             {/* Podcast Cover Art (Smaller on mobile) */}
-            <div className="w-24 h-24 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-2xl flex items-center justify-center flex-shrink-0">
-              <Headphones className="w-12 h-12 sm:w-24 sm:h-24 lg:w-28 lg:h-28 text-white/90" />
-            </div>
+         
+<div className="w-24 h-24 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg shadow-2xl overflow-hidden flex-shrink-0">
+  <Image
+    src="/images/podcast.png"
+    alt="Headphones illustration"
+    width={224} // double of 112 for better scaling
+    height={224}
+    className="w-full h-full object-cover"
+  />
+</div>
+
             
             {/* Title Info */}
             <div className="flex-1 pb-4 pt-4 sm:pt-0">
