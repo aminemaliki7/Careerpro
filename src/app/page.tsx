@@ -36,6 +36,9 @@ export const metadata = {
       "Find your next opportunity, learn new skills, and stay ahead in tech.",
     images: ["https://hirely.ma/og-image.jpg"],
   },
+   alternates: {
+    canonical: "https://hirely.ma",
+  },
 };
 
 export default async function HomePage() {
