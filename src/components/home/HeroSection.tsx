@@ -23,7 +23,7 @@ const HeroSection = () => {
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
         {/* Staggered Text Animation */}
         <motion.h1 
-          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-4 tracking-tight leading-none"
+          className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-6 tracking-tight leading-none"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ 
@@ -32,21 +32,22 @@ const HeroSection = () => {
             ease: [0.25, 0.1, 0.25, 1]
           }}
         >
-          Hirely. 
-          <br />
-          <motion.span 
-            className="font-medium text-[#1E40AF]"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ 
-              duration: 0.9, 
-              delay: 0.3, 
-              ease: [0.25, 0.1, 0.25, 1]
-            }}
-          >
-            Quickly.
-          </motion.span>
+          Hirely.
         </motion.h1>
+
+        <motion.h2
+          className="text-2xl sm:text-3xl md:text-4xl font-medium text-gray-900 mb-8"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ 
+            duration: 0.9, 
+            delay: 0.3, 
+            ease: [0.25, 0.1, 0.25, 1]
+          }}
+        >
+          Land your next role.{' '}
+          <span className="text-[#1E40AF]">Quickly.</span>
+        </motion.h2>
         
         <motion.p 
           className="text-xl sm:text-2xl text-gray-500 mb-8 font-light max-w-2xl mx-auto leading-relaxed"
