@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, MapPin, ExternalLink } from 'lucide-react';
 import { Job } from '@/types/job';
+import { createJobSlug } from '@/lib/utils/format';
 
 interface JobCardProps {
   job: Job;
@@ -95,7 +96,7 @@ const JobCard = ({ job, index }: JobCardProps) => {
             {formatDate(job.posted_date)}
           </span>
           <motion.a
-            href={`/jobs/${job.id}`}
+            href={`/jobs/${job.id}/${createJobSlug(job.title)}`}
             target="_blank"
             rel="noopener noreferrer"
             className="group/btn bg-black text-white px-6 py-2.5 rounded-full font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center gap-2 text-sm"

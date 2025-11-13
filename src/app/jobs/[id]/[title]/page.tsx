@@ -2,6 +2,7 @@ import { supabase } from '@/lib/supabase';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
+import { createJobSlug } from '@/lib/utils/format';
 
 interface Job {
   id: string;
@@ -157,7 +158,7 @@ const SparklesIcon = ({ className }: { className: string }) => (
 export default async function JobDetailsPage({ 
   params 
 }: { 
-  params: Promise<{ id: string }> 
+  params: Promise<{ id: string , title: string  }> 
 }) {
   const { id } = await params;
 
@@ -401,7 +402,7 @@ export default async function JobDetailsPage({
                   {relatedJobs.map(job => (
                     <li key={job.id}>
                       <Link 
-                        href={`/jobs/${job.id}`} 
+                        href={`/jobs/${job.id}/${createJobSlug(job.title)}`} 
                         className="block hover:text-blue-600 transition-colors"
                       >
                         <div className="font-medium">{job.title}</div>

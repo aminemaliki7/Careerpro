@@ -4,6 +4,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { Job, getJobRegion, formatExperienceLevel, GLOBAL_REGIONS } from '@/types/job';
+import { createJobSlug } from '@/lib/utils/format';
 
 
 
@@ -274,7 +275,7 @@ export default function JobsPage() {
 
       <div className="mt-3 sm:mt-0 flex items-center gap-4">
         <a
-          href={`/jobs/${job.id}`}
+          href={`/jobs/${job.id}/${createJobSlug(job.title)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
