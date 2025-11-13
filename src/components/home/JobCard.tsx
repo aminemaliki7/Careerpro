@@ -5,9 +5,10 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Clock, MapPin, ExternalLink } from 'lucide-react';
+import { Job } from '@/types/job';
 
 interface JobCardProps {
-  job: any;
+  job: Job;
   index: number;
 }
 
@@ -45,21 +46,7 @@ const JobCard = ({ job, index }: JobCardProps) => {
               {job.company}
             </p>
           </div>
-          {job.logo && (
-            <motion.div 
-              className="ml-4 p-2 bg-gray-50 rounded-2xl group-hover:bg-gray-100 transition-colors"
-              whileHover={{ rotate: 8, scale: 1.15 }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <Image
-                src={job.logo}
-                alt={`${job.company} logo`}
-                width={40}
-                height={40}
-                className="w-10 h-10 object-contain"
-              />
-            </motion.div>
-          )}
+         
         </div>
 
         <div className="space-y-3 mb-6">

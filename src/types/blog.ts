@@ -16,6 +16,7 @@ export interface BlogPost {
   affiliateCourseLinks?: AffiliateCourseLink[]
   audioUrl?: string;
   audioDuration?: number; // in seconds
+  coverImage?: string; // Add this line
 }
 
 export interface BlogMetadata {

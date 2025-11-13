@@ -4,9 +4,10 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Clock, TrendingUp } from 'lucide-react';
+import { Roadmap } from '@/types/roadmap';
 
 interface RoadmapCardProps {
-  roadmap: any;
+  roadmap: Roadmap;
   index: number;
 }
 
