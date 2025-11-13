@@ -1,13 +1,14 @@
 @import "tailwindcss";
 
+/* ============================================
+   THEME & VARIABLES
+   ============================================ */
 :root {
   --background: #ffffff;
   --foreground: #171717;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -19,17 +20,31 @@
   }
 }
 
+/* ============================================
+   BASE STYLES
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
 }
 
-/* Add to your globals.css */
+/* ============================================
+   THIRD-PARTY OVERRIDES
+   ============================================ */
 .cl-dev-banner {
   display: none !important;
 }
 
+/* ============================================
+   AD MANAGEMENT
+   ============================================ */
 .ad-container {
   text-align: center;
   margin: 2rem auto;
@@ -37,42 +52,33 @@ body {
   transition: all 0.3s ease;
 }
 
-/* Collapse empty ad containers - CRITICAL FIX */
-ins.adsbygoogle[data-ad-status="unfilled"] {
-  display: none !important;
-  min-height: 0 !important;
-  height: 0 !important;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-/* Hide ads while loading to prevent white space */
-ins.adsbygoogle:not([data-ad-status="filled"]) {
+ins.adsbygoogle {
+  display: block;
   max-height: 0;
-  overflow: hidden;
   opacity: 0;
   transition: max-height 0.3s ease, opacity 0.3s ease;
 }
 
-/* Show ads once filled */
 ins.adsbygoogle[data-ad-status="filled"] {
   max-height: 600px;
   opacity: 1;
-  display: block !important;
 }
 
-/* Prevent layout shift while ads load */
-ins.adsbygoogle {
-  display: block;
+ins.adsbygoogle[data-ad-status="unfilled"] {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
 }
 
-/* Hide parent container if ad failed */
-.ad-container:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
-  display: none;
-  margin: 0;
-  padding: 0;
+@supports selector(:has(*)) {
+  .ad-container:has(ins.adsbygoogle[data-ad-status="unfilled"]) {
+    display: none;
+  }
 }
 
+/* ============================================
+   PARTNERS SECTION
+   ============================================ */
 .partners-section {
   padding: 4rem 0;
   background-color: var(--background);
@@ -89,7 +95,7 @@ ins.adsbygoogle {
 .partner-logo {
   height: 3rem;
   filter: grayscale(100%);
-  transition: all 0.3s ease;
+  transition: filter 0.3s ease;
 }
 
 .partner-logo:hover {
@@ -97,35 +103,61 @@ ins.adsbygoogle {
 }
 
 /* ============================================
-   CUSTOM ANIMATIONS FOR DYNAMIC HOMEPAGE
+   SMOOTH ANIMATIONS & TRANSITIONS
+   ============================================ */
+
+/* Global smooth transitions */
+* {
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hardware acceleration for better performance */
+.gpu-accelerated,
+[class*="animate-"],
+.group:hover > *,
+img,
+video {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Smooth image rendering */
+img {
+  image-rendering: auto;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ============================================
+   CUSTOM KEYFRAME ANIMATIONS
    ============================================ */
 
 @keyframes float {
   0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
+    transform: translateY(0) rotate(0deg) translateZ(0); 
   }
   50% { 
-    transform: translateY(-20px) rotate(5deg); 
+    transform: translateY(-20px) rotate(5deg) translateZ(0); 
   }
 }
 
 @keyframes float-slow {
   0%, 100% { 
-    transform: translateY(0px) translateX(0px); 
+    transform: translate(0, 0) translateZ(0); 
   }
   50% { 
-    transform: translateY(-30px) translateX(10px); 
+    transform: translate(10px, -30px) translateZ(0); 
   }
 }
 
 @keyframes pulse-glow {
   0%, 100% { 
     opacity: 0.5; 
-    transform: scale(1); 
+    transform: scale(1) translateZ(0); 
   }
   50% { 
     opacity: 1; 
-    transform: scale(1.05); 
+    transform: scale(1.05) translateZ(0); 
   }
 }
 
@@ -147,22 +179,60 @@ ins.adsbygoogle {
   }
 }
 
-/* Animation utility classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+/* ============================================
+   ANIMATION UTILITY CLASSES
+   ============================================ */
+
 .animate-float {
-  animation: float 6s ease-in-out infinite;
+  animation: float 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: transform;
 }
 
 .animate-float-slow {
-  animation: float-slow 8s ease-in-out infinite;
+  animation: float-slow 8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: transform;
 }
 
 .animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
+  animation: pulse-glow 3s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: opacity, transform;
 }
 
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient-shift 8s ease infinite;
+  will-change: background-position;
 }
 
 .shimmer {
@@ -173,25 +243,177 @@ ins.adsbygoogle {
     transparent
   );
   background-size: 200px 100%;
-  animation: shimmer 2s infinite;
+  animation: shimmer 2s linear infinite;
+  will-change: background-position;
 }
 
-/* Performance optimization */
-.animate-float,
-.animate-float-slow,
-.animate-pulse-glow,
-.animate-gradient,
-.shimmer {
-  will-change: transform, opacity, background-position;
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Smooth scroll behavior */
-html {
-  scroll-behavior: smooth;
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Optimize images for better performance */
-img {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* ============================================
+   SMOOTH HOVER EFFECTS
+   ============================================ */
+
+/* Smooth card lifts */
+.card-lift {
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.card-lift:hover {
+  transform: translateY(-8px) translateZ(0);
+}
+
+/* Smooth button interactions */
+button,
+a[class*="btn"],
+[role="button"] {
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Smooth image zoom */
+.image-zoom {
+  overflow: hidden;
+}
+
+.image-zoom img {
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.image-zoom:hover img {
+  transform: scale(1.05) translateZ(0);
+}
+
+/* ============================================
+   ACCESSIBILITY - REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
+  
+  /* Disable all will-change for reduced motion */
+  * {
+    will-change: auto !important;
+  }
+}
+
+/* ============================================
+   PERFORMANCE OPTIMIZATIONS
+   ============================================ */
+
+/* Optimize repaints */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+.will-change-auto {
+  will-change: auto;
+}
+
+/* Contain layout changes */
+.contain-layout {
+  contain: layout;
+}
+
+.contain-paint {
+  contain: paint;
+}
+
+/* ============================================
+   FRAMER MOTION OVERRIDES FOR SMOOTHNESS
+   ============================================ */
+
+/* Ensure smooth Framer Motion animations */
+[data-framer-motion] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth scrolling for in-view animations */
+[data-viewport-enter="true"] {
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============================================
+   CUSTOM SCROLL BEHAVIOR
+   ============================================ */
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 6px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Firefox smooth scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #888 var(--background);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ============================================
+   FOCUS STATES FOR ACCESSIBILITY
+   ============================================ */
+
+:focus-visible {
+  outline: 2px solid #1E40AF;
+  outline-offset: 2px;
+  transition: outline-offset 0.2s ease;
+}
+
+button:focus-visible,
+a:focus-visible {
+  outline-offset: 4px;
 }
