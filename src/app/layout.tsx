@@ -21,18 +21,10 @@ export const metadata: Metadata = {
   title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
   description:
     'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
-  icons: {
-    icon: '/images/blog/logo.svg',
-  },
-  // Google Search Console Verification
-  verification: {
-    google: '00c4fbab1e48645b',
-  },
-  // Métadonnées SEO avancées
+  icons: { icon: '/images/blog/logo.svg' },
+  verification: { google: '00c4fbab1e48645b' },
   metadataBase: new URL('https://hirely.ma'),
-  alternates: {
-    canonical: 'https://hirely.ma',
-  },
+  alternates: { canonical: 'https://hirely.ma' },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -41,14 +33,7 @@ export const metadata: Metadata = {
     title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
     description:
       'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
-    images: [
-      {
-        url: '/images/blog/logo.svg',
-        width: 1200,
-        height: 630,
-        alt: 'Hirely.ma - Tech Jobs Platform',
-      },
-    ],
+    images: [{ url: '/images/blog/logo.svg', width: 1200, height: 630, alt: 'Hirely.ma - Tech Jobs Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
@@ -60,13 +45,7 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
+    googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
   keywords: [
     'tech jobs Morocco',
@@ -80,16 +59,25 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
       <html lang="en">
         <head>
-          {/* JSON-LD Schema pour améliorer le SEO */}
+          {/* Google Tag Manager */}
+          <Script
+            id="gtm-script"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                })(window,document,'script','dataLayer','GTM-NH5L7MKV');`,
+            }}
+          />
+
+          {/* JSON-LD Schema for SEO */}
           <Script
             id="schema-org"
             type="application/ld+json"
@@ -110,13 +98,21 @@ export default function RootLayout({
             }}
           />
         </head>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+          {/* Google Tag Manager (noscript) */}
+          <noscript>
+            <iframe
+              src="https://www.googletagmanager.com/ns.html?id=GTM-NH5L7MKV"
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+            ></iframe>
+          </noscript>
+
           {/* Google Analytics */}
           <GoogleAnalytics />
 
-          {/* Google AdSense script (must load after DOM is interactive) */}
+          {/* Google AdSense */}
           <Script
             id="adsbygoogle-init"
             async
@@ -125,7 +121,7 @@ export default function RootLayout({
             strategy="afterInteractive"
           />
 
-          {/* Your app layout */}
+          {/* App content */}
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>
       </html>
