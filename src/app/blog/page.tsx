@@ -12,6 +12,6 @@ export const metadata: Metadata = {
 export default function BlogPage() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();
-
+  
   return <BlogClient allPosts={allPosts} featuredPosts={featuredPosts} />;
 }

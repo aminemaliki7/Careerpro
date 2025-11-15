@@ -1,3 +1,4 @@
+// src/components/ui/Header.tsx
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -20,7 +21,8 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/' },
-    { name: 'Talks', href: '/blog' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Podcast', href: '/podcast' },
     { name: 'Roadmaps', href: '/roadmaps' },
     { name: 'Jobs', href: '/jobs' },
     { name: 'About', href: '/about' },
