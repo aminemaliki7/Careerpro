@@ -27,12 +27,7 @@ function MobileFilterModal({
   return (
     <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300">
       <div className="absolute inset-0 bg-white overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
-          <h2 className="text-xl font-bold text-gray-900">Filter Episodes</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-900">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
+      
 
         <div className="p-4 space-y-6">
           <div>
@@ -221,7 +216,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
   }, [isPlaying]);
 
   return (
-    <div className="min-h-screen bg-white pb-32">
+    <div className="min-h-screen bg-white pb-24 sm:pb-32">
       {showMobileFilters && (
         <MobileFilterModal
           allTags={allTags}
@@ -234,10 +229,10 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
 
       {/* Hero Header - Clean Podcast Style */}
       <div className="border-b border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-          <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+          <div className="flex flex-col lg:flex-row items-start gap-6 sm:gap-8 lg:gap-12">
             {/* Podcast Cover */}
-            <div className="w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
+            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
               <Image
                 src="/images/podcast.png"
                 alt="Career Insights Podcast"
@@ -249,18 +244,18 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
             
             {/* Podcast Info */}
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
                 <Headphones className="w-4 h-4 text-gray-600" />
                 <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">Podcast</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-gray-900 mb-3 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">
                 Career Insights
               </h1>
-              <p className="text-lg sm:text-xl text-gray-600 mb-6 max-w-2xl leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 max-w-2xl leading-relaxed">
                 Expert advice on job searching, career growth, and navigating the tech industry
               </p>
               
-              <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 mb-6">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
                 <span className="flex items-center gap-2">
                   <div className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center">
                     <User className="w-3 h-3 text-white" />
@@ -269,14 +264,11 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                 </span>
                 <span>·</span>
                 <span className="font-medium">{allEpisodes.length} episodes</span>
-                <span>·</span>
-                <Link href="/blog" className="text-gray-900 hover:text-gray-600 font-medium transition-colors">
+                <span className="hidden sm:inline">·</span>
+                <Link href="/blog" className="hidden sm:inline text-gray-900 hover:text-gray-600 font-medium transition-colors">
                   Read Articles →
                 </Link>
               </div>
-
-              {/* Subscribe Button */}
-              
             </div>
           </div>
         </div>
@@ -284,42 +276,42 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
 
       {/* Featured Episodes - Trending Style */}
       {featuredEpisodes.length > 0 && (
-        <div className="border-b border-gray-200 py-8">
+        <div className="border-b border-gray-200 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="w-5 h-5" />
-              <h2 className="text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
               {featuredEpisodes.slice(0, 6).map((episode, index) => (
-                <div key={episode.slug} className="flex gap-4 group">
-                  <span className="text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
+                <div key={episode.slug} className="flex gap-3 sm:gap-4 group">
+                  <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
                     0{index + 1}
                   </span>
-                  <div className="flex-1">
+                  <div className="flex-1 min-w-0">
                     <Link href={`/blog/${episode.slug}`}>
-                      <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
                         {episode.title}
                       </h3>
-                      <div className="flex items-center gap-2 text-xs text-gray-500 mb-2">
-                        <span>{formatDate(episode.publishedAt)}</span>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
+                        <span className="truncate">{formatDate(episode.publishedAt)}</span>
                         <span>·</span>
-                        <span>{episode.readingTime || 5} min listen</span>
+                        <span>{episode.readingTime || 5} min</span>
                       </div>
                     </Link>
                     <button
                       onClick={(e) => handlePlayPause(episode, e)}
-                      className="inline-flex items-center gap-2 text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
+                      className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
                     >
                       {currentlyPlaying === episode.slug && isPlaying ? (
                         <>
-                          <Pause className="w-4 h-4" />
-                          Pause
+                          <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <span>Pause</span>
                         </>
                       ) : (
                         <>
-                          <Play className="w-4 h-4" />
-                          Play
+                          <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <span>Play</span>
                         </>
                       )}
                     </button>
@@ -332,65 +324,56 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
       )}
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Episodes Column */}
           <div className="lg:col-span-2">
-            {/* Search */}
-            <div className="mb-8">
+            {/* Search & Mobile Filter Button */}
+            <div className="mb-6 sm:mb-8 space-y-3">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="text"
                   placeholder="Search episodes..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400"
+                  className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
+              
+              {/* Mobile Filter Button */}
+           
             </div>
 
-            {/* Selected Tag */}
-            {selectedTag && (
-              <div className="mb-6 flex items-center gap-2">
-                <span className="text-sm text-gray-600">Filtered by:</span>
-                <button
-                  onClick={() => setSelectedTag('')}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-900 transition-colors"
-                >
-                  {selectedTag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  <X className="w-3 h-3" />
-                </button>
-              </div>
-            )}
+          
 
             {/* Episodes List */}
             {filteredEpisodes.length > 0 ? (
-              <div className="space-y-8">
+              <div className="space-y-6 sm:space-y-8">
                 {filteredEpisodes.map((episode) => (
-                  <article key={episode.slug} className="group pb-8 border-b border-gray-200">
+                  <article key={episode.slug} className="group pb-6 sm:pb-8 border-b border-gray-200">
                     <Link href={`/blog/${episode.slug}`} className="block">
-                      <div className="flex gap-6">
-                        <div className="flex-1">
+                      <div className="flex gap-4 sm:gap-6">
+                        <div className="flex-1 min-w-0">
                           {/* Title */}
-                          <h2 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
                             {episode.title}
                           </h2>
 
                           {/* Description */}
-                          <p className="text-gray-600 text-base mb-4 line-clamp-2">
+                          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
                             {episode.description}
                           </p>
 
                           {/* Meta Info */}
-                          <div className="flex items-center gap-3 text-sm text-gray-500 mb-4">
-                            <span>{formatDate(episode.publishedAt)}</span>
+                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
+                            <span className="truncate">{formatDate(episode.publishedAt)}</span>
                             <span>·</span>
                             <span>{episode.readingTime || 5} min</span>
                             {episode.tags && episode.tags[0] && (
                               <>
-                                <span>·</span>
-                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                <span className="hidden sm:inline">·</span>
+                                <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
                                   {episode.tags[0].replace(/-/g, ' ')}
                                 </span>
                               </>
@@ -400,7 +383,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
 
                         {/* Thumbnail */}
                         {episode.coverImage && (
-                          <div className="w-32 h-32 sm:w-40 sm:h-40 flex-shrink-0">
+                          <div className="w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 flex-shrink-0">
                             <img
                               src={episode.coverImage}
                               alt={episode.title}
@@ -412,10 +395,10 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     </Link>
 
                     {/* Play Button */}
-                    <div className="flex items-center justify-between mt-4">
+                    <div className="flex items-center justify-between mt-3 sm:mt-4">
                       <button
                         onClick={(e) => handlePlayPause(episode, e)}
-                        className={`inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-sm transition-colors ${
+                        className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full font-medium text-xs sm:text-sm transition-colors ${
                           currentlyPlaying === episode.slug && isPlaying
                             ? 'bg-gray-900 text-white'
                             : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
@@ -423,29 +406,29 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                       >
                         {currentlyPlaying === episode.slug && isPlaying ? (
                           <>
-                            <Pause className="w-4 h-4" />
-                            Pause
+                            <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <span>Pause</span>
                           </>
                         ) : (
                           <>
-                            <Play className="w-4 h-4" />
-                            Play Episode
+                            <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                            <span>Play Episode</span>
                           </>
                         )}
                       </button>
                       <button className="text-gray-400 hover:text-gray-900 transition-colors">
-                        <Bookmark className="w-5 h-5" />
+                        <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     </div>
                   </article>
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16">
-                <p className="text-gray-600 mb-4">No episodes found</p>
+              <div className="text-center py-12 sm:py-16">
+                <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">No episodes found</p>
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-gray-900 underline hover:text-gray-600"
+                  className="text-xs sm:text-sm text-gray-900 underline hover:text-gray-600"
                 >
                   Clear filters
                 </button>
@@ -508,8 +491,86 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
       {/* Spotify-Style Audio Player - Fixed Bottom */}
       {currentlyPlaying && currentEpisode && (
         <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-lg border-t border-gray-700 shadow-2xl z-50">
-          <div className="max-w-[1800px] mx-auto px-4 py-3">
-            <div className="flex items-center gap-6">
+          <div className="max-w-[1800px] mx-auto px-2 sm:px-4 py-2 sm:py-3">
+            {/* Mobile Layout */}
+            <div className="sm:hidden">
+              <div className="flex flex-col gap-2">
+                {/* Episode Info & Controls */}
+                <div className="flex items-center gap-2">
+                  {currentEpisode.coverImage && (
+                    <img
+                      src={currentEpisode.coverImage}
+                      alt={currentEpisode.title}
+                      className="w-12 h-12 rounded shadow-lg object-cover flex-shrink-0"
+                    />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-semibold text-white truncate">
+                      {currentEpisode.title}
+                    </p>
+                    <p className="text-[10px] text-gray-400 truncate">
+                      {currentEpisode.author}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <button
+                      onClick={handleSkipBackward}
+                      className="text-gray-400 hover:text-white transition-all"
+                    >
+                      <SkipBack className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={(e) => handlePlayPause(currentEpisode, e)}
+                      className="w-9 h-9 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-all shadow-lg"
+                    >
+                      {isPlaying ? (
+                        <Pause className="w-4 h-4 text-gray-900" fill="currentColor" />
+                      ) : (
+                        <Play className="w-4 h-4 text-gray-900 ml-0.5" fill="currentColor" />
+                      )}
+                    </button>
+                    <button
+                      onClick={handleSkipForward}
+                      className="text-gray-400 hover:text-white transition-all"
+                    >
+                      <SkipForward className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] text-gray-400 w-9 text-right flex-shrink-0">
+                    {formatTime(currentTime)}
+                  </span>
+                  <div className="relative flex-1">
+                    <input
+                      type="range"
+                      min="0"
+                      max={duration || 0}
+                      value={currentTime}
+                      onChange={handleSeek}
+                      className="w-full h-1 bg-gray-700 rounded-full appearance-none cursor-pointer
+                        [&::-webkit-slider-thumb]:appearance-none 
+                        [&::-webkit-slider-thumb]:w-2.5 
+                        [&::-webkit-slider-thumb]:h-2.5 
+                        [&::-webkit-slider-thumb]:bg-white 
+                        [&::-webkit-slider-thumb]:rounded-full 
+                        [&::-webkit-slider-thumb]:cursor-pointer"
+                      style={{
+                        background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
+                      }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-gray-400 w-9 flex-shrink-0">
+                    {formatTime(duration)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Desktop Layout */}
+            <div className="hidden sm:flex items-center gap-4 md:gap-6">
               {/* Episode Info */}
               <div className="flex items-center gap-3 w-[30%] min-w-[180px]">
                 {currentEpisode.coverImage && (
@@ -517,44 +578,44 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     <img
                       src={currentEpisode.coverImage}
                       alt={currentEpisode.title}
-                      className="w-14 h-14 rounded shadow-lg object-cover flex-shrink-0"
+                      className="w-12 sm:w-14 h-12 sm:h-14 rounded shadow-lg object-cover flex-shrink-0"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                      <Headphones className="w-5 h-5 text-white" />
+                      <Headphones className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
                     </div>
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-semibold text-white truncate">
+                  <p className="text-xs sm:text-sm font-semibold text-white truncate">
                     {currentEpisode.title}
                   </p>
-                  <p className="text-xs text-gray-400 truncate">
+                  <p className="text-[10px] sm:text-xs text-gray-400 truncate">
                     {currentEpisode.author}
                   </p>
                 </div>
                 <button className="text-gray-400 hover:text-white transition-colors hidden md:block">
-                  <Bookmark className="w-5 h-5" />
+                  <Bookmark className="w-4 sm:w-5 h-4 sm:h-5" />
                 </button>
               </div>
 
               {/* Player Controls - Center */}
               <div className="flex-1 flex flex-col items-center gap-2 max-w-[40%]">
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-3 sm:gap-4">
                   <button
                     onClick={handleSkipBackward}
                     className="text-gray-400 hover:text-white transition-all hover:scale-110"
                     title="Rewind 15s"
                   >
-                    <SkipBack className="w-5 h-5" />
+                    <SkipBack className="w-4 sm:w-5 h-4 sm:h-5" />
                   </button>
                   <button
                     onClick={(e) => handlePlayPause(currentEpisode, e)}
-                    className="w-10 h-10 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-lg"
+                    className="w-9 sm:w-10 h-9 sm:h-10 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-lg"
                   >
                     {isPlaying ? (
-                      <Pause className="w-5 h-5 text-gray-900" fill="currentColor" />
+                      <Pause className="w-4 sm:w-5 h-4 sm:h-5 text-gray-900" fill="currentColor" />
                     ) : (
-                      <Play className="w-5 h-5 text-gray-900 ml-0.5" fill="currentColor" />
+                      <Play className="w-4 sm:w-5 h-4 sm:h-5 text-gray-900 ml-0.5" fill="currentColor" />
                     )}
                   </button>
                   <button
@@ -562,13 +623,13 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     className="text-gray-400 hover:text-white transition-all hover:scale-110"
                     title="Forward 15s"
                   >
-                    <SkipForward className="w-5 h-5" />
+                    <SkipForward className="w-4 sm:w-5 h-4 sm:h-5" />
                   </button>
                 </div>
 
                 {/* Progress Bar */}
                 <div className="w-full flex items-center gap-2">
-                  <span className="text-xs text-gray-400 w-10 text-right">
+                  <span className="text-[10px] sm:text-xs text-gray-400 w-8 sm:w-10 text-right">
                     {formatTime(currentTime)}
                   </span>
                   <div className="relative flex-1 group">
@@ -580,23 +641,22 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                       onChange={handleSeek}
                       className="w-full h-1 bg-gray-700 rounded-full appearance-none cursor-pointer transition-all
                         [&::-webkit-slider-thumb]:appearance-none 
-                        [&::-webkit-slider-thumb]:w-3 
-                        [&::-webkit-slider-thumb]:h-3 
+                        [&::-webkit-slider-thumb]:w-2.5 
+                        [&::-webkit-slider-thumb]:h-2.5 
+                        sm:[&::-webkit-slider-thumb]:w-3 
+                        sm:[&::-webkit-slider-thumb]:h-3 
                         [&::-webkit-slider-thumb]:bg-white 
                         [&::-webkit-slider-thumb]:rounded-full 
                         [&::-webkit-slider-thumb]:cursor-pointer 
                         [&::-webkit-slider-thumb]:shadow-lg
                         [&::-webkit-slider-thumb]:transition-all
-                        group-hover:[&::-webkit-slider-thumb]:scale-125
-                        [&::-webkit-slider-runnable-track]:bg-gradient-to-r
-                        [&::-webkit-slider-runnable-track]:from-blue-500
-                        [&::-webkit-slider-runnable-track]:to-blue-400"
+                        group-hover:[&::-webkit-slider-thumb]:scale-125"
                       style={{
                         background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
                       }}
                     />
                   </div>
-                  <span className="text-xs text-gray-400 w-10">
+                  <span className="text-[10px] sm:text-xs text-gray-400 w-8 sm:w-10">
                     {formatTime(duration)}
                   </span>
                 </div>
@@ -606,12 +666,12 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
               <div className="w-[30%] min-w-[180px] flex items-center justify-end gap-3">
                 <Link 
                   href={`/blog/${currentEpisode.slug}`}
-                  className="text-xs text-gray-400 hover:text-white transition-colors hidden lg:block"
+                  className="text-[10px] sm:text-xs text-gray-400 hover:text-white transition-colors hidden lg:block"
                 >
                   View Article →
                 </Link>
                 <button className="text-gray-400 hover:text-white transition-colors hidden sm:block">
-                  <Headphones className="w-5 h-5" />
+                  <Headphones className="w-4 sm:w-5 h-4 sm:h-5" />
                 </button>
               </div>
             </div>

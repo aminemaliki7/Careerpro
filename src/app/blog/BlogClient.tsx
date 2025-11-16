@@ -2,7 +2,7 @@
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp } from 'lucide-react';
+import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp, Filter } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 
 interface BlogClientProps {
@@ -10,13 +10,80 @@ interface BlogClientProps {
   featuredPosts: BlogPostWithContent[];
 }
 
+function MobileFilterModal({
+  allTags,
+  selectedTag,
+  setSelectedTag,
+  clearFilters,
+  onClose,
+}: {
+  allTags: string[];
+  selectedTag: string;
+  setSelectedTag: (tag: string) => void;
+  clearFilters: () => void;
+  onClose: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300">
+      <div className="absolute inset-0 bg-white overflow-y-auto">
+        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
+          <h2 className="text-xl font-bold text-gray-900">Filter Articles</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-900">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        <div className="p-4 space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
+              <Tag className="w-5 h-5 text-gray-900" />
+              Topics
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {allTags.map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
+                  className={`px-4 py-2 rounded-full font-medium transition-all text-sm ${
+                    selectedTag === tag
+                      ? 'bg-gray-900 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-gray-200 flex gap-3 sticky bottom-0 bg-white pb-4">
+            <button
+              onClick={clearFilters}
+              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-200 text-gray-900 hover:bg-gray-300 transition-colors"
+            >
+              Clear All
+            </button>
+            <button
+              onClick={onClose}
+              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+            >
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const allTags = useMemo(() => {
     const tags = allPosts.flatMap(post => post.tags);
-    return [...new Set(tags)].sort().slice(0, 8); // Show top 8 tags
+    return [...new Set(tags)].sort().slice(0, 8);
   }, [allPosts]);
 
   const filteredPosts = useMemo(() => {
@@ -50,37 +117,45 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedTag('');
+    setShowMobileFilters(false);
   };
 
   return (
     <div className="min-h-screen bg-white">
-   
+      {showMobileFilters && (
+        <MobileFilterModal
+          allTags={allTags}
+          selectedTag={selectedTag}
+          setSelectedTag={setSelectedTag}
+          clearFilters={clearFilters}
+          onClose={() => setShowMobileFilters(false)}
+        />
+      )}
 
       {/* Trending Section */}
       {featuredPosts.length > 0 && (
-        <div className="border-b border-gray-200 py-8">
+        <div className="border-b border-gray-200 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 mb-6">
-              <TrendingUp className="w-5 h-5" />
-              <h2 className="text-sm font-semibold uppercase tracking-wide">Trending on Hirely</h2>
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Trending on Hirely</h2>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
               {featuredPosts.slice(0, 6).map((post, index) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="flex gap-4 group"
+                  className="flex gap-3 sm:gap-4 group"
                 >
-                  <span className="text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
+                  <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
                     0{index + 1}
                   </span>
-                  <div className="flex-1">
-                   
-                    <h3 className="text-base font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
                       {post.title}
                     </h3>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <span>{formatDate(post.publishedAt)}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
+                      <span className="truncate">{formatDate(post.publishedAt)}</span>
                       <span>·</span>
                       <span>{post.readingTime || 5} min read</span>
                     </div>
@@ -93,22 +168,36 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
       )}
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           {/* Posts Column */}
           <div className="lg:col-span-2">
-            {/* Search */}
-            <div className="mb-8">
+            {/* Search & Mobile Filter Button */}
+            <div className="mb-6 sm:mb-8 space-y-3">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search articles..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400"
+                  className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400 text-sm sm:text-base"
                 />
               </div>
+              
+              {/* Mobile Filter Button */}
+              <button
+                onClick={() => setShowMobileFilters(true)}
+                className="lg:hidden w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-900 rounded-full font-medium text-sm hover:bg-gray-200 transition-colors"
+              >
+                <Filter className="w-4 h-4" />
+                Filter Topics
+                {selectedTag && (
+                  <span className="px-2 py-0.5 bg-gray-900 text-white rounded-full text-xs">
+                    1
+                  </span>
+                )}
+              </button>
             </div>
 
             {/* Selected Tag */}
@@ -127,55 +216,52 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
 
             {/* Posts List */}
             {filteredPosts.length > 0 ? (
-              <div className="space-y-12">
+              <div className="space-y-8 sm:space-y-12">
                 {filteredPosts.map((post) => (
                   <article
                     key={post.slug}
                     className="group"
                   >
-                    <Link href={`/blog/${post.slug}`} className="flex gap-8">
-                      <div className="flex-1">
-                        {/* Author Info */}
-                       
-
+                    <Link href={`/blog/${post.slug}`} className="flex gap-4 sm:gap-8">
+                      <div className="flex-1 min-w-0">
                         {/* Title */}
-                        <h2 className="text-2xl font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
                           {post.title}
                         </h2>
 
                         {/* Description */}
-                        <p className="text-gray-600 text-base mb-4 line-clamp-2 hidden sm:block">
+                        <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 hidden sm:block">
                           {post.description}
                         </p>
 
                         {/* Meta Info */}
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3 text-sm text-gray-500">
-                            <span>{formatDate(post.publishedAt)}</span>
+                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
+                            <span className="truncate">{formatDate(post.publishedAt)}</span>
                             <span>·</span>
                             <span>{post.readingTime || 5} min read</span>
                             {post.tags && post.tags[0] && (
                               <>
-                                <span>·</span>
-                                <span className="px-2 py-1 bg-gray-100 rounded-full text-xs">
+                                <span className="hidden sm:inline">·</span>
+                                <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
                                   {post.tags[0].replace(/-/g, ' ')}
                                 </span>
                               </>
                             )}
                           </div>
-                          <button className="text-gray-400 hover:text-gray-900 transition-colors">
-                            <Bookmark className="w-5 h-5" />
+                          <button className="text-gray-400 hover:text-gray-900 transition-colors flex-shrink-0">
+                            <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
                           </button>
                         </div>
                       </div>
 
                       {/* Thumbnail */}
                       {post.coverImage && (
-                        <div className="w-32 h-32 sm:w-48 sm:h-32 flex-shrink-0">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0">
                           <img
                             src={post.coverImage}
                             alt={post.title}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover rounded sm:rounded-none"
                           />
                         </div>
                       )}
@@ -184,11 +270,11 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16">
-                <p className="text-gray-600 mb-4">No articles found</p>
+              <div className="text-center py-12 sm:py-16">
+                <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">No articles found</p>
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-gray-900 underline hover:text-gray-600"
+                  className="text-xs sm:text-sm text-gray-900 underline hover:text-gray-600"
                 >
                   Clear filters
                 </button>
