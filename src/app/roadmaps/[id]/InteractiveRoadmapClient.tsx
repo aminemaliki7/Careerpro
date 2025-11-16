@@ -1,19 +1,17 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Clock,
-  BookOpen,
   ExternalLink,
   CheckCircle,
   Circle,
-  ArrowRight,
   Star,
-  Zap,
+  Book,
   Layers,
   Dumbbell,
   Award,
-  Book,
+  BookOpen,
 } from 'lucide-react';
 import type { Roadmap, RoadmapStep, RoadmapResource } from '@/types/roadmap';
 
@@ -41,285 +39,306 @@ const InteractiveRoadmapClient = ({ roadmap }: InteractiveRoadmapClientProps) =>
   const [completedSteps, setCompletedSteps] = useState<Set<string>>(new Set());
   const [selectedStep, setSelectedStep] = useState<string | null>(null);
 
+  // Load progress from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem(`roadmap-progress-${roadmap.id}`);
+    if (saved) {
+      setCompletedSteps(new Set(JSON.parse(saved)));
+    }
+  }, [roadmap.id]);
+
+  // Save progress to localStorage
   const toggleStepCompletion = (stepId: string) => {
     const newCompleted = new Set(completedSteps);
-    newCompleted.has(stepId) ? newCompleted.delete(stepId) : newCompleted.add(stepId);
-    setCompletedSteps(newCompleted);
-  };
-
-  const getStepColor = (difficulty: RoadmapStep['difficulty'], isCompleted: boolean) => {
-    if (isCompleted) return 'bg-green-500 border-green-600 text-white';
-
-    switch (difficulty) {
-      case 'Beginner':
-        return 'bg-emerald-100 border-emerald-300 text-emerald-800 hover:bg-emerald-200';
-      case 'Intermediate':
-        return 'bg-amber-100 border-amber-300 text-amber-800 hover:bg-amber-200';
-      case 'Advanced':
-        return 'bg-red-100 border-red-300 text-red-800 hover:bg-red-200';
-      default:
-        return 'bg-blue-100 border-blue-300 text-blue-800 hover:bg-blue-200';
+    if (newCompleted.has(stepId)) {
+      newCompleted.delete(stepId);
+    } else {
+      newCompleted.add(stepId);
     }
+    setCompletedSteps(newCompleted);
+    localStorage.setItem(`roadmap-progress-${roadmap.id}`, JSON.stringify([...newCompleted]));
   };
 
-  const createRoadmapFlow = () => {
-    const rows: RoadmapStep[][] = [];
-    let currentRow: RoadmapStep[] = [];
-    roadmap.steps.forEach((step, index) => {
-      if (index > 0 && index % 3 === 0) {
-        rows.push([...currentRow]);
-        currentRow = [];
-      }
-      currentRow.push(step);
-    });
-    if (currentRow.length > 0) rows.push(currentRow);
-    return rows;
-  };
-
-  const roadmapFlow = createRoadmapFlow();
   const selectedStepData = selectedStep
     ? roadmap.steps.find((step) => step.id === selectedStep) || null
     : null;
 
+  const progressPercentage = (completedSteps.size / roadmap.steps.length) * 100;
+
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 overflow-x-auto">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Interactive Learning Path</h2>
-          <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-emerald-100 border border-emerald-300 rounded"></div>
-              <span>Beginner</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-amber-100 border border-amber-300 rounded"></div>
-              <span>Intermediate</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-red-100 border border-red-300 rounded"></div>
-              <span>Advanced</span>
-            </div>
-          </div>
+      {/* Progress Bar */}
+      <div className="mb-8">
+        <div className="flex items-center justify-between text-sm mb-2">
+          <span className="text-gray-600 font-medium">Your Progress</span>
+          <span className="font-semibold text-gray-900">
+            {completedSteps.size} / {roadmap.steps.length} completed
+          </span>
         </div>
-
-        <div className="relative min-w-max">
-          {roadmapFlow.map((row, rowIndex) => (
-            <div key={rowIndex} className="relative mb-12">
-              {rowIndex < roadmapFlow.length - 1 && (
-                <div className="absolute left-1/2 -bottom-6 w-0.5 h-6 bg-gray-300 transform -translate-x-0.5"></div>
-              )}
-              <div className="flex items-center justify-center gap-8 flex-wrap">
-                {row.map((step, stepIndex) => {
-                  const isCompleted = completedSteps.has(step.id);
-                  const isSelected = selectedStep === step.id;
-
-                  return (
-                    <div key={step.id} className="relative flex items-center">
-                      {stepIndex < row.length - 1 && (
-                        <div className="absolute -right-4 top-1/2 w-8 h-0.5 bg-gray-300 transform -translate-y-0.5 z-0">
-                          <ArrowRight className="w-4 h-4 text-gray-400 absolute -right-2 -top-2" />
-                        </div>
-                      )}
-
-                      <div
-                        className={`
-                          relative z-10 min-w-48 max-w-64 p-4 rounded-lg border-2 cursor-pointer transition-all duration-200 transform
-                          ${getStepColor(step.difficulty, isCompleted)}
-                          ${isSelected ? 'scale-105 shadow-lg ring-2 ring-blue-400' : 'hover:scale-102 hover:shadow-md'}
-                        `}
-                        onClick={() => setSelectedStep(isSelected ? null : step.id)}
-                      >
-                        <div className="absolute -top-2 -right-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleStepCompletion(step.id);
-                            }}
-                            className="w-6 h-6 rounded-full bg-white border-2 border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                          >
-                            {isCompleted ? (
-                              <CheckCircle className="w-4 h-4 text-green-500" />
-                            ) : (
-                              <Circle className="w-4 h-4 text-gray-400" />
-                            )}
-                          </button>
-                        </div>
-
-                        <div className="mb-2">
-                          <h3 className="font-bold text-sm mb-1 leading-tight">{step.title}</h3>
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-xs px-2 py-0.5 bg-white bg-opacity-70 rounded">
-                              {step.difficulty}
-                            </span>
-                            <span className="text-xs flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              {step.duration}
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1">
-                          {step.skills.slice(0, 3).map((skill, idx) => (
-                            <span
-                              key={idx}
-                              className="text-xs px-1.5 py-0.5 bg-white bg-opacity-50 rounded text-current"
-                            >
-                              {skill}
-                            </span>
-                          ))}
-                          {step.skills.length > 3 && (
-                            <span className="text-xs px-1.5 py-0.5 bg-white bg-opacity-50 rounded text-current">
-                              +{step.skills.length - 3}
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="absolute bottom-0 left-0 right-0 h-1 bg-black bg-opacity-10 rounded-b-lg overflow-hidden">
-                          {isCompleted && <div className="h-full bg-white bg-opacity-60 w-full transition-all duration-300"></div>}
-                        </div>
-                      </div>
-
-                     
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-gray-200">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              Progress: {completedSteps.size} of {roadmap.steps.length} steps completed
-            </div>
-            <div className="w-48 bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                style={{ width: `${(completedSteps.size / roadmap.steps.length) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+        <div className="w-full bg-gray-200 rounded-full h-3">
+          <div
+            className="bg-green-500 h-3 rounded-full transition-all duration-300"
+            style={{ width: `${progressPercentage}%` }}
+          />
         </div>
       </div>
 
-      {selectedStepData && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-3xl w-full max-h-[90vh] shadow-2xl overflow-hidden">
-            <div className="p-6 overflow-y-auto max-h-[90vh]">
-              <div className="flex items-start justify-between mb-4 border-b pb-4">
-                <h3 className="text-3xl font-extrabold text-gray-900">{selectedStepData.title}</h3>
-                <button
-                  onClick={() => setSelectedStep(null)}
-                  className="p-1 rounded-full text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
+      {/* Roadmap Steps */}
+      <div className="space-y-3">
+        <h2 className="text-xl font-bold text-gray-900 mb-6">Learning Path</h2>
 
-              <p className="text-gray-600 mb-6">{selectedStepData.description}</p>
+        {roadmap.steps.map((step, index) => {
+          const isCompleted = completedSteps.has(step.id);
+          const isSelected = selectedStep === step.id;
 
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-700 mb-2">Skills you&apos;ll learn:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {selectedStepData.skills.map((skill, index) => (
-                    <span key={index} className="px-3 py-1 bg-green-100 text-green-800 text-sm font-medium rounded-full">{skill}</span>
-                  ))}
-                </div>
-              </div>
+          return (
+            <div
+              key={step.id}
+              className={`border-2 rounded-lg transition-all duration-200 ${
+                isSelected
+                  ? 'border-gray-900 shadow-lg'
+                  : 'border-gray-200 hover:border-gray-400'
+              }`}
+            >
+              <div className="p-5">
+                <div className="flex items-start gap-4">
+                  {/* Checkbox */}
+                  <button
+                    onClick={() => toggleStepCompletion(step.id)}
+                    className="flex-shrink-0 mt-1"
+                    aria-label={isCompleted ? 'Mark as incomplete' : 'Mark as complete'}
+                  >
+                    {isCompleted ? (
+                      <CheckCircle className="w-6 h-6 text-green-500" />
+                    ) : (
+                      <Circle className="w-6 h-6 text-gray-300 hover:text-gray-400" />
+                    )}
+                  </button>
 
-              <div className="mt-8">
-                <h4 className="text-xl font-bold text-gray-800 mb-4">Learning Resources:</h4>
-                <div className="space-y-4">
-                  {selectedStepData.resources.map((resource: RoadmapResource, index) => {
-                    const isCourse = resource.type === 'Course';
-
-                    return (
-                      <div key={index} className={`flex flex-col p-4 rounded-xl transition-shadow duration-300 ${isCourse ? 'border-2 border-blue-400 bg-blue-50/70' : 'border border-gray-200 bg-white shadow-sm'}`}>
-                        <div className="flex items-start gap-4 mb-3">
-                          {isCourse && resource.thumbnailUrl ? (
-                            <img
-                              src={resource.thumbnailUrl}
-                              alt={resource.title}
-                              className="w-16 h-16 object-cover rounded-lg flex-shrink-0 border border-gray-200"
-                              onError={(e) => {
-                                e.currentTarget.onerror = null;
-                                e.currentTarget.src = "https://placehold.co/64x64/E0F2F1/0D9488?text=Course";
-                              }}
-                            />
-                          ) : (
-                            <div className="w-10 h-10 flex items-center justify-center mt-1">{getResourceIcon(resource.type)}</div>
-                          )}
-
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between mb-1">
-                              <span className={`font-extrabold text-lg leading-tight ${isCourse ? 'text-blue-900' : 'text-gray-900'}`}>
-                                {resource.title}
-                              </span>
-                            </div>
-                            {resource.provider && <p className="text-sm text-gray-500 mb-2">Provider: <span className="font-semibold text-gray-700">{resource.provider}</span></p>}
-                            <p className="text-sm text-gray-700">{resource.description}</p>
-                          </div>
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-4 mb-2">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-sm font-bold text-gray-500">
+                            {index + 1}.
+                          </span>
+                          <h3
+                            className={`text-lg font-bold ${
+                              isCompleted
+                                ? 'line-through text-gray-400'
+                                : 'text-gray-900'
+                            }`}
+                          >
+                            {step.title}
+                          </h3>
                         </div>
+                        <p className="text-sm text-gray-600 mb-3">
+                          {step.description}
+                        </p>
+                      </div>
+                      <span
+                        className={`px-2.5 py-1 rounded-md text-xs font-semibold whitespace-nowrap ${
+                          step.difficulty === 'Beginner'
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : step.difficulty === 'Intermediate'
+                            ? 'bg-yellow-100 text-yellow-700 border border-yellow-200'
+                            : 'bg-red-100 text-red-700 border border-red-200'
+                        }`}
+                      >
+                        {step.difficulty}
+                      </span>
+                    </div>
 
-                        <div className={`pt-3 flex flex-wrap justify-between items-center gap-4 ${isCourse ? 'border-t border-blue-200' : 'border-t border-gray-100'}`}>
-                          {isCourse && (
-                            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
-                              {resource.rating && (
-                                <span className="flex items-center gap-1 font-medium text-gray-700">
-                                  <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                                  {resource.rating} ({resource.students ? `${Math.round(resource.students / 1000)}k` : 'N/A'} students)
-                                </span>
-                              )}
-                              {resource.duration && <span className="flex items-center gap-1 text-gray-600"><Clock className="w-4 h-4" />{resource.duration}</span>}
-                              {resource.level && <span className={`px-2 py-0.5 text-xs font-semibold rounded-full ${resource.level === 'Beginner' ? 'bg-emerald-100 text-emerald-800' : resource.level === 'Intermediate' ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-800'}`}>{resource.level}</span>}
-                              {(resource.isBestseller || resource.isPopular) && (
-                                <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center gap-1 shadow-sm">
-                                  <Zap className="w-3 h-3"/> {resource.isBestseller ? 'Bestseller' : 'Popular'}
-                                </span>
-                              )}
-                            </div>
-                          )}
+                    {/* Skills */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {step.skills.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
 
-                          <div className="flex items-center gap-3">
-                            {isCourse && resource.price && (
-                              <div className="flex items-center gap-2">
-                                {resource.price.current === 0 ? (
-                                  <span className="text-xl font-bold text-green-600">FREE</span>
-                                ) : (
-                                  <div className="flex items-center gap-2">
-                                    {resource.price.current < resource.price.original && (
-                                      <span className="text-sm line-through text-gray-500">{resource.price.original.toFixed(2)} {resource.price.currency}</span>
-                                    )}
-                                    <span className="text-xl font-bold text-red-600">{resource.price.current.toFixed(2)} {resource.price.currency}</span>
-                                  </div>
+                    {/* Footer */}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Clock className="w-3.5 h-3.5" />
+                        <span>{step.duration}</span>
+                      </div>
+                      {step.resources.length > 0 && (
+                        <button
+                          onClick={() =>
+                            setSelectedStep(isSelected ? null : step.id)
+                          }
+                          className="text-sm font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1"
+                        >
+                          {isSelected ? 'Hide' : 'View'} Resources ({step.resources.length})
+                          <ExternalLink className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Expanded Resources */}
+                {isSelected && step.resources.length > 0 && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 ml-10">
+                    <h4 className="text-sm font-bold text-gray-900 mb-3">
+                      Recommended Resources
+                    </h4>
+                    <div className="space-y-3">
+                      {step.resources.map((resource: RoadmapResource, idx) => {
+                        const isCourse = resource.type === 'Course';
+
+                        return (
+                          <div
+                            key={idx}
+                            className={`flex flex-col p-4 rounded-lg transition-shadow duration-300 ${
+                              isCourse
+                                ? 'border-2 border-blue-300 bg-blue-50/50'
+                                : 'border border-gray-200 bg-white'
+                            }`}
+                          >
+                            <div className="flex items-start gap-4 mb-3">
+                              {isCourse && resource.thumbnailUrl ? (
+                                <img
+                                  src={resource.thumbnailUrl}
+                                  alt={resource.title}
+                                  className="w-16 h-16 object-cover rounded-lg flex-shrink-0 border border-gray-200"
+                                  onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src =
+                                      'https://placehold.co/64x64/E0F2F1/0D9488?text=Course';
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-10 h-10 flex items-center justify-center mt-1">
+                                  {getResourceIcon(resource.type)}
+                                </div>
+                              )}
+
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span
+                                    className={`font-bold text-base leading-tight ${
+                                      isCourse
+                                        ? 'text-blue-900'
+                                        : 'text-gray-900'
+                                    }`}
+                                  >
+                                    {resource.title}
+                                  </span>
+                                </div>
+                                {resource.provider && (
+                                  <p className="text-sm text-gray-500 mb-2">
+                                    Provider:{' '}
+                                    <span className="font-semibold text-gray-700">
+                                      {resource.provider}
+                                    </span>
+                                  </p>
+                                )}
+                                {resource.description && (
+                                  <p className="text-sm text-gray-700">
+                                    {resource.description}
+                                  </p>
                                 )}
                               </div>
-                            )}
-                            {resource.url && (
-                              <a
-                                href={resource.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className={`flex items-center gap-1 px-4 py-2 rounded-xl font-semibold transition-colors shadow-lg text-white ${isCourse ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-700 hover:bg-gray-800'}`}
-                              >
-                                {isCourse ? 'Go to Course' : 'View Resource'}
-                                <ExternalLink className="w-4 h-4" />
-                              </a>
-                            )}
+                            </div>
+
+                            <div
+                              className={`pt-3 flex flex-wrap justify-between items-center gap-4 ${
+                                isCourse
+                                  ? 'border-t border-blue-200'
+                                  : 'border-t border-gray-100'
+                              }`}
+                            >
+                              {isCourse && (
+                                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                                  {resource.rating && (
+                                    <span className="flex items-center gap-1 font-medium text-gray-700">
+                                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                                      {resource.rating}
+                                      {resource.students &&
+                                        ` (${Math.round(resource.students / 1000)}k students)`}
+                                    </span>
+                                  )}
+                                  {resource.duration && (
+                                    <span className="flex items-center gap-1 text-gray-600">
+                                      <Clock className="w-4 h-4" />
+                                      {resource.duration}
+                                    </span>
+                                  )}
+                                  {resource.level && (
+                                    <span
+                                      className={`px-2 py-0.5 text-xs font-semibold rounded-full ${
+                                        resource.level === 'Beginner'
+                                          ? 'bg-emerald-100 text-emerald-800'
+                                          : resource.level === 'Intermediate'
+                                          ? 'bg-amber-100 text-amber-800'
+                                          : 'bg-red-100 text-red-800'
+                                      }`}
+                                    >
+                                      {resource.level}
+                                    </span>
+                                  )}
+                                </div>
+                              )}
+
+                              <div className="flex items-center gap-3">
+                                {isCourse && resource.price && (
+                                  <div className="flex items-center gap-2">
+                                    {resource.price.current === 0 ? (
+                                      <span className="text-lg font-bold text-green-600">
+                                        FREE
+                                      </span>
+                                    ) : (
+                                      <div className="flex items-center gap-2">
+                                        {resource.price.current <
+                                          resource.price.original && (
+                                          <span className="text-sm line-through text-gray-500">
+                                            {resource.price.original.toFixed(2)}{' '}
+                                            {resource.price.currency}
+                                          </span>
+                                        )}
+                                        <span className="text-lg font-bold text-red-600">
+                                          {resource.price.current.toFixed(2)}{' '}
+                                          {resource.price.currency}
+                                        </span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                                {resource.url && (
+                                  <a
+                                    href={resource.url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`flex items-center gap-1 px-4 py-2 rounded-lg font-semibold transition-colors text-white ${
+                                      isCourse
+                                        ? 'bg-blue-600 hover:bg-blue-700'
+                                        : 'bg-gray-700 hover:bg-gray-800'
+                                    }`}
+                                  >
+                                    {isCourse ? 'Go to Course' : 'View Resource'}
+                                    <ExternalLink className="w-4 h-4" />
+                                  </a>
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
-        </div>
-      )}
+          );
+        })}
+      </div>
     </>
   );
 };
