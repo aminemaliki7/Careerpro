@@ -1,10 +1,12 @@
+// src/components/blog/BlogLayout.tsx
 'use client';
 
-import { ReactNode, useEffect, useState } from "react";
-import { CalendarDays, User } from "lucide-react";
-import type { BlogPostWithContent } from "@/types/blog";
-import AdBanner from "@/components/ads/AdBanner";
-import { AD_SLOTS } from "@/config/adSlots";
+import { ReactNode, useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Clock, Bookmark, Share2, Twitter, Linkedin, Facebook, Link2, ChevronUp, MoreHorizontal } from 'lucide-react';
+import type { BlogPostWithContent } from '@/types/blog';
+import AdBanner from '@/components/ads/AdBanner';
+import { AD_SLOTS } from '@/config/adSlots';
 
 interface BlogLayoutProps {
   post: BlogPostWithContent;
@@ -12,32 +14,26 @@ interface BlogLayoutProps {
 }
 
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
-  const [headings, setHeadings] = useState<{ id: string; text: string; level: number }[]>([]);
-  const [activeId, setActiveId] = useState<string>("");
+  const [activeId, setActiveId] = useState<string>('');
+  const [showShareMenu, setShowShareMenu] = useState(false);
 
-  // Collect headings from the article
-  useEffect(() => {
-    const contentHeadings = Array.from(
-      document.querySelectorAll("article h2, article h3")
-    ).map((el) => ({
-      id: el.id,
-      text: el.textContent || "",
-      level: el.tagName === "H2" ? 2 : 3,
-    }));
-    setHeadings(contentHeadings);
-  }, []);
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
 
-  // Track active heading based on scroll - OnSaas style
+  // Track scroll position
   useEffect(() => {
     const handleScroll = () => {
-      const headingElements = document.querySelectorAll("article h2, article h3");
-      let currentActiveId = "";
+      const headingElements = document.querySelectorAll('article h2, article h3');
+      let currentActiveId = '';
 
       for (let i = 0; i < headingElements.length; i++) {
         const element = headingElements[i] as HTMLElement;
         const rect = element.getBoundingClientRect();
         
-        // Check if element is in viewport with some offset for better UX
         if (rect.top <= 100 && rect.bottom >= 0) {
           currentActiveId = element.id;
         }
@@ -46,372 +42,408 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       setActiveId(currentActiveId);
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+  const handleShare = async (platform?: string) => {
+    const url = window.location.href;
+    const text = post.title;
 
+    if (platform === 'twitter') {
+      window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'linkedin') {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`, '_blank');
+    } else if (platform === 'facebook') {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    } else {
+      await navigator.clipboard.writeText(url);
+      alert('Link copied to clipboard!');
+    }
+    setShowShareMenu(false);
+  };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
-            {post.title}
-          </h1>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto mb-8 leading-relaxed">
-            {post.description}
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-gray-500 text-sm">
-            <div className="flex items-center gap-2">
-              <CalendarDays className="w-4 h-4" />
-              <span>{formatDate(post.publishedAt)}</span>
+    <div className="min-h-screen bg-white">
+      {/* Medium-Style Article Container */}
+      <article className="max-w-[680px] mx-auto px-6 sm:px-8 pt-12 pb-20">
+        {/* Title */}
+        <h1 className="text-[42px] sm:text-[52px] font-serif font-bold text-[#242424] mb-2 leading-[1.1] tracking-tight">
+          {post.title}
+        </h1>
+
+        {/* Subtitle/Description */}
+        <h2 className="text-[20px] sm:text-[24px] text-[#6B6B6B] mb-8 leading-[1.4] font-normal">
+          {post.description}
+        </h2>
+
+        {/* Author & Meta Row */}
+        <div className="flex items-center justify-between py-6 mb-8 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            {/* Author Avatar */}
+         
+            <div>
+             
+              <div className="flex items-center gap-2 text-[14px] text-[#6B6B6B]">
+                <span>{formatDate(post.publishedAt)}</span>
+                <span>·</span>
+                <span>{post.readingTime || 5} min read</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span>{post.author}</span>
+          </div>
+
+          {/* Action Icons */}
+          <div className="flex items-center gap-4">
+            <button className="text-[#6B6B6B] hover:text-[#242424] transition-colors">
+              <Bookmark className="w-6 h-6" />
+            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                className="text-[#6B6B6B] hover:text-[#242424] transition-colors"
+              >
+                <MoreHorizontal className="w-6 h-6" />
+              </button>
+              
+              {/* Share Dropdown */}
+              {showShareMenu && (
+                <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-2xl border border-gray-200 py-2 w-48 z-50">
+                  <button
+                    onClick={() => handleShare('twitter')}
+                    className="w-full px-4 py-2 text-left text-sm text-[#242424] hover:bg-gray-50 flex items-center gap-3"
+                  >
+                    <Twitter className="w-4 h-4" />
+                    Share on Twitter
+                  </button>
+                  <button
+                    onClick={() => handleShare('linkedin')}
+                    className="w-full px-4 py-2 text-left text-sm text-[#242424] hover:bg-gray-50 flex items-center gap-3"
+                  >
+                    <Linkedin className="w-4 h-4" />
+                    Share on LinkedIn
+                  </button>
+                  <button
+                    onClick={() => handleShare('facebook')}
+                    className="w-full px-4 py-2 text-left text-sm text-[#242424] hover:bg-gray-50 flex items-center gap-3"
+                  >
+                    <Facebook className="w-4 h-4" />
+                    Share on Facebook
+                  </button>
+                  <button
+                    onClick={() => handleShare()}
+                    className="w-full px-4 py-2 text-left text-sm text-[#242424] hover:bg-gray-50 flex items-center gap-3"
+                  >
+                    <Link2 className="w-4 h-4" />
+                    Copy link
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
-      </header>
 
-      {/* Main Content Layout */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 gap-12">
-          {/* Article Content */}
-          <main className="lg:col-span-8">
-            <article className="onsaas-prose prose prose-lg max-w-none">
-              {/* Enhanced mobile styles with animations - REDUCED SPACING */}
-              <style jsx global>{`
-                .mobile-optimized-prose {
-                  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-                  color: #1a202c;
-                  line-height: 1.5;
-                }
-                
-                .animate-fade-in {
-                  animation: fadeIn 0.5s ease-in-out;
-                }
-                
-                @keyframes fadeIn {
-                  from {
-                    opacity: 0;
-                    transform: translateY(10px);
-                  }
-                  to {
-                    opacity: 1;
-                    transform: translateY(0);
-                  }
-                }
-                
-                .onsaas-prose h1,
-                .onsaas-prose h2,
-                .onsaas-prose h3,
-                .onsaas-prose h4 {
-                  color: #1a202c;
-                  font-weight: 700;
-                  line-height: 1.2;
-                  margin-top: 1.5rem;
-                  margin-bottom: 0.75rem;
-                  scroll-margin-top: 120px;
-                }
-                
-                .onsaas-prose h1 {
-                  font-size: 2.5rem;
-                  margin-top: 0;
-                }
-                
-                .onsaas-prose h2 {
-                  font-size: 2rem;
-                  color: #2d3748;
-                  border-bottom: 1px solid #e2e8f0;
-                  padding-bottom: 0.5rem;
-                  margin-top: 2rem;
-                }
-                
-                .onsaas-prose h3 {
-                  font-size: 1.5rem;
-                  color: #2d3748;
-                }
-                
-                .onsaas-prose p {
-                  margin-bottom: 1rem;
-                  color: #4a5568;
-                  font-size: 1.125rem;
-                  line-height: 1.7;
-                }
-                
-                .onsaas-prose ul,
-                .onsaas-prose ol {
-                  margin-bottom: 1.25rem;
-                  margin-top: 0.75rem;
-                  padding-left: 2rem;
-                }
-                
-                .onsaas-prose li {
-                  margin-bottom: 0.5rem;
-                  color: #4a5568;
-                  line-height: 1.6;
-                }
-                
-                .onsaas-prose li::marker {
-                  color: #667eea;
-                }
-                
-                .onsaas-prose a {
-                  color: #667eea;
-                  text-decoration: underline;
-                  text-decoration-color: rgba(102, 126, 234, 0.4);
-                  text-underline-offset: 0.25rem;
-                  transition: all 0.2s ease;
-                }
-                
-                .onsaas-prose a:hover {
-                  color: #5a67d8;
-                  text-decoration-color: rgba(90, 103, 216, 0.8);
-                }
-                
-                .onsaas-prose blockquote {
-                  border-left: 4px solid #667eea;
-                  padding-left: 1.5rem;
-                  margin: 1.5rem 0;
-                  color: #2d3748;
-                  font-style: italic;
-                  background: #f7fafc;
-                  padding: 1.5rem;
-                  border-radius: 0.5rem;
-                }
-                
-                .onsaas-prose code {
-                  background-color: #edf2f7;
-                  color: #d53f8c;
-                  padding: 0.25rem 0.5rem;
-                  border-radius: 0.375rem;
-                  font-size: 0.875rem;
-                  font-weight: 600;
-                }
-                
-                .onsaas-prose pre {
-                  background: #2d3748;
-                  color: #e2e8f0;
-                  padding: 1.5rem;
-                  border-radius: 0.75rem;
-                  overflow-x: auto;
-                  margin: 1.5rem 0;
-                  font-size: 0.875rem;
-                  line-height: 1.6;
-                }
-                
-                .onsaas-prose pre code {
-                  background: transparent;
-                  color: inherit;
-                  padding: 0;
-                  border-radius: 0;
-                  font-size: inherit;
-                  font-weight: normal;
-                }
-                
-                .onsaas-prose img {
-                  border-radius: 0.75rem;
-                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-                  margin: 2rem 0;
-                  width: 100%;
-                }
-
-                /* Clickable image styles */
-                .clickable-cover-image {
-                  position: relative;
-                  display: block;
-                  cursor: pointer;
-                  transition: all 0.3s ease;
-                  border-radius: 0.75rem;
-                  overflow: hidden;
-                  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-                }
-
-                .clickable-cover-image:hover {
-                  transform: translateY(-2px);
-                  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-                }
-
-                .clickable-cover-image:hover img {
-                  transform: scale(1.02);
-                }
-
-                .clickable-cover-image img {
-                  transition: transform 0.3s ease;
-                  margin: 0;
-                  box-shadow: none;
-                  border-radius: 0;
-                }
-
-                .cover-image-overlay {
-                  position: absolute;
-                  top: 0;
-                  left: 0;
-                  right: 0;
-                  bottom: 0;
-                  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(90, 103, 216, 0.1));
-                  opacity: 0;
-                  transition: opacity 0.3s ease;
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-                }
-
-                .clickable-cover-image:hover .cover-image-overlay {
-                  opacity: 1;
-                }
-
-                .click-indicator {
-                  background: rgba(255, 255, 255, 0.95);
-                  color: #667eea;
-                  padding: 0.75rem 1.5rem;
-                  border-radius: 2rem;
-                  font-weight: 600;
-                  font-size: 0.875rem;
-                  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-                  transform: translateY(10px);
-                  transition: transform 0.3s ease;
-                }
-
-                .clickable-cover-image:hover .click-indicator {
-                  transform: translateY(0);
-                }
-                
-                .onsaas-prose table {
-                  width: 100%;
-                  border-collapse: collapse;
-                  margin: 1.5rem 0;
-                  border-radius: 0.5rem;
-                  overflow: hidden;
-                  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-                }
-                
-                .onsaas-prose th,
-                .onsaas-prose td {
-                  border: 1px solid #e2e8f0;
-                  padding: 1rem;
-                  text-align: left;
-                }
-                
-                .onsaas-prose th {
-                  background: #f7fafc;
-                  font-weight: 600;
-                  color: #2d3748;
-                }
-                
-                /* Mobile optimizations */
-                @media (max-width: 768px) {
-                  .onsaas-prose h1 {
-                    font-size: 2rem;
-                  }
-                  
-                  .onsaas-prose h2 {
-                    font-size: 1.75rem;
-                    margin-top: 1.5rem;
-                  }
-                  
-                  .onsaas-prose h3 {
-                    font-size: 1.375rem;
-                  }
-                  
-                  .onsaas-prose p {
-                    font-size: 1.1rem;
-                    margin-bottom: 0.875rem;
-                  }
-
-                  .onsaas-prose ul,
-                  .onsaas-prose ol {
-                    margin-bottom: 1rem;
-                    margin-top: 0.5rem;
-                  }
-
-                  .onsaas-prose li {
-                    margin-bottom: 0.4rem;
-                  }
-                  
-                  .onsaas-prose pre {
-                    padding: 1rem;
-                    font-size: 0.8rem;
-                    margin: 1.25rem 0;
-                  }
-                  
-                  .onsaas-prose table {
-                    font-size: 0.875rem;
-                    margin: 1.25rem 0;
-                  }
-                  
-                  .onsaas-prose th,
-                  .onsaas-prose td {
-                    padding: 0.75rem;
-                  }
-
-                  .onsaas-prose blockquote {
-                    margin: 1.25rem 0;
-                  }
-
-                  .click-indicator {
-                    font-size: 0.75rem;
-                    padding: 0.5rem 1rem;
-                  }
-                }
-              `}</style>
-
-              {/* Cover Image - Clickable if affiliate link exists */}
-              {post.coverImage && (
-                <div className="mb-8">
-                  {post.affiliateLink ? (
-                    <a
-                      href={post.affiliateLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="clickable-cover-image"
-                      aria-label={`Try ${post.title} - Click to learn more`}
-                    >
-                      <img
-                        src={post.coverImage}
-                        alt={post.title}
-                        className="w-full h-64 sm:h-100 object-cover object-top rounded-xl shadow-lg"
-                      />
-                      <div className="cover-image-overlay">
-                        <div className="click-indicator">
-                          Click to Try →
-                        </div>
-                      </div>
-                    </a>
-                  ) : (
-                    <img
-                      src={post.coverImage}
-                      alt={post.title}
-                      className="w-full h-64 sm:h-80 object-cover rounded-xl shadow-lg"
-                    />
-                  )}
+        {/* Cover Image with Affiliate Link Support */}
+        {post.coverImage && (
+          <div className="mb-12 -mx-6 sm:-mx-8">
+            {post.affiliateLink ? (
+              <a
+                href={post.affiliateLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block relative group"
+              >
+                <img
+                  src={post.coverImage}
+                  alt={post.title}
+                  className="w-full max-h-[500px] object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300 flex items-center justify-center">
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white px-4 py-2 rounded-full text-sm font-medium text-gray-900 shadow-lg">
+                    Click to Try →
+                  </div>
                 </div>
-              )}
-
-              {children}
-            </article>
-
-            {/* 🎯 SINGLE AD: After Article Content */}
-            <div className="mt-16 mb-12">
-              <AdBanner 
-                dataAdSlot={AD_SLOTS.BLOG_TOP}
-                dataAdFormat="auto"
-                className="my-8"
+              </a>
+            ) : (
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="w-full max-h-[500px] object-cover"
               />
-            </div>
-          </main>
+            )}
+          </div>
+        )}
+
+        {/* Article Content with Medium Typography */}
+        <div className="medium-prose">
+          <style jsx global>{`
+            .medium-prose {
+              font-family: charter, Georgia, Cambria, "Times New Roman", Times, serif;
+              color: #242424;
+              line-height: 1.58;
+            }
+            
+            .medium-prose > * {
+              margin-bottom: 0;
+            }
+            
+            .medium-prose h1,
+            .medium-prose h2,
+            .medium-prose h3,
+            .medium-prose h4 {
+              font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+              font-weight: 700;
+              color: #242424;
+              line-height: 1.2;
+              letter-spacing: -0.02em;
+            }
+            
+            .medium-prose h1 {
+              font-size: 2.5em;
+              margin-top: 2em;
+              margin-bottom: 0.25em;
+            }
+            
+            .medium-prose h2 {
+              font-size: 2em;
+              margin-top: 1.8em;
+              margin-bottom: 0.25em;
+            }
+            
+            .medium-prose h3 {
+              font-size: 1.5em;
+              margin-top: 1.6em;
+              margin-bottom: 0.25em;
+            }
+            
+            .medium-prose p {
+              font-size: 20px;
+              line-height: 1.58;
+              letter-spacing: -0.003em;
+              margin-top: 0;
+              margin-bottom: 1.58em;
+              color: #242424;
+            }
+            
+            .medium-prose a {
+              color: inherit;
+              text-decoration: underline;
+              text-decoration-color: rgba(0, 0, 0, 0.3);
+              text-underline-offset: 2px;
+              transition: text-decoration-color 0.2s;
+            }
+            
+            .medium-prose a:hover {
+              text-decoration-color: rgba(0, 0, 0, 0.8);
+            }
+            
+            .medium-prose strong,
+            .medium-prose b {
+              font-weight: 700;
+              color: #242424;
+            }
+            
+            .medium-prose em,
+            .medium-prose i {
+              font-style: italic;
+            }
+            
+            .medium-prose code {
+              background-color: rgba(0, 0, 0, 0.05);
+              padding: 3px 6px;
+              border-radius: 3px;
+              font-size: 16px;
+              font-family: Menlo, Monaco, "Courier New", Courier, monospace;
+              color: #242424;
+            }
+            
+            .medium-prose pre {
+              background-color: #f7f7f7;
+              border-radius: 4px;
+              padding: 20px;
+              overflow-x: auto;
+              margin: 1.58em 0;
+              font-size: 16px;
+              line-height: 1.5;
+            }
+            
+            .medium-prose pre code {
+              background: none;
+              padding: 0;
+              font-size: inherit;
+            }
+            
+            .medium-prose blockquote {
+              border-left: 3px solid #242424;
+              padding-left: 23px;
+              margin-left: -23px;
+              margin-right: 0;
+              font-style: italic;
+              color: #242424;
+              font-size: 21px;
+              line-height: 1.58;
+              margin-top: 1.58em;
+              margin-bottom: 1.58em;
+            }
+            
+            .medium-prose ul,
+            .medium-prose ol {
+              padding-left: 30px;
+              margin-top: 1.58em;
+              margin-bottom: 1.58em;
+            }
+            
+            .medium-prose li {
+              margin-bottom: 14px;
+              line-height: 1.58;
+              font-size: 20px;
+            }
+            
+            .medium-prose li p {
+              margin-bottom: 0;
+            }
+            
+            .medium-prose img {
+              width: 100%;
+              height: auto;
+              margin: 1.58em 0;
+            }
+            
+            .medium-prose hr {
+              border: 0;
+              border-top: 1px solid rgba(0, 0, 0, 0.1);
+              margin: 2.5em 0;
+            }
+            
+            .medium-prose table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 1.58em 0;
+            }
+            
+            .medium-prose th,
+            .medium-prose td {
+              border: 1px solid #e6e6e6;
+              padding: 12px;
+              text-align: left;
+              font-size: 18px;
+            }
+            
+            .medium-prose th {
+              background-color: #f7f7f7;
+              font-weight: 600;
+            }
+            
+            /* Mobile Responsive */
+            @media (max-width: 768px) {
+              .medium-prose p,
+              .medium-prose li {
+                font-size: 18px;
+              }
+              
+              .medium-prose h2 {
+                font-size: 1.75em;
+              }
+              
+              .medium-prose h3 {
+                font-size: 1.375em;
+              }
+              
+              .medium-prose blockquote {
+                font-size: 19px;
+                padding-left: 20px;
+                margin-left: -20px;
+              }
+              
+              .medium-prose code {
+                font-size: 14px;
+              }
+              
+              .medium-prose pre {
+                font-size: 14px;
+                padding: 16px;
+              }
+            }
+          `}</style>
+          
+          {children}
         </div>
+
+        {/* Ad Banner */}
+        <div className="my-12 py-8 border-y border-gray-100">
+          <AdBanner 
+            dataAdSlot={AD_SLOTS.BLOG_TOP}
+            dataAdFormat="auto"
+            className="my-8"
+          />
+        </div>
+
+        {/* Tags */}
+        {post.tags && post.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-12">
+            {post.tags.map(tag => (
+              <Link
+                key={tag}
+                href={`/blog?tag=${tag}`}
+                className="px-4 py-2 bg-[#F2F2F2] hover:bg-[#E6E6E6] rounded-full text-[14px] font-normal text-[#242424] transition-colors"
+              >
+                {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+              </Link>
+            ))}
+          </div>
+        )}
+
+     
+
+        {/* Roadmap CTA */}
+        <div className="mt-12 p-8 bg-[#F9F9F9] rounded-lg border border-[#E6E6E6]">
+          <h3 className="text-[24px] font-bold text-[#242424] mb-3">
+             Ready to level up your career?
+          </h3>
+          <p className="text-[16px] text-[#6B6B6B] mb-6 leading-relaxed">
+            Explore our interactive career roadmaps designed to guide you from junior to expert, step by step.
+          </p>
+          <Link
+            href="/roadmaps"
+            className="inline-block px-6 py-3 bg-[#242424] text-white rounded-full text-[14px] font-medium hover:bg-[#000000] transition-colors"
+          >
+            View Roadmaps →
+          </Link>
+        </div>
+
+        {/* Back to Top Button */}
+        <button
+          onClick={scrollToTop}
+          className="mt-12 flex items-center gap-2 text-[14px] text-[#6B6B6B] hover:text-[#242424] transition-colors mx-auto"
+        >
+          <ChevronUp className="w-4 h-4" />
+          Back to top
+        </button>
+      </article>
+
+      {/* Mobile Floating Action Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-6 py-4 flex items-center justify-between z-50 shadow-lg">
+        <div className="flex items-center gap-6">
+          <button className="text-[#6B6B6B] hover:text-[#242424]">
+            <Bookmark className="w-6 h-6" />
+          </button>
+          <button 
+            onClick={() => setShowShareMenu(!showShareMenu)}
+            className="text-[#6B6B6B] hover:text-[#242424]"
+          >
+            <Share2 className="w-6 h-6" />
+          </button>
+        </div>
+        <button 
+          onClick={scrollToTop}
+          className="text-[#6B6B6B] hover:text-[#242424]"
+        >
+          <ChevronUp className="w-6 h-6" />
+        </button>
       </div>
     </div>
   );
