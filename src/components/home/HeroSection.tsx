@@ -45,7 +45,7 @@ const HeroSection = () => {
             ease: [0.25, 0.1, 0.25, 1]
           }}
         >
-          Land your next role.{' '}
+          Land your next tech role.{' '}
           <span className="text-[#1E40AF]">Quickly.</span>
         </motion.h2>
         

@@ -1,9 +1,8 @@
-// src/components/home/RoadmapCard.tsx
 'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Clock, TrendingUp } from 'lucide-react';
+import { Clock, TrendingUp, Tags } from 'lucide-react';
 import { Roadmap } from '@/types/roadmap';
 
 interface RoadmapCardProps {
@@ -15,105 +14,73 @@ const RoadmapCard = ({ roadmap, index }: RoadmapCardProps) => {
   const getDemandColor = (level: string) => {
     switch (level) {
       case 'Very High':
-        return 'bg-green-100 text-green-700';
+        return 'bg-green-50 text-green-700 border-green-200';
       case 'High':
-        return 'bg-blue-100 text-blue-700';
+        return 'bg-blue-50 text-blue-700 border-blue-200';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'bg-gray-50 text-gray-700 border-gray-200';
     }
   };
 
   return (
     <Link href={`/roadmaps/${roadmap.id}`}>
       <motion.div
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 15 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-50px" }}
-        transition={{ 
-          duration: 0.6, 
-          delay: index * 0.1,
-          ease: [0.22, 1, 0.36, 1] 
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{
+          duration: 0.35,
+          delay: index * 0.05,
+          ease: [0.22, 1, 0.36, 1],
         }}
-        whileHover={{ y: -8, scale: 1.02 }}
-        className="group bg-white rounded-3xl border border-gray-200 hover:border-gray-300 p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-gray-200/60 block"
+        whileHover={{ y: -3, scale: 1.015 }}
+        className="group bg-white rounded-xl border border-gray-200 hover:border-gray-300 
+                   p-5.5 shadow-sm hover:shadow-md transition-all duration-300 block"
       >
-        <div className="mb-6">
-          <motion.span 
-            className={`inline-block px-4 py-2 rounded-full text-xs font-medium ${getDemandColor(roadmap.demandLevel)}`}
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ 
-              delay: 0.2 + (index * 0.1), 
-              type: "spring", 
-              stiffness: 200 
-            }}
-            whileHover={{ scale: 1.1 }}
+        {/* Demand Badge */}
+        <div className="mb-3">
+          <span
+            className={`inline-flex items-center px-3 py-1 text-xs font-medium rounded-full border ${getDemandColor(
+              roadmap.demandLevel
+            )}`}
           >
+            <TrendingUp className="w-3.5 h-3.5 mr-1" />
             {roadmap.demandLevel} Demand
-          </motion.span>
+          </span>
         </div>
 
-        <motion.h3 
-          className="text-xl font-medium text-gray-900 mb-4 group-hover:text-blue-600 transition-colors"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 + (index * 0.1) }}
-        >
+        {/* Title */}
+        <h3 className="text-[15px] font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
           {roadmap.title}
-        </motion.h3>
-        
-        <motion.p 
-          className="text-gray-600 mb-6 line-clamp-2 text-sm leading-relaxed"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 + (index * 0.1) }}
-        >
-          {roadmap.description}
-        </motion.p>
+        </h3>
 
-        <div className="flex items-center gap-6 mb-6 text-xs text-gray-400">
-          <motion.div 
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5 + (index * 0.1) }}
-          >
-            <div className="w-4 h-4 rounded-full bg-blue-100 flex items-center justify-center">
-              <Clock className="w-2.5 h-2.5 text-blue-600" />
-            </div>
+        {/* Description */}
+        <p className="text-[13px] text-gray-600 mb-3 line-clamp-2 leading-snug">
+          {roadmap.description}
+        </p>
+
+        {/* Meta Section */}
+        <div className="flex items-center gap-4 mb-3 text-[12px] text-gray-500">
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5 text-blue-600" />
             {roadmap.totalDuration}
-          </motion.div>
-          
-          <motion.div 
-            className="flex items-center gap-2"
-            initial={{ opacity: 0, x: -10 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.6 + (index * 0.1) }}
-          >
-            <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center">
-              <TrendingUp className="w-2.5 h-2.5 text-green-600" />
-            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <Tags className="w-3.5 h-3.5 text-gray-600" />
             {roadmap.level}
-          </motion.div>
+          </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {roadmap.tags.slice(0, 3).map((tag: string, tagIndex: number) => (
-            <motion.span
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5">
+          {roadmap.tags.slice(0, 3).map((tag, tagIndex) => (
+            <span
               key={`${roadmap.id}-tag-${tag}-${tagIndex}`}
-              className="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded-full"
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.7 + (tagIndex * 0.05) }}
+              className="px-2.5 py-[3px] bg-gray-100 text-gray-700 text-[11px] font-medium rounded-full"
             >
               {tag}
-            </motion.span>
+            </span>
           ))}
         </div>
       </motion.div>
