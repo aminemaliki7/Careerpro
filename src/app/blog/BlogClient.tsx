@@ -2,7 +2,8 @@
 'use client';
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp, Filter } from 'lucide-react';
+import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp, Filter, Headphones } from 'lucide-react';
+import { motion } from 'framer-motion';
 import type { BlogPostWithContent } from '@/types/blog';
 
 interface BlogClientProps {
@@ -151,9 +152,16 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     0{index + 1}
                   </span>
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                      {post.title}
-                    </h3>
+                    <div className="flex items-start gap-2">
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
+                        {post.title}
+                      </h3>
+                      {post.audioUrl && (
+                        <span className="flex items-center gap-1 px-1.5 py-0.5 bg-gray-900 rounded-full flex-shrink-0">
+                          <Headphones className="w-3 h-3 text-white" />
+                        </span>
+                      )}
+                    </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
                       <span className="truncate">{formatDate(post.publishedAt)}</span>
                       <span>·</span>
@@ -217,7 +225,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             {/* Posts List */}
             {filteredPosts.length > 0 ? (
               <div className="space-y-8 sm:space-y-12">
-                {filteredPosts.map((post) => (
+                {filteredPosts.map((post, index) => (
                   <article
                     key={post.slug}
                     className="group"
@@ -225,9 +233,12 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     <Link href={`/blog/${post.slug}`} className="flex gap-4 sm:gap-8">
                       <div className="flex-1 min-w-0">
                         {/* Title */}
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                          {post.title}
-                        </h2>
+                        <div className="flex items-start gap-2 mb-1.5 sm:mb-2">
+                          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
+                            {post.title}
+                          </h2>
+                         
+                        </div>
 
                         {/* Description */}
                         <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 hidden sm:block">
@@ -257,12 +268,28 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
 
                       {/* Thumbnail */}
                       {post.coverImage && (
-                        <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0">
+                        <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0 relative">
                           <img
                             src={post.coverImage}
                             alt={post.title}
                             className="w-full h-full object-cover rounded sm:rounded-none"
                           />
+                          {post.audioUrl && (
+                            <motion.div 
+                              className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-gray-900/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-0.5 sm:gap-1"
+                              initial={{ opacity: 0, scale: 0.8 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: 0.2 + (index * 0.05) }}
+                              aria-label="Audio content available"
+                              role="status"
+                            >
+                              <Headphones className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" aria-hidden="true" />
+                              <span className="text-[9px] sm:text-[10px] font-semibold text-white uppercase tracking-wider hidden xs:inline">
+                                Audio
+                              </span>
+                            </motion.div>
+                          )}
                         </div>
                       )}
                     </Link>

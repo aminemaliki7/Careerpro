@@ -3,7 +3,8 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { getAllPostSlugs, getPostBySlug } from '@/lib/posts';
 import BlogLayout from '@/components/blog/BlogLayout';
-
+import {AudioPlayer} from '@/components/blog/AudioPlayer';
+ 
 interface BlogPostPageProps {
   params: Promise<{
     slug: string;
@@ -69,14 +70,13 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
  
   return (
     <BlogLayout post={post}>
+      {/* Audio Player - Shows if audioUrl exists */}
+      {post.audioUrl && <AudioPlayer audioUrl={post.audioUrl} title={post.title} />}
       
-
       <div 
         className="prose max-w-none"
         dangerouslySetInnerHTML={{ __html: post.content }} 
       />
-
-      
     </BlogLayout>
   );
 }
