@@ -54,7 +54,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-6">
+          <nav className="hidden md:flex space-x-11">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
