@@ -5,9 +5,10 @@ export const AD_SLOTS = {
   HOMEPAGE_BOTTOM: 'YOUR_SLOT_ID_HERE',
   
   // Blog ads
-  BLOG_TOP: '7664951801',           
+  BLOG_TOP: 'YOUR_SLOT_ID_HERE',           
   BLOG_IN_CONTENT: 'YOUR_SLOT_ID_HERE', 
-  BLOG_SIDEBAR: 'YOUR_SLOT_ID_HERE', 
+  BLOG_SIDEBAR: '9198296805',
+
   BLOG_BOTTOM: 'YOUR_SLOT_ID_HERE', 
   
   // Job listing ads
