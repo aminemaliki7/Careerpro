@@ -14,6 +14,8 @@ import {
   LogIn,
   UserPlus,
   Headphones,
+  Compass,
+  BookOpen,
 } from 'lucide-react';
 import {
   SignInButton,
@@ -33,9 +35,10 @@ export default function Header() {
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Blog', href: '/blog', icon: FileText },
-     { name: 'Jobs', href: '/jobs', icon: Briefcase },
+    { name: 'Jobs', href: '/jobs', icon: Briefcase },
     { name: 'Podcast', href: '/podcast', icon: Headphones },
-    { name: 'Roadmaps', href: '/roadmaps', icon: MapPin },
+{ name: 'Paths', href: '/roadmaps', icon: BookOpen }
+
   ];
 
   return (
