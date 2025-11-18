@@ -37,7 +37,7 @@ export default function Header() {
     { name: 'Blog', href: '/blog', icon: FileText },
     { name: 'Jobs', href: '/jobs', icon: Briefcase },
     { name: 'Podcast', href: '/podcast', icon: Headphones },
-{ name: 'Paths', href: '/roadmaps', icon: BookOpen }
+    { name: 'Paths', href: '/roadmaps', icon: BookOpen }
 
   ];
 
