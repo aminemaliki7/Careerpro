@@ -73,10 +73,8 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       {/* Audio Player - Shows if audioUrl exists */}
       {post.audioUrl && <AudioPlayer audioUrl={post.audioUrl} title={post.title} />}
       
-      <div 
-        className="prose max-w-none"
-        dangerouslySetInnerHTML={{ __html: post.content }} 
-      />
+      {/* REMOVED the prose class here - it's now handled in BlogLayout */}
+      <div dangerouslySetInnerHTML={{ __html: post.content }} />
     </BlogLayout>
   );
 }

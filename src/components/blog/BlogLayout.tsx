@@ -171,34 +171,32 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
         </div>
       </header>
 
-      {/* Main Article Content - Medium Style */}
+      {/* Main Article Content */}
       <article className="max-w-[680px] mx-auto px-6 pt-14 pb-20">
-        {/* Title - Large and Bold like Medium */}
-        <h1 className="text-[42px] leading-[52px] font-serif font-bold text-gray-900 mb-2 tracking-tight">
+        {/* Title */}
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
           {post.title}
         </h1>
 
         {/* Subtitle/Description */}
         {post.description && (
-          <h2 className="text-[22px] leading-[32px] text-gray-600 mb-8 font-serif">
+          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
             {post.description}
-          </h2>
+          </p>
         )}
 
-        {/* Author and Meta Info - Medium Style */}
+        {/* Author and Meta Info */}
         <div className="flex items-center gap-3 pb-8 mb-8 border-b border-gray-200">
-          {/* Author Avatar Placeholder */}
-          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg flex-shrink-0">
+          {/* Author Avatar */}
+          <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
             {post.author ? post.author[0].toUpperCase() : 'H'}
           </div>
 
           <div className="flex-1">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-gray-900">
-                {post.author || 'Hirely'}
-              </span>
+            <div className="text-sm font-medium text-gray-900">
+              {post.author || 'Hirely'}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600 mt-0.5">
+            <div className="flex items-center gap-2 text-sm text-gray-500 mt-0.5">
               <span>{formatDate(post.publishedAt)}</span>
               <span>·</span>
               <span>{post.readingTime || 5} min read</span>
@@ -233,65 +231,84 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           </div>
         </div>
 
-        {/* Cover Image - Full Width */}
+        {/* Cover Image */}
         {post.coverImage && (
           <div className="mb-10 -mx-6">
             <img
               src={post.coverImage}
               alt={post.title}
-              className="w-full h-auto"
+              className="w-full h-auto rounded-lg"
             />
           </div>
         )}
 
- <div
-  className="
-    prose max-w-none
+        {/* Article Content - Clean & Relaxed */}
+        <div className="prose prose-lg max-w-none
+          /* Simple neutral headings */
+          prose-headings:text-gray-900
+          prose-headings:font-normal
+          prose-h2:text-2xl
+          prose-h2:mt-12
+          prose-h2:mb-4
+          prose-h2:font-semibold
+          prose-h3:text-xl
+          prose-h3:mt-8
+          prose-h3:mb-3
+          
+          /* Comfortable paragraph spacing */
+          prose-p:text-gray-700
+          prose-p:leading-relaxed
+          prose-p:mb-6
+          
+          /* Simple underlined links */
+          prose-a:text-gray-900
+          prose-a:underline
+          prose-a:decoration-gray-300
+          prose-a:underline-offset-2
+          hover:prose-a:decoration-gray-600
+          
+          /* Clean lists */
+          prose-ul:my-6
+          prose-li:text-gray-700
+          prose-li:leading-relaxed
+          prose-li:my-2
+          
+          /* Minimal blockquote */
+          prose-blockquote:border-l-2
+          prose-blockquote:border-gray-300
+          prose-blockquote:pl-4
+          prose-blockquote:italic
+          prose-blockquote:text-gray-600
+          prose-blockquote:not-italic
+          
+          /* Subtle images */
+          prose-img:rounded-lg
+          prose-img:my-8
+          
+          /* Clean code blocks */
+          prose-code:text-sm
+          prose-code:bg-gray-100
+          prose-code:text-gray-800
+          prose-code:px-1.5
+          prose-code:py-0.5
+          prose-code:rounded
+          prose-code:font-mono
+          prose-code:before:content-none
+          prose-code:after:content-none
+          
+          prose-pre:bg-gray-50
+          prose-pre:border
+          prose-pre:border-gray-200
+          prose-pre:text-gray-800
+          
+          /* Better strong/bold */
+          prose-strong:text-gray-900
+          prose-strong:font-semibold
+        ">
+          {children}
+        </div>
 
-    /* HEADINGS */
-    prose-headings:font-serif 
-    prose-headings:font-bold 
-    prose-headings:text-gray-900
-    prose-h1:text-[42px] prose-h1:leading-[48px] prose-h1:tracking-tight prose-h1:mb-6 prose-h1:mt-14
-    prose-h2:text-[30px] prose-h2:leading-[38px] prose-h2:text-indigo-700 prose-h2:font-semibold prose-h2:mb-4 prose-h2:mt-10
-    prose-h3:text-[24px] prose-h3:leading-[32px] prose-h3:text-indigo-600 prose-h3:font-medium prose-h3:mb-3 prose-h3:mt-8
-
-    /* PARAGRAPHS */
-    prose-p:text-[20px] prose-p:leading-[32px] prose-p:text-gray-800 prose-p:mb-7 prose-p:font-serif
-
-    /* LINKS — highlighted */
-    prose-a:text-indigo-700 
-    prose-a:font-semibold 
-    prose-a:no-underline 
-    prose-a:border-b-2 
-    prose-a:border-indigo-300 
-    hover:prose-a:border-indigo-600
-
-    /* LISTS */
-    prose-li:text-[20px] prose-li:leading-[30px] prose-li:text-gray-800 prose-li:mb-1
-
-    /* BLOCKQUOTE */
-    prose-blockquote:border-l-4 prose-blockquote:border-indigo-600 
-    prose-blockquote:bg-indigo-50 prose-blockquote:px-4 prose-blockquote:py-3 
-    prose-blockquote:rounded-md prose-blockquote:italic prose-blockquote:text-gray-700
-
-    /* IMAGES */
-    prose-img:rounded-xl prose-img:shadow-md prose-img:my-10
-
-    /* CODE */
-    prose-code:bg-gray-900 prose-code:text-white prose-code:px-2 prose-code:py-1 
-    prose-code:rounded-md prose-code:text-sm
-
-    /* PRE */
-    prose-pre:bg-gray-900 prose-pre:text-gray-50 prose-pre:p-4 prose-pre:rounded-lg prose-pre:shadow-inner
-  "
->
-  {children}
-</div>
-
-
-
-        {/* Tags - Medium Style */}
+        {/* Tags */}
         {post.tags && post.tags.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-gray-200">
             {post.tags.map((tag) => (
