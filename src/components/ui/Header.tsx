@@ -38,7 +38,6 @@ export default function Header() {
     { name: 'Jobs', href: '/jobs', icon: Briefcase },
     { name: 'Podcast', href: '/podcast', icon: Headphones },
     { name: 'Paths', href: '/roadmaps', icon: BookOpen }
-
   ];
 
   return (
@@ -75,34 +74,40 @@ export default function Header() {
 
           {/* Auth + User Section */}
           <div className="flex items-center space-x-4">
+            {/* Desktop Auth Buttons - Hidden on Mobile */}
             <SignedOut>
-              <SignInButton>
-                <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-1 rounded-md transition-colors duration-200">
-                  <LogIn className="w-5 h-5 mr-1" /> Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton>
-                <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md transition-all duration-200">
-                  <UserPlus className="w-5 h-5 mr-1" /> Get Started
-                </button>
-              </SignUpButton>
+              <div className="hidden md:flex items-center space-x-4">
+                <SignInButton>
+                  <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-1 rounded-md transition-colors duration-200">
+                    <LogIn className="w-5 h-5 mr-1" /> Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md transition-all duration-200">
+                    <UserPlus className="w-5 h-5 mr-1" /> Get Started
+                  </button>
+                </SignUpButton>
+              </div>
             </SignedOut>
+            
+            {/* User Button - Visible on All Screens */}
             <SignedIn>
               <UserButton
                 appearance={{
                   elements: {
                     avatarBox:
-                      'w-8 h-8 ring-1 ring-gray-300 hover:ring-blue-500 transition-all duration-200',
+                      'w-8 h-8 rounded-full ring-1 ring-gray-300 hover:ring-blue-500 transition-all duration-200',
                   },
                 }}
               />
             </SignedIn>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
                 className="text-gray-700 hover:text-blue-600 p-2 rounded-md focus:outline-none"
+                aria-label="Toggle menu"
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -110,35 +115,28 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
           <div className="md:hidden mt-2 border-t border-gray-200 bg-white">
             <div className="px-2 py-3 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md transition-colors duration-200"
-                >
-                  <item.icon className="w-5 h-5 mr-2" />
-                  {item.name}
-                </Link>
-              ))}
-              <div className="mt-2 flex flex-col space-y-2">
-                <SignedOut>
-                  <SignInButton>
-                    <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-2 rounded-md transition-colors duration-200">
-                      <LogIn className="w-5 h-5 mr-1" /> Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton>
-                    <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-md transition-all duration-200">
-                      <UserPlus className="w-5 h-5 mr-1" /> Get Started
-                    </button>
-                  </SignUpButton>
-                </SignedOut>
-              </div>
+              {navigation.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center px-3 py-2 rounded-md transition-colors duration-200 ${
+                      isActive 
+                        ? 'text-blue-700 bg-blue-50' 
+                        : 'text-gray-700 hover:text-blue-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    <item.icon className="w-5 h-5 mr-2" />
+                    {item.name}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
