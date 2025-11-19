@@ -230,9 +230,9 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
       {/* Hero Header - Clean Podcast Style */}
       <div className="border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <div className="flex flex-col lg:flex-row items-start gap-6 sm:gap-8 lg:gap-12">
+          <div className="flex items-start gap-4 sm:gap-6 lg:gap-12">
             {/* Podcast Cover */}
-            <div className="w-32 h-32 sm:w-40 sm:h-40 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
+            <div className="w-24 h-24 sm:w-40 sm:h-40 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
               <Image
                 src="/images/podcast.png"
                 alt="Career Insights Podcast"
@@ -243,22 +243,22 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
             </div>
             
             {/* Podcast Info */}
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                <Headphones className="w-4 h-4 text-gray-600" />
-                <span className="text-xs font-semibold uppercase tracking-wider text-gray-600">Podcast</span>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-1.5 sm:mb-3">
+                <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
+                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Podcast</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-gray-900 mb-2 sm:mb-3 leading-tight">
+              <h1 className="text-xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-gray-900 mb-1.5 sm:mb-3 leading-tight">
                 Career Insights
               </h1>
-              <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-4 sm:mb-6 max-w-2xl leading-relaxed">
+              <p className="text-xs sm:text-lg lg:text-xl text-gray-600 mb-3 sm:mb-6 leading-relaxed">
                 Expert advice on job searching, career growth, and navigating the tech industry
               </p>
               
-              <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
-                <span className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-gray-900 flex items-center justify-center">
-                    <User className="w-3 h-3 text-white" />
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm text-gray-600">
+                <span className="flex items-center gap-1.5 sm:gap-2">
+                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-900 flex items-center justify-center">
+                    <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
                   </div>
                   Career Hub
                 </span>
