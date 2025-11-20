@@ -180,7 +180,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
         {/* Subtitle/Description */}
         {post.description && (
-          <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+          <p className="text-xl text-gray-800 md:text-gray-600 mb-8 leading-relaxed">
             {post.description}
           </p>
         )}
@@ -196,7 +196,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
             <div className="text-sm font-medium text-gray-900">
               {post.author || 'Hirely'}
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500 mt-0.5">
+            <div className="flex items-center gap-2 text-sm text-gray-600 md:text-gray-500 mt-0.5">
               <span>{formatDate(post.publishedAt)}</span>
               <span>·</span>
               <span>{post.readingTime || 5} min read</span>
@@ -242,7 +242,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           </div>
         )}
 
-        {/* Article Content - Clean & Relaxed */}
+        {/* Article Content - Improved Mobile Readability */}
         <div className="prose prose-lg max-w-none
           /* Simple neutral headings */
           prose-headings:text-gray-900
@@ -255,30 +255,35 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           prose-h3:mt-8
           prose-h3:mb-3
           
-          /* Comfortable paragraph spacing */
-          prose-p:text-gray-700
+          /* Better mobile paragraph readability - darker text */
+          prose-p:text-gray-800
+          md:prose-p:text-gray-700
           prose-p:leading-relaxed
           prose-p:mb-6
           
-          /* Simple underlined links */
+          /* Simple underlined links - more visible on mobile */
           prose-a:text-gray-900
           prose-a:underline
-          prose-a:decoration-gray-300
+          prose-a:decoration-gray-400
+          md:prose-a:decoration-gray-300
           prose-a:underline-offset-2
           hover:prose-a:decoration-gray-600
           
-          /* Clean lists */
+          /* Clean lists - darker on mobile */
           prose-ul:my-6
-          prose-li:text-gray-700
+          prose-li:text-gray-800
+          md:prose-li:text-gray-700
           prose-li:leading-relaxed
           prose-li:my-2
           
-          /* Minimal blockquote */
+          /* Minimal blockquote - more visible on mobile */
           prose-blockquote:border-l-2
-          prose-blockquote:border-gray-300
+          prose-blockquote:border-gray-400
+          md:prose-blockquote:border-gray-300
           prose-blockquote:pl-4
           prose-blockquote:italic
-          prose-blockquote:text-gray-600
+          prose-blockquote:text-gray-700
+          md:prose-blockquote:text-gray-600
           prose-blockquote:not-italic
           
           /* Subtle images */
@@ -288,7 +293,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           /* Clean code blocks */
           prose-code:text-sm
           prose-code:bg-gray-100
-          prose-code:text-gray-800
+          prose-code:text-gray-900
+          md:prose-code:text-gray-800
           prose-code:px-1.5
           prose-code:py-0.5
           prose-code:rounded
@@ -299,7 +305,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           prose-pre:bg-gray-50
           prose-pre:border
           prose-pre:border-gray-200
-          prose-pre:text-gray-800
+          prose-pre:text-gray-900
+          md:prose-pre:text-gray-800
           
           /* Better strong/bold */
           prose-strong:text-gray-900
