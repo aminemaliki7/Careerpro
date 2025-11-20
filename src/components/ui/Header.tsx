@@ -53,7 +53,7 @@ export default function Header() {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-11">
+          <nav className="hidden md:flex space-x-11 items-center h-full">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -61,7 +61,7 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex flex-col items-center justify-center text-gray-600 hover:text-blue-700 transition-colors duration-200 ${
+                  className={`flex flex-col items-center justify-center text-gray-600 hover:text-blue-700 transition-colors duration-200 h-full ${
                     isActive ? 'text-blue-700' : ''
                   }`}
                 >
