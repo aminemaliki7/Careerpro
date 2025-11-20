@@ -76,15 +76,15 @@ export default function Header() {
           <div className="flex items-center space-x-4">
             {/* Desktop Auth Buttons - Hidden on Mobile */}
             <SignedOut>
-              <div className="hidden md:flex items-center space-x-4">
+              <div className="hidden md:flex items-center space-x-3">
                 <SignInButton>
-                  <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-1 rounded-md transition-colors duration-200">
-                    <LogIn className="w-5 h-5 mr-1" /> Sign In
+                  <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-1.5 rounded-md transition-colors duration-200 text-sm">
+                    <LogIn className="w-4 h-4 mr-1.5" /> Sign In
                   </button>
                 </SignInButton>
                 <SignUpButton>
-                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded-md transition-all duration-200">
-                    <UserPlus className="w-5 h-5 mr-1" /> Get Started
+                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md transition-all duration-200 text-sm whitespace-nowrap">
+                    <UserPlus className="w-4 h-4 mr-1.5" /> Get Started
                   </button>
                 </SignUpButton>
               </div>
