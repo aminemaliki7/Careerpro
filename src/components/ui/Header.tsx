@@ -46,14 +46,14 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
 
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center flex-1">
             <Link href="/" aria-label="Circuit Home">
-              <CircuitLogo size="sm" className="mr-6 hover:scale-105 transition-transform" />
+              <CircuitLogo size="sm" className="hover:scale-105 transition-transform" />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-11 items-center h-full">
+          <nav className="hidden md:flex space-x-11 items-center h-full flex-1 justify-center">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -73,7 +73,7 @@ export default function Header() {
           </nav>
 
           {/* Auth + User Section */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-1 justify-end">
             {/* Desktop Auth Buttons - Hidden on Mobile */}
             <SignedOut>
               <div className="hidden md:flex items-center space-x-3">
