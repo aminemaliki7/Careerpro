@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
   description:
-    'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+    'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
   icons: { icon: '/images/blog/logo.svg' },
   verification: { google: '00c4fbab1e48645b' },
   metadataBase: new URL('https://hirely.ma'),
@@ -30,16 +30,16 @@ export const metadata: Metadata = {
     locale: 'en_US',
     url: 'https://hirely.ma',
     siteName: 'Hirely.ma',
-    title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
+    title: 'Hirely - Find Tech Jobs, Career Advice & Developer Roadmaps',
     description:
-      'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+      'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
     images: [{ url: '/images/blog/logo.svg', width: 1200, height: 630, alt: 'Hirely.ma - Tech Jobs Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
+    title: 'Hirely - Find Tech Jobs, Career Advice & Developer Roadmaps',
     description:
-      'Discover daily tech job opportunities, expert career tips, and step-by-step career roadmaps to land your dream IT job.',
+      'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
     images: ['/images/blog/logo.svg'],
   },
   robots: {
@@ -47,16 +47,19 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-video-preview': -1, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  keywords: [
-    'tech jobs Morocco',
-    'IT jobs',
-    'career roadmaps',
-    'software engineer jobs',
-    'DevOps jobs',
-    'QA jobs',
-    'Morocco tech careers',
-    'job board',
-  ],
+ keywords: [
+  'tech jobs platform',
+  'software engineering careers',
+  'IT jobs worldwide',
+  'career roadmaps for developers',
+  'DevOps engineer jobs',
+  'QA automation jobs',
+  'internship opportunities',
+  'graduate tech jobs',
+  'remote tech jobs',
+  'job board for tech professionals',
+],
+
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -64,6 +67,38 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang="en">
         <head>
+          <Script
+  id="podcast-schema"
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "PodcastSeries",
+      "name": "Hirely Tech Podcast",
+      "description": "A podcast where tech professionals share real career stories, job advice, and insights on software, DevOps, QA and the tech industry.",
+      "url": "https://hirely.ma/podcast",
+      "inLanguage": "en",
+      "areaServed": {
+        "@type": "Audience",
+        "audienceType": "English speaking countries worldwide"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Hirely.ma",
+        "url": "https://hirely.ma",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://hirely.ma/images/blog/logo.svg"
+        }
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Amine"
+      }
+    })
+  }}
+/>
+
           {/* Google Tag Manager */}
           <Script
             id="gtm-script"

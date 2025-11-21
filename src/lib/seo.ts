@@ -4,20 +4,52 @@ import { BlogPost } from '@/types/blog'
 
 export const siteConfig = {
   name: 'TechCareer Pro',
-  description: 'Expert advice on CV optimization, interview preparation, and career strategy for tech professionals.',
-  url: 'https://yourdomain.com', // Update with your actual domain
+  description: 'Expert advice on tech resume optimization, interview preparation, and career strategies for software engineers in the job market.',
+  url: 'https://hirely.ma/', // Update with your actual domain
   ogImage: 'https://yourdomain.com/images/og-default.jpg',
-  creator: 'Alex Johnson', // Update with your name
+  creator: 'Amine ', // Update with your name
   keywords: [
-    'tech careers',
-    'CV optimization',
-    'job search',
-    'interview preparation',
-    'career advice',
-    'ATS systems',
-    'tech jobs',
-    'software engineer jobs'
-  ]
+  // Main US-focused keywords
+  'tech careers',
+  'software engineering careers',
+  'how to get a tech job',
+  'entry level tech jobs',
+  'remote tech jobs',
+  'software developer jobs',
+  'QA engineer jobs',
+  'backend developer jobs',
+
+  // Resume / CV in  language
+  'tech resume tips',
+  'software engineer resume',
+  'ATS resume',
+  'resume optimization for tech',
+  'how to pass ATS',
+
+  // Interview focused
+  'technical interview preparation',
+  'coding interview tips',
+  'system design interview',
+  'behavioral interview tech',
+
+  // Career & education
+  'career roadmap for developers',
+  'how to become a software engineer',
+  'career switch to tech',
+  'tech career for beginners',
+  'IT career roadmap',
+
+  // Internships & new grads (terms)
+  'tech internship',
+  'software engineering internship',
+  'new grad software engineer',
+  'entry level developer jobs',
+
+  // Branding
+  'TechCareer Pro',
+  'Hirely',
+]
+
 }
 
 export function generateSEOMetadata({
@@ -53,6 +85,9 @@ export function generateSEOMetadata({
     metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical: url,
+      languages: {
+    'en-US': url,
+  },
     },
     openGraph: {
       type,
@@ -163,9 +198,14 @@ export function generateOrganizationStructuredData() {
       name: siteConfig.creator,
     },
     sameAs: [
-      'https://linkedin.com/in/yourprofile', // Update with your social profiles
-      'https://twitter.com/yourtwitterhandle',
+      'https://www.linkedin.com/company/hirely-ma', // Update with your social profiles
+      'https://x.com/SerenithHQ',
     ],
+    address: {
+  "@type": "PostalAddress",
+  addressCountry: "US"
+}
+
   }
 }
 
