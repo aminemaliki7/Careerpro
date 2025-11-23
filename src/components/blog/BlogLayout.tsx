@@ -62,9 +62,9 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Header - Mobile optimized */}
-      <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
+    <div className="min-h-screen bg-white pt-14 sm:pt-[57px]">
+      {/* Header - Mobile optimized - Fixed sticky */}
+      <header className="fixed top-0 left-0 right-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm z-50 shadow-sm">
         <div className="max-w-[1336px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-[57px]">
             <Link href="/blog" className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
