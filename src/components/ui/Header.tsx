@@ -34,9 +34,9 @@ export default function Header() {
 
   const navigation = [
     { name: 'Home', href: '/', icon: Home },
-    { name: 'Blog', href: '/blog', icon: FileText },
+    { name: 'Blogs', href: '/blog', icon: FileText },
     { name: 'Jobs', href: '/jobs', icon: Briefcase },
-    { name: 'Podcast', href: '/podcast', icon: Headphones },
+    { name: 'Podcasts', href: '/podcast', icon: Headphones },
     { name: 'Paths', href: '/roadmaps', icon: BookOpen }
   ];
 

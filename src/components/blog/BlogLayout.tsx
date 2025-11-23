@@ -62,9 +62,9 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   };
 
   return (
-    <div className="min-h-screen bg-white pt-14 sm:pt-[57px]">
-      {/* Header - Mobile optimized - Fixed sticky */}
-      <header className="fixed top-0 left-0 right-0 border-b border-gray-200 bg-white/95 backdrop-blur-sm z-50 shadow-sm">
+    <div className="min-h-screen bg-white">
+      {/* Header - Fixed below main site header */}
+      <header className="fixed top-14 sm:top-16 left-0 right-0 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm z-40">
         <div className="max-w-[1336px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 sm:h-[57px]">
             <Link href="/blog" className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
@@ -107,7 +107,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       </header>
 
       {/* Article Content - Mobile optimized */}
-      <article className="max-w-[720px] mx-auto px-4 sm:px-6 pt-8 sm:pt-14 pb-12 sm:pb-20">
+      <article className="max-w-[720px] mx-auto px-4 sm:px-6 pt-[120px] sm:pt-[130px] pb-12 sm:pb-20">
         {/* Title - Responsive sizing */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-[1.15] break-words">
           {post.title}
