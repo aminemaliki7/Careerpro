@@ -417,3 +417,337 @@ button:focus-visible,
 a:focus-visible {
   outline-offset: 4px;
 }
+/* ============================================
+   ENHANCED BLOG PROSE STYLES - VISUAL HIERARCHY
+   Add this to the END of your globals.css
+   ============================================ */
+
+/* Base prose optimizations */
+.prose {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+  color: #374151;
+  line-height: 1.75;
+}
+
+/* HEADING ENHANCEMENTS - Make them stand out MORE */
+.prose h2 {
+  position: relative;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
+  color: #111827 !important;
+}
+
+.prose h2::before {
+  content: '';
+  position: absolute;
+  left: -1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 70%;
+  background: linear-gradient(to bottom, #3b82f6, #1d4ed8);
+  border-radius: 2px;
+}
+
+@media (max-width: 640px) {
+  .prose h2::before {
+    left: -0.75rem;
+    width: 3px;
+  }
+}
+
+.prose h3 {
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  position: relative;
+  padding-left: 0.75rem;
+}
+
+.prose h3::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: #3b82f6;
+  font-size: 1em;
+}
+
+/* PARAGRAPH IMPROVEMENTS */
+.prose p {
+  margin-bottom: 1.5rem;
+}
+
+.prose p:first-of-type {
+  font-size: 1.125rem;
+  color: #1f2937;
+  line-height: 1.8;
+}
+
+@media (min-width: 640px) {
+  .prose p:first-of-type {
+    font-size: 1.25rem;
+  }
+}
+
+/* STRONG TEXT - More prominent highlighting */
+.prose strong {
+  font-weight: 700;
+  color: #111827;
+  background: linear-gradient(to right, #fef3c7, #fde68a);
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* LINKS - More interactive */
+.prose a {
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.prose a:hover {
+  color: #1d4ed8;
+  border-bottom-color: #3b82f6;
+}
+
+/* LIST IMPROVEMENTS - Better visual structure */
+.prose ul li {
+  position: relative;
+  padding-left: 0.5rem;
+}
+
+.prose ul > li::marker {
+  color: #3b82f6;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.prose ol > li::marker {
+  color: #3b82f6;
+  font-weight: 700;
+}
+
+.prose li strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* BLOCKQUOTE - Distinctive callout style */
+.prose blockquote {
+  position: relative;
+  font-style: italic;
+  padding-left: 1.5rem !important;
+  padding-right: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin: 2rem 0;
+  background: linear-gradient(to right, #eff6ff, #dbeafe);
+  border-left: 4px solid #3b82f6 !important;
+  border-radius: 0 0.5rem 0.5rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 640px) {
+  .prose blockquote {
+    padding-left: 1rem !important;
+    margin: 1.5rem 0;
+  }
+}
+
+.prose blockquote p {
+  color: #1e40af;
+  margin-bottom: 0;
+}
+
+/* CODE STYLING - Technical clarity */
+.prose :not(pre) > code {
+  background: #f3f4f6;
+  color: #111827;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.9em;
+  font-weight: 600;
+  border: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+.prose pre {
+  background: #1f2937 !important;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #f9fafb;
+  font-size: 0.95em;
+}
+
+/* IMAGES - Professional presentation */
+.prose img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* HORIZONTAL RULES - Visual breaks */
+.prose hr {
+  border: none;
+  border-top: 2px solid #e5e7eb;
+  margin: 3rem 0;
+  position: relative;
+}
+
+.prose hr::after {
+  content: '◆';
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 0 1rem;
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+/* TABLES - Clean and readable */
+.prose table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  display: block;
+  overflow-x: auto;
+}
+
+.prose thead {
+  background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+}
+
+.prose th {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: #374151;
+  border-bottom: 2px solid #d1d5db;
+}
+
+.prose td {
+  color: #4b5563;
+}
+
+.prose tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* MOBILE OPTIMIZATIONS */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 1rem;
+  }
+
+  .prose h2 {
+    font-size: 1.75rem !important;
+    margin-top: 2.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .prose h3 {
+    font-size: 1.375rem !important;
+    margin-top: 2rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.5rem;
+    margin: 1.5rem 0;
+  }
+
+  .prose li {
+    margin-bottom: 0.75rem;
+  }
+
+  .prose blockquote {
+    font-size: 0.95rem;
+  }
+
+  .prose table {
+    font-size: 0.875rem;
+  }
+
+  .prose pre {
+    font-size: 0.875rem;
+    padding: 1rem;
+    margin: 1.5rem -1rem;
+    border-radius: 0;
+  }
+}
+
+/* READING EXPERIENCE - First letter drop cap for articles */
+.prose > p:first-of-type::first-letter {
+  float: left;
+  font-size: 3.5rem;
+  line-height: 3rem;
+  padding-right: 0.5rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+@media (max-width: 640px) {
+  .prose > p:first-of-type::first-letter {
+    font-size: 2.5rem;
+    line-height: 2rem;
+  }
+}
+
+/* SMOOTH SCROLLING for anchor links */
+.prose [id] {
+  scroll-margin-top: 6rem;
+}
+
+/* SELECTION HIGHLIGHT */
+.prose ::selection {
+  background: #bfdbfe;
+  color: #1e3a8a;
+}
+
+/* FOCUS STATES for accessibility */
+.prose a:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* PRINT STYLES */
+@media print {
+  .prose {
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  .prose h2 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  .prose pre {
+    page-break-inside: avoid;
+  }
+}
