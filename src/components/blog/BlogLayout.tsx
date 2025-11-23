@@ -441,10 +441,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         Reply
                       </button>
 
-                      <button className="flex items-center gap-1.5 sm:gap-2 text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-sm font-medium ml-auto">
-                        <Flag className="w-4 h-4 sm:w-5 sm:h-5" />
-                        <span className="hidden sm:inline">Report</span>
-                      </button>
+                    
                     </div>
                   </div>
                 </div>
