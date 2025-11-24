@@ -1,8 +1,8 @@
 // src/components/blog/BlogLayout.tsx
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Bookmark, Share2, Twitter, Facebook, Linkedin, Check, Sparkles, MessageCircle, Send, Heart, MoreVertical, Flag } from 'lucide-react';
+import { ArrowLeft, Bookmark, Share2, Twitter, Facebook, Linkedin, Check, Sparkles, MessageCircle, Send, Heart, MoreVertical, Flag, Play, Pause } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 
 interface BlogLayoutProps {
@@ -16,6 +16,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [claps, setClaps] = useState(0);
   const [isClapping, setIsClapping] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [comments, setComments] = useState<Array<{
     id: string;
     author: string;
@@ -50,6 +52,36 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     // Reset animation
     setTimeout(() => setIsClapping(false), 600);
   };
+
+  const toggleAudioPlay = () => {
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause();
+      } else {
+        audioRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
+    }
+  };
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+    const handleEnded = () => setIsPlaying(false);
+
+    audio.addEventListener('play', handlePlay);
+    audio.addEventListener('pause', handlePause);
+    audio.addEventListener('ended', handleEnded);
+
+    return () => {
+      audio.removeEventListener('play', handlePlay);
+      audio.removeEventListener('pause', handlePause);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, []);
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
@@ -198,8 +230,11 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Fixed Top Navigation */}
+   
+
       {/* Article Content */}
-      <article className="max-w-[720px] mx-auto px-4 sm:px-6 pt-1 pb-12 sm:pb-20">
+      <article className="max-w-[720px] mx-auto px-4 sm:px-6 pt-[108px] sm:pt-[120px] pb-12 sm:pb-20">
         {/* Title */}
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-[1.15] break-words">
           {post.title}
@@ -231,6 +266,26 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
           {/* Quick Actions - Right Side */}
           <div className="flex items-center gap-1 ml-3">
+            {/* Play/Pause Audio Button */}
+            {post.audioUrl && (
+              <>
+                <audio ref={audioRef} src={post.audioUrl} preload="metadata" />
+                <button
+                  onClick={toggleAudioPlay}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
+                  aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
+                  title={isPlaying ? 'Pause audio' : 'Listen to article'}
+                >
+                  {isPlaying ? (
+                    <Pause className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 group-hover:text-gray-900" />
+                  ) : (
+                    <Play className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 group-hover:text-gray-900" />
+                  )}
+                </button>
+              </>
+            )}
+
+            {/* Clap Button */}
             <button
               onClick={handleClap}
               className="relative p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group"
@@ -250,6 +305,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 </span>
               )}
             </button>
+
+            {/* Bookmark Button */}
             <button
               onClick={handleBookmark}
               className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
@@ -264,6 +321,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 }`}
               />
             </button>
+
+            {/* Share Button */}
             <div className="relative">
               <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
@@ -441,7 +500,10 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         Reply
                       </button>
 
-                    
+                      <button className="flex items-center gap-1.5 sm:gap-2 text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-sm font-medium ml-auto">
+                        <Flag className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <span className="hidden sm:inline">Report</span>
+                      </button>
                     </div>
                   </div>
                 </div>

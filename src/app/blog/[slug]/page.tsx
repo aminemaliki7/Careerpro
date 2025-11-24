@@ -71,7 +71,6 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   return (
     <BlogLayout post={post}>
       {/* Audio Player - Shows if audioUrl exists */}
-      {post.audioUrl && <AudioPlayer audioUrl={post.audioUrl} title={post.title} />}
       
       {/* REMOVED the prose class here - it's now handled in BlogLayout */}
       <div dangerouslySetInnerHTML={{ __html: post.content }} />
