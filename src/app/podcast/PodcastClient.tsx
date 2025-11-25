@@ -220,16 +220,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
               </div>
 
               {/* Show current episode stats if playing */}
-              {currentlyPlaying && stats && (
-                <div className="mt-4">
-                  <PodcastStatsDisplay
-                    totalListens={stats.totalListens}
-                    activeListeners={stats.activeListeners}
-                    totalDuration={stats.totalDuration}
-                    variant="full"
-                  />
-                </div>
-              )}
+           
             </div>
           </div>
         </div>

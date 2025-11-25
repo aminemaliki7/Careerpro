@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+// GET: fetch stats for a single episode
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Fetch stats for specific episode
+    // Fetch stats for the episode
     const { data, error } = await supabase
       .from('podcast_stats')
       .select('*')
@@ -44,38 +45,69 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// Get stats for all episodes
+// POST: fetch stats for multiple episodes OR increment listens
 export async function POST(request: NextRequest) {
   try {
-    const { episodeSlugs } = await request.json();
+    const body = await request.json();
 
-    if (!episodeSlugs || !Array.isArray(episodeSlugs)) {
+    // If it's an array of episode slugs → return multiple stats
+    if (Array.isArray(body.episodeSlugs)) {
+      const { data, error } = await supabase
+        .from('podcast_stats')
+        .select('*')
+        .in('episode_slug', body.episodeSlugs);
+
+      if (error) throw error;
+
+      const statsMap = (data || []).reduce((acc, stat) => {
+        acc[stat.episode_slug] = stat;
+        return acc;
+      }, {} as Record<string, any>);
+
+      return NextResponse.json(statsMap);
+    }
+
+    // If it's a single episodeSlug → increment listens
+    const { episodeSlug, duration = 0 } = body;
+
+    if (!episodeSlug) {
       return NextResponse.json(
-        { error: 'Episode slugs array is required' },
+        { error: 'Episode slug is required' },
         { status: 400 }
       );
     }
 
+    // Upsert stats: increment total_listens & total_duration_seconds
     const { data, error } = await supabase
       .from('podcast_stats')
-      .select('*')
-      .in('episode_slug', episodeSlugs);
+      .upsert(
+        {
+          episode_slug: episodeSlug,
+          total_listens: 1,
+          total_duration_seconds: duration,
+        },
+        { onConflict: 'episode_slug', ignoreDuplicates: false }
+      )
+      .select();
 
-    if (error) {
-      throw error;
+    if (error) throw error;
+
+    // If exists, increment instead of overwrite
+    if (data && data.length > 0) {
+      await supabase
+        .from('podcast_stats')
+        .update({
+          total_listens: supabase.rpc('increment', { x: 1 }), // or use normal arithmetic
+          total_duration_seconds: supabase.rpc('increment', { x: duration }),
+        })
+        .eq('episode_slug', episodeSlug);
     }
 
-    // Create a map of slug to stats
-    const statsMap = (data || []).reduce((acc, stat) => {
-      acc[stat.episode_slug] = stat;
-      return acc;
-    }, {} as Record<string, any>);
-
-    return NextResponse.json(statsMap);
+    return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Error fetching podcast stats:', error);
+    console.error('Error updating/fetching podcast stats:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch podcast stats' },
+      { error: 'Failed to update/fetch podcast stats' },
       { status: 500 }
     );
   }
