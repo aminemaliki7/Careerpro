@@ -2,85 +2,31 @@
 'use client';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, User, Tag, Filter, X, Headphones, Play, Pause, SkipBack, SkipForward, Bookmark, TrendingUp } from 'lucide-react';
+import { Search, User, Tag, Play, Pause, SkipBack, SkipForward, Bookmark, TrendingUp, Headphones } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 import Image from "next/image";
+import { usePodcastListener } from '@/app/hooks/usePodcastListener';
+import { PodcastStatsDisplay, LiveIndicator } from '@/components/podcast/PodcastStatsDisplay';
 
 interface PodcastClientProps {
   allEpisodes: BlogPostWithContent[];
   featuredEpisodes: BlogPostWithContent[];
 }
 
-function MobileFilterModal({
-  allTags,
-  selectedTag,
-  setSelectedTag,
-  clearFilters,
-  onClose,
-}: {
-  allTags: string[];
-  selectedTag: string;
-  setSelectedTag: (tag: string) => void;
-  clearFilters: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300">
-      <div className="absolute inset-0 bg-white overflow-y-auto">
-      
-
-        <div className="p-4 space-y-6">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <Tag className="w-5 h-5 text-gray-900" />
-              Topics
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {allTags.map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
-                  className={`px-4 py-2 rounded-full font-medium transition-all text-sm ${
-                    selectedTag === tag
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-gray-200 flex gap-3 sticky bottom-0 bg-white pb-4">
-            <button
-              onClick={clearFilters}
-              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-200 text-gray-900 hover:bg-gray-300 transition-colors"
-            >
-              Clear All
-            </button>
-            <button
-              onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
-            >
-              Apply Filters
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function PodcastClient({ allEpisodes, featuredEpisodes }: PodcastClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Track listener stats for currently playing episode
+  const { stats, isTracking } = usePodcastListener(
+    currentlyPlaying,
+    isPlaying
+  );
 
   const allTags = useMemo(() => {
     const tags = allEpisodes.flatMap(episode => episode.tags);
@@ -128,7 +74,6 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedTag('');
-    setShowMobileFilters(false);
   };
 
   const handlePlayPause = (episode: BlogPostWithContent, e?: React.MouseEvent) => {
@@ -171,40 +116,59 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
     }
   };
 
-  useEffect(() => {
-    if (currentlyPlaying && currentEpisode?.audioUrl) {
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-      
-      const audio = new Audio(currentEpisode.audioUrl);
-      audioRef.current = audio;
+     
 
-      const handleLoadedMetadata = () => setDuration(audio.duration);
-      const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-      const handleEnded = () => {
-        setIsPlaying(false);
-        setCurrentTime(0);
-      };
+  // Audio management - separated from play/pause state
+ useEffect(() => {
+  if (!currentlyPlaying || !currentEpisode?.audioUrl) return;
 
-      audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-      audio.addEventListener('timeupdate', handleTimeUpdate);
-      audio.addEventListener('ended', handleEnded);
+  // ✅ Declare handlers FIRST
+  const handleLoadedMetadata = () => {
+    if (audioRef.current) setDuration(audioRef.current.duration);
+  };
 
-      if (isPlaying) {
-        audio.play().catch(error => console.error("Error playing audio:", error));
-      }
+  const handleTimeUpdate = () => {
+    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
+  };
 
-      return () => {
-        audio.pause();
-        audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        audio.removeEventListener('timeupdate', handleTimeUpdate);
-        audio.removeEventListener('ended', handleEnded);
-      };
-    }
-  }, [currentlyPlaying, currentEpisode, isPlaying]);
+  const handleEnded = () => {
+    setIsPlaying(false);
+    setCurrentTime(0);
+  };
 
+  // ✅ Cleanup previous audio instance
+  if (audioRef.current) {
+    audioRef.current.pause();
+    audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+    audioRef.current.removeEventListener('ended', handleEnded);
+    audioRef.current.src = "";
+    audioRef.current = null;
+  }
+
+  // ✅ Create new audio instance
+  const audio = new Audio(currentEpisode.audioUrl);
+  audioRef.current = audio;
+
+  audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+  audio.addEventListener('timeupdate', handleTimeUpdate);
+  audio.addEventListener('ended', handleEnded);
+
+  if (isPlaying) {
+    audio.play().catch(error => console.error("Error playing audio:", error));
+  }
+
+  return () => {
+    audio.pause();
+    audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.removeEventListener('timeupdate', handleTimeUpdate);
+    audio.removeEventListener('ended', handleEnded);
+  };
+
+}, [currentlyPlaying, currentEpisode?.audioUrl, isPlaying]);
+
+
+  // Separate effect for play/pause
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -217,21 +181,10 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
 
   return (
     <div className="min-h-screen bg-white pb-24 sm:pb-32">
-      {showMobileFilters && (
-        <MobileFilterModal
-          allTags={allTags}
-          selectedTag={selectedTag}
-          setSelectedTag={setSelectedTag}
-          clearFilters={clearFilters}
-          onClose={() => setShowMobileFilters(false)}
-        />
-      )}
-
-      {/* Hero Header - Clean Podcast Style */}
+      {/* Hero Header */}
       <div className="border-b border-gray-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
           <div className="flex items-start gap-4 sm:gap-6 lg:gap-12">
-            {/* Podcast Cover */}
             <div className="w-24 h-24 sm:w-40 sm:h-40 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
               <Image
                 src="/images/podcast.png"
@@ -239,10 +192,10 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                 width={224}
                 height={224}
                 className="w-full h-full object-cover"
+                priority
               />
             </div>
             
-            {/* Podcast Info */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1.5 sm:mb-3">
                 <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
@@ -255,7 +208,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                 Expert advice on job searching, career growth, and navigating the tech industry
               </p>
               
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm text-gray-600 mb-4">
                 <span className="flex items-center gap-1.5 sm:gap-2">
                   <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-900 flex items-center justify-center">
                     <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
@@ -264,17 +217,25 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                 </span>
                 <span>·</span>
                 <span className="font-medium">{allEpisodes.length} episodes</span>
-                <span className="hidden sm:inline">·</span>
-                <Link href="/blog" className="hidden sm:inline text-gray-900 hover:text-gray-600 font-medium transition-colors">
-                  Read Articles →
-                </Link>
               </div>
+
+              {/* Show current episode stats if playing */}
+              {currentlyPlaying && stats && (
+                <div className="mt-4">
+                  <PodcastStatsDisplay
+                    totalListens={stats.totalListens}
+                    activeListeners={stats.activeListeners}
+                    totalDuration={stats.totalDuration}
+                    variant="full"
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
 
-      {/* Featured Episodes - Trending Style */}
+      {/* Featured Episodes */}
       {featuredEpisodes.length > 0 && (
         <div className="border-b border-gray-200 py-6 sm:py-8">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -299,9 +260,18 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                         <span>{episode.readingTime || 5} min</span>
                       </div>
                     </Link>
+                    
+                    {/* Live indicator for featured */}
+                    {currentlyPlaying === episode.slug && stats && stats.activeListeners > 0 && (
+                      <div className="mb-2">
+                        <LiveIndicator count={stats.activeListeners} />
+                      </div>
+                    )}
+
                     <button
                       onClick={(e) => handlePlayPause(episode, e)}
                       className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
+                      aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
                     >
                       {currentlyPlaying === episode.slug && isPlaying ? (
                         <>
@@ -326,10 +296,9 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Episodes Column */}
           <div className="lg:col-span-2">
-            {/* Search & Mobile Filter Button */}
-            <div className="mb-6 sm:mb-8 space-y-3">
+            {/* Search */}
+            <div className="mb-6 sm:mb-8">
               <div className="relative">
                 <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
                 <input
@@ -338,14 +307,10 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400 text-sm sm:text-base"
+                  aria-label="Search podcast episodes"
                 />
               </div>
-              
-              {/* Mobile Filter Button */}
-           
             </div>
-
-          
 
             {/* Episodes List */}
             {filteredEpisodes.length > 0 ? (
@@ -355,33 +320,19 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     <Link href={`/blog/${episode.slug}`} className="block">
                       <div className="flex gap-4 sm:gap-6">
                         <div className="flex-1 min-w-0">
-                          {/* Title */}
                           <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
                             {episode.title}
                           </h2>
-
-                          {/* Description */}
                           <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
                             {episode.description}
                           </p>
-
-                          {/* Meta Info */}
                           <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
                             <span className="truncate">{formatDate(episode.publishedAt)}</span>
                             <span>·</span>
                             <span>{episode.readingTime || 5} min</span>
-                            {episode.tags && episode.tags[0] && (
-                              <>
-                                <span className="hidden sm:inline">·</span>
-                                <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
-                                  {episode.tags[0].replace(/-/g, ' ')}
-                                </span>
-                              </>
-                            )}
                           </div>
                         </div>
 
-                        {/* Thumbnail */}
                         {episode.coverImage && (
                           <div className="w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 flex-shrink-0">
                             <img
@@ -394,29 +345,45 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                       </div>
                     </Link>
 
-                    {/* Play Button */}
+                    {/* Stats and Controls */}
                     <div className="flex items-center justify-between mt-3 sm:mt-4">
-                      <button
-                        onClick={(e) => handlePlayPause(episode, e)}
-                        className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full font-medium text-xs sm:text-sm transition-colors ${
-                          currentlyPlaying === episode.slug && isPlaying
-                            ? 'bg-gray-900 text-white'
-                            : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                        }`}
-                      >
-                        {currentlyPlaying === episode.slug && isPlaying ? (
-                          <>
-                            <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>Pause</span>
-                          </>
-                        ) : (
-                          <>
-                            <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                            <span>Play Episode</span>
-                          </>
+                      <div className="flex items-center gap-4">
+                        <button
+                          onClick={(e) => handlePlayPause(episode, e)}
+                          className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full font-medium text-xs sm:text-sm transition-colors ${
+                            currentlyPlaying === episode.slug && isPlaying
+                              ? 'bg-gray-900 text-white'
+                              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                          }`}
+                          aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
+                        >
+                          {currentlyPlaying === episode.slug && isPlaying ? (
+                            <>
+                              <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>Pause</span>
+                            </>
+                          ) : (
+                            <>
+                              <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span>Play</span>
+                            </>
+                          )}
+                        </button>
+
+                        {/* Show live stats if this episode is playing */}
+                        {currentlyPlaying === episode.slug && stats && (
+                          <PodcastStatsDisplay
+                            totalListens={stats.totalListens}
+                            activeListeners={stats.activeListeners}
+                            variant="inline"
+                          />
                         )}
-                      </button>
-                      <button className="text-gray-400 hover:text-gray-900 transition-colors">
+                      </div>
+
+                      <button 
+                        className="text-gray-400 hover:text-gray-900 transition-colors"
+                        aria-label="Bookmark episode"
+                      >
                         <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     </div>
@@ -439,7 +406,6 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
           {/* Sidebar */}
           <aside className="hidden lg:block">
             <div className="sticky top-8 space-y-8">
-              {/* Topics */}
               <div>
                 <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-900 mb-4">
                   Popular Topics
@@ -460,42 +426,18 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                   ))}
                 </div>
               </div>
-
-              {/* Subscribe CTA */}
-              <div className="border-t border-gray-200 pt-8">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">
-                  Never miss an episode
-                </h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Get weekly career insights delivered to your inbox.
-                </p>
-                <button className="w-full px-4 py-2 bg-gray-900 text-white rounded-full text-sm font-medium hover:bg-gray-800 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-
-              {/* Footer Links */}
-              <div className="border-t border-gray-200 pt-8">
-                <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600">
-                  <Link href="/about" className="hover:text-gray-900">About</Link>
-                  <Link href="/contact" className="hover:text-gray-900">Contact</Link>
-                  <Link href="/terms" className="hover:text-gray-900">Terms</Link>
-                  <Link href="/privacy-policy" className="hover:text-gray-900">Privacy</Link>
-                </div>
-              </div>
             </div>
           </aside>
         </div>
       </div>
 
-      {/* Spotify-Style Audio Player - Fixed Bottom */}
+      {/* Audio Player - Fixed Bottom */}
       {currentlyPlaying && currentEpisode && (
         <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-lg border-t border-gray-700 shadow-2xl z-50">
           <div className="max-w-[1800px] mx-auto px-2 sm:px-4 py-2 sm:py-3">
             {/* Mobile Layout */}
             <div className="sm:hidden">
               <div className="flex flex-col gap-2">
-                {/* Episode Info & Controls */}
                 <div className="flex items-center gap-2">
                   {currentEpisode.coverImage && (
                     <img
@@ -508,20 +450,28 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     <p className="text-xs font-semibold text-white truncate">
                       {currentEpisode.title}
                     </p>
-                    <p className="text-[10px] text-gray-400 truncate">
-                      {currentEpisode.author}
-                    </p>
+                    {stats && stats.activeListeners > 0 && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <span className="flex h-1.5 w-1.5">
+                          <span className="animate-ping absolute inline-flex h-1.5 w-1.5 rounded-full bg-red-400 opacity-75"></span>
+                          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
+                        </span>
+                        <span className="text-[10px] text-red-400">{stats.activeListeners} listening</span>
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <button
                       onClick={handleSkipBackward}
                       className="text-gray-400 hover:text-white transition-all"
+                      aria-label="Skip backward 15 seconds"
                     >
                       <SkipBack className="w-4 h-4" />
                     </button>
                     <button
                       onClick={(e) => handlePlayPause(currentEpisode, e)}
                       className="w-9 h-9 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-all shadow-lg"
+                      aria-label={isPlaying ? 'Pause' : 'Play'}
                     >
                       {isPlaying ? (
                         <Pause className="w-4 h-4 text-gray-900" fill="currentColor" />
@@ -532,36 +482,29 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                     <button
                       onClick={handleSkipForward}
                       className="text-gray-400 hover:text-white transition-all"
+                      aria-label="Skip forward 15 seconds"
                     >
                       <SkipForward className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="flex items-center gap-2">
                   <span className="text-[10px] text-gray-400 w-9 text-right flex-shrink-0">
                     {formatTime(currentTime)}
                   </span>
-                  <div className="relative flex-1">
-                    <input
-                      type="range"
-                      min="0"
-                      max={duration || 0}
-                      value={currentTime}
-                      onChange={handleSeek}
-                      className="w-full h-1 bg-gray-700 rounded-full appearance-none cursor-pointer
-                        [&::-webkit-slider-thumb]:appearance-none 
-                        [&::-webkit-slider-thumb]:w-2.5 
-                        [&::-webkit-slider-thumb]:h-2.5 
-                        [&::-webkit-slider-thumb]:bg-white 
-                        [&::-webkit-slider-thumb]:rounded-full 
-                        [&::-webkit-slider-thumb]:cursor-pointer"
-                      style={{
-                        background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
-                      }}
-                    />
-                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
+                    }}
+                    aria-label="Seek audio position"
+                  />
                   <span className="text-[10px] text-gray-400 w-9 flex-shrink-0">
                     {formatTime(duration)}
                   </span>
@@ -571,46 +514,43 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
 
             {/* Desktop Layout */}
             <div className="hidden sm:flex items-center gap-4 md:gap-6">
-              {/* Episode Info */}
               <div className="flex items-center gap-3 w-[30%] min-w-[180px]">
                 {currentEpisode.coverImage && (
-                  <div className="relative group">
-                    <img
-                      src={currentEpisode.coverImage}
-                      alt={currentEpisode.title}
-                      className="w-12 sm:w-14 h-12 sm:h-14 rounded shadow-lg object-cover flex-shrink-0"
-                    />
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
-                      <Headphones className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
-                    </div>
-                  </div>
+                  <img
+                    src={currentEpisode.coverImage}
+                    alt={currentEpisode.title}
+                    className="w-12 sm:w-14 h-12 sm:h-14 rounded shadow-lg object-cover flex-shrink-0"
+                  />
                 )}
                 <div className="min-w-0 flex-1">
                   <p className="text-xs sm:text-sm font-semibold text-white truncate">
                     {currentEpisode.title}
                   </p>
-                  <p className="text-[10px] sm:text-xs text-gray-400 truncate">
-                    {currentEpisode.author}
-                  </p>
+                  {stats && stats.activeListeners > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <span className="flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                      </span>
+                      <span className="text-[10px] text-red-400">{stats.activeListeners} listening now</span>
+                    </div>
+                  )}
                 </div>
-                <button className="text-gray-400 hover:text-white transition-colors hidden md:block">
-                  <Bookmark className="w-4 sm:w-5 h-4 sm:h-5" />
-                </button>
               </div>
 
-              {/* Player Controls - Center */}
               <div className="flex-1 flex flex-col items-center gap-2 max-w-[40%]">
                 <div className="flex items-center gap-3 sm:gap-4">
                   <button
                     onClick={handleSkipBackward}
                     className="text-gray-400 hover:text-white transition-all hover:scale-110"
-                    title="Rewind 15s"
+                    aria-label="Skip backward 15 seconds"
                   >
                     <SkipBack className="w-4 sm:w-5 h-4 sm:h-5" />
                   </button>
                   <button
                     onClick={(e) => handlePlayPause(currentEpisode, e)}
                     className="w-9 sm:w-10 h-9 sm:h-10 bg-white hover:bg-gray-100 rounded-full flex items-center justify-center transition-all hover:scale-105 shadow-lg"
+                    aria-label={isPlaying ? 'Pause' : 'Play'}
                   >
                     {isPlaying ? (
                       <Pause className="w-4 sm:w-5 h-4 sm:h-5 text-gray-900" fill="currentColor" />
@@ -621,58 +561,40 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                   <button
                     onClick={handleSkipForward}
                     className="text-gray-400 hover:text-white transition-all hover:scale-110"
-                    title="Forward 15s"
+                    aria-label="Skip forward 15 seconds"
                   >
                     <SkipForward className="w-4 sm:w-5 h-4 sm:h-5" />
                   </button>
                 </div>
 
-                {/* Progress Bar */}
                 <div className="w-full flex items-center gap-2">
                   <span className="text-[10px] sm:text-xs text-gray-400 w-8 sm:w-10 text-right">
                     {formatTime(currentTime)}
                   </span>
-                  <div className="relative flex-1 group">
-                    <input
-                      type="range"
-                      min="0"
-                      max={duration || 0}
-                      value={currentTime}
-                      onChange={handleSeek}
-                      className="w-full h-1 bg-gray-700 rounded-full appearance-none cursor-pointer transition-all
-                        [&::-webkit-slider-thumb]:appearance-none 
-                        [&::-webkit-slider-thumb]:w-2.5 
-                        [&::-webkit-slider-thumb]:h-2.5 
-                        sm:[&::-webkit-slider-thumb]:w-3 
-                        sm:[&::-webkit-slider-thumb]:h-3 
-                        [&::-webkit-slider-thumb]:bg-white 
-                        [&::-webkit-slider-thumb]:rounded-full 
-                        [&::-webkit-slider-thumb]:cursor-pointer 
-                        [&::-webkit-slider-thumb]:shadow-lg
-                        [&::-webkit-slider-thumb]:transition-all
-                        group-hover:[&::-webkit-slider-thumb]:scale-125"
-                      style={{
-                        background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
-                      }}
-                    />
-                  </div>
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 0}
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="flex-1 h-1 bg-gray-700 rounded-full appearance-none cursor-pointer"
+                    style={{
+                      background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${(currentTime / duration) * 100}%, #374151 ${(currentTime / duration) * 100}%, #374151 100%)`
+                    }}
+                    aria-label="Seek audio position"
+                  />
                   <span className="text-[10px] sm:text-xs text-gray-400 w-8 sm:w-10">
                     {formatTime(duration)}
                   </span>
                 </div>
               </div>
 
-              {/* Right Side - Volume & Extra Controls */}
               <div className="w-[30%] min-w-[180px] flex items-center justify-end gap-3">
-                <Link 
-                  href={`/blog/${currentEpisode.slug}`}
-                  className="text-[10px] sm:text-xs text-gray-400 hover:text-white transition-colors hidden lg:block"
-                >
-                  View Article →
-                </Link>
-                <button className="text-gray-400 hover:text-white transition-colors hidden sm:block">
-                  <Headphones className="w-4 sm:w-5 h-4 sm:h-5" />
-                </button>
+                {stats && (
+                  <div className="text-xs text-gray-400">
+                    {stats.totalListens.toLocaleString()} listens
+                  </div>
+                )}
               </div>
             </div>
           </div>
