@@ -226,63 +226,65 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
         </div>
       </div>
 
-      {/* Featured Episodes */}
-      {featuredEpisodes.length > 0 && (
-        <div className="border-b border-gray-200 py-6 sm:py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
-              {featuredEpisodes.slice(0, 6).map((episode, index) => (
-                <div key={episode.slug} className="flex gap-3 sm:gap-4 group">
-                  <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
-                    0{index + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <Link href={`/blog/${episode.slug}`}>
-                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                        {episode.title}
-                      </h3>
-                      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
-                        <span className="truncate">{formatDate(episode.publishedAt)}</span>
-                        <span>·</span>
-                        <span>{episode.readingTime || 5} min</span>
-                      </div>
-                    </Link>
-                    
-                    {/* Live indicator for featured */}
-                    {currentlyPlaying === episode.slug && stats && stats.activeListeners > 0 && (
-                      <div className="mb-2">
-                        <LiveIndicator count={stats.activeListeners} />
-                      </div>
-                    )}
-
-                    <button
-                      onClick={(e) => handlePlayPause(episode, e)}
-                      className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors"
-                      aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
-                    >
-                      {currentlyPlaying === episode.slug && isPlaying ? (
-                        <>
-                          <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>Pause</span>
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                          <span>Play</span>
-                        </>
-                      )}
-                    </button>
-                  </div>
+ {/* Featured Episodes */}
+{featuredEpisodes.length > 0 && (
+  <div className="border-b border-gray-200 py-6 sm:py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="flex items-center gap-2 mb-4 sm:mb-6">
+        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+        <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
+        {featuredEpisodes.slice(0, 6).map((episode, index) => (
+          <div key={episode.slug} className="flex gap-3 sm:gap-4 group">
+            {/* Fixed-width number container for alignment */}
+            <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors w-8 sm:w-10 flex-shrink-0">
+              0{index + 1}
+            </span>
+            <div className="flex-1 min-w-0 flex flex-col">
+              <Link href={`/blog/${episode.slug}`} className="block">
+                {/* Fixed height title container */}
+                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors min-h-[2.5rem] sm:min-h-[3rem]">
+                  {episode.title}
+                </h3>
+                <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
+                  <span className="truncate">{formatDate(episode.publishedAt)}</span>
+                  <span>·</span>
+                  <span>{episode.readingTime || 5} min</span>
                 </div>
-              ))}
+              </Link>
+              
+              {/* Fixed height container for live indicator */}
+              <div className="mb-2 min-h-[1.5rem]">
+                {currentlyPlaying === episode.slug && stats && stats.activeListeners > 0 && (
+                  <LiveIndicator count={stats.activeListeners} />
+                )}
+              </div>
+              
+              <button
+                onClick={(e) => handlePlayPause(episode, e)}
+                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors self-start"
+                aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
+              >
+                {currentlyPlaying === episode.slug && isPlaying ? (
+                  <>
+                    <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Pause</span>
+                  </>
+                ) : (
+                  <>
+                    <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Play</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
-        </div>
-      )}
+        ))}
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">

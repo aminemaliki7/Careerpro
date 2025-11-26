@@ -46,14 +46,14 @@ export default function Header() {
         <div className="flex justify-between items-center h-16">
 
           {/* Logo */}
-          <div className="flex items-center flex-1">
+          <div className="flex items-center">
             <Link href="/" aria-label="Circuit Home">
               <CircuitLogo size="sm" className="hover:scale-105 transition-transform" />
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-11 items-center h-full flex-1 justify-center">
+          <nav className="hidden md:flex space-x-8 lg:space-x-11 items-center h-full absolute left-1/2 transform -translate-x-1/2">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -61,29 +61,34 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex flex-col items-center justify-center text-gray-600 hover:text-blue-700 transition-colors duration-200 h-full ${
-                    isActive ? 'text-blue-700' : ''
+                  className={`flex flex-col items-center justify-center transition-colors duration-200 h-full group ${
+                    isActive ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
                   }`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-xs mt-1">{item.name}</span>
+                  <Icon className={`w-5 h-5 ${isActive ? '' : 'group-hover:scale-110 transition-transform'}`} />
+                  <span className={`text-xs mt-1 font-medium ${isActive ? 'text-blue-600' : ''}`}>
+                    {item.name}
+                  </span>
+                  {isActive && (
+                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+                  )}
                 </Link>
               );
             })}
           </nav>
 
           {/* Auth + User Section */}
-          <div className="flex items-center space-x-4 flex-1 justify-end">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             {/* Desktop Auth Buttons - Hidden on Mobile */}
             <SignedOut>
               <div className="hidden md:flex items-center space-x-3">
                 <SignInButton>
-                  <button className="flex items-center text-gray-700 hover:text-blue-700 px-3 py-1.5 rounded-md transition-colors duration-200 text-sm">
+                  <button className="flex items-center text-gray-700 hover:text-blue-600 px-3 py-1.5 rounded-lg transition-colors duration-200 text-sm font-medium hover:bg-gray-50">
                     <LogIn className="w-4 h-4 mr-1.5" /> Sign In
                   </button>
                 </SignInButton>
                 <SignUpButton>
-                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-1.5 rounded-md transition-all duration-200 text-sm whitespace-nowrap">
+                  <button className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-200 text-sm font-medium shadow-sm hover:shadow whitespace-nowrap">
                     <UserPlus className="w-4 h-4 mr-1.5" /> Get Started
                   </button>
                 </SignUpButton>
@@ -96,7 +101,7 @@ export default function Header() {
                 appearance={{
                   elements: {
                     avatarBox:
-                      'w-8 h-8 rounded-full ring-1 ring-gray-300 hover:ring-blue-500 transition-all duration-200',
+                      'w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-blue-500 transition-all duration-200',
                   },
                 }}
               />
@@ -106,7 +111,7 @@ export default function Header() {
             <div className="md:hidden flex items-center">
               <button
                 onClick={toggleMenu}
-                className="text-gray-700 hover:text-blue-600 p-2 rounded-md focus:outline-none"
+                className="text-gray-700 hover:text-blue-600 p-2 rounded-lg hover:bg-gray-50 transition-colors focus:outline-none"
                 aria-label="Toggle menu"
               >
                 {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -117,26 +122,45 @@ export default function Header() {
 
         {/* Mobile Menu Dropdown */}
         {isMenuOpen && (
-          <div className="md:hidden mt-2 border-t border-gray-200 bg-white">
+          <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-2 py-3 space-y-1">
               {navigation.map((item) => {
+                const Icon = item.icon;
                 const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center px-3 py-2 rounded-md transition-colors duration-200 ${
+                    className={`flex items-center justify-between px-4 py-3 rounded-lg transition-colors duration-200 ${
                       isActive 
-                        ? 'text-blue-700 bg-blue-50' 
-                        : 'text-gray-700 hover:text-blue-700 hover:bg-gray-50'
+                        ? 'text-blue-600 bg-blue-50 font-medium' 
+                        : 'text-gray-700 hover:text-blue-600 hover:bg-gray-50'
                     }`}
                   >
-                    <item.icon className="w-5 h-5 mr-2" />
-                    {item.name}
+                    <span className="text-sm font-medium">{item.name}</span>
+                    <Icon className="w-5 h-5" />
                   </Link>
                 );
               })}
+              
+              {/* Mobile Auth Buttons */}
+              <SignedOut>
+                <div className="pt-3 mt-3 border-t border-gray-200 space-y-2">
+                  <SignInButton>
+                    <button className="w-full flex items-center justify-between px-4 py-3 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors duration-200">
+                      <span className="text-sm font-medium">Sign In</span>
+                      <LogIn className="w-5 h-5" />
+                    </button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <button className="w-full flex items-center justify-between px-4 py-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200 shadow-sm">
+                      <span className="text-sm font-medium">Get Started</span>
+                      <UserPlus className="w-5 h-5" />
+                    </button>
+                  </SignUpButton>
+                </div>
+              </SignedOut>
             </div>
           </div>
         )}
