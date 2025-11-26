@@ -260,10 +260,10 @@ export default function JobsPage() {
 
         {/* Jobs List */}
         <div className="lg:col-span-3 space-y-6">
-          {paginatedJobs.map((job: Job) => (
+{paginatedJobs.map((job: Job) => (
   <div key={job.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow overflow-hidden">
-    <div className="p-4 sm:p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center">
-      <div>
+    <div className="p-4 sm:p-6 flex flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex-1 min-w-0">
         <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
         <p className="text-sm text-gray-500">{job.company}</p>
         <div className="flex flex-wrap text-xs text-gray-400 mt-2 gap-2">
@@ -273,12 +273,12 @@ export default function JobsPage() {
         </div>
       </div>
 
-      <div className="mt-3 sm:mt-0 flex items-center gap-4">
+      <div className="flex items-center flex-shrink-0">
         <a
           href={`/jobs/${job.id}/${createJobSlug(job.title)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap"
         >
           Apply
         </a>
