@@ -110,7 +110,7 @@ function EpisodeCard({ episode, currentlyPlaying, isPlaying, handlePlayPause, st
   currentlyPlaying: string | null;
   isPlaying: boolean;
   handlePlayPause: (episode: BlogPostWithContent, e?: React.MouseEvent) => void;
-  stats: any;
+  stats: { totalListens: number; activeListeners: number } | null;
 }) {
   const { claps, isClapping, handleClap } = useEpisodeClaps(episode.slug);
   const [isBookmarked, setIsBookmarked] = useState(false);
@@ -582,7 +582,6 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
           </aside>
         </div>
       </div>
-
       {/* Audio Player - Fixed Bottom */}
       {currentlyPlaying && currentEpisode && (
         <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 backdrop-blur-lg border-t border-gray-700 shadow-2xl z-50">
