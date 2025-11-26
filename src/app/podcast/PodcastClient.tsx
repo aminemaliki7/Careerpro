@@ -2,15 +2,255 @@
 'use client';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, User, Tag, Play, Pause, SkipBack, SkipForward, Bookmark, TrendingUp, Headphones } from 'lucide-react';
+import { Search, User, Tag, Play, Pause, SkipBack, SkipForward, Bookmark, TrendingUp, Headphones, Sparkles } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 import Image from "next/image";
 import { usePodcastListener } from '@/app/hooks/usePodcastListener';
 import { PodcastStatsDisplay, LiveIndicator } from '@/components/podcast/PodcastStatsDisplay';
+import { supabase } from '@/lib/supabase';
 
 interface PodcastClientProps {
   allEpisodes: BlogPostWithContent[];
   featuredEpisodes: BlogPostWithContent[];
+}
+
+// Hook to manage claps for an episode
+function useEpisodeClaps(episodeSlug: string) {
+  const [claps, setClaps] = useState(0);
+  const [isClapping, setIsClapping] = useState(false);
+
+  useEffect(() => {
+    loadClaps();
+
+    const channel = supabase
+      .channel(`post-${episodeSlug}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'post_appreciations',
+          filter: `post_slug=eq.${episodeSlug}`,
+        },
+        (payload) => {
+          if (payload.new && typeof payload.new === 'object' && 'total_claps' in payload.new) {
+            setClaps(payload.new.total_claps as number);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [episodeSlug]);
+
+  const loadClaps = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('post_appreciations')
+        .select('total_claps')
+        .eq('post_slug', episodeSlug)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading claps:', error);
+        return;
+      }
+
+      if (data) {
+        setClaps(data.total_claps || 0);
+      }
+    } catch (err) {
+      console.error('Error loading claps:', err);
+    }
+  };
+
+  const handleClap = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setClaps(prev => prev + 1);
+    setIsClapping(true);
+    setTimeout(() => setIsClapping(false), 600);
+
+    try {
+      const { data: existing } = await supabase
+        .from('post_appreciations')
+        .select('*')
+        .eq('post_slug', episodeSlug)
+        .single();
+
+      if (existing) {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .update({ total_claps: existing.total_claps + 1 })
+          .eq('post_slug', episodeSlug);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .insert({ post_slug: episodeSlug, total_claps: 1 });
+
+        if (error) throw error;
+      }
+    } catch (error) {
+      console.error('Error saving clap:', error);
+      setClaps(prev => prev - 1);
+    }
+  };
+
+  return { claps, isClapping, handleClap };
+}
+
+// Episode Card Component
+function EpisodeCard({ episode, currentlyPlaying, isPlaying, handlePlayPause, stats }: {
+  episode: BlogPostWithContent;
+  currentlyPlaying: string | null;
+  isPlaying: boolean;
+  handlePlayPause: (episode: BlogPostWithContent, e?: React.MouseEvent) => void;
+  stats: any;
+}) {
+  const { claps, isClapping, handleClap } = useEpisodeClaps(episode.slug);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsBookmarked(!isBookmarked);
+    
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
+      const episodeUrl = `/blog/${episode.slug}`;
+      
+      if (isBookmarked) {
+        const filtered = bookmarks.filter((b: string) => b !== episodeUrl);
+        localStorage.setItem('bookmarkedPosts', JSON.stringify(filtered));
+      } else {
+        bookmarks.push(episodeUrl);
+        localStorage.setItem('bookmarkedPosts', JSON.stringify(bookmarks));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
+      const episodeUrl = `/blog/${episode.slug}`;
+      setIsBookmarked(bookmarks.includes(episodeUrl));
+    }
+  }, [episode.slug]);
+
+  return (
+    <article className="group pb-6 sm:pb-8 border-b border-gray-200">
+      <Link href={`/blog/${episode.slug}`} className="block">
+        <div className="flex gap-4 sm:gap-6">
+          <div className="flex-1 min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
+              {episode.title}
+            </h2>
+            <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
+              {episode.description}
+            </p>
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
+              <span className="truncate">{formatDate(episode.publishedAt)}</span>
+              <span>·</span>
+              <span>{episode.readingTime || 5} min</span>
+            </div>
+          </div>
+
+          {episode.coverImage && (
+            <div className="w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 flex-shrink-0">
+              <img
+                src={episode.coverImage}
+                alt={episode.title}
+                className="w-full h-full object-cover rounded"
+              />
+            </div>
+          )}
+        </div>
+      </Link>
+
+      {/* Stats and Controls */}
+      <div className="flex items-center justify-between mt-3 sm:mt-4">
+        <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
+          <button
+            onClick={(e) => handlePlayPause(episode, e)}
+            className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full font-medium text-xs sm:text-sm transition-colors ${
+              currentlyPlaying === episode.slug && isPlaying
+                ? 'bg-gray-900 text-white'
+                : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+            }`}
+            aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
+          >
+            {currentlyPlaying === episode.slug && isPlaying ? (
+              <>
+                <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Pause</span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <span>Play</span>
+              </>
+            )}
+          </button>
+
+          {/* Show live stats if this episode is playing */}
+          {currentlyPlaying === episode.slug && stats && (
+            <PodcastStatsDisplay
+              totalListens={stats.totalListens}
+              activeListeners={stats.activeListeners}
+              variant="inline"
+            />
+          )}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+          {/* Clap Button */}
+          <button
+            onClick={handleClap}
+            className="relative p-1.5 sm:p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group/clap"
+            aria-label="Show appreciation"
+            title="Show appreciation"
+          >
+            <Sparkles 
+              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
+                isClapping 
+                  ? 'text-purple-600 scale-125 rotate-12' 
+                  : 'text-gray-400 group-hover/clap:text-purple-600 group-hover/clap:scale-110'
+              }`}
+            />
+            {claps > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-purple-600 text-white text-[8px] sm:text-[9px] font-bold rounded-full min-w-3 h-3 sm:min-w-4 sm:h-4 px-0.5 sm:px-1 flex items-center justify-center">
+                {claps > 99 ? '99+' : claps}
+              </span>
+            )}
+          </button>
+
+          {/* Bookmark Button */}
+          <button 
+            onClick={handleBookmark}
+            className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-full hover:bg-gray-100"
+            aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark episode'}
+          >
+            <Bookmark className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all ${
+              isBookmarked ? 'fill-gray-900 text-gray-900' : ''
+            }`} />
+          </button>
+        </div>
+      </div>
+    </article>
+  );
 }
 
 export default function PodcastClient({ allEpisodes, featuredEpisodes }: PodcastClientProps) {
@@ -22,7 +262,6 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Track listener stats for currently playing episode
   const { stats, isTracking } = usePodcastListener(
     currentlyPlaying,
     isPlaying
@@ -116,59 +355,50 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
     }
   };
 
-     
+  useEffect(() => {
+    if (!currentlyPlaying || !currentEpisode?.audioUrl) return;
 
-  // Audio management - separated from play/pause state
- useEffect(() => {
-  if (!currentlyPlaying || !currentEpisode?.audioUrl) return;
+    const handleLoadedMetadata = () => {
+      if (audioRef.current) setDuration(audioRef.current.duration);
+    };
 
-  // ✅ Declare handlers FIRST
-  const handleLoadedMetadata = () => {
-    if (audioRef.current) setDuration(audioRef.current.duration);
-  };
+    const handleTimeUpdate = () => {
+      if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
+    };
 
-  const handleTimeUpdate = () => {
-    if (audioRef.current) setCurrentTime(audioRef.current.currentTime);
-  };
+    const handleEnded = () => {
+      setIsPlaying(false);
+      setCurrentTime(0);
+    };
 
-  const handleEnded = () => {
-    setIsPlaying(false);
-    setCurrentTime(0);
-  };
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+      audioRef.current.removeEventListener('ended', handleEnded);
+      audioRef.current.src = "";
+      audioRef.current = null;
+    }
 
-  // ✅ Cleanup previous audio instance
-  if (audioRef.current) {
-    audioRef.current.pause();
-    audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
-    audioRef.current.removeEventListener('ended', handleEnded);
-    audioRef.current.src = "";
-    audioRef.current = null;
-  }
+    const audio = new Audio(currentEpisode.audioUrl);
+    audioRef.current = audio;
 
-  // ✅ Create new audio instance
-  const audio = new Audio(currentEpisode.audioUrl);
-  audioRef.current = audio;
+    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+    audio.addEventListener('ended', handleEnded);
 
-  audio.addEventListener('loadedmetadata', handleLoadedMetadata);
-  audio.addEventListener('timeupdate', handleTimeUpdate);
-  audio.addEventListener('ended', handleEnded);
+    if (isPlaying) {
+      audio.play().catch(error => console.error("Error playing audio:", error));
+    }
 
-  if (isPlaying) {
-    audio.play().catch(error => console.error("Error playing audio:", error));
-  }
+    return () => {
+      audio.pause();
+      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+      audio.removeEventListener('ended', handleEnded);
+    };
+  }, [currentlyPlaying, currentEpisode?.audioUrl, isPlaying]);
 
-  return () => {
-    audio.pause();
-    audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
-    audio.removeEventListener('timeupdate', handleTimeUpdate);
-    audio.removeEventListener('ended', handleEnded);
-  };
-
-}, [currentlyPlaying, currentEpisode?.audioUrl, isPlaying]);
-
-
-  // Separate effect for play/pause
   useEffect(() => {
     if (audioRef.current) {
       if (isPlaying) {
@@ -218,79 +448,72 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                 <span>·</span>
                 <span className="font-medium">{allEpisodes.length} episodes</span>
               </div>
-
-              {/* Show current episode stats if playing */}
-           
             </div>
           </div>
         </div>
       </div>
 
- {/* Featured Episodes */}
-{featuredEpisodes.length > 0 && (
-  <div className="border-b border-gray-200 py-6 sm:py-8">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="flex items-center gap-2 mb-4 sm:mb-6">
-        <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-        <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
-        {featuredEpisodes.slice(0, 6).map((episode, index) => (
-          <div key={episode.slug} className="flex gap-3 sm:gap-4 group">
-            {/* Fixed-width number container for alignment */}
-            <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors w-8 sm:w-10 flex-shrink-0">
-              0{index + 1}
-            </span>
-            <div className="flex-1 min-w-0 flex flex-col">
-              <Link href={`/blog/${episode.slug}`} className="block">
-                {/* Fixed height title container */}
-                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors min-h-[2.5rem] sm:min-h-[3rem]">
-                  {episode.title}
-                </h3>
-                <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
-                  <span className="truncate">{formatDate(episode.publishedAt)}</span>
-                  <span>·</span>
-                  <span>{episode.readingTime || 5} min</span>
+      {/* Featured Episodes */}
+      {featuredEpisodes.length > 0 && (
+        <div className="border-b border-gray-200 py-6 sm:py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center gap-2 mb-4 sm:mb-6">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
+              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">Featured Episodes</h2>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
+              {featuredEpisodes.slice(0, 6).map((episode, index) => (
+                <div key={episode.slug} className="flex gap-3 sm:gap-4 group">
+                  <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors w-8 sm:w-10 flex-shrink-0">
+                    0{index + 1}
+                  </span>
+                  <div className="flex-1 min-w-0 flex flex-col">
+                    <Link href={`/blog/${episode.slug}`} className="block">
+                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors min-h-[2.5rem] sm:min-h-[3rem]">
+                        {episode.title}
+                      </h3>
+                      <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
+                        <span className="truncate">{formatDate(episode.publishedAt)}</span>
+                        <span>·</span>
+                        <span>{episode.readingTime || 5} min</span>
+                      </div>
+                    </Link>
+                    
+                    <div className="mb-2 min-h-[1.5rem]">
+                      {currentlyPlaying === episode.slug && stats && stats.activeListeners > 0 && (
+                        <LiveIndicator count={stats.activeListeners} />
+                      )}
+                    </div>
+                    
+                    <button
+                      onClick={(e) => handlePlayPause(episode, e)}
+                      className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors self-start"
+                      aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
+                    >
+                      {currentlyPlaying === episode.slug && isPlaying ? (
+                        <>
+                          <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <span>Pause</span>
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                          <span>Play</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </Link>
-              
-              {/* Fixed height container for live indicator */}
-              <div className="mb-2 min-h-[1.5rem]">
-                {currentlyPlaying === episode.slug && stats && stats.activeListeners > 0 && (
-                  <LiveIndicator count={stats.activeListeners} />
-                )}
-              </div>
-              
-              <button
-                onClick={(e) => handlePlayPause(episode, e)}
-                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium text-gray-900 hover:text-gray-600 transition-colors self-start"
-                aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
-              >
-                {currentlyPlaying === episode.slug && isPlaying ? (
-                  <>
-                    <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span>Pause</span>
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span>Play</span>
-                  </>
-                )}
-              </button>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
+        </div>
+      )}
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           <div className="lg:col-span-2">
-            {/* Search */}
             <div className="mb-6 sm:mb-8">
               <div className="relative">
                 <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
@@ -309,78 +532,14 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
             {filteredEpisodes.length > 0 ? (
               <div className="space-y-6 sm:space-y-8">
                 {filteredEpisodes.map((episode) => (
-                  <article key={episode.slug} className="group pb-6 sm:pb-8 border-b border-gray-200">
-                    <Link href={`/blog/${episode.slug}`} className="block">
-                      <div className="flex gap-4 sm:gap-6">
-                        <div className="flex-1 min-w-0">
-                          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-1.5 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors">
-                            {episode.title}
-                          </h2>
-                          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2">
-                            {episode.description}
-                          </p>
-                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
-                            <span className="truncate">{formatDate(episode.publishedAt)}</span>
-                            <span>·</span>
-                            <span>{episode.readingTime || 5} min</span>
-                          </div>
-                        </div>
-
-                        {episode.coverImage && (
-                          <div className="w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 flex-shrink-0">
-                            <img
-                              src={episode.coverImage}
-                              alt={episode.title}
-                              className="w-full h-full object-cover rounded"
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </Link>
-
-                    {/* Stats and Controls */}
-                    <div className="flex items-center justify-between mt-3 sm:mt-4">
-                      <div className="flex items-center gap-4">
-                        <button
-                          onClick={(e) => handlePlayPause(episode, e)}
-                          className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full font-medium text-xs sm:text-sm transition-colors ${
-                            currentlyPlaying === episode.slug && isPlaying
-                              ? 'bg-gray-900 text-white'
-                              : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                          }`}
-                          aria-label={currentlyPlaying === episode.slug && isPlaying ? 'Pause episode' : 'Play episode'}
-                        >
-                          {currentlyPlaying === episode.slug && isPlaying ? (
-                            <>
-                              <Pause className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              <span>Pause</span>
-                            </>
-                          ) : (
-                            <>
-                              <Play className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                              <span>Play</span>
-                            </>
-                          )}
-                        </button>
-
-                        {/* Show live stats if this episode is playing */}
-                        {currentlyPlaying === episode.slug && stats && (
-                          <PodcastStatsDisplay
-                            totalListens={stats.totalListens}
-                            activeListeners={stats.activeListeners}
-                            variant="inline"
-                          />
-                        )}
-                      </div>
-
-                      <button 
-                        className="text-gray-400 hover:text-gray-900 transition-colors"
-                        aria-label="Bookmark episode"
-                      >
-                        <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </button>
-                    </div>
-                  </article>
+                  <EpisodeCard 
+                    key={episode.slug}
+                    episode={episode}
+                    currentlyPlaying={currentlyPlaying}
+                    isPlaying={isPlaying}
+                    handlePlayPause={handlePlayPause}
+                    stats={currentlyPlaying === episode.slug ? stats : null}
+                  />
                 ))}
               </div>
             ) : (

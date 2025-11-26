@@ -1,14 +1,246 @@
 // src/app/blog/BlogClient.tsx
 'use client';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp, Filter, Headphones } from 'lucide-react';
+import { Search, CalendarDays, Clock, ArrowRight, Tag, X, Bookmark, TrendingUp, Filter, Headphones, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { BlogPostWithContent } from '@/types/blog';
+import { supabase } from '@/lib/supabase';
 
 interface BlogClientProps {
   allPosts: BlogPostWithContent[];
   featuredPosts: BlogPostWithContent[];
+}
+
+// Hook to manage claps for a post
+function usePostClaps(postSlug: string) {
+  const [claps, setClaps] = useState(0);
+  const [isClapping, setIsClapping] = useState(false);
+
+  useEffect(() => {
+    loadClaps();
+
+    // Subscribe to real-time updates
+    const channel = supabase
+      .channel(`post-${postSlug}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'post_appreciations',
+          filter: `post_slug=eq.${postSlug}`,
+        },
+        (payload) => {
+          if (payload.new && typeof payload.new === 'object' && 'total_claps' in payload.new) {
+            setClaps(payload.new.total_claps as number);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [postSlug]);
+
+  const loadClaps = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('post_appreciations')
+        .select('total_claps')
+        .eq('post_slug', postSlug)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error loading claps:', error);
+        return;
+      }
+
+      if (data) {
+        setClaps(data.total_claps || 0);
+      }
+    } catch (err) {
+      console.error('Error loading claps:', err);
+    }
+  };
+
+  const handleClap = async (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent navigation
+    e.stopPropagation();
+
+    // Optimistic update
+    setClaps(prev => prev + 1);
+    setIsClapping(true);
+    setTimeout(() => setIsClapping(false), 600);
+
+    try {
+      const { data: existing } = await supabase
+        .from('post_appreciations')
+        .select('*')
+        .eq('post_slug', postSlug)
+        .single();
+
+      if (existing) {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .update({ total_claps: existing.total_claps + 1 })
+          .eq('post_slug', postSlug);
+
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .insert({ post_slug: postSlug, total_claps: 1 });
+
+        if (error) throw error;
+      }
+    } catch (error) {
+      console.error('Error saving clap:', error);
+      setClaps(prev => prev - 1);
+    }
+  };
+
+  return { claps, isClapping, handleClap };
+}
+
+// Post Card Component with Claps
+function PostCard({ post, index }: { post: BlogPostWithContent; index: number }) {
+  const { claps, isClapping, handleClap } = usePostClaps(post.slug);
+  const [isBookmarked, setIsBookmarked] = useState(false);
+
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
+  const handleBookmark = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsBookmarked(!isBookmarked);
+    
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
+      const postUrl = `/blog/${post.slug}`;
+      
+      if (isBookmarked) {
+        const filtered = bookmarks.filter((b: string) => b !== postUrl);
+        localStorage.setItem('bookmarkedPosts', JSON.stringify(filtered));
+      } else {
+        bookmarks.push(postUrl);
+        localStorage.setItem('bookmarkedPosts', JSON.stringify(bookmarks));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
+      const postUrl = `/blog/${post.slug}`;
+      setIsBookmarked(bookmarks.includes(postUrl));
+    }
+  }, [post.slug]);
+
+  return (
+    <article className="group">
+      <Link href={`/blog/${post.slug}`} className="flex gap-4 sm:gap-8">
+        <div className="flex-1 min-w-0">
+          {/* Title */}
+          <div className="flex items-start gap-2 mb-1.5 sm:mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
+              {post.title}
+            </h2>
+          </div>
+
+          {/* Description */}
+          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 hidden sm:block">
+            {post.description}
+          </p>
+
+          {/* Meta Info */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
+              <span className="truncate">{formatDate(post.publishedAt)}</span>
+              <span>·</span>
+              <span>{post.readingTime || 5} min read</span>
+              {post.tags && post.tags[0] && (
+                <>
+                  <span className="hidden sm:inline">·</span>
+                  <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
+                    {post.tags[0].replace(/-/g, ' ')}
+                  </span>
+                </>
+              )}
+            </div>
+            
+            {/* Action Buttons */}
+            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+              {/* Clap Button */}
+              <button
+                onClick={handleClap}
+                className="relative p-1.5 sm:p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group/clap"
+                aria-label="Show appreciation"
+                title="Show appreciation"
+              >
+                <Sparkles 
+                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
+                    isClapping 
+                      ? 'text-purple-600 scale-125 rotate-12' 
+                      : 'text-gray-400 group-hover/clap:text-purple-600 group-hover/clap:scale-110'
+                  }`}
+                />
+                {claps > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-purple-600 text-white text-[8px] sm:text-[9px] font-bold rounded-full min-w-3 h-3 sm:min-w-4 sm:h-4 px-0.5 sm:px-1 flex items-center justify-center">
+                    {claps > 99 ? '99+' : claps}
+                  </span>
+                )}
+              </button>
+
+              {/* Bookmark Button */}
+              <button
+                onClick={handleBookmark}
+                className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-full hover:bg-gray-100"
+                aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+              >
+                <Bookmark className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all ${
+                  isBookmarked ? 'fill-gray-900 text-gray-900' : ''
+                }`} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Thumbnail */}
+        {post.coverImage && (
+          <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0 relative">
+            <img
+              src={post.coverImage}
+              alt={post.title}
+              className="w-full h-full object-cover rounded sm:rounded-none"
+            />
+            {post.audioUrl && (
+              <motion.div 
+                className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-gray-900/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-0.5 sm:gap-1"
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 + (index * 0.05) }}
+                aria-label="Audio content available"
+                role="status"
+              >
+                <Headphones className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" aria-hidden="true" />
+                <span className="text-[9px] sm:text-[10px] font-semibold text-white uppercase tracking-wider hidden xs:inline">
+                  Audio
+                </span>
+              </motion.div>
+            )}
+          </div>
+        )}
+      </Link>
+    </article>
+  );
 }
 
 function MobileFilterModal({
@@ -226,74 +458,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             {filteredPosts.length > 0 ? (
               <div className="space-y-8 sm:space-y-12">
                 {filteredPosts.map((post, index) => (
-                  <article
-                    key={post.slug}
-                    className="group"
-                  >
-                    <Link href={`/blog/${post.slug}`} className="flex gap-4 sm:gap-8">
-                      <div className="flex-1 min-w-0">
-                        {/* Title */}
-                        <div className="flex items-start gap-2 mb-1.5 sm:mb-2">
-                          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
-                            {post.title}
-                          </h2>
-                         
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 hidden sm:block">
-                          {post.description}
-                        </p>
-
-                        {/* Meta Info */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
-                            <span className="truncate">{formatDate(post.publishedAt)}</span>
-                            <span>·</span>
-                            <span>{post.readingTime || 5} min read</span>
-                            {post.tags && post.tags[0] && (
-                              <>
-                                <span className="hidden sm:inline">·</span>
-                                <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
-                                  {post.tags[0].replace(/-/g, ' ')}
-                                </span>
-                              </>
-                            )}
-                          </div>
-                          <button className="text-gray-400 hover:text-gray-900 transition-colors flex-shrink-0">
-                            <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Thumbnail */}
-                      {post.coverImage && (
-                        <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0 relative">
-                          <img
-                            src={post.coverImage}
-                            alt={post.title}
-                            className="w-full h-full object-cover rounded sm:rounded-none"
-                          />
-                          {post.audioUrl && (
-                            <motion.div 
-                              className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-gray-900/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-0.5 sm:gap-1"
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.2 + (index * 0.05) }}
-                              aria-label="Audio content available"
-                              role="status"
-                            >
-                              <Headphones className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" aria-hidden="true" />
-                              <span className="text-[9px] sm:text-[10px] font-semibold text-white uppercase tracking-wider hidden xs:inline">
-                                Audio
-                              </span>
-                            </motion.div>
-                          )}
-                        </div>
-                      )}
-                    </Link>
-                  </article>
+                  <PostCard key={post.slug} post={post} index={index} />
                 ))}
               </div>
             ) : (
