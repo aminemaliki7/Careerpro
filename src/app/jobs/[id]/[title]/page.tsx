@@ -23,10 +23,6 @@ interface Job {
   benefits: string[];
 }
 
-// Utility functions
-const getJobRegion = (location: string) => {
-  return 'North America';
-};
 
 const formatExperienceLevel = (level: string) => {
   const levels: Record<string, string> = {
@@ -55,7 +51,6 @@ const formatDate = (dateString: string) => {
   });
 };
 
-const GLOBAL_REGIONS = [{ value: 'North America', label: 'North America' }];
 
 // Icon Components (condensed for brevity)
 const MapPinIcon = ({ className }: { className: string }) => (
@@ -178,8 +173,7 @@ export default async function JobDetailsPage({
     .neq('id', id)
     .limit(3);
 
-  const jobRegion = getJobRegion(typedJob.location);
-  const regionInfo = GLOBAL_REGIONS.find(r => r.value === jobRegion);
+
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -208,12 +202,7 @@ export default async function JobDetailsPage({
                   <MapPinIcon className="h-5 w-5 mr-2 text-gray-400" />
                   <span>{typedJob.location}</span>
                 </div>
-                {regionInfo && (
-                  <div className="flex items-center">
-                    <GlobeIcon className="h-5 w-5 mr-2 text-gray-400" />
-                    <span>{regionInfo.label}</span>
-                  </div>
-                )}
+              
                 <div className="flex items-center">
                   <ClockIcon className="h-5 w-5 mr-2 text-gray-400" />
                   <span>{typedJob.type}</span>

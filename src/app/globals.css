@@ -701,21 +701,10 @@ a:focus-visible {
 }
 
 /* READING EXPERIENCE - First letter drop cap for articles */
-.prose > p:first-of-type::first-letter {
-  float: left;
-  font-size: 3.5rem;
-  line-height: 3rem;
-  padding-right: 0.5rem;
-  font-weight: 700;
-  color: #3b82f6;
-}
 
-@media (max-width: 640px) {
-  .prose > p:first-of-type::first-letter {
-    font-size: 2.5rem;
-    line-height: 2rem;
-  }
-}
+
+
+
 
 /* SMOOTH SCROLLING for anchor links */
 .prose [id] {
