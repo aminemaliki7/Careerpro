@@ -574,7 +574,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
               {/* Newsletter */}
               <div className="border-t border-gray-200 pt-8">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">
-                  Reading list
+                  Reading list 
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
                   Click the bookmark icon on any story to easily organize your favorite reads.
