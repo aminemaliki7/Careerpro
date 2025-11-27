@@ -7,7 +7,7 @@ slug: "langchain-vs-langgraph"
 featured: true
 coverImage: "/images/langchain-vs-langgraph.jpg"
 audioUrl: "/audio/blog/langchain-vs-langgraph.mp3"
-audioDuration: 415*/
+audioDuration: 415
 
 affiliateLink: ""
 affiliateCourseLinks: []
@@ -85,13 +85,25 @@ This setup allows **nonlinear workflows**, where users can interact in any order
 
 ## LangChain vs LangGraph: Key Differences
 
-| Feature | LangChain | LangGraph |
-|---------|-----------|-----------|
-| **Primary Focus** | Sequential LLM workflows | Multi-agent systems and complex workflows |
-| **Structure** | Chain (Directed Acyclic Graph) | Graph (loops and state revisiting allowed) |
-| **Components** | Memory, Prompt, LLM, Agent | Nodes, Edges, State |
-| **State Management** | Limited, with memory components | Robust, accessible to all nodes |
-| **Use Cases** | Sequential tasks like data retrieval → processing → output | Interactive systems requiring ongoing adaptation and context, e.g., virtual assistants |
+### Primary Focus
+- **LangChain:** Designed for **sequential LLM workflows**, executing tasks in a defined order.  
+- **LangGraph:** Built for **multi-agent systems and complex workflows**, handling nonlinear interactions and stateful processes.
+
+### Structure
+- **LangChain:** Uses a **chain structure (Directed Acyclic Graph)** — tasks flow in a set sequence.  
+- **LangGraph:** Uses a **graph structure** — supports loops, revisiting states, and dynamic routing between nodes.
+
+### Components
+- **LangChain:** Includes **Memory**, **Prompt**, **LLM**, and **Agent** components.  
+- **LangGraph:** Includes **Nodes**, **Edges**, and **State**, forming the graph structure of the workflow.
+
+### State Management
+- **LangChain:** Limited state management, primarily through memory components, which maintain some context across interactions.  
+- **LangGraph:** Robust state management; all nodes can access and modify state, enabling context-aware behaviors.
+
+### Use Cases
+- **LangChain:** Ideal for **sequential tasks**, e.g., data retrieval → processing → output.  
+- **LangGraph:** Perfect for **interactive systems requiring ongoing adaptation**, e.g., virtual assistants or task managers handling multiple types of requests.
 
 ---
 
