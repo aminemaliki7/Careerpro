@@ -16,6 +16,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [claps, setClaps] = useState(0);
   const [isClapping, setIsClapping] = useState(false);
+  const [hasClapped, setHasClapped] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [comments, setComments] = useState<Array<{
@@ -40,10 +41,11 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     });
 
   // ============================================================================
-  // Load claps from Supabase on mount
+  // Load claps from Supabase on mount and check if user has clapped
   // ============================================================================
   useEffect(() => {
     loadClapsFromDatabase();
+    checkIfUserClapped();
     
     // Subscribe to real-time updates
     const channel = supabase
@@ -69,6 +71,13 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     };
   }, [postSlug]);
 
+  const checkIfUserClapped = () => {
+    if (typeof window !== 'undefined') {
+      const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+      setHasClapped(clappedPosts.includes(postSlug));
+    }
+  };
+
   const loadClapsFromDatabase = async () => {
     try {
       const { data, error } = await supabase
@@ -91,43 +100,101 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   };
 
   // ============================================================================
-  // Handle clap with Supabase update
+  // Handle clap toggle - add or remove appreciation
   // ============================================================================
   const handleClap = async () => {
-    // Optimistic update
-    setClaps(prev => prev + 1);
-    setIsClapping(true);
-    setTimeout(() => setIsClapping(false), 600);
+    if (hasClapped) {
+      // Remove appreciation
+      setClaps(prev => Math.max(0, prev - 1));
+      setIsClapping(true);
+      setHasClapped(false);
 
-    try {
-      // Check if record exists
-      const { data: existing } = await supabase
-        .from('post_appreciations')
-        .select('*')
-        .eq('post_slug', postSlug)
-        .single();
-
-      if (existing) {
-        // Update existing record
-        const { error } = await supabase
-          .from('post_appreciations')
-          .update({ total_claps: existing.total_claps + 1 })
-          .eq('post_slug', postSlug);
-
-        if (error) throw error;
-      } else {
-        // Insert new record
-        const { error } = await supabase
-          .from('post_appreciations')
-          .insert({ post_slug: postSlug, total_claps: 1 });
-
-        if (error) throw error;
+      // Remove from localStorage
+      if (typeof window !== 'undefined') {
+        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+        const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
+        localStorage.setItem('clappedPosts', JSON.stringify(filtered));
       }
-    } catch (error) {
-      console.error('Error saving clap:', error);
-      // Revert optimistic update on error
-      setClaps(prev => prev - 1);
-      alert('Failed to save appreciation. Please try again.');
+
+      setTimeout(() => setIsClapping(false), 600);
+
+      try {
+        const { data: existing } = await supabase
+          .from('post_appreciations')
+          .select('*')
+          .eq('post_slug', postSlug)
+          .single();
+
+        if (existing && existing.total_claps > 0) {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .update({ total_claps: existing.total_claps - 1 })
+            .eq('post_slug', postSlug);
+
+          if (error) throw error;
+        }
+      } catch (error) {
+        console.error('Error removing clap:', error);
+        // Revert on error
+        setClaps(prev => prev + 1);
+        setHasClapped(true);
+        
+        if (typeof window !== 'undefined') {
+          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+          clappedPosts.push(postSlug);
+          localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
+        }
+      }
+    } else {
+      // Add appreciation
+      setClaps(prev => prev + 1);
+      setIsClapping(true);
+      setHasClapped(true);
+
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+        clappedPosts.push(postSlug);
+        localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
+      }
+
+      setTimeout(() => setIsClapping(false), 600);
+
+      try {
+        const { data: existing } = await supabase
+          .from('post_appreciations')
+          .select('*')
+          .eq('post_slug', postSlug)
+          .single();
+
+        if (existing) {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .update({ total_claps: existing.total_claps + 1 })
+            .eq('post_slug', postSlug);
+
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .insert({ post_slug: postSlug, total_claps: 1 });
+
+          if (error) throw error;
+        }
+      } catch (error) {
+        console.error('Error saving clap:', error);
+        // Revert on error
+        setClaps(prev => prev - 1);
+        setHasClapped(false);
+        
+        if (typeof window !== 'undefined') {
+          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+          const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
+          localStorage.setItem('clappedPosts', JSON.stringify(filtered));
+        }
+        
+        alert('Failed to save appreciation. Please try again.');
+      }
     }
   };
 
@@ -346,16 +413,18 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
               </>
             )}
 
-            {/* UPDATED: Clap Button with Real-time Database Sync */}
+            {/* UPDATED: Clap Button - Toggle Add/Remove */}
             <button
               onClick={handleClap}
               className="relative p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group"
-              aria-label="Clap for this article"
-              title="Show appreciation"
+              aria-label={hasClapped ? "Remove appreciation" : "Show appreciation"}
+              title={hasClapped ? "Remove appreciation" : "Show appreciation"}
             >
               <Sparkles 
                 className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${
-                  isClapping 
+                  hasClapped
+                    ? 'text-purple-600'
+                    : isClapping 
                     ? 'text-purple-600 scale-125 rotate-12' 
                     : 'text-gray-700 group-hover:text-purple-600 group-hover:scale-110'
                 }`}

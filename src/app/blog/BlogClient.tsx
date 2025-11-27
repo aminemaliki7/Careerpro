@@ -12,13 +12,15 @@ interface BlogClientProps {
   featuredPosts: BlogPostWithContent[];
 }
 
-// Hook to manage claps for a post
+// Hook to manage claps for a post with toggle functionality
 function usePostClaps(postSlug: string) {
   const [claps, setClaps] = useState(0);
   const [isClapping, setIsClapping] = useState(false);
+  const [hasClapped, setHasClapped] = useState(false);
 
   useEffect(() => {
     loadClaps();
+    checkIfUserClapped();
 
     // Subscribe to real-time updates
     const channel = supabase
@@ -44,6 +46,13 @@ function usePostClaps(postSlug: string) {
     };
   }, [postSlug]);
 
+  const checkIfUserClapped = () => {
+    if (typeof window !== 'undefined') {
+      const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+      setHasClapped(clappedPosts.includes(postSlug));
+    }
+  };
+
   const loadClaps = async () => {
     try {
       const { data, error } = await supabase
@@ -66,47 +75,108 @@ function usePostClaps(postSlug: string) {
   };
 
   const handleClap = async (e: React.MouseEvent) => {
-    e.preventDefault(); // Prevent navigation
+    e.preventDefault();
     e.stopPropagation();
 
-    // Optimistic update
-    setClaps(prev => prev + 1);
-    setIsClapping(true);
-    setTimeout(() => setIsClapping(false), 600);
+    if (hasClapped) {
+      // Remove appreciation
+      setClaps(prev => Math.max(0, prev - 1));
+      setIsClapping(true);
+      setHasClapped(false);
 
-    try {
-      const { data: existing } = await supabase
-        .from('post_appreciations')
-        .select('*')
-        .eq('post_slug', postSlug)
-        .single();
-
-      if (existing) {
-        const { error } = await supabase
-          .from('post_appreciations')
-          .update({ total_claps: existing.total_claps + 1 })
-          .eq('post_slug', postSlug);
-
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from('post_appreciations')
-          .insert({ post_slug: postSlug, total_claps: 1 });
-
-        if (error) throw error;
+      // Remove from localStorage
+      if (typeof window !== 'undefined') {
+        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+        const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
+        localStorage.setItem('clappedPosts', JSON.stringify(filtered));
       }
-    } catch (error) {
-      console.error('Error saving clap:', error);
-      setClaps(prev => prev - 1);
+
+      setTimeout(() => setIsClapping(false), 600);
+
+      try {
+        const { data: existing } = await supabase
+          .from('post_appreciations')
+          .select('*')
+          .eq('post_slug', postSlug)
+          .single();
+
+        if (existing && existing.total_claps > 0) {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .update({ total_claps: existing.total_claps - 1 })
+            .eq('post_slug', postSlug);
+
+          if (error) throw error;
+        }
+      } catch (error) {
+        console.error('Error removing clap:', error);
+        // Revert on error
+        setClaps(prev => prev + 1);
+        setHasClapped(true);
+        
+        if (typeof window !== 'undefined') {
+          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+          clappedPosts.push(postSlug);
+          localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
+        }
+      }
+    } else {
+      // Add appreciation
+      setClaps(prev => prev + 1);
+      setIsClapping(true);
+      setHasClapped(true);
+
+      // Save to localStorage
+      if (typeof window !== 'undefined') {
+        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+        clappedPosts.push(postSlug);
+        localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
+      }
+
+      setTimeout(() => setIsClapping(false), 600);
+
+      try {
+        const { data: existing } = await supabase
+          .from('post_appreciations')
+          .select('*')
+          .eq('post_slug', postSlug)
+          .single();
+
+        if (existing) {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .update({ total_claps: existing.total_claps + 1 })
+            .eq('post_slug', postSlug);
+
+          if (error) throw error;
+        } else {
+          const { error } = await supabase
+            .from('post_appreciations')
+            .insert({ post_slug: postSlug, total_claps: 1 });
+
+          if (error) throw error;
+        }
+      } catch (error) {
+        console.error('Error saving clap:', error);
+        // Revert optimistic update
+        setClaps(prev => prev - 1);
+        setHasClapped(false);
+        
+        if (typeof window !== 'undefined') {
+          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+          const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
+          localStorage.setItem('clappedPosts', JSON.stringify(filtered));
+        }
+      }
     }
   };
 
-  return { claps, isClapping, handleClap };
+  return { claps, isClapping, handleClap, hasClapped };
 }
 
 // Post Card Component with Claps
 function PostCard({ post, index }: { post: BlogPostWithContent; index: number }) {
-  const { claps, isClapping, handleClap } = usePostClaps(post.slug);
+  const { claps, isClapping, handleClap, hasClapped } = usePostClaps(post.slug);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
   const formatDate = (dateString: string) =>
@@ -177,16 +247,18 @@ function PostCard({ post, index }: { post: BlogPostWithContent; index: number })
             
             {/* Action Buttons */}
             <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-              {/* Clap Button */}
+              {/* Clap Button - Toggle */}
               <button
                 onClick={handleClap}
                 className="relative p-1.5 sm:p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group/clap"
-                aria-label="Show appreciation"
-                title="Show appreciation"
+                aria-label={hasClapped ? "Remove appreciation" : "Show appreciation"}
+                title={hasClapped ? "Remove appreciation" : "Show appreciation"}
               >
                 <Sparkles 
                   className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
-                    isClapping 
+                    hasClapped
+                      ? 'text-purple-600'
+                      : isClapping 
                       ? 'text-purple-600 scale-125 rotate-12' 
                       : 'text-gray-400 group-hover/clap:text-purple-600 group-hover/clap:scale-110'
                   }`}
