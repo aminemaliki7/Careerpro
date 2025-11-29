@@ -65,6 +65,15 @@ export default function EasyApplyModal({
   const [parseError, setParseError] = useState('');
   const [parsing, setParsing] = useState(false);
 
+  // New ATS-related state
+  const [atsLoading, setAtsLoading] = useState(false);
+  const [atsError, setAtsError] = useState('');
+  const [atsResult, setAtsResult] = useState<{
+    score: number;
+    passed: boolean;
+    suggestions: string[];
+  } | null>(null);
+
   if (!isOpen) return null;
 
   const extractTextFromFile = async (file: File): Promise<string> => {
@@ -107,6 +116,7 @@ export default function EasyApplyModal({
     setError('');
     setParseError('');
     setParsing(true);
+    setAtsResult(null); // reset ATS result after new upload
 
     try {
       const text = await extractTextFromFile(file);
@@ -121,6 +131,53 @@ export default function EasyApplyModal({
       console.error('File parsing error:', err);
     } finally {
       setParsing(false);
+    }
+  };
+
+  // New: Run ATS check against the provided CV text and job details
+  const handleRunAtsCheck = async () => {
+    if (!cvText || cvText.trim().length < 50) {
+      setAtsError('Please provide your CV content (at least 50 characters) before running the ATS check.');
+      return;
+    }
+
+    setAtsLoading(true);
+    setAtsError('');
+    setAtsResult(null);
+
+    try {
+      const response = await fetch('/api/jobs/ats-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          cvText: cvText.trim(),
+          jobTitle,
+          company,
+          requirements: requirements || [],
+          description: description || '',
+          skills: skills || [],
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'ATS check failed');
+      }
+
+      // Expecting { score: number, passed: boolean, suggestions: string[] }
+      setAtsResult({
+        score: data.score ?? 0,
+        passed: !!data.passed,
+        suggestions: data.suggestions ?? [],
+      });
+
+      setCurrentStep(3); // go to ATS results step
+    } catch (err) {
+      setAtsError('Failed to run ATS check. Please try again.');
+      console.error('ATS check error:', err);
+    } finally {
+      setAtsLoading(false);
     }
   };
 
@@ -157,7 +214,7 @@ export default function EasyApplyModal({
       }
 
       setGeneratedEmail(data.emailContent);
-      setCurrentStep(3);
+      setCurrentStep(4); // move to final Review & Send step (was 3)
     } catch (err) {
       setError('Failed to generate email. Please try again.');
       console.error('Generation error:');
@@ -182,7 +239,6 @@ export default function EasyApplyModal({
       return;
     }
     
-    // Show reminder about attaching resume
     const confirmSend = window.confirm(
       `Quick reminder: Don't forget to attach your resume/CV to the email before sending!\n\nClick OK to open your email client.`
     );
@@ -197,7 +253,8 @@ export default function EasyApplyModal({
   };
 
   const canProceedToStep2 = userName.trim().length >= 2;
-  const canProceedToStep3 = cvText.trim().length >= 50;
+  const canProceedToStep3 = cvText.trim().length >= 50; // allows running ATS
+  const canProceedToStep4 = !!atsResult || !!generatedEmail; // allow moving to final if ATS already run or email generated
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -222,13 +279,14 @@ export default function EasyApplyModal({
           </button>
         </div>
 
-        {/* Progress Steps */}
+        {/* Progress Steps - updated to include ATS Checker as step 3 */}
         <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
           <div className="flex items-center justify-between max-w-2xl mx-auto">
             {[
               { num: 1, label: 'Your Info' },
               { num: 2, label: 'Upload CV' },
-              { num: 3, label: 'Review & Send' }
+              { num: 3, label: 'ATS Check' },
+              { num: 4, label: 'Review & Send' }
             ].map((step, index) => (
               <div key={step.num} className="flex items-center flex-1">
                 <div className="flex items-center">
@@ -251,7 +309,7 @@ export default function EasyApplyModal({
                     {step.label}
                   </span>
                 </div>
-                {index < 2 && (
+                {index < 3 && (
                   <div className={`flex-1 h-1 mx-4 rounded-full transition-all ${
                     currentStep > step.num ? 'bg-green-500' : 'bg-gray-200'
                   }`} />
@@ -313,7 +371,7 @@ export default function EasyApplyModal({
             <div className="max-w-2xl mx-auto space-y-6">
               <div>
                 <h3 className="text-2xl font-light text-gray-900 mb-2">Upload your CV/Resume</h3>
-                <p className="text-gray-500 text-sm font-light">We&apos;ll analyze your experience to create a tailored application.</p>
+                <p className="text-gray-500 text-sm font-light">We&apos;ll analyze your experience to create a tailored application and run an ATS check.</p>
               </div>
 
               <div className="bg-white border border-gray-200 rounded-2xl p-8 space-y-6 shadow-sm">
@@ -374,7 +432,10 @@ export default function EasyApplyModal({
                   </label>
                   <textarea
                     value={cvText}
-                    onChange={(e) => setCvText(e.target.value)}
+                    onChange={(e) => {
+                      setCvText(e.target.value);
+                      setAtsResult(null); // reset ATS result when text changes
+                    }}
                     rows={10}
                     className="w-full border border-gray-300 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
                     placeholder="Paste your complete CV/Resume here including work experience, education, skills, and achievements..."
@@ -393,9 +454,9 @@ export default function EasyApplyModal({
                 </div>
               </div>
 
-              {error && (
+              {(error || atsError) && (
                 <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
-                  {error}
+                  {error || atsError}
                 </div>
               )}
 
@@ -406,32 +467,121 @@ export default function EasyApplyModal({
                 >
                   Back
                 </button>
-                <button
-                  onClick={handleGenerateEmail}
-                  disabled={!canProceedToStep3 || loading}
-                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center shadow-lg hover:shadow-xl"
-                >
-                  {loading ? (
-                    <>
-                      <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                      </svg>
-                      Generating with AI...
-                    </>
-                  ) : (
-                    <>
-                      <SparklesIcon className="h-5 w-5 mr-2 animate-pulse" />
-                      Generate Email
-                    </>
-                  )}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleRunAtsCheck}
+                    disabled={!canProceedToStep3 || atsLoading}
+                    className="px-6 py-3 bg-white border border-purple-600 text-purple-600 rounded-full font-medium hover:bg-purple-50 disabled:opacity-50 transition-all"
+                  >
+                    {atsLoading ? 'Running ATS...' : 'Run ATS Check'}
+                  </button>
+                  <button
+                    onClick={handleGenerateEmail}
+                    disabled={!canProceedToStep3 || loading}
+                    className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center shadow-lg hover:shadow-xl"
+                  >
+                    {loading ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Generating with AI...
+                      </>
+                    ) : (
+                      <>
+                        <SparklesIcon className="h-5 w-5 mr-2 animate-pulse" />
+                        Generate Email
+                      </>
+                    )}
+                  </button>
+                </div>
               </div>
             </div>
           )}
 
-          {/* Step 3: Review & Send */}
-          {currentStep === 3 && generatedEmail && (
+          {/* Step 3: ATS Results */}
+          {currentStep === 3 && (
+            <div className="max-w-3xl mx-auto space-y-6">
+              <div>
+                <h3 className="text-2xl font-light text-gray-900 mb-2">ATS Checker Results</h3>
+                <p className="text-gray-500 text-sm font-light">See how your CV performs against the job description and get improvement suggestions.</p>
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+                {atsLoading && (
+                  <div className="flex items-center gap-3">
+                    <svg className="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    <span className="text-gray-700">Analyzing...</span>
+                  </div>
+                )}
+
+                {!atsLoading && atsResult && (
+                  <>
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <h4 className="text-lg font-medium">Score: <span className="text-purple-600">{atsResult.score}%</span></h4>
+                        <p className="text-sm text-gray-500">{atsResult.passed ? 'Looks good for ATS!' : 'May need improvements for ATS parsing.'}</p>
+                      </div>
+                      <div className={`px-3 py-1 rounded-full font-medium ${atsResult.passed ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
+                        {atsResult.passed ? 'Likely Passed' : 'At Risk'}
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h5 className="text-sm font-medium mb-2">Suggestions</h5>
+                      {atsResult.suggestions.length ? (
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2">
+                          {atsResult.suggestions.map((s, i) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-500">No specific suggestions — your CV looks good.</p>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {!atsLoading && !atsResult && (
+                  <div className="text-sm text-gray-500">No ATS data available. Run the ATS check to see results.</div>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={() => setCurrentStep(2)}
+                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+                >
+                  Back
+                </button>
+                <div className="flex-1 flex gap-3">
+                  <button
+                    onClick={() => {
+                      // proceed to generate email (user can still edit CV in previous step)
+                      setCurrentStep(2); // let them edit or re-run ATS before generating
+                    }}
+                    className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+                  >
+                    Edit CV
+                  </button>
+                  <button
+                    onClick={handleGenerateEmail}
+                    disabled={loading}
+                    className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
+                  >
+                    {loading ? 'Generating...' : 'Proceed to Generate Email'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Step 4: Review & Send (was step 3) */}
+          {currentStep === 4 && generatedEmail && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
                 <h3 className="text-2xl font-light text-gray-900 mb-2">Your personalized application email</h3>
@@ -471,7 +621,7 @@ export default function EasyApplyModal({
 
               <div className="flex gap-3 pt-4">
                 <button
-                  onClick={() => setCurrentStep(2)}
+                  onClick={() => setCurrentStep(3)}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
                 >
                   Back
