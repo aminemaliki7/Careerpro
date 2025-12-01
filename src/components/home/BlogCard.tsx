@@ -1,6 +1,5 @@
 // src/components/home/BlogCard.tsx
 'use client';
-
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -31,26 +30,26 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
         delay: index * 0.1,
         ease: [0.22, 1, 0.36, 1] 
       }}
-      className="group bg-white rounded-lg border border-gray-100 overflow-hidden hover:border-gray-200 hover:shadow-sm transition-all duration-300"
+      className="group bg-white rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
     >
       <Link href={`/blog/${post.slug}`} className="block">
         {/* Image */}
         {post.coverImage && (
-          <div className="relative w-full h-48 bg-gray-100 overflow-hidden">
+          <div className="relative w-full h-56 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
             <Image
               src={post.coverImage}
               alt={post.title}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
             />
             
             {/* Audio Badge */}
             {post.audioUrl && (
-              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm">
-                <Headphones className="w-3.5 h-3.5 text-gray-700" />
-                <span className="text-xs font-medium text-gray-700">
-                  {post.audioDuration ? `${Math.ceil(post.audioDuration / 60)} min` : '5 min'}
+              <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-2 rounded-full flex items-center gap-2 shadow-lg">
+                <Headphones className="w-4 h-4 text-gray-900" />
+                <span className="text-sm font-medium text-gray-900">
+                  {post.audioDuration ? `${Math.ceil(post.audioDuration / 60)}m` : '5m'}
                 </span>
               </div>
             )}
@@ -58,35 +57,38 @@ const BlogCard = ({ post, index }: BlogCardProps) => {
         )}
 
         {/* Content */}
-        <div className="p-6 space-y-3">
+        <div className="p-6 space-y-4">
           {/* Tag */}
           {post.tags && post.tags[0] && (
-            <span className="inline-block text-xs font-medium text-gray-500 uppercase tracking-wider">
+            <span className="inline-block text-xs font-semibold text-gray-900 uppercase tracking-wide">
               {post.tags[0].replace(/-/g, ' ')}
             </span>
           )}
           
           {/* Title */}
-          <h3 className="text-xl font-semibold text-gray-900 leading-snug group-hover:text-gray-600 transition-colors duration-200 line-clamp-2">
+          <h3 className="text-2xl font-bold text-gray-900 leading-tight group-hover:text-gray-700 transition-colors duration-200 line-clamp-2">
             {post.title}
           </h3>
 
           {/* Description */}
-          <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
+          <p className="text-gray-600 leading-relaxed line-clamp-2">
             {post.description}
           </p>
 
           {/* Meta */}
-          <div className="flex items-center gap-4 text-xs text-gray-500 pt-2">
+          <div className="flex items-center gap-3 text-sm text-gray-500 pt-2 border-t border-gray-100">
             <time dateTime={post.publishedAt}>
               {formatDate(post.publishedAt)}
             </time>
             
             {!post.audioUrl && (
-              <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5" />
-                <span>5 min read</span>
-              </div>
+              <>
+                <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+                <div className="flex items-center gap-1.5">
+                  <Clock className="w-4 h-4" />
+                  <span>5 min</span>
+                </div>
+              </>
             )}
           </div>
         </div>
