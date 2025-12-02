@@ -1,7 +1,16 @@
-// src/components/jobs/EasyApplyModal.tsx
 'use client';
 
 import { useState } from 'react';
+
+// --- Interfaces for AI Response ---
+interface AtsResult {
+  matchScore: number;
+  matchedSkills: string[];
+  missingSkills: string[];
+  strengths: string[];
+  recommendations: string[];
+  summary: string;
+}
 
 interface EasyApplyModalProps {
   isOpen: boolean;
@@ -14,6 +23,7 @@ interface EasyApplyModalProps {
   skills?: string[];
 }
 
+// --- Icon Components (omitted for brevity) ---
 const CloseIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -44,6 +54,20 @@ const CheckCircleIcon = ({ className }: { className: string }) => (
   </svg>
 );
 
+// New icons for better visualization
+const TrendingUpIcon = ({ className }: { className: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+  </svg>
+);
+
+const XCircleIcon = ({ className }: { className: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+
+
 export default function EasyApplyModal({
   isOpen,
   onClose,
@@ -65,17 +89,14 @@ export default function EasyApplyModal({
   const [parseError, setParseError] = useState('');
   const [parsing, setParsing] = useState(false);
 
-  // New ATS-related state
+  // UPDATED: New ATS-related state uses the AtsResult interface
   const [atsLoading, setAtsLoading] = useState(false);
   const [atsError, setAtsError] = useState('');
-  const [atsResult, setAtsResult] = useState<{
-    score: number;
-    passed: boolean;
-    suggestions: string[];
-  } | null>(null);
+  const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
 
   if (!isOpen) return null;
 
+  // --- File Extraction Logic (unchanged) ---
   const extractTextFromFile = async (file: File): Promise<string> => {
     const fileType = file.type;
     const fileName = file.name.toLowerCase();
@@ -108,7 +129,7 @@ export default function EasyApplyModal({
     }
   };
 
- const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -134,7 +155,7 @@ export default function EasyApplyModal({
     }
   };
 
-  // New: Run ATS check against the provided CV text and job details
+  // UPDATED: Handle ATS Check
   const handleRunAtsCheck = async () => {
     if (!cvText || cvText.trim().length < 50) {
       setAtsError('Please provide your CV content (at least 50 characters) before running the ATS check.');
@@ -159,17 +180,20 @@ export default function EasyApplyModal({
         }),
       });
 
-      const data = await response.json();
+      const data: AtsResult & { error?: string } = await response.json();
 
       if (!response.ok) {
         throw new Error(data.error || 'ATS check failed');
       }
 
-      // Expecting { score: number, passed: boolean, suggestions: string[] }
+      // UPDATED: Assign fields from the backend JSON response
       setAtsResult({
-        score: data.score ?? 0,
-        passed: !!data.passed,
-        suggestions: data.suggestions ?? [],
+        matchScore: data.matchScore ?? 0,
+        matchedSkills: data.matchedSkills ?? [],
+        missingSkills: data.missingSkills ?? [],
+        strengths: data.strengths ?? [],
+        recommendations: data.recommendations ?? [],
+        summary: data.summary ?? 'Analysis complete.',
       });
 
       setCurrentStep(3); // go to ATS results step
@@ -181,11 +205,22 @@ export default function EasyApplyModal({
     }
   };
 
+  // --- Email Generation and Sending Logic (unchanged) ---
   const handleGenerateEmail = async () => {
     if (!cvText || cvText.trim().length < 50) {
       setError('Please provide your CV content (at least 50 characters)');
       return;
     }
+    
+    // If not coming directly from ATS result screen, force ATS check first
+    if (!atsResult && currentStep === 2) {
+      // Run ATS check and then proceed to generation if successful
+      // For simplicity, we'll bypass the ATS screen on this path if the user clicks "Generate Email" directly
+      // In a real app, you might want to run the ATS check and then automatically advance to the generation step 
+      // or simply skip the ATS result display if the user chooses the direct path.
+      // For now, let's just proceed with the email generation.
+    }
+
 
     setLoading(true);
     setError('');
@@ -214,7 +249,7 @@ export default function EasyApplyModal({
       }
 
       setGeneratedEmail(data.emailContent);
-      setCurrentStep(4); // move to final Review & Send step (was 3)
+      setCurrentStep(4); // move to final Review & Send step
     } catch (err) {
       setError('Failed to generate email. Please try again.');
       console.error('Generation error:');
@@ -238,28 +273,42 @@ export default function EasyApplyModal({
       setError('No contact email available for this job');
       return;
     }
-    
+
     const confirmSend = window.confirm(
       `Quick reminder: Don't forget to attach your resume/CV to the email before sending!\n\nClick OK to open your email client.`
     );
-    
+
     if (!confirmSend) {
       return;
     }
-    
+
     const subject = `Application for ${jobTitle} Position`;
     const mailtoLink = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(generatedEmail)}`;
     window.location.href = mailtoLink;
   };
 
+  // --- Navigation and State Logic (partially updated) ---
   const canProceedToStep2 = userName.trim().length >= 2;
-  const canProceedToStep3 = cvText.trim().length >= 50; // allows running ATS
-  const canProceedToStep4 = !!atsResult || !!generatedEmail; // allow moving to final if ATS already run or email generated
+  const canProceedToStep3 = cvText.trim().length >= 50; // allows running ATS or generating email
+  const canProceedToStep4 = !!generatedEmail; // Only allow moving to final review if email is generated
+
+  // Helper for determining color based on score
+  const getScoreColor = (score: number) => {
+    if (score >= 70) return 'bg-green-100 text-green-700 border-green-300';
+    if (score >= 40) return 'bg-yellow-100 text-yellow-700 border-yellow-300';
+    return 'bg-red-100 text-red-700 border-red-300';
+  };
+
+  const getScoreStatus = (score: number) => {
+    if (score >= 70) return 'Strong Match';
+    if (score >= 40) return 'Moderate Match';
+    return 'Weak Match';
+  };
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-200">
-        {/* Header */}
+        {/* Header (unchanged) */}
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-6 flex justify-between items-center">
           <div className="text-white">
             <h2 className="text-2xl font-light flex items-center">
@@ -279,7 +328,7 @@ export default function EasyApplyModal({
           </button>
         </div>
 
-        {/* Progress Steps - updated to include ATS Checker as step 3 */}
+        {/* Progress Steps (unchanged) */}
         <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
           <div className="flex items-center justify-between max-w-2xl mx-auto">
             {[
@@ -321,7 +370,7 @@ export default function EasyApplyModal({
 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-8">
-          {/* Step 1: Personal Information */}
+          {/* Step 1: Personal Information (unchanged) */}
           {currentStep === 1 && (
             <div className="max-w-2xl mx-auto space-y-6">
               <div>
@@ -366,7 +415,7 @@ export default function EasyApplyModal({
             </div>
           )}
 
-          {/* Step 2: Upload CV */}
+          {/* Step 2: Upload CV (unchanged save for button logic) */}
           {currentStep === 2 && (
             <div className="max-w-2xl mx-auto space-y-6">
               <div>
@@ -500,15 +549,15 @@ export default function EasyApplyModal({
             </div>
           )}
 
-          {/* Step 3: ATS Results */}
+          {/* UPDATED: Step 3: ATS Results */}
           {currentStep === 3 && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-2">ATS Checker Results</h3>
+                <h3 className="text-2xl font-light text-gray-900 mb-2">ATS Checker Results 🤖</h3>
                 <p className="text-gray-500 text-sm font-light">See how your CV performs against the job description and get improvement suggestions.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm space-y-6">
                 {atsLoading && (
                   <div className="flex items-center gap-3">
                     <svg className="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24">
@@ -521,66 +570,120 @@ export default function EasyApplyModal({
 
                 {!atsLoading && atsResult && (
                   <>
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h4 className="text-lg font-medium">Score: <span className="text-purple-600">{atsResult.score}%</span></h4>
-                        <p className="text-sm text-gray-500">{atsResult.passed ? 'Looks good for ATS!' : 'May need improvements for ATS parsing.'}</p>
+                    <div className={`p-4 rounded-xl border-l-4 ${getScoreColor(atsResult.matchScore)}`}>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          {atsResult.matchScore >= 70 ? (
+                            <CheckCircleIcon className="h-6 w-6 text-green-700" />
+                          ) : (
+                            <TrendingUpIcon className="h-6 w-6 text-yellow-700" />
+                          )}
+                          <h4 className="text-xl font-semibold">Match Score: <span className="font-bold">{atsResult.matchScore}%</span></h4>
+                        </div>
+                        <div className={`px-4 py-1 rounded-full text-sm font-medium ${getScoreColor(atsResult.matchScore).replace('-100', '-50').replace('border-', 'bg-').replace('text-', 'text-')}`}>
+                          {getScoreStatus(atsResult.matchScore)}
+                        </div>
                       </div>
-                      <div className={`px-3 py-1 rounded-full font-medium ${atsResult.passed ? 'bg-green-50 text-green-700' : 'bg-yellow-50 text-yellow-700'}`}>
-                        {atsResult.passed ? 'Likely Passed' : 'At Risk'}
-                      </div>
+                      <p className="text-sm italic mt-2">{atsResult.summary}</p>
                     </div>
 
-                    <div className="mb-4">
-                      <h5 className="text-sm font-medium mb-2">Suggestions</h5>
-                      {atsResult.suggestions.length ? (
-                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2">
-                          {atsResult.suggestions.map((s, i) => (
+                    {/* Strengths Section */}
+                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+                      <h5 className="text-lg font-medium text-green-700 mb-3 flex items-center">
+                        <CheckCircleIcon className="h-5 w-5 mr-2" />
+                        Key Strengths
+                      </h5>
+                      {atsResult.strengths.length > 0 ? (
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2 pl-4">
+                          {atsResult.strengths.map((s, i) => (
                             <li key={i}>{s}</li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-sm text-gray-500">No specific suggestions — your CV looks good.</p>
+                        <p className="text-sm text-gray-500 italic">No specific strengths identified based on the provided job description.</p>
                       )}
+                      <h5 className="text-sm font-medium mt-4">Matched Skills:</h5>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {atsResult.matchedSkills.slice(0, 10).map((skill, i) => (
+                          <span key={i} className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium">
+                            {skill}
+                          </span>
+                        ))}
+                         {atsResult.matchedSkills.length > 10 && (
+                            <span className="bg-green-50 text-green-600 text-xs px-3 py-1 rounded-full font-medium">
+                              +{atsResult.matchedSkills.length - 10} more
+                            </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Recommendations Section */}
+                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
+                      <h5 className="text-lg font-medium text-red-600 mb-3 flex items-center">
+                        <XCircleIcon className="h-5 w-5 mr-2" />
+                        Improvement Recommendations
+                      </h5>
+                      {atsResult.recommendations.length > 0 ? (
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2 pl-4">
+                          {atsResult.recommendations.map((s, i) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <p className="text-sm text-gray-500 italic">The CV is highly optimized. No immediate recommendations.</p>
+                      )}
+                      <h5 className="text-sm font-medium mt-4">Missing Key Skills:</h5>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {atsResult.missingSkills.slice(0, 10).map((skill, i) => (
+                          <span key={i} className="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full font-medium">
+                            {skill}
+                          </span>
+                        ))}
+                         {atsResult.missingSkills.length > 10 && (
+                            <span className="bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
+                              +{atsResult.missingSkills.length - 10} more
+                            </span>
+                        )}
+                        {!atsResult.missingSkills.length && (
+                            <span className="text-sm text-gray-500 italic">None found.</span>
+                        )}
+                      </div>
                     </div>
                   </>
                 )}
 
                 {!atsLoading && !atsResult && (
-                  <div className="text-sm text-gray-500">No ATS data available. Run the ATS check to see results.</div>
+                  <div className="text-sm text-gray-500 p-4 border border-gray-300 rounded-xl text-center">
+                    No ATS data available. Go back to Step 2 and click &quot;Run ATS Check&quot; to see results.
+                  </div>
                 )}
               </div>
 
-              <div className="flex gap-3 pt-4">
+              {atsError && (
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
+                  {atsError}
+                </div>
+              )}
+
+              <div className="flex justify-between pt-4">
                 <button
                   onClick={() => setCurrentStep(2)}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
                 >
                   Back
                 </button>
-                <div className="flex-1 flex gap-3">
-                  <button
-                    onClick={() => {
-                      // proceed to generate email (user can still edit CV in previous step)
-                      setCurrentStep(2); // let them edit or re-run ATS before generating
-                    }}
-                    className="px-6 py-3 bg-white border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
-                  >
-                    Edit CV
-                  </button>
-                  <button
-                    onClick={handleGenerateEmail}
-                    disabled={loading}
-                    className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
-                  >
-                    {loading ? 'Generating...' : 'Proceed to Generate Email'}
-                  </button>
-                </div>
+                <button
+                  onClick={handleGenerateEmail}
+                  disabled={loading}
+                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center shadow-lg hover:shadow-xl"
+                >
+                  {loading ? 'Generating...' : 'Proceed to Generate Email'}
+                </button>
               </div>
             </div>
           )}
 
-          {/* Step 4: Review & Send (was step 3) */}
+          {/* Step 4: Review & Send (unchanged) */}
           {currentStep === 4 && generatedEmail && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
