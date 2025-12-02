@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: 'Hirely.ma - Daily Tech Jobs, Career Tips & Roadmaps',
   description:
     'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
-  icons: { icon: '/images/blog/logo.svg' },
+  icons: { icon: '/images/blog/logo1.svg' },
   verification: { google: '00c4fbab1e48645b' },
   metadataBase: new URL('https://hirely.ma'),
   alternates: { canonical: 'https://hirely.ma' },
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
     title: 'Hirely - Find Tech Jobs, Career Advice & Developer Roadmaps',
     description:
       'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
-    images: [{ url: '/images/blog/logo.svg', width: 1200, height: 630, alt: 'Hirely.ma - Tech Jobs Platform' }],
+    images: [{ url: '/images/blog/logo1.svg', width: 1200, height: 630, alt: 'Hirely.ma - Tech Jobs Platform' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Hirely - Find Tech Jobs, Career Advice & Developer Roadmaps',
     description:
       'Find tech jobs, enhance your developer skills, and follow practical career roadmaps for software engineers, QA, DevOps, and IT professionals.',
-    images: ['/images/blog/logo.svg'],
+    images: ['/images/blog/logo1.svg'],
   },
   robots: {
     index: true,
@@ -88,7 +88,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         "url": "https://hirely.ma",
         "logo": {
           "@type": "ImageObject",
-          "url": "https://hirely.ma/images/blog/logo.svg"
+          "url": "https://hirely.ma/images/blog/logo1.svg"
         }
       },
       "creator": {
