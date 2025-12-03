@@ -96,16 +96,18 @@ export default function Header() {
             </SignedOut>
             
             {/* User Button - Visible on All Screens */}
-            <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox:
-                      'w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-blue-500 transition-all duration-200',
-                  },
-                }}
-              />
-            </SignedIn>
+            {/* User Button - Visible on All Screens */}
+<SignedIn>
+  <UserButton
+    appearance={{
+      elements: {
+        avatarBox: 'w-9 h-9 rounded-full ring-2 ring-gray-200 hover:ring-blue-500 transition-all duration-200',
+        userButtonBox: 'w-9 h-9', // ensures container size matches
+      },
+    }}
+  />
+</SignedIn>
+
 
             {/* Mobile Menu Button */}
             <div className="md:hidden flex items-center">

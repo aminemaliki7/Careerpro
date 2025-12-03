@@ -12,12 +12,10 @@ export default function Footer() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Function to scroll to the top of the page
   const scrollToTop = useCallback(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  // Effect to show/hide the scroll-to-top button
   useEffect(() => {
     const checkScrollTop = () => {
       if (!showScroll && window.scrollY > 400) {
@@ -29,8 +27,7 @@ export default function Footer() {
     window.addEventListener('scroll', checkScrollTop);
     return () => window.removeEventListener('scroll', checkScrollTop);
   }, [showScroll]);
-  
-  // Handle the form submission
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -39,22 +36,15 @@ export default function Footer() {
     try {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
 
       const data = await response.json();
-
       if (response.ok) {
         setMessage('Subscription successful! 🎉');
-        setEmail(''); // Clear the input field on success
-        
-        // Hide the message after 3 seconds
-        setTimeout(() => {
-          setMessage('');
-        }, 3000);
+        setEmail('');
+        setTimeout(() => setMessage(''), 3000);
       } else {
         setMessage(data.message || 'An error occurred. Please try again.');
       }
@@ -66,39 +56,39 @@ export default function Footer() {
     }
   };
 
- const socialLinks = [
-  { name: 'LinkedIn', href: 'https://www.linkedin.com/company/hirely-ma', icon: Linkedin },
-];
-
+  const socialLinks = [
+    { name: 'LinkedIn', href: 'https://www.linkedin.com/company/hirely-ma', icon: Linkedin },
+    { name: 'Twitter', href: 'https://twitter.com/hirely_ma', icon: Twitter },
+    { name: 'GitHub', href: 'https://github.com/hirely', icon: Github },
+  ];
 
   const quickLinks = [
     { name: 'Home', href: '/' },
-    { name: 'Talks', href: '/blog' },
+    { name: 'Blog & Insights', href: '/blog' },
     { name: 'About Us', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
 
   const popularTopics = [
-    { name: 'CV Optimization', href: '/blog?tag=cv-optimization' },
-    { name: 'Interview Tips', href: '/blog?tag=interview-tips' },
-    { name: 'ATS Systems', href: '/blog?tag=ats-systems' },
-    { name: 'Career Advice', href: '/blog?tag=career-advice' },
-    { name: 'Job Search Strategy', href: '/blog?tag=job-search' },
+    { name: 'AI Trends', href: '/blog?tag=ai-trends' },
+    { name: 'Startup Insights', href: '/blog?tag=startups' },
+    { name: 'Remote Jobs', href: '/blog?tag=remote-jobs' },
+    { name: 'Tech Career Advice', href: '/blog?tag=career-advice' },
+    { name: 'Developer Roadmaps', href: '/blog?tag=roadmaps' },
   ];
 
   return (
     <footer className="bg-gray-900 text-white">
-      {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Brand Section with Circuit Logo */}
+
+          {/* Brand Section */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-block mb-4" aria-label="hirely Home">
               <HirelyLogo size="sm" color="#ffffff" />
             </Link>
             <p className="text-gray-300 mb-4 text-sm leading-relaxed">
-              Expert career advice and job search strategies to help you land your dream tech job. 
-              From CV optimization to interview prep, we&apos;ve got you covered.
+              Global insights on AI, startups, and tech careers. Discover job strategies, developer roadmaps, and interview tips to advance your tech career.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((link) => {
@@ -125,10 +115,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {quickLinks.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                  >
+                  <Link href={link.href} className="text-gray-300 hover:text-blue-400 transition-colors text-sm">
                     {link.name}
                   </Link>
                 </li>
@@ -142,10 +129,7 @@ export default function Footer() {
             <ul className="space-y-2">
               {popularTopics.map((link) => (
                 <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-300 hover:text-blue-400 transition-colors text-sm"
-                  >
+                  <Link href={link.href} className="text-gray-300 hover:text-blue-400 transition-colors text-sm">
                     {link.name}
                   </Link>
                 </li>
@@ -153,11 +137,11 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Newsletter Signup */}
+          {/* Newsletter */}
           <div>
             <h3 className="text-lg font-semibold mb-4 text-white">Stay Updated</h3>
             <p className="text-gray-300 text-sm mb-4">
-              Get weekly career tips and job search strategies delivered to your inbox.
+              Subscribe to get the latest AI insights, startup news, and global tech career updates directly in your inbox.
             </p>
             <form onSubmit={handleSubscribe} className="space-y-3">
               <input
@@ -185,39 +169,32 @@ export default function Footer() {
               No spam. Unsubscribe anytime.
             </p>
           </div>
+
         </div>
       </div>
 
-      {/* Bottom Bar & Scroll to Top */}
+      {/* Bottom Bar */}
       <div className="border-t border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="text-gray-400 text-sm mb-2 sm:mb-0">
-              © {currentYear} hirely.ma. All rights reserved.
-            </div>
-            <div className="flex items-center space-x-6">
-              <Link
-                href="/privacy-policy"
-                className="text-gray-400 hover:text-white transition-colors text-sm"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
+          <div className="text-gray-400 text-sm mb-2 sm:mb-0">
+            © {currentYear} hirely.ma. All rights reserved. Explore global tech insights, AI trends, and career guidance.
+          </div>
+          <div className="flex items-center space-x-6">
+            <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="text-gray-400 hover:text-white transition-colors text-sm">
+              Terms of Service
+            </Link>
+            {showScroll && (
+              <button
+                onClick={scrollToTop}
+                className="bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                aria-label="Scroll to top"
               >
-                Privacy Policy
-              </Link>
-              <Link
-                href="/terms"
-                className="text-gray-400 hover:text-white transition-colors text-sm"
-              >
-                Terms of Service
-              </Link>
-              {showScroll && (
-                <button
-                  onClick={scrollToTop}
-                  className="bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
-                  aria-label="Scroll to top"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </button>
-              )}
-            </div>
+                <ArrowUp className="w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>

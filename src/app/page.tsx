@@ -16,9 +16,40 @@ import JobCard from '@/components/home/JobCard';
 import RoadmapCard from '@/components/home/RoadmapCard';
 
 export const metadata = {
-  title: "Hirely – Tech Jobs, Roadmaps & Career Insights for Developers",
+  title: "Hirely – AI, Startups & Global Tech Careers",
   description:
-    "Hirely is your hub for discovering tech jobs, learning through roadmaps, and staying updated on the latest industry trends. Build your skills and career faster.",
+    "Hirely is your hub for AI trends, startup insights, tech career roadmaps, and global job opportunities for developers, QA, DevOps, and IT professionals. Stay ahead in tech.",
+  keywords: [
+    'AI trends 2026',
+    'tech startups insights',
+    'global tech jobs',
+    'remote software engineering jobs',
+    'developer career roadmap',
+    'machine learning jobs worldwide',
+    'DevOps career guidance',
+    'QA automation careers',
+    'emerging technologies',
+    'startup job opportunities',
+  ],
+  openGraph: {
+    title: "Hirely – AI, Startups & Global Tech Careers",
+    description:
+      "Discover AI trends, startup insights, tech career roadmaps, and global job opportunities for IT professionals.",
+    url: 'https://hirely.ma',
+    siteName: 'Hirely.ma',
+    images: [
+      { url: '/images/blog/logo1.svg', width: 1200, height: 630, alt: 'Hirely.ma - Global Tech Platform' },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "Hirely – AI, Startups & Global Tech Careers",
+    description:
+      "Discover AI trends, startup insights, tech career roadmaps, and global job opportunities for IT professionals.",
+    images: ['/images/blog/logo1.svg'],
+  },
 };
 
 export const revalidate = 3600;
@@ -79,9 +110,10 @@ export default async function HomePage() {
       {featuredPosts.length > 0 && (
         <SectionWrapper bg="gray-50">
           <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-4">Latest Career Insights</h2>
+            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-4">Latest Tech Insights</h2>
             <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-6">
-              Career guidance and tech industry insights—available in audio and text
+              Stay updated on AI, startups, and emerging technologies 
+              available in articles and podcast episodes
             </p>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full shadow-sm">
               <Headphones className="w-4 h-4 text-blue-600" />
@@ -94,29 +126,25 @@ export default async function HomePage() {
               <BlogCard key={post.slug} post={post} index={index} />
             ))}
           </div>
-
-         
         </SectionWrapper>
       )}
 
       {/* Jobs Section */}
       <SectionWrapper bg="white">
         <div className="text-center mb-20">
-          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">Latest Tech Jobs & Opportunities</h2>
+          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6"> Tech Jobs & Global Opportunities</h2>
           <p className="text-xl text-gray-500 font-light max-w-2xl mx-auto mb-8">
-            Handpicked positions from innovative companies that value talent and growth.
+            Tech, AI, and startup jobs from around the world.
           </p>
           <RecruiterButton />
         </div>
 
         {jobs.length > 0 ? (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {jobs.map((job, index) => (
-                <JobCard key={job.id} job={job} index={index} />
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {jobs.map((job, index) => (
+              <JobCard key={job.id} job={job} index={index} />
+            ))}
+          </div>
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500">No jobs available at the moment. Check back soon!</p>
@@ -128,9 +156,9 @@ export default async function HomePage() {
       <SectionWrapper bg="gray-50">
         <div className="flex flex-col sm:flex-row items-end justify-between mb-20">
           <div>
-            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">Engineers Roadmaps</h2>
+            <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">Tech Career Roadmaps</h2>
             <p className="text-xl text-gray-500 font-light max-w-2xl">
-              Structured learning paths designed to take you from beginner to expert.
+              Step-by-step learning paths for developers, AI engineers, and tech professionals to level up globally.
             </p>
           </div>
         </div>
@@ -143,33 +171,32 @@ export default async function HomePage() {
       </SectionWrapper>
 
       {/* Partners Section */}
-     <SectionWrapper bg="white" pt="pt-12" pb="pb-16">
-  <div className="text-center mb-8">
-    <p className="text-sm text-gray-400 font-medium mb-4 uppercase tracking-wider">
-      Our Partners
-    </p>
-    <div className="flex justify-center items-center gap-8">
-      <a
-        href="https://www.udemy.com"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group block transition-all duration-300 hover:scale-105"
-      >
-        <Image
-          src="https://www.udemy.com/staticx/udemy/images/v7/logo-udemy.svg"
-          alt="Udemy - Online Learning Platform"
-          width={140}
-          height={40}
-          className="opacity-60 group-hover:opacity-100 transition-opacity duration-300"
-        />
-      </a>
-    </div>
-    <p className="text-xs text-gray-400 mt-3">
-      Trusted learning platform with over 250,000 courses
-    </p>
-  </div>
-</SectionWrapper>
-
+      <SectionWrapper bg="white" pt="pt-12" pb="pb-16">
+        <div className="text-center mb-8">
+          <p className="text-sm text-gray-400 font-medium mb-4 uppercase tracking-wider">
+            Our Partners
+          </p>
+          <div className="flex justify-center items-center gap-8">
+            <a
+              href="https://www.udemy.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block transition-all duration-300 hover:scale-105"
+            >
+              <Image
+                src="https://www.udemy.com/staticx/udemy/images/v7/logo-udemy.svg"
+                alt="Udemy - Online Learning Platform"
+                width={140}
+                height={40}
+                className="opacity-60 group-hover:opacity-100 transition-opacity duration-300"
+              />
+            </a>
+          </div>
+          <p className="text-xs text-gray-400 mt-3">
+            Trusted learning platform with over 250,000 courses
+          </p>
+        </div>
+      </SectionWrapper>
 
       {/* Newsletter CTA */}
       <SectionWrapper bg="black" pt="pt-24" pb="pb-32">
@@ -182,8 +209,8 @@ export default async function HomePage() {
 
           <h2 className="text-4xl sm:text-5xl font-light mb-6">Never Miss an Episode</h2>
           <p className="text-xl text-gray-300 font-light mb-12 max-w-2xl mx-auto leading-relaxed">
-            Get weekly career insights, new podcast episodes, and job opportunities delivered to your inbox. 
-            Join 1,000+ professionals already listening.
+            Weekly updates on AI trends, startup insights, tech jobs, and career roadmaps delivered straight to your inbox. 
+            Join 1,000+ professionals staying ahead in tech.
           </p>
 
           <NewsletterCTA />
