@@ -23,50 +23,48 @@ interface EasyApplyModalProps {
   skills?: string[];
 }
 
-// --- Icon Components (omitted for brevity) ---
-const CloseIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+// --- Icon Components ---
+const CloseIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
   </svg>
 );
 
-const SparklesIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const SparklesIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
   </svg>
 );
 
-const DocumentIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const DocumentIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
   </svg>
 );
 
-const CopyIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const CopyIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
   </svg>
 );
 
-const CheckCircleIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const CheckCircleIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
 
-// New icons for better visualization
-const TrendingUpIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const TrendingUpIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
   </svg>
 );
 
-const XCircleIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+const XCircleIcon = ({ className }: { className?: string }) => (
+  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
   </svg>
 );
-
 
 export default function EasyApplyModal({
   isOpen,
@@ -78,30 +76,29 @@ export default function EasyApplyModal({
   contactEmail,
   skills
 }: EasyApplyModalProps) {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [userName, setUserName] = useState('');
+  const [currentStep, setCurrentStep] = useState<number>(1);
+  const [userName, setUserName] = useState<string>('');
   const [cvFile, setCvFile] = useState<File | null>(null);
-  const [cvText, setCvText] = useState('');
-  const [generatedEmail, setGeneratedEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
-  const [parseError, setParseError] = useState('');
-  const [parsing, setParsing] = useState(false);
+  const [cvText, setCvText] = useState<string>('');
+  const [generatedEmail, setGeneratedEmail] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+  const [copied, setCopied] = useState<boolean>(false);
+  const [parseError, setParseError] = useState<string>('');
+  const [parsing, setParsing] = useState<boolean>(false);
 
-  // UPDATED: New ATS-related state uses the AtsResult interface
-  const [atsLoading, setAtsLoading] = useState(false);
-  const [atsError, setAtsError] = useState('');
+  // ATS state
+  const [atsLoading, setAtsLoading] = useState<boolean>(false);
+  const [atsError, setAtsError] = useState<string>('');
   const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
 
   if (!isOpen) return null;
 
-  // --- File Extraction Logic (unchanged) ---
+  // --- File Extraction Logic ---
   const extractTextFromFile = async (file: File): Promise<string> => {
     const fileType = file.type;
     const fileName = file.name.toLowerCase();
 
-    // Only allow DOCX and TXT
     if (fileType === 'text/plain' || fileName.endsWith('.txt')) {
       return await file.text();
     } else if (fileName.endsWith('.docx')) {
@@ -137,7 +134,7 @@ export default function EasyApplyModal({
     setError('');
     setParseError('');
     setParsing(true);
-    setAtsResult(null); // reset ATS result after new upload
+    setAtsResult(null);
 
     try {
       const text = await extractTextFromFile(file);
@@ -155,7 +152,7 @@ export default function EasyApplyModal({
     }
   };
 
-  // UPDATED: Handle ATS Check
+  // Run ATS check
   const handleRunAtsCheck = async () => {
     if (!cvText || cvText.trim().length < 50) {
       setAtsError('Please provide your CV content (at least 50 characters) before running the ATS check.');
@@ -186,7 +183,6 @@ export default function EasyApplyModal({
         throw new Error(data.error || 'ATS check failed');
       }
 
-      // UPDATED: Assign fields from the backend JSON response
       setAtsResult({
         matchScore: data.matchScore ?? 0,
         matchedSkills: data.matchedSkills ?? [],
@@ -196,7 +192,7 @@ export default function EasyApplyModal({
         summary: data.summary ?? 'Analysis complete.',
       });
 
-      setCurrentStep(3); // go to ATS results step
+      setCurrentStep(3);
     } catch (err) {
       setAtsError('Failed to run ATS check. Please try again.');
       console.error('ATS check error:', err);
@@ -205,22 +201,12 @@ export default function EasyApplyModal({
     }
   };
 
-  // --- Email Generation and Sending Logic (unchanged) ---
+  // Generate email with AI
   const handleGenerateEmail = async () => {
     if (!cvText || cvText.trim().length < 50) {
       setError('Please provide your CV content (at least 50 characters)');
       return;
     }
-    
-    // If not coming directly from ATS result screen, force ATS check first
-    if (!atsResult && currentStep === 2) {
-      // Run ATS check and then proceed to generation if successful
-      // For simplicity, we'll bypass the ATS screen on this path if the user clicks "Generate Email" directly
-      // In a real app, you might want to run the ATS check and then automatically advance to the generation step 
-      // or simply skip the ATS result display if the user chooses the direct path.
-      // For now, let's just proceed with the email generation.
-    }
-
 
     setLoading(true);
     setError('');
@@ -228,9 +214,7 @@ export default function EasyApplyModal({
     try {
       const response = await fetch('/api/jobs/generate-email', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cvText: cvText.trim(),
           jobTitle,
@@ -249,10 +233,10 @@ export default function EasyApplyModal({
       }
 
       setGeneratedEmail(data.emailContent);
-      setCurrentStep(4); // move to final Review & Send step
+      setCurrentStep(4);
     } catch (err) {
       setError('Failed to generate email. Please try again.');
-      console.error('Generation error:');
+      console.error('Generation error:', err);
     } finally {
       setLoading(false);
     }
@@ -278,21 +262,17 @@ export default function EasyApplyModal({
       `Quick reminder: Don't forget to attach your resume/CV to the email before sending!\n\nClick OK to open your email client.`
     );
 
-    if (!confirmSend) {
-      return;
-    }
+    if (!confirmSend) return;
 
     const subject = `Application for ${jobTitle} Position`;
     const mailtoLink = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(generatedEmail)}`;
     window.location.href = mailtoLink;
   };
 
-  // --- Navigation and State Logic (partially updated) ---
   const canProceedToStep2 = userName.trim().length >= 2;
-  const canProceedToStep3 = cvText.trim().length >= 50; // allows running ATS or generating email
-  const canProceedToStep4 = !!generatedEmail; // Only allow moving to final review if email is generated
+  const canProceedToStep3 = cvText.trim().length >= 50;
+  const canProceedToStep4 = !!generatedEmail;
 
-  // Helper for determining color based on score
   const getScoreColor = (score: number) => {
     if (score >= 70) return 'bg-green-100 text-green-700 border-green-300';
     if (score >= 40) return 'bg-yellow-100 text-yellow-700 border-yellow-300';
@@ -306,79 +286,132 @@ export default function EasyApplyModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-gray-200">
-        {/* Header (unchanged) */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-8 py-6 flex justify-between items-center">
-          <div className="text-white">
-            <h2 className="text-2xl font-light flex items-center">
-              <SparklesIcon className="h-6 w-6 mr-3 animate-pulse" />
-              Easy Apply with AI
-            </h2>
-            <p className="text-purple-100 text-sm mt-2 font-light">
-              {jobTitle} at {company}
-            </p>
-          </div>
-          <button
-            onClick={onClose}
-            className="text-white/80 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-full"
-            aria-label="Close modal"
-          >
-            <CloseIcon className="h-6 w-6" />
-          </button>
+ <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-1 md:p-4 overflow-y-auto">
+
+  {/* MODAL CONTAINER */}
+  <div
+    className="
+      bg-white
+      w-full
+      max-w-full
+      h-[90vh] md:h-auto       /* smaller modal on mobile */
+      md:max-w-4xl
+      md:rounded-3xl
+      rounded-lg
+      overflow-hidden
+      flex
+      flex-col
+      border
+      border-gray-200
+      shadow-2xl
+      relative                  /* for absolute close button */
+    "
+    role="dialog"
+    aria-modal="true"
+  >
+    {/* HEADER */}
+    <div className="
+      bg-gradient-to-r from-purple-600 to-blue-600 
+      px-3 py-2 md:px-8 md:py-6
+      flex flex-col gap-1
+      md:flex-row md:items-center md:justify-between
+      relative
+    ">
+      <div className="text-white">
+        {/* Title */}
+        <h2 className="text-base md:text-2xl font-light flex items-center">
+          <SparklesIcon className="h-4 w-4 md:h-6 md:w-6 mr-2 animate-pulse" />
+          Easy Apply with AI
+        </h2>
+
+        {/* Subtitle */}
+        <p className="text-[10px] md:text-sm mt-0.5 md:mt-2 text-purple-100 font-light">
+          {jobTitle} at {company}
+        </p>
+      </div>
+
+      {/* Close Button - top right corner on mobile */}
+      <button
+        onClick={onClose}
+        className="
+          absolute top-2 right-2 md:static md:p-2
+          p-1.5
+          text-white/90 hover:text-white hover:bg-white/10
+          rounded-full transition
+        "
+        aria-label="Close modal"
+      >
+        <CloseIcon className="h-4 w-4 md:h-6 md:w-6" />
+      </button>
+    </div>
+
+       {/* PROGRESS STEPS - fixed on mobile, smaller */}
+<div className="bg-gray-50 px-3 py-3 md:px-8 md:py-6 border-b border-gray-200">
+  <div className="flex items-center justify-between gap-2 md:gap-4">
+
+    {[
+      { num: 1, label: 'Your Info' },
+      { num: 2, label: 'Upload CV' },
+      { num: 3, label: 'ATS Check' },
+      { num: 4, label: 'Review & Send' }
+    ].map((step, index) => (
+      <div
+        key={step.num}
+        className="flex flex-col items-center text-center flex-1"
+        aria-current={currentStep === step.num ? 'step' : undefined}
+      >
+        {/* circle */}
+        <div
+          className={`w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-medium transition-all ${
+            currentStep > step.num
+              ? 'bg-green-500 text-white shadow-lg shadow-green-200'
+              : currentStep === step.num
+              ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-200'
+              : 'bg-gray-200 text-gray-500'
+          }`}
+        >
+          {currentStep > step.num ? (
+            <CheckCircleIcon className="h-4 w-4 md:h-6 md:w-6" />
+          ) : (
+            step.num
+          )}
         </div>
 
-        {/* Progress Steps (unchanged) */}
-        <div className="bg-gray-50 px-8 py-6 border-b border-gray-200">
-          <div className="flex items-center justify-between max-w-2xl mx-auto">
-            {[
-              { num: 1, label: 'Your Info' },
-              { num: 2, label: 'Upload CV' },
-              { num: 3, label: 'ATS Check' },
-              { num: 4, label: 'Review & Send' }
-            ].map((step, index) => (
-              <div key={step.num} className="flex items-center flex-1">
-                <div className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center font-medium transition-all ${
-                    currentStep > step.num
-                      ? 'bg-green-500 text-white shadow-lg shadow-green-200'
-                      : currentStep === step.num
-                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-200'
-                      : 'bg-gray-200 text-gray-500'
-                  }`}>
-                    {currentStep > step.num ? (
-                      <CheckCircleIcon className="h-6 w-6" />
-                    ) : (
-                      step.num
-                    )}
-                  </div>
-                  <span className={`ml-3 text-sm font-medium ${
-                    currentStep >= step.num ? 'text-gray-900' : 'text-gray-400'
-                  }`}>
-                    {step.label}
-                  </span>
-                </div>
-                {index < 3 && (
-                  <div className={`flex-1 h-1 mx-4 rounded-full transition-all ${
-                    currentStep > step.num ? 'bg-green-500' : 'bg-gray-200'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* label */}
+        <span
+          className={`mt-1 text-[10px] md:text-sm font-medium ${
+            currentStep >= step.num ? 'text-gray-900' : 'text-gray-400'
+          }`}
+        >
+          {step.label}
+        </span>
 
-        {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-8">
-          {/* Step 1: Personal Information (unchanged) */}
+        {/* connector only on desktop */}
+        {index < 3 && (
+          <div
+            className={`hidden md:block absolute top-1/2 right-0 w-full h-1 rounded-full ${
+              currentStep > step.num ? 'bg-green-500' : 'bg-gray-200'
+            }`}
+          />
+        )}
+      </div>
+    ))}
+
+  </div>
+</div>
+
+
+        {/* CONTENT AREA */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+          {/* STEP 1 */}
           {currentStep === 1 && (
             <div className="max-w-2xl mx-auto space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-2">Let&apos;s start with your details</h3>
-                <p className="text-gray-500 text-sm font-light">This information will be used to personalize your application email.</p>
+                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Let&quot;s start with your details</h3>
+                <p className="text-gray-500 text-sm md:text-sm font-light">This information will be used to personalize your application email.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 space-y-4 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-8 space-y-4 shadow-sm">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     Full Name <span className="text-red-500">*</span>
@@ -388,26 +421,24 @@ export default function EasyApplyModal({
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full border border-gray-300 rounded-xl p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    className="w-full border border-gray-300 rounded-xl p-3 md:p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
                     autoFocus
                   />
-                  <p className="text-xs text-gray-400 mt-2 font-light">
-                    This will appear in the email signature
-                  </p>
+                  <p className="text-xs text-gray-400 mt-2 font-light">This will appear in the email signature</p>
                 </div>
               </div>
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">
                   {error}
                 </div>
               )}
 
-              <div className="flex justify-end pt-4">
+              <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
                 <button
                   onClick={() => setCurrentStep(2)}
                   disabled={!canProceedToStep2}
-                  className="px-8 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-lg hover:shadow-xl"
+                  className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-lg"
                 >
                   Continue to CV Upload
                 </button>
@@ -415,17 +446,17 @@ export default function EasyApplyModal({
             </div>
           )}
 
-          {/* Step 2: Upload CV (unchanged save for button logic) */}
+          {/* STEP 2 */}
           {currentStep === 2 && (
             <div className="max-w-2xl mx-auto space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-2">Upload your CV/Resume</h3>
-                <p className="text-gray-500 text-sm font-light">We&apos;ll analyze your experience to create a tailored application and run an ATS check.</p>
+                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Upload your CV/Resume</h3>
+                <p className="text-gray-500 text-sm md:text-sm font-light">We&quot;ll analyze your experience to create a tailored application and run an ATS check.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl p-8 space-y-6 shadow-sm">
-                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-purple-400 hover:bg-purple-50/30 transition-all">
-                  <DocumentIcon className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+              <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-8 space-y-6 shadow-sm">
+                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 md:p-12 text-center hover:border-purple-400 hover:bg-purple-50/30 transition-all">
+                  <DocumentIcon className="h-12 w-12 md:h-16 md:w-16 mx-auto text-gray-400 mb-4" />
                   <input
                     type="file"
                     accept=".pdf,.docx,.txt"
@@ -436,39 +467,38 @@ export default function EasyApplyModal({
                   />
                   <label
                     htmlFor="cv-upload"
-                    className={`cursor-pointer text-purple-600 hover:text-purple-700 font-medium text-lg ${parsing ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`cursor-pointer text-purple-600 hover:text-purple-700 font-medium text-base md:text-lg ${parsing ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {parsing ? 'Processing...' : 'Click to upload file'}
                   </label>
                   <p className="text-gray-400 mt-2 font-light">or paste your CV text below</p>
-                  <p className="text-xs text-gray-400 mt-4 font-light">
-                    Supported formats: DOCX, TXT (max 10MB)
-                  </p>
+                  <p className="text-xs text-gray-400 mt-4 font-light">Supported formats: DOCX, TXT (max 10MB)</p>
+
                   {cvFile && !parsing && (
-                    <div className="mt-6 inline-flex items-center bg-green-50 text-green-700 px-5 py-3 rounded-full shadow-sm">
-                      <CheckCircleIcon className="h-5 w-5 mr-2" />
-                      <span className="font-medium">{cvFile.name}</span>
+                    <div className="mt-4 inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-full shadow-sm">
+                      <CheckCircleIcon className="h-4 w-4 mr-2" />
+                      <span className="font-medium text-sm truncate max-w-[160px]">{cvFile.name}</span>
                     </div>
                   )}
+
                   {parsing && (
-                    <div className="mt-6 flex items-center justify-center">
-                      <svg className="animate-spin h-6 w-6 text-purple-600 mr-2" viewBox="0 0 24 24">
+                    <div className="mt-4 flex items-center justify-center">
+                      <svg className="animate-spin h-5 w-5 text-purple-600 mr-2" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
                       <span className="text-purple-600 font-medium">Extracting text...</span>
                     </div>
                   )}
+
                   {parseError && (
-                    <div className="mt-6 bg-red-50 text-red-600 px-5 py-3 rounded-full text-sm inline-block">
-                      {parseError}
-                    </div>
+                    <div className="mt-4 bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm inline-block">{parseError}</div>
                   )}
                 </div>
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200"></div>
+                    <div className="w-full border-t border-gray-200" />
                   </div>
                   <div className="relative flex justify-center text-xs">
                     <span className="px-3 bg-white text-gray-400 font-light">OR</span>
@@ -476,17 +506,15 @@ export default function EasyApplyModal({
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
-                    Paste your CV text here
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Paste your CV text here</label>
                   <textarea
                     value={cvText}
                     onChange={(e) => {
                       setCvText(e.target.value);
-                      setAtsResult(null); // reset ATS result when text changes
+                      setAtsResult(null);
                     }}
-                    rows={10}
-                    className="w-full border border-gray-300 rounded-2xl p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
+                    rows={8}
+                    className="w-full border border-gray-300 rounded-2xl p-3 md:p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
                     placeholder="Paste your complete CV/Resume here including work experience, education, skills, and achievements..."
                   />
                   <div className="flex justify-between items-center mt-3">
@@ -494,9 +522,8 @@ export default function EasyApplyModal({
                       {cvText.length} characters {cvText.length >= 50 ? '(Ready)' : '(minimum 50 required)'}
                     </p>
                     {cvText.length >= 50 && (
-                      <span className="text-green-600 text-xs font-medium flex items-center bg-green-50 px-3 py-1 rounded-full">
-                        <CheckCircleIcon className="h-4 w-4 mr-1" />
-                        Ready
+                      <span className="text-green-600 text-xs font-medium flex items-center bg-green-50 px-2 py-1 rounded-full">
+                        <CheckCircleIcon className="h-3 w-3 mr-1" /> Ready
                       </span>
                     )}
                   </div>
@@ -504,19 +531,18 @@ export default function EasyApplyModal({
               </div>
 
               {(error || atsError) && (
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
-                  {error || atsError}
-                </div>
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{error || atsError}</div>
               )}
 
-              <div className="flex justify-between pt-4">
+              <div className="flex flex-col-reverse md:flex-row justify-between pt-4 gap-3">
                 <button
                   onClick={() => setCurrentStep(1)}
                   className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
                 >
                   Back
                 </button>
-                <div className="flex gap-3">
+
+                <div className="flex flex-col md:flex-row gap-3">
                   <button
                     onClick={handleRunAtsCheck}
                     disabled={!canProceedToStep3 || atsLoading}
@@ -527,11 +553,11 @@ export default function EasyApplyModal({
                   <button
                     onClick={handleGenerateEmail}
                     disabled={!canProceedToStep3 || loading}
-                    className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center shadow-lg hover:shadow-xl"
+                    className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-lg"
                   >
                     {loading ? (
                       <>
-                        <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                         </svg>
@@ -539,7 +565,7 @@ export default function EasyApplyModal({
                       </>
                     ) : (
                       <>
-                        <SparklesIcon className="h-5 w-5 mr-2 animate-pulse" />
+                        <SparklesIcon className="h-4 w-4 mr-2 animate-pulse" />
                         Generate Email
                       </>
                     )}
@@ -549,15 +575,15 @@ export default function EasyApplyModal({
             </div>
           )}
 
-          {/* UPDATED: Step 3: ATS Results */}
+          {/* STEP 3 - ATS RESULTS */}
           {currentStep === 3 && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-2">ATS Checker Results 🤖</h3>
-                <p className="text-gray-500 text-sm font-light">See how your CV performs against the job description and get improvement suggestions.</p>
+                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">ATS Checker Results 🤖</h3>
+                <p className="text-gray-500 text-sm md:text-sm font-light">See how your CV performs against the job description and get improvement suggestions.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-3xl p-8 shadow-sm space-y-6">
+              <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm space-y-4">
                 {atsLoading && (
                   <div className="flex items-center gap-3">
                     <svg className="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24">
@@ -570,187 +596,162 @@ export default function EasyApplyModal({
 
                 {!atsLoading && atsResult && (
                   <>
-                    <div className={`p-4 rounded-xl border-l-4 ${getScoreColor(atsResult.matchScore)}`}>
+                    <div className={`p-3 rounded-xl border-l-4 ${getScoreColor(atsResult.matchScore)}`}>
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           {atsResult.matchScore >= 70 ? (
-                            <CheckCircleIcon className="h-6 w-6 text-green-700" />
+                            <CheckCircleIcon className="h-5 w-5 text-green-700" />
                           ) : (
-                            <TrendingUpIcon className="h-6 w-6 text-yellow-700" />
+                            <TrendingUpIcon className="h-5 w-5 text-yellow-700" />
                           )}
-                          <h4 className="text-xl font-semibold">Match Score: <span className="font-bold">{atsResult.matchScore}%</span></h4>
+                          <h4 className="text-lg md:text-xl font-semibold">Match Score: <span className="font-bold">{atsResult.matchScore}%</span></h4>
                         </div>
-                        <div className={`px-4 py-1 rounded-full text-sm font-medium ${getScoreColor(atsResult.matchScore).replace('-100', '-50').replace('border-', 'bg-').replace('text-', 'text-')}`}>
+                        <div className={`px-3 py-1 rounded-full text-sm font-medium ${getScoreColor(atsResult.matchScore).replace('-100', '-50').replace('border-', 'bg-').replace('text-', 'text-')}`}>
                           {getScoreStatus(atsResult.matchScore)}
                         </div>
                       </div>
                       <p className="text-sm italic mt-2">{atsResult.summary}</p>
                     </div>
 
-                    {/* Strengths Section */}
-                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
-                      <h5 className="text-lg font-medium text-green-700 mb-3 flex items-center">
-                        <CheckCircleIcon className="h-5 w-5 mr-2" />
-                        Key Strengths
-                      </h5>
+                    <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                      <h5 className="text-base font-medium text-green-700 mb-3 flex items-center"><CheckCircleIcon className="h-4 w-4 mr-2" /> Key Strengths</h5>
                       {atsResult.strengths.length > 0 ? (
-                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2 pl-4">
-                          {atsResult.strengths.map((s, i) => (
-                            <li key={i}>{s}</li>
-                          ))}
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 pl-4">
+                          {atsResult.strengths.map((s, i) => <li key={i}>{s}</li>)}
                         </ul>
                       ) : (
                         <p className="text-sm text-gray-500 italic">No specific strengths identified based on the provided job description.</p>
                       )}
+
                       <h5 className="text-sm font-medium mt-4">Matched Skills:</h5>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {atsResult.matchedSkills.slice(0, 10).map((skill, i) => (
-                          <span key={i} className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium">
-                            {skill}
-                          </span>
+                          <span key={i} className="bg-green-100 text-green-800 text-xs px-3 py-1 rounded-full font-medium">{skill}</span>
                         ))}
-                         {atsResult.matchedSkills.length > 10 && (
-                            <span className="bg-green-50 text-green-600 text-xs px-3 py-1 rounded-full font-medium">
-                              +{atsResult.matchedSkills.length - 10} more
-                            </span>
-                        )}
+                        {atsResult.matchedSkills.length > 10 && <span className="bg-green-50 text-green-600 text-xs px-3 py-1 rounded-full">+{atsResult.matchedSkills.length - 10} more</span>}
                       </div>
                     </div>
 
-                    {/* Recommendations Section */}
-                    <div className="bg-gray-50 rounded-2xl p-5 border border-gray-200">
-                      <h5 className="text-lg font-medium text-red-600 mb-3 flex items-center">
-                        <XCircleIcon className="h-5 w-5 mr-2" />
-                        Improvement Recommendations
-                      </h5>
+                    <div className="bg-gray-50 rounded-2xl p-4 border border-gray-200">
+                      <h5 className="text-base font-medium text-red-600 mb-3 flex items-center"><XCircleIcon className="h-4 w-4 mr-2" /> Improvement Recommendations</h5>
                       {atsResult.recommendations.length > 0 ? (
-                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-2 pl-4">
-                          {atsResult.recommendations.map((s, i) => (
-                            <li key={i}>{s}</li>
-                          ))}
+                        <ul className="list-disc list-inside text-sm text-gray-700 space-y-1 pl-4">
+                          {atsResult.recommendations.map((s, i) => <li key={i}>{s}</li>)}
                         </ul>
                       ) : (
                         <p className="text-sm text-gray-500 italic">The CV is highly optimized. No immediate recommendations.</p>
                       )}
+
                       <h5 className="text-sm font-medium mt-4">Missing Key Skills:</h5>
                       <div className="flex flex-wrap gap-2 mt-2">
                         {atsResult.missingSkills.slice(0, 10).map((skill, i) => (
-                          <span key={i} className="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full font-medium">
-                            {skill}
-                          </span>
+                          <span key={i} className="bg-red-100 text-red-800 text-xs px-3 py-1 rounded-full font-medium">{skill}</span>
                         ))}
-                         {atsResult.missingSkills.length > 10 && (
-                            <span className="bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full font-medium">
-                              +{atsResult.missingSkills.length - 10} more
-                            </span>
-                        )}
-                        {!atsResult.missingSkills.length && (
-                            <span className="text-sm text-gray-500 italic">None found.</span>
-                        )}
+                        {atsResult.missingSkills.length > 10 && <span className="bg-red-50 text-red-600 text-xs px-3 py-1 rounded-full">+{atsResult.missingSkills.length - 10} more</span>}
+                        {!atsResult.missingSkills.length && <span className="text-sm text-gray-500 italic">None found.</span>}
                       </div>
                     </div>
                   </>
                 )}
 
                 {!atsLoading && !atsResult && (
-                  <div className="text-sm text-gray-500 p-4 border border-gray-300 rounded-xl text-center">
-                    No ATS data available. Go back to Step 2 and click &quot;Run ATS Check&quot; to see results.
-                  </div>
+                  <div className="text-sm text-gray-500 p-3 border border-gray-300 rounded-xl text-center">No ATS data available. Go back to Step 2 and click &quot;Run ATS Check&quot; to see results.</div>
                 )}
               </div>
 
-              {atsError && (
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
-                  {atsError}
-                </div>
-              )}
+              {atsError && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{atsError}</div>}
 
-              <div className="flex justify-between pt-4">
-                <button
-                  onClick={() => setCurrentStep(2)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
-                >
-                  Back
-                </button>
-                <button
-                  onClick={handleGenerateEmail}
-                  disabled={loading}
-                  className="px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center shadow-lg hover:shadow-xl"
-                >
-                  {loading ? 'Generating...' : 'Proceed to Generate Email'}
-                </button>
-              </div>
+              <div className="flex flex-col-reverse md:flex-row justify-between pt-4 gap-3">
+
+  {/* Back button */}
+  <button
+    onClick={() => setCurrentStep(2)}
+    className="
+      px-4 py-2           /* smaller mobile */
+      text-sm             /* smaller mobile text */
+      md:px-6 md:py-3     /* normal desktop */
+      md:text-base
+      border border-gray-300 
+      text-gray-700 
+      rounded-full 
+      font-medium 
+      hover:bg-gray-50 
+      transition-all
+    "
+  >
+    Back
+  </button>
+
+  {/* Next button */}
+  <button
+    onClick={handleGenerateEmail}
+    disabled={loading}
+    className="
+      px-4 py-2            /* smaller mobile */
+      text-sm              /* smaller mobile text */
+      md:px-6 md:py-3      /* normal desktop */
+      md:text-base
+      bg-gradient-to-r from-purple-600 to-blue-600 
+      text-white 
+      rounded-full 
+      font-medium 
+      hover:from-purple-700 hover:to-blue-700 
+      disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed 
+      transition-all 
+      flex items-center justify-center 
+      shadow-lg
+    "
+  >
+    {loading ? 'Generating...' : 'Proceed to Generate Email'}
+  </button>
+
+</div>
+
             </div>
           )}
 
-          {/* Step 4: Review & Send (unchanged) */}
+          {/* STEP 4 - REVIEW & SEND */}
           {currentStep === 4 && generatedEmail && (
             <div className="max-w-3xl mx-auto space-y-6">
               <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-2">Your personalized application email</h3>
-                <p className="text-gray-500 text-sm font-light">Review and edit your AI-generated email before sending.</p>
+                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Your personalized application email</h3>
+                <p className="text-gray-500 text-sm md:text-sm font-light">Review and edit your AI-generated email before sending.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-3xl p-8 shadow-sm">
-                <div className="flex justify-between items-center mb-6">
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <span className="text-sm font-medium text-gray-700 flex items-center">
-                    <SparklesIcon className="h-5 w-5 mr-2 text-purple-600 animate-pulse" />
+                    <SparklesIcon className="h-4 w-4 mr-2 text-purple-600 animate-pulse" />
                     AI Generated Application Email
                   </span>
-                  <button
-                    onClick={handleCopyEmail}
-                    className="text-purple-600 hover:text-purple-700 text-sm flex items-center font-medium transition-colors px-4 py-2 rounded-full hover:bg-purple-100"
-                  >
+                  <button onClick={handleCopyEmail} className="text-purple-600 hover:text-purple-700 text-sm flex items-center font-medium transition-colors px-3 py-2 rounded-full hover:bg-purple-100">
                     <CopyIcon className="h-4 w-4 mr-2" />
                     {copied ? 'Copied!' : 'Copy to Clipboard'}
                   </button>
                 </div>
+
                 <textarea
                   value={generatedEmail}
                   onChange={(e) => setGeneratedEmail(e.target.value)}
-                  rows={16}
-                  className="w-full border border-gray-300 rounded-2xl p-5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white font-mono transition-all"
+                  rows={12}
+                  className="w-full border border-gray-300 rounded-2xl p-3 md:p-5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white font-mono transition-all"
                 />
-                <p className="text-xs text-gray-500 mt-4 bg-white rounded-xl px-4 py-3 border border-gray-200 font-light">
-                  Feel free to edit the email to add your personal touch before sending
-                </p>
+
+                <p className="text-xs text-gray-500 mt-4 bg-white rounded-xl px-3 py-2 border border-gray-200 font-light">Feel free to edit the email to add your personal touch before sending</p>
               </div>
 
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-red-700 text-sm">
-                  {error}
-                </div>
-              )}
+              {error && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{error}</div>}
 
-              <div className="flex gap-3 pt-4">
-                <button
-                  onClick={() => setCurrentStep(3)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
-                >
-                  Back
-                </button>
-                <div className="flex-1 flex gap-3">
+              <div className="flex flex-col md:flex-row gap-3 pt-4">
+                <button onClick={() => setCurrentStep(3)} className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all">Back</button>
+
+                <div className="flex-1 flex flex-col md:flex-row gap-3">
                   {contactEmail ? (
-                    <button
-                      onClick={handleSendEmail}
-                      className="flex-1 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all shadow-lg hover:shadow-xl"
-                    >
-                      Send via Email Client
-                    </button>
+                    <button onClick={handleSendEmail} className="flex-1 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all shadow-lg">Send via Email Client</button>
                   ) : (
-                    <button
-                      onClick={handleCopyEmail}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl"
-                    >
-                      Copy Email
-                    </button>
+                    <button onClick={handleCopyEmail} className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg">Copy Email</button>
                   )}
-                  <button
-                    onClick={onClose}
-                    className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
-                  >
-                    Close
-                  </button>
+                  <button onClick={onClose} className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all">Close</button>
                 </div>
               </div>
             </div>

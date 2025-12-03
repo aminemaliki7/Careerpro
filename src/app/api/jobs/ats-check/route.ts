@@ -2,11 +2,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Initialize the AI client
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
 export async function POST(req: NextRequest) {
   console.log('🎯 ATS Check API called');
-  
+
   try {
     const body = await req.json();
     const { cvText, jobTitle, company, requirements, description, skills } = body;
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
       hasSkills: !!skills,
     });
 
-    // Validation
+    // --- 1. Validation ---
     if (!cvText || cvText.trim().length < 50) {
       console.log('❌ Validation failed: CV text too short');
       return NextResponse.json(
@@ -45,17 +46,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // --- 2. Data Cleaning for Prompt ---
+
+    // Filter out null/empty values from arrays for a cleaner prompt
+    const validRequirements = (Array.isArray(requirements) ? requirements : []).filter(r => r && r.trim());
+    const validSkills = (Array.isArray(skills) ? skills : []).filter(s => s && s.trim());
+
+    const requirementsText = validRequirements.length > 0
+      ? validRequirements.join('\n- ')
+      : 'Not specified';
+
+    const skillsText = validSkills.length > 0
+      ? validSkills.join(', ')
+      : 'Not specified';
+
     const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
 
-    const requirementsText = Array.isArray(requirements) && requirements.length > 0
-      ? requirements.join('\n- ')
-      : 'Not specified';
-
-    const skillsText = Array.isArray(skills) && skills.length > 0
-      ? skills.join(', ')
-      : 'Not specified';
-
-    const prompt = `You are an expert ATS (Applicant Tracking System) analyzer. Analyze the following CV against the job requirements and provide a detailed compatibility report.
+    // --- 3. Construct Prompt ---
+    const prompt = `You are an expert ATS (Applicant Tracking System) analyzer. Your SOLE output MUST be a valid JSON object following the specified structure. Analyze the following CV against the job requirements and provide a detailed compatibility report.
 
 JOB INFORMATION:
 - Position: ${jobTitle}
@@ -99,26 +107,24 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
 
     console.log('✅ Gemini API response received');
 
-    // Parse the JSON response
+    // --- 4. Robust JSON Parsing ---
     let analysis;
     try {
-      // Remove potential markdown code blocks and extra text
       let cleanedText = responseText.trim();
-      
-      // Remove markdown code blocks
-      cleanedText = cleanedText
-        .replace(/```json\n?/g, '')
-        .replace(/```\n?/g, '')
-        .trim();
-      
-      // Find JSON object in the response
+
+      // Remove markdown fence (```json or ```) if present
+      cleanedText = cleanedText.replace(/```json\s*|```\s*/g, '').trim();
+
+      // Safely extract only the outermost JSON object
       const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        cleanedText = jsonMatch[0];
+      
+      if (!jsonMatch) {
+         throw new Error('AI response did not contain a valid JSON object.');
       }
       
-      analysis = JSON.parse(cleanedText);
+      analysis = JSON.parse(jsonMatch[0]);
       console.log('✅ Successfully parsed Gemini response');
+      
     } catch (parseError) {
       console.error('❌ Failed to parse Gemini response:', responseText);
       return NextResponse.json(
@@ -131,7 +137,7 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
       );
     }
 
-    // Validate the response structure
+    // --- 5. Final Output Validation and Cleaning ---
     if (
       typeof analysis.matchScore !== 'number' ||
       !Array.isArray(analysis.matchedSkills) ||
@@ -153,7 +159,7 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
     // Ensure matchScore is within bounds
     analysis.matchScore = Math.min(100, Math.max(0, Math.round(analysis.matchScore)));
 
-    // Ensure summary exists
+    // Ensure summary exists (safety fallback)
     if (!analysis.summary || typeof analysis.summary !== 'string') {
       analysis.summary = `The candidate shows a ${analysis.matchScore >= 70 ? 'strong' : analysis.matchScore >= 50 ? 'good' : 'moderate'} match for the ${jobTitle} position at ${company}.`;
     }
@@ -164,6 +170,7 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
   } catch (error) {
     console.error('❌ ATS check error:', error);
     
+    // Detailed error handling for API issues
     if (error instanceof Error) {
       if (error.message.includes('API key') || error.message.includes('GEMINI_API_KEY')) {
         return NextResponse.json(
@@ -172,6 +179,7 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
         );
       }
       
+      // Catches model not found/invalid model errors
       if (String(error).includes('404 Not Found') || String(error).includes('is not found for API version')) {
         return NextResponse.json(
           { error: 'API Model Error: The model name is invalid or your @google/generative-ai package is outdated. Please update the package and restart your server.' },
@@ -198,12 +206,12 @@ Return ONLY the JSON object, no additional text, no markdown formatting, no code
   }
 }
 
-// Add OPTIONS handler for CORS if needed
+// OPTIONS handler for CORS preflight requests (essential when calling from a different origin)
 export async function OPTIONS(req: NextRequest) {
   return new NextResponse(null, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': '*', // IMPORTANT: Restrict this to your frontend domain in production
       'Access-Control-Allow-Methods': 'POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
     },
