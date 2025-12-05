@@ -6,7 +6,7 @@ import {
   Clock,
   MapPin,
   Briefcase,
-  ExternalLink,
+  ArrowRight,
   Bookmark,
   CircleDollarSign,
 } from 'lucide-react';
@@ -40,105 +40,101 @@ const JobCard = ({ job, index }: JobCardProps) => {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.3, delay: index * 0.04 }}
-      className="
-        group
-        bg-white border border-gray-200
-        rounded-xl
-        p-4 sm:p-5     /* 🔥 slightly bigger */
-        hover:shadow-md hover:-translate-y-[2px]
-        transition-all
-        flex justify-between gap-4
-      "
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ 
+        duration: 0.5, 
+        delay: index * 0.05,
+        ease: [0.22, 1, 0.36, 1] 
+      }}
+      className="group bg-white border border-gray-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 hover:shadow-xl hover:border-gray-200 transition-all duration-300 flex flex-col sm:flex-row justify-between gap-4"
     >
-      {/* LEFT */}
-      <Link href={jobUrl} className="flex-1 min-w-0">
-        {/* Title */}
-        <h3 className="text-[15px] font-semibold text-gray-900 mb-1 line-clamp-1 group-hover:text-gray-700">
-          {job.title}
-        </h3>
-
-        {/* Company + Salary */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="text-[13px] text-gray-600 flex items-center gap-1">
-            <Briefcase className="w-3.5 h-3.5 text-gray-400" />
+      {/* LEFT CONTENT */}
+      <Link href={jobUrl} className="flex-1 min-w-0 space-y-3">
+        {/* Company Badge + Salary */}
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#0A66C2]/10 text-[#0A66C2] text-xs font-semibold rounded-full">
+            <Briefcase className="w-3.5 h-3.5" />
             {job.company}
           </span>
 
           {job.salary_range && (
-            <span className="px-2 py-[3px] bg-gray-100 text-gray-700 text-[11px] rounded-md flex items-center gap-1">
+            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-700 text-xs font-medium rounded-full">
               <CircleDollarSign className="w-3.5 h-3.5" />
               {job.salary_range}
             </span>
           )}
         </div>
 
+        {/* Title with Arrow */}
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 leading-tight group-hover:text-[#0A66C2] transition-colors duration-200 line-clamp-2 flex-1">
+            {job.title}
+          </h3>
+          <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-[#0A66C2] group-hover:translate-x-1 transition-all duration-200 flex-shrink-0 mt-1 hidden sm:block" />
+        </div>
+
         {/* Description */}
-        <p className="text-[13px] text-gray-600 line-clamp-2 mb-3 leading-snug">
+        <p className="text-sm text-gray-600 leading-relaxed line-clamp-2">
           {job.description}
         </p>
 
         {/* Skills */}
         {Array.isArray(job.skills) && job.skills.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mb-3">
-            {job.skills.slice(0, 3).map((skill: string, i: number) => (
+          <div className="flex flex-wrap gap-1.5">
+            {job.skills.slice(0, 4).map((skill: string, i: number) => (
               <span
                 key={`${job.id}-skill-${i}`}
-                className="px-2.5 py-[3px] bg-gray-100 text-gray-700 text-[11px] rounded-full"
+                className="px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-full border border-gray-200"
               >
                 {skill}
               </span>
             ))}
-            {job.skills.length > 3 && (
-              <span className="px-2.5 py-[3px] bg-gray-100 text-gray-700 text-[11px] rounded-full">
-                +{job.skills.length - 3}
+            {job.skills.length > 4 && (
+              <span className="px-2.5 py-1 bg-gray-50 text-gray-700 text-xs rounded-full border border-gray-200">
+                +{job.skills.length - 4}
               </span>
             )}
           </div>
         )}
 
         {/* Meta */}
-        <div className="flex flex-wrap items-center gap-3 text-[12px] text-gray-500">
-          <span className="flex items-center gap-1.5">
-            <MapPin className="w-3.5 h-3.5" />
+        <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm text-gray-500 pt-2 border-t border-gray-100">
+          <span className="flex items-center gap-1.5 font-medium">
+            <MapPin className="w-4 h-4" />
             {job.location}
           </span>
 
+          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+
           <span className="flex items-center gap-1.5">
-            <Clock className="w-3.5 h-3.5" />
+            <Clock className="w-4 h-4" />
             {job.type}
           </span>
+
+          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
 
           <span>{formatDate(job.posted_date)}</span>
         </div>
       </Link>
 
       {/* RIGHT ACTIONS */}
-      <div className="flex flex-col justify-between items-end gap-2">
+      <div className="flex sm:flex-col justify-between sm:justify-start items-center sm:items-end gap-2 sm:gap-3">
         <Link
           href={jobUrl}
-          className="
-            flex items-center gap-1.5
-            text-[12px] font-medium
-            bg-gray-900 text-white 
-            px-3 py-2 rounded-lg
-            hover:bg-gray-800
-            transition
-          "
+          className="flex items-center gap-2 text-sm font-medium bg-[#0A66C2] text-white px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-[#004182] transition-all duration-200 shadow-sm hover:shadow-md"
         >
-          Apply
-          <ExternalLink className="w-4 h-4" />
+          Apply Now
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
         </Link>
 
         <button
-          className="p-2 text-gray-400 hover:text-gray-900 hover:bg-gray-100 rounded-md transition"
+          className="p-2 sm:p-2.5 text-gray-400 hover:text-[#0A66C2] hover:bg-[#0A66C2]/10 rounded-lg transition-all duration-200"
           aria-label="Bookmark job"
           onClick={(e) => e.preventDefault()}
         >
-          <Bookmark className="w-4 h-4" />
+          <Bookmark className="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
     </motion.article>

@@ -410,48 +410,56 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
   }, [isPlaying]);
 
   return (
-    <div className="min-h-screen bg-white pb-24 sm:pb-32">
-      {/* Hero Header */}
-      <div className="border-b border-gray-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <div className="flex items-start gap-4 sm:gap-6 lg:gap-12">
-            <div className="w-24 h-24 sm:w-40 sm:h-40 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-lg shadow-xl overflow-hidden flex-shrink-0 border border-gray-300">
-              <Image
-                src="/images/podcast.png"
-                alt="Career Insights Podcast"
-                width={224}
-                height={224}
-                className="w-full h-full object-cover"
-                priority
-              />
-            </div>
-            
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1.5 sm:mb-3">
-                <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
-                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-gray-600">Podcast</span>
+   <div className="min-h-screen bg-white pb-24 sm:pb-32">
+  {/* Hero Header */}
+  <div className="border-b border-gray-100 bg-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
+      <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8 lg:gap-12">
+        {/* Podcast Cover */}
+        <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-lg overflow-hidden flex-shrink-0 border border-gray-200">
+          <Image
+            src="/images/podcast.jpg"
+            alt="Career Insights Podcast"
+            width={224}
+            height={224}
+            className="w-full h-full object-cover"
+            priority
+          />
+        </div>
+        
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs font-medium mb-4">
+            <Headphones className="w-3.5 h-3.5" />
+            Podcast Series
+          </div>
+          
+          {/* Title */}
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 leading-tight">
+            Career Insights
+          </h1>
+          
+          {/* Description */}
+          <p className="text-base sm:text-lg text-gray-600 mb-6 leading-relaxed max-w-2xl">
+            Expert advice on job searching, career growth, and navigating the tech industry
+          </p>
+          
+          {/* Meta Info */}
+          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+            <span className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-[#0A66C2] flex items-center justify-center">
+                <User className="w-4 h-4 text-white" />
               </div>
-              <h1 className="text-xl sm:text-4xl lg:text-5xl xl:text-6xl font-serif font-bold text-gray-900 mb-1.5 sm:mb-3 leading-tight">
-                Career Insights
-              </h1>
-              <p className="text-xs sm:text-lg lg:text-xl text-gray-600 mb-3 sm:mb-6 leading-relaxed">
-                Expert advice on job searching, career growth, and navigating the tech industry
-              </p>
-              
-              <div className="flex flex-wrap items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm text-gray-600 mb-4">
-                <span className="flex items-center gap-1.5 sm:gap-2">
-                  <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-gray-900 flex items-center justify-center">
-                    <User className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" />
-                  </div>
-                  Career Hub
-                </span>
-                <span>·</span>
-                <span className="font-medium">{allEpisodes.length} episodes</span>
-              </div>
-            </div>
+              <span className="font-medium">Career Hub</span>
+            </span>
+            <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+            <span className="font-medium">{allEpisodes.length} episodes</span>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 
       {/* Featured Episodes */}
       {featuredEpisodes.length > 0 && (
