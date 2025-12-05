@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
 import { Job, getJobRegion, formatExperienceLevel, GLOBAL_REGIONS } from '@/types/job';
 import { createJobSlug } from '@/lib/utils/format';
+import HirelyLogo from '@/components/ui/CircuitLogo';
 
 
 
@@ -147,7 +148,9 @@ export default function JobsPage() {
     return date.toLocaleDateString('en-US');
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
+  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-pulse">
+                    <HirelyLogo size="lg" />
+                </div></div>;
   if (error) return <div className="min-h-screen flex items-center justify-center text-red-500">{error}</div>;
 
   return (
