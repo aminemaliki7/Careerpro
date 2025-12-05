@@ -29,7 +29,7 @@ const HeroSection = () => {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6 lg:gap-x-14 sm:gap-y-8 md:items-start">
           {/* Left Content */}
           <motion.div 
-            className="space-y-3 sm:space-y-4 md:space-y-6 md:col-span-2 lg:col-span-1 w-full max-w-3xl lg:max-w-none mx-auto lg:mx-0 text-center lg:text-left order-2 md:order-1"
+            className="space-y-1 sm:space-y-4 md:space-y-6 md:col-span-2 lg:col-span-1 w-full max-w-3xl lg:max-w-none mx-auto lg:mx-0 text-center lg:text-left order-2 md:order-1"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
@@ -89,7 +89,7 @@ const HeroSection = () => {
 
           {/* Center Image */}
           <motion.div 
-            className="flex justify-center order-1 md:order-2"
+            className="flex justify-center order-2 md:order-2"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.4 }}
