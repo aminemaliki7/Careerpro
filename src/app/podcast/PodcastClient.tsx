@@ -410,16 +410,23 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
   }, [isPlaying]);
 
   return (
-   <div className="min-h-screen bg-white pb-24 sm:pb-32">
-  {/* Hero Header */}
-  <div className="border-b border-gray-100 bg-white">
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-      <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-8 lg:gap-12">
+  // NOTE: Assuming Tailwind configuration allows for custom colors, 
+// or using a specific hex value directly. I'll use a direct hex color (#00C4CC) 
+// for the primary accents and a dark blue/gray for better contrast.
+
+<div className="min-h-screen bg-gray-50 pb-24 sm:pb-32">
+  {/* Hero Header - Hirely Vibe with A16Z Style Description */}
+  <div className="border-b border-gray-100 bg-white shadow-sm"> 
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 lg:py-16">
+      
+      {/* Layout: flex-col on mobile (default) to stack image/text, flex-row on 'sm' and up */}
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 lg:gap-12 text-center sm:text-left">
+        
         {/* Podcast Cover */}
-        <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-lg overflow-hidden flex-shrink-0 border border-gray-200">
+        <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl overflow-hidden flex-shrink-0 border border-gray-200">
           <Image
             src="/images/podcast.jpg"
-            alt="Career Insights Podcast"
+            alt="Hirely Podcast"
             width={224}
             height={224}
             className="w-full h-full object-cover"
@@ -429,38 +436,38 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
         
         {/* Content */}
         <div className="flex-1 min-w-0">
+          
           {/* Badge */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs font-medium mb-4">
-            <Headphones className="w-3.5 h-3.5" />
-            Podcast Series
-          </div>
+         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00C4CC]/10 border border-[#00C4CC]/20 text-[#00C4CC] text-xs font-semibold uppercase tracking-wider mb-4">
+    <Headphones className="w-3.5 h-3.5" />
+    DEEP DIVE
+</div>
           
           {/* Title */}
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 leading-tight">
-            Career Insights
+          <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 leading-tight">
+            TECH PODCAST
           </h1>
           
-          {/* Description */}
-          <p className="text-base sm:text-lg text-gray-600 mb-6 leading-relaxed max-w-2xl">
-            Expert advice on job searching, career growth, and navigating the tech industry
+          {/* Description - UPDATED to be concise and high-impact */}
+          <p className="text-lg sm:text-xl text-gray-500 mb-6 leading-relaxed max-w-2xl mx-auto sm:mx-0">
+            **Discussions on the future of work, recruiting trends, and career acceleration.**
           </p>
           
           {/* Meta Info */}
-          <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm text-gray-500">
             <span className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#0A66C2] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-full bg-[#00C4CC] flex items-center justify-center shadow-md">
                 <User className="w-4 h-4 text-white" />
               </div>
-              <span className="font-medium">Career Hub</span>
+              <span className="font-semibold text-gray-700">The Hirely Team</span>
             </span>
             <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-            <span className="font-medium">{allEpisodes.length} episodes</span>
+            <span className="font-semibold">{allEpisodes.length} episodes</span>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
+</div>
       {/* Featured Episodes */}
       {featuredEpisodes.length > 0 && (
         <div className="border-b border-gray-200 py-6 sm:py-8">
