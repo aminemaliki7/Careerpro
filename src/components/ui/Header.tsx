@@ -4,7 +4,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutDashboard } from 'lucide-react';
 import {
   SignInButton,
   SignUpButton,
@@ -57,18 +57,33 @@ export default function Header() {
                 </Link>
               );
             })}
+            
+            {/* Dashboard link for signed-in users */}
+            <SignedIn>
+              <Link
+                href="/dashboard"
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-1.5 ${
+                  pathname === '/dashboard'
+                    ? 'text-[#0A66C2] bg-[#0A66C2]/10' 
+                    : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
+                }`}
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard
+              </Link>
+            </SignedIn>
           </nav>
 
           {/* Auth + User Section */}
           <div className="flex items-center gap-3">
             <SignedOut>
               <div className="hidden md:flex items-center gap-2">
-                <SignInButton>
+                <SignInButton mode="modal">
                   <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-[#0A66C2] rounded-lg hover:bg-gray-50 transition-all">
                     Sign In
                   </button>
                 </SignInButton>
-                <SignUpButton>
+                <SignUpButton mode="modal">
                   <button className="px-4 py-2 text-sm font-medium bg-[#0A66C2] text-white rounded-lg hover:bg-[#004182] transition-all shadow-sm">
                     Get Started
                   </button>
@@ -119,14 +134,30 @@ export default function Header() {
                 );
               })}
               
+              {/* Dashboard link for mobile signed-in users */}
+              <SignedIn>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                    pathname === '/dashboard'
+                      ? 'text-[#0A66C2] bg-[#0A66C2]/10' 
+                      : 'text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50'
+                  }`}
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  Dashboard
+                </Link>
+              </SignedIn>
+              
               <SignedOut>
                 <div className="pt-3 mt-3 border-t border-gray-100 space-y-2">
-                  <SignInButton>
+                  <SignInButton mode="modal">
                     <button className="w-full px-4 py-3 text-sm font-medium text-gray-700 hover:text-[#0A66C2] hover:bg-gray-50 rounded-lg transition-all text-left">
                       Sign In
                     </button>
                   </SignInButton>
-                  <SignUpButton>
+                  <SignUpButton mode="modal">
                     <button className="w-full px-4 py-3 text-sm font-medium bg-[#0A66C2] text-white rounded-lg hover:bg-[#004182] transition-all shadow-sm">
                       Get Started
                     </button>

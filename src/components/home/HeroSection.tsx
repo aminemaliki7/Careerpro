@@ -2,20 +2,11 @@
 
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { SignUpButton, SignedIn, SignedOut } from '@clerk/nextjs';
 import { Bot, BarChart3, Target } from 'lucide-react';
 
 const HeroSection = () => {
   const router = useRouter();
-  const { isSignedIn } = useAuth();
-
-  const handleGetStarted = () => {
-    if (isSignedIn) {
-      router.push('/dashboard');
-    } else {
-      router.push('/sign-in');
-    }
-  };
 
   return (
     <section className="py-6 sm:py-8 lg:py-12">
@@ -55,15 +46,30 @@ const HeroSection = () => {
               </p>
             </div>
             <div className="flex justify-center lg:justify-start pt-2">
-              <button 
-                onClick={handleGetStarted}
-                className="px-5 sm:px-6 h-10 sm:h-11 flex items-center gap-2 rounded-lg bg-[#0A66C2] text-white text-sm transition ease-linear hover:bg-[#004182]"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-                </svg>
-                Start Applying with AI
-              </button>
+              {/* For signed-out users: Show sign-up button */}
+              <SignedOut>
+                <SignUpButton mode="modal">
+                  <button className="px-5 sm:px-6 h-10 sm:h-11 flex items-center gap-2 rounded-lg bg-[#0A66C2] text-white text-sm transition ease-linear hover:bg-[#004182]">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    </svg>
+                    Start Applying with AI
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+
+              {/* For signed-in users: Go to dashboard */}
+              <SignedIn>
+                <button 
+                  onClick={() => router.push('/dashboard')}
+                  className="px-5 sm:px-6 h-10 sm:h-11 flex items-center gap-2 rounded-lg bg-[#0A66C2] text-white text-sm transition ease-linear hover:bg-[#004182]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                  </svg>
+                  Go to Dashboard
+                </button>
+              </SignedIn>
             </div>
             <div className="grid grid-cols-3 w-full gap-2 pt-2">
               <div>
