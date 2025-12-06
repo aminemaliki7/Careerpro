@@ -1,20 +1,20 @@
 // app/api/startups/submit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
-import { StartupSubmission } from '@/types/startup';
 
 function generateSlug(name: string): string {
   return name
     .toLowerCase()
+    .trim()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const body: StartupSubmission = await request.json();
+    const body = await request.json();
 
-    // Validate required fields
+    // Required fields
     const requiredFields = [
       'name',
       'description',
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     ];
 
     for (const field of requiredFields) {
-      if (!body[field as keyof StartupSubmission]) {
+      if (!body[field]) {
         return NextResponse.json(
           { error: `Missing required field: ${field}` },
           { status: 400 }
@@ -37,50 +37,50 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Generate slug
     const slug = generateSlug(body.name);
 
-    // Check if slug already exists
-    const { data: existing } = await supabase
-      .from('startup_submissions')
-      .select('slug')
+    // Check if slug already exists (approved or pending)
+    const { data: exists } = await supabase
+      .from('startups')
+      .select('id, status')
       .eq('slug', slug)
-      .single();
+      .maybeSingle();
 
-    if (existing) {
+    if (exists) {
       return NextResponse.json(
-        { error: 'A startup with this name already exists' },
+        { error: 'A startup with this name already exists.' },
         { status: 409 }
       );
     }
 
-    // Map camelCase body to snake_case columns
-    const submissionPayload = {
-      name: body.name,
+    // Build payload
+    const payload = {
+      name: body.name.trim(),
       slug,
-      description: body.description,
+      description: body.description.trim(),
       full_description: body.fullDescription || null,
       industry: body.industry,
       size: body.size,
       funding_stage: body.fundingStage,
       founded_date: body.foundedDate,
-      location: body.location,
-      website_url: body.websiteUrl,
+      location: body.location.trim(),
+      website_url: body.websiteUrl.trim(),
       logo_url: body.logoUrl || null,
-      contact_email: body.contactEmail,
-      contact_name: body.contactName,
+      contact_email: body.contactEmail.trim(),
+      contact_name: body.contactName.trim(),
       status: 'pending',
-      submitted_at: new Date().toISOString(),
+      created_at: new Date().toISOString()
     };
 
+    // Insert into startups table directly
     const { data, error } = await supabase
-      .from('startup_submissions')
-      .insert([submissionPayload])
+      .from('startups')
+      .insert(payload)
       .select()
       .single();
 
     if (error) {
-      console.error('Supabase error:', error);
+      console.error(error);
       return NextResponse.json(
         { error: 'Failed to submit startup' },
         { status: 500 }
@@ -89,13 +89,14 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'Startup submitted successfully! We will review it and get back to you soon.',
-        submission: data
+        message: 'Startup submitted successfully! Pending approval.',
+        startup: data
       },
       { status: 201 }
     );
+
   } catch (error) {
-    console.error('Error submitting startup:', error);
+    console.error('Error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

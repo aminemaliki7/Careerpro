@@ -25,6 +25,8 @@ export default function Header() {
     { name: 'Roadmaps', href: '/roadmaps' },
     { name: 'Blog', href: '/blog' },
     { name: 'Podcast', href: '/podcast' },
+    { name: 'Startups', href: '/startups' },
+
   ];
 
   return (
