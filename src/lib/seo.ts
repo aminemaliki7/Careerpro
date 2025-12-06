@@ -4,52 +4,41 @@ import { BlogPost } from '@/types/blog'
 
 export const siteConfig = {
   name: 'TechCareer Pro',
-  description: 'Expert advice on tech resume optimization, interview preparation, and career strategies for software engineers in the job market.',
-  url: 'https://hirely.ma/', // Update with your actual domain
-  ogImage: 'https://yourdomain.com/images/og-default.jpg',
-  creator: 'Amine ', // Update with your name
+  description:
+    'Expert advice on tech resume optimization, interview preparation, and career strategies for software engineers in the job market.',
+  url: 'https://hirely.ma/',
+  ogImage: 'https://hirely.ma/images/og-default.jpg',
+  creator: 'Amine', 
   keywords: [
-  // Main US-focused keywords
-  'tech careers',
-  'software engineering careers',
-  'how to get a tech job',
-  'entry level tech jobs',
-  'remote tech jobs',
-  'software developer jobs',
-  'QA engineer jobs',
-  'backend developer jobs',
-
-  // Resume / CV in  language
-  'tech resume tips',
-  'software engineer resume',
-  'ATS resume',
-  'resume optimization for tech',
-  'how to pass ATS',
-
-  // Interview focused
-  'technical interview preparation',
-  'coding interview tips',
-  'system design interview',
-  'behavioral interview tech',
-
-  // Career & education
-  'career roadmap for developers',
-  'how to become a software engineer',
-  'career switch to tech',
-  'tech career for beginners',
-  'IT career roadmap',
-
-  // Internships & new grads (terms)
-  'tech internship',
-  'software engineering internship',
-  'new grad software engineer',
-  'entry level developer jobs',
-
-  // Branding
-  'TechCareer Pro',
-  'Hirely',
-]
-
+    'tech careers',
+    'software engineering careers',
+    'how to get a tech job',
+    'entry level tech jobs',
+    'remote tech jobs',
+    'software developer jobs',
+    'QA engineer jobs',
+    'backend developer jobs',
+    'tech resume tips',
+    'software engineer resume',
+    'ATS resume',
+    'resume optimization for tech',
+    'how to pass ATS',
+    'technical interview preparation',
+    'coding interview tips',
+    'system design interview',
+    'behavioral interview tech',
+    'career roadmap for developers',
+    'how to become a software engineer',
+    'career switch to tech',
+    'tech career for beginners',
+    'IT career roadmap',
+    'tech internship',
+    'software engineering internship',
+    'new grad software engineer',
+    'entry level developer jobs',
+    'TechCareer Pro',
+    'Hirely',
+  ],
 }
 
 export function generateSEOMetadata({
@@ -61,7 +50,7 @@ export function generateSEOMetadata({
   type = 'website',
   publishedTime,
   modifiedTime,
-  authors
+  authors,
 }: {
   title: string
   description: string
@@ -75,19 +64,19 @@ export function generateSEOMetadata({
 }): Metadata {
   const url = `${siteConfig.url}${path}`
   const combinedKeywords = [...siteConfig.keywords, ...keywords]
-  
+
   return {
     title: title.includes(siteConfig.name) ? title : `${title} | ${siteConfig.name}`,
     description,
     keywords: combinedKeywords.join(', '),
-    authors: authors ? authors.map(name => ({ name })) : [{ name: siteConfig.creator }],
+    authors: authors ? authors.map((name) => ({ name })) : [{ name: siteConfig.creator }],
     creator: siteConfig.creator,
     metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical: url,
       languages: {
-    'en-US': url,
-  },
+        'en-US': url,
+      },
     },
     openGraph: {
       type,
@@ -103,17 +92,19 @@ export function generateSEOMetadata({
           alt: title,
         },
       ],
-      ...(type === 'article' && publishedTime && {
-        publishedTime,
-        modifiedTime,
-      }),
+      ...(type === 'article' && publishedTime
+        ? {
+            publishedTime,
+            modifiedTime,
+          }
+        : {}),
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
       images: [image],
-      creator: '@yourtwitterhandle', // Update with your Twitter handle
+      creator: '@yourtwitterhandle', // Replace with actual handle
     },
     robots: {
       index: true,
@@ -133,7 +124,7 @@ export function generateBlogPostMetadata(post: BlogPost, path: string): Metadata
   return generateSEOMetadata({
     title: post.title,
     description: post.description,
-    keywords: post.seoKeywords,
+    keywords: post.seoKeywords || [],
     path,
     type: 'article',
     publishedTime: post.publishedAt,
@@ -167,9 +158,9 @@ export function generateStructuredData(post: BlogPost) {
       '@type': 'WebPage',
       '@id': `${siteConfig.url}/blog/${post.slug}`,
     },
-    keywords: post.seoKeywords.join(', '),
-    articleSection: post.tags[0] || 'Career Advice',
-    wordCount: Math.round((post.readingTime || 0) * 250), // Estimate based on reading time
+    keywords: post.seoKeywords?.join(', ') || '',
+    articleSection: post.tags?.[0] || 'Career Advice',
+    wordCount: Math.round((post.readingTime || 0) * 250),
   }
 }
 
@@ -198,14 +189,13 @@ export function generateOrganizationStructuredData() {
       name: siteConfig.creator,
     },
     sameAs: [
-      'https://www.linkedin.com/company/hirely-ma', // Update with your social profiles
+      'https://www.linkedin.com/company/hirely-ma',
       'https://x.com/SerenithHQ',
     ],
     address: {
-  "@type": "PostalAddress",
-  addressCountry: "US"
-}
-
+      '@type': 'PostalAddress',
+      addressCountry: 'US',
+    },
   }
 }
 
@@ -224,32 +214,29 @@ export function generateWebsiteStructuredData() {
   }
 }
 
-// Utility to truncate text for meta descriptions
+// Utility: truncate text for meta description
 export function truncateText(text: string, maxLength: number = 160): string {
   if (text.length <= maxLength) return text
-  
-  // Find the last space within the limit to avoid cutting off words
   const truncated = text.substring(0, maxLength)
   const lastSpace = truncated.lastIndexOf(' ')
-  
-  return lastSpace > 0 
-    ? `${truncated.substring(0, lastSpace)}...`
-    : `${truncated}...`
+  return lastSpace > 0 ? `${truncated.substring(0, lastSpace)}...` : `${truncated}...`
 }
 
 // Generate slug from title
 export function generateSlug(title: string): string {
   return title
     .toLowerCase()
-    .replace(/[^\w\s-]/g, '') // Remove special characters
-    .replace(/\s+/g, '-') // Replace spaces with hyphens
-    .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
     .trim()
 }
 
-// Calculate reading time
+// Calculate reading time (minutes)
 export function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200
   const wordCount = content.split(/\s+/).length
   return Math.ceil(wordCount / wordsPerMinute)
 }
+// Alias for convenience to match previous usage
+export const generatePageMetadata = generateSEOMetadata;
