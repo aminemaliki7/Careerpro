@@ -1,7 +1,7 @@
 // app/startups/submit/page.tsx
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles, Rocket, Users, TrendingUp } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 import StartupSubmissionForm from '@/components/startups/StartupSubmissionForm';
 import { generatePageMetadata } from '@/lib/seo';
 
@@ -14,17 +14,20 @@ export const metadata: Metadata = generatePageMetadata({
 export default function SubmitStartupPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 relative overflow-hidden">
-      {/* Decorative Background Elements */}
+      {/* Decorative Background Elements - Kept fixed for effect */}
       <div className="fixed top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-20 right-10 w-96 h-96 bg-[#0A66C2]/5 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-20 left-10 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
+        {/* Adjusted size/opacity slightly for mobile performance/subtlety */}
+        <div className="absolute top-20 right-10 w-64 h-64 sm:w-96 sm:h-96 bg-[#0A66C2]/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-10 w-56 h-56 sm:w-80 sm:h-80 bg-blue-400/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }}></div>
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      {/* Main Content Container: Adjusted py-8 to py-6 for tighter mobile layout */}
+      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12">
+        
         {/* Back Button */}
         <Link
           href="/startups"
-          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0A66C2] mb-8 group transition-colors duration-300"
+          className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0A66C2] mb-6 sm:mb-8 group transition-colors duration-300" // Reduced mb-8 to mb-6 on mobile
         >
           <div className="p-1.5 rounded-lg bg-white border border-gray-200 group-hover:border-[#0A66C2] group-hover:bg-[#0A66C2]/5 transition-all duration-300 shadow-sm">
             <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-300" />
@@ -32,12 +35,13 @@ export default function SubmitStartupPage() {
           <span className="font-medium">Back to Startups</span>
         </Link>
 
-        {/* Hero Section */}
-        <div className="text-center mb-12 sm:mb-16">
+        {/* Hero Section: Reduced mb-12 to mb-8 on mobile */}
+        <div className="text-center mb-8 sm:mb-16">
+          
           {/* Badge */}
-          <div className="flex justify-center mb-6">
-            <span className="inline-flex items-center gap-x-1.5 px-4 py-1.5 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-sm font-medium hover:bg-[#0A66C2]/15 transition-all duration-300 cursor-default">
-              <Sparkles className="w-4 h-4" />
+          <div className="flex justify-center mb-5 sm:mb-6"> {/* Slight reduction in mb on mobile */}
+            <span className="inline-flex items-center gap-x-1.5 px-3.5 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs sm:text-sm font-medium hover:bg-[#0A66C2]/15 transition-all duration-300 cursor-default"> {/* Reduced badge padding/size slightly */}
+              <Sparkles className="w-3.5 h-3.5" />
               Get Featured
             </span>
           </div>
@@ -53,28 +57,29 @@ export default function SubmitStartupPage() {
           </h1>
 
           {/* Description */}
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed px-4">
+          <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed px-0 sm:px-4"> {/* Removed mobile px-4, adjusted mb */}
             Get featured in our startup directory and connect with talented professionals looking for their next opportunity.
           </p>
 
-        
-
-          {/* Trust Indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-gray-600">
-            <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-green-500">
+          
+          {/* Trust Indicators: Changed to a grid on mobile for structured layout */}
+          <div className="grid grid-cols-2 sm:flex items-center justify-center gap-y-3 gap-x-6 text-sm text-gray-600 px-4 sm:px-0">
+            {/* Added px-4 back here to contain the grid on mobile */}
+            
+            <div className="flex items-center gap-2 justify-center"> {/* Added justify-center for grid items */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]"> {/* ICON COLOR CHANGE & SIZE REDUCTION */}
                 <path fillRule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
               <span className="font-medium">Free to submit</span>
             </div>
-            <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-green-500">
+            <div className="flex items-center gap-2 justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
                 <path fillRule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
               <span className="font-medium">Quick approval</span>
             </div>
-            <div className="flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 text-green-500">
+            <div className="flex items-center gap-2 col-span-2 justify-center sm:col-span-1"> {/* Added col-span-2 to center the last item, then reset to col-span-1 for sm:flex */}
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
                 <path fillRule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
               </svg>
               <span className="font-medium">Edit anytime</span>
@@ -96,6 +101,7 @@ export default function SubmitStartupPage() {
             <p className="text-gray-600 mb-6 text-sm sm:text-base">
               Have questions about the submission process? We&lsquo;re here to help you get started.
             </p>
+            {/* Buttons are already correctly stacking on mobile (w-full) */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
                 href="mailto:support@example.com"

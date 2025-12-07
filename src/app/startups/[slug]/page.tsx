@@ -1,4 +1,5 @@
 // app/startups/[slug]/page.tsx
+
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -22,13 +23,14 @@ async function getStartup(slug: string) {
   }
 }
 
-export async function generateMetadata({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }>
-}): Promise<Metadata> {
-  const { slug } = await params;
-  const startup = await getStartup(slug);
+type Props = {
+  params: Promise<{ slug: string }>,
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
+};
+
+export async function generateMetadata(props: Props): Promise<Metadata> {
+  const { slug } = await props.params;
+  const startup = await getStartup(slug); 
   
   if (!startup) {
     return {
@@ -44,13 +46,12 @@ export async function generateMetadata({
   });
 }
 
-export default async function StartupPage({ 
-  params 
-}: { 
-  params: Promise<{ slug: string }>
-}) {
-  const { slug } = await params;
+// --- START OF FIX FOR StartupPage COMPONENT ---
+// Replaced synchronous destructuring { params } with the full props object
+export default async function StartupPage(props: Props) { 
+  const { slug } = await props.params;
   const startup = await getStartup(slug);
+  // --- END OF FIX ---
   
   if (!startup) {
     notFound();
@@ -63,16 +64,20 @@ export default async function StartupPage({
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
-      {/* Decorative Background Elements */}
+      
+      {/* Decorative Background Elements - Retaining mobile adjustments */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 right-10 w-96 h-96 bg-[#0A66C2]/5 rounded-full blur-3xl"></div>
-        <div className="absolute top-60 left-10 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 right-1/4 w-72 h-72 bg-[#0A66C2]/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-0 w-64 h-64 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div> 
+        <div className="hidden sm:block absolute top-60 left-10 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl opacity-50"></div>
+        <div className="absolute bottom-20 left-10 w-56 h-56 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      {/* Main Content Container: Adjusted py-6 to py-8 for mobile breathing room */}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"> 
+        
         {/* Header Section */}
-        <div className="mb-8 sm:mb-12">
+        <div className="mb-6 sm:mb-12">
+          
           {/* Back Button */}
           <Link
             href="/startups"
@@ -86,7 +91,9 @@ export default async function StartupPage({
 
           {/* Page Badge and Title */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
+            
+            {/* Badges */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3"> 
               <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs sm:text-sm font-medium">
                 <Sparkles className="w-3.5 h-3.5" />
                 Startup Profile
@@ -113,27 +120,31 @@ export default async function StartupPage({
               )}
             </div>
 
-            {/* Company Logo and Name */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div className="flex items-start gap-4">
-                {/* Company Logo - Now using Client Component */}
+            {/* Company Logo, Name, Description (Main Content) */}
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6"> 
+              
+              {/* Logo and Text */}
+              <div className="flex items-start gap-4"> 
+                {/* Company Logo */}
                 <StartupLogo 
                   logoUrl={startup.logo_url} 
                   name={startup.name} 
                 />
 
                 <div>
-                  <h1 className="font-display font-semibold text-3xl sm:text-4xl lg:text-5xl text-gray-900 mb-2">
+                  {/* Title size is already mobile-responsive */}
+                  <h1 className="font-display font-semibold text-2xl sm:text-4xl lg:text-5xl text-gray-900 mb-1"> 
                     {startup.name}
                   </h1>
-                  <p className="text-lg text-gray-600 max-w-2xl">
+                  {/* ADDED: leading-relaxed for enhanced mobile readability */}
+                  <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
                     {startup.description}
                   </p>
                 </div>
               </div>
 
-              {/* Quick Stats */}
-              <div className="flex flex-wrap gap-3">
+              {/* Quick Stats: CHANGED to grid grid-cols-2 for clean 2x2 mobile layout */}
+              <div className="grid grid-cols-2 gap-3 mt-4 sm:mt-0"> 
                 {foundedYear && (
                   <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
                     <p className="text-xs text-gray-500 mb-0.5">Founded</p>
@@ -162,21 +173,19 @@ export default async function StartupPage({
             </div>
           </div>
         </div>
-
-   
-
-        {/* Call-to-Action Footer */}
-        <div className="mt-12 bg-gradient-to-r from-[#0A66C2]/5 via-blue-50 to-[#0A66C2]/5 rounded-2xl p-8 sm:p-10 border border-[#0A66C2]/20 text-center">
+        
+        {/* Call-to-Action Footer (Buttons stack and are full-width on mobile, which is good UX) */}
+        <div className="mt-8 sm:mt-12 bg-gradient-to-r from-[#0A66C2]/5 via-blue-50 to-[#0A66C2]/5 rounded-2xl p-6 sm:p-10 border border-[#0A66C2]/20 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="inline-flex items-center justify-center w-14 h-14 bg-[#0A66C2] rounded-full mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-7 h-7 text-white">
+            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-[#0A66C2] rounded-full mb-3 sm:mb-4">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 sm:w-7 sm:h-7 text-white">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
               </svg>
             </div>
-            <h2 className="font-display font-semibold text-2xl sm:text-3xl text-gray-900 mb-3">
+            <h2 className="font-display font-semibold text-xl sm:text-3xl text-gray-900 mb-2 sm:mb-3">
               Interested in {startup.name}?
             </h2>
-            <p className="text-gray-600 mb-6 text-sm sm:text-base">
+            <p className="text-gray-600 mb-5 text-sm sm:text-base">
               Explore open positions and join their team to help shape the future
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
