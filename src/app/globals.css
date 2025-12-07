@@ -1,4 +1,229 @@
 @import "tailwindcss";
+/* ============================================
+   STARTUPS SECTION - MOBILE OPTIMIZATIONS
+   ============================================ */
+
+/* Smooth scroll behavior for startup navigation */
+#browse {
+  scroll-margin-top: 5rem;
+}
+
+@media (min-width: 640px) {
+  #browse {
+    scroll-margin-top: 6rem;
+  }
+}
+
+/* Startup card hover effects */
+.startup-card {
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.startup-card:hover {
+  transform: translateY(-4px) translateZ(0);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1),
+              0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+@media (max-width: 640px) {
+  .startup-card:hover {
+    transform: translateY(-2px) translateZ(0);
+  }
+}
+
+/* Filter modal animations */
+.filter-modal-backdrop {
+  animation: fadeIn 0.2s ease-out;
+}
+
+.filter-modal-content {
+  animation: slideUpModal 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideUpModal {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Startup logo fade-in effect */
+.startup-logo {
+  animation: fadeInScale 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+}
+
+/* Badge pulse animation for active filters */
+.filter-badge {
+  animation: badgePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes badgePulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1) translateZ(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05) translateZ(0);
+  }
+}
+
+/* Mobile touch feedback */
+@media (max-width: 640px) {
+  button:active,
+  a[role="button"]:active {
+    transform: scale(0.98) translateZ(0);
+  }
+  
+  .startup-card:active {
+    transform: scale(0.99) translateZ(0);
+  }
+}
+
+/* Pagination button states */
+.pagination-button {
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pagination-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Hero section animations */
+.hero-badge {
+  animation: fadeInDown 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-title {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.2s backwards;
+}
+
+.hero-description {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.4s backwards;
+}
+
+.hero-cta {
+  animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.6s backwards;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+/* Trust indicators animation */
+.trust-indicator {
+  animation: fadeInScale 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.trust-indicator:nth-child(1) {
+  animation-delay: 0.7s;
+  animation-fill-mode: backwards;
+}
+
+.trust-indicator:nth-child(2) {
+  animation-delay: 0.8s;
+  animation-fill-mode: backwards;
+}
+
+.trust-indicator:nth-child(3) {
+  animation-delay: 0.9s;
+  animation-fill-mode: backwards;
+}
+
+/* Loading skeleton for startup cards */
+.startup-skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Smooth transitions for filter tags */
+.filter-tag {
+  animation: slideInFromLeft 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) translateZ(0);
+  }
+}
+
+/* Mobile-specific optimizations */
+@media (max-width: 640px) {
+  /* Reduce motion on mobile for better performance */
+  .startup-card,
+  .filter-modal-content,
+  .pagination-button {
+    transition-duration: 0.2s;
+  }
+  
+  /* Optimize animations for mobile */
+  @supports (-webkit-overflow-scrolling: touch) {
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+  }
+}
+
+/* Prevent layout shift during loading */
+.startups-grid {
+  min-height: 400px;
+}
+
+@media (min-width: 768px) {
+  .startups-grid {
+    min-height: 600px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .startup-card,
+  .filter-modal-content,
+  .hero-badge,
+  .hero-title,
+  .hero-description,
+  .hero-cta,
+  .trust-indicator,
+  .filter-tag {
+    animation: none !important;
+    transition: none !important;
+  }
+}
 
 /* ============================================
    THEME & VARIABLES
