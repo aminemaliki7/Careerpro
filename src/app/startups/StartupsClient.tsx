@@ -68,7 +68,7 @@ export default function StartupsClient() {
   if (error) {
     return (
       <motion.div 
-        className="min-h-[60vh] flex items-center justify-center py-8 sm:py-12"
+        className="min-h-[60vh] flex items-center justify-center py-8 sm:py-12 **!bg-white**" // Fixed background
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
       >
@@ -76,8 +76,8 @@ export default function StartupsClient() {
           <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#0A66C2] rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
             <span className="text-white text-xl sm:text-2xl font-bold">!</span>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Something went wrong</h2>
-          <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8">{error}</p>
+          <h2 className="text-xl sm:text-2xl font-bold **!text-gray-900** mb-2 sm:mb-3">Something went wrong</h2> {/* Fixed text color */}
+          <p className="text-sm sm:text-base **!text-gray-600** mb-6 sm:mb-8">{error}</p> {/* Fixed text color */}
           <button
             onClick={fetchStartups}
             className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#0A66C2] text-white rounded-lg font-medium hover:bg-[#004182] active:bg-[#003366] transition-colors shadow-lg shadow-[#0A66C2]/20"
@@ -90,7 +90,8 @@ export default function StartupsClient() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-12">
+    // Apply !bg-white to the main container
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-12 **!bg-white**">
       
       {/* Header */}
       <motion.div 
@@ -99,15 +100,15 @@ export default function StartupsClient() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-2 sm:mb-4">
+        <h1 className="text-2xl sm:text-4xl lg:text-5xl font-bold **!text-gray-900** mb-2 sm:mb-4"> {/* Fixed text color */}
           Discover startups
         </h1> 
-        <p className="text-sm sm:text-lg text-gray-600">
+        <p className="text-sm sm:text-lg **!text-gray-600**"> {/* Fixed text color */}
           {loading ? 'Loading...' : `${total.toLocaleString()} ${total === 1 ? 'startup' : 'startups'} to explore`}
         </p>
       </motion.div>
 
-      {/* Filters */}
+      {/* Filters (Assume StartupFilters component also uses !bg-white and !text-gray-XXX internally if needed) */}
       <div className="mb-6 sm:mb-12">
         <StartupFilters onFilterChange={handleFilterChange} />
       </div>
@@ -123,7 +124,7 @@ export default function StartupsClient() {
             exit={{ opacity: 0 }}
           >
             <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 text-[#0A66C2] animate-spin mb-4" />
-            <p className="text-sm sm:text-base text-gray-600">Loading startups...</p>
+            <p className="text-sm sm:text-base **!text-gray-600**">Loading startups...</p> {/* Fixed text color */}
           </motion.div>
         ) : (
           <motion.div
@@ -136,7 +137,7 @@ export default function StartupsClient() {
             
             {startups.length > 0 ? (
               <>
-                {/* Startups Grid */}
+                {/* Startups Grid (Assume StartupCard component also uses !bg-white and !text-gray-XXX internally if needed) */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8 mb-8 sm:mb-12 lg:mb-16">
                   {startups.map((startup, index) => (
                     <motion.div
@@ -158,12 +159,11 @@ export default function StartupsClient() {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.2 }}
                   >
-                    {/* Mobile: Stack buttons vertically */}
                     <div className="flex w-full sm:w-auto justify-between sm:justify-start items-center gap-4">
                       <button
                         onClick={() => handlePageChange(page - 1)}
                         disabled={page === 1}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2.5 text-sm font-medium text-gray-700 hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:border-[#0A66C2] disabled:hover:border-gray-300 min-h-[44px]"
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2.5 text-sm font-medium **!text-gray-700** hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors **!bg-white** border border-gray-300 rounded-lg hover:border-[#0A66C2] disabled:hover:border-gray-300 min-h-[44px]" // Fixed text/bg
                       >
                         <span className="text-lg">←</span>
                         <span className="hidden sm:inline">Previous</span>
@@ -171,7 +171,7 @@ export default function StartupsClient() {
                       
                       {/* Page Info - Centered on mobile */}
                       <div className="flex items-center justify-center sm:order-none order-last">
-                        <span className="text-xs sm:text-sm text-gray-600 font-medium">
+                        <span className="text-xs sm:text-sm **!text-gray-600** font-medium"> {/* Fixed text color */}
                           Page {page} of {totalPages}
                         </span>
                       </div>
@@ -179,7 +179,7 @@ export default function StartupsClient() {
                       <button
                         onClick={() => handlePageChange(page + 1)}
                         disabled={page === totalPages}
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2.5 text-sm font-medium text-gray-700 hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors bg-white border border-gray-300 rounded-lg hover:border-[#0A66C2] disabled:hover:border-gray-300 min-h-[44px]"
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2.5 text-sm font-medium **!text-gray-700** hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors **!bg-white** border border-gray-300 rounded-lg hover:border-[#0A66C2] disabled:hover:border-gray-300 min-h-[44px]" // Fixed text/bg
                       >
                         <span className="hidden sm:inline">Next</span>
                         <span className="text-lg">→</span>
@@ -197,7 +197,7 @@ export default function StartupsClient() {
                             className={`w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${
                               page === pageNum
                                 ? 'bg-[#0A66C2] text-white shadow-lg shadow-[#0A66C2]/30'
-                                : 'bg-white text-gray-700 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2]'
+                                : '**!bg-white** **!text-gray-700** border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2]' // Fixed text/bg
                             }`}
                           >
                             {pageNum}
@@ -209,16 +209,16 @@ export default function StartupsClient() {
                           {page > 2 && (
                             <button
                               onClick={() => handlePageChange(1)}
-                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all"
+                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium **!bg-white** **!text-gray-700** border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all" // Fixed text/bg
                             >
                               1
                             </button>
                           )}
-                          {page > 3 && <span className="text-gray-400">...</span>}
+                          {page > 3 && <span className="**!text-gray-400**">...</span>} {/* Fixed text color */}
                           {page > 1 && (
                             <button
                               onClick={() => handlePageChange(page - 1)}
-                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all"
+                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium **!bg-white** **!text-gray-700** border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all" // Fixed text/bg
                             >
                               {page - 1}
                             </button>
@@ -231,16 +231,16 @@ export default function StartupsClient() {
                           {page < totalPages && (
                             <button
                               onClick={() => handlePageChange(page + 1)}
-                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all"
+                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium **!bg-white** **!text-gray-700** border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all" // Fixed text/bg
                             >
                               {page + 1}
                             </button>
                           )}
-                          {page < totalPages - 2 && <span className="text-gray-400">...</span>}
+                          {page < totalPages - 2 && <span className="**!text-gray-400**">...</span>} {/* Fixed text color */}
                           {page < totalPages - 1 && (
                             <button
                               onClick={() => handlePageChange(totalPages)}
-                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all"
+                              className="w-10 h-10 flex items-center justify-center rounded-lg text-sm font-medium **!bg-white** **!text-gray-700** border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] transition-all" // Fixed text/bg
                             >
                               {totalPages}
                             </button>
@@ -261,8 +261,8 @@ export default function StartupsClient() {
                 <div className="w-16 h-16 sm:w-20 sm:h-20 bg-[#0A66C2]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                   <Search className="w-7 h-7 sm:w-9 sm:h-9 text-[#0A66C2]" />
                 </div>
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">No startups found</h2>
-                <p className="text-sm sm:text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-4">
+                <h2 className="text-xl sm:text-2xl font-bold **!text-gray-900** mb-3">No startups found</h2> {/* Fixed text color */}
+                <p className="text-sm sm:text-base **!text-gray-600** mb-6 sm:mb-8 max-w-md mx-auto px-4"> {/* Fixed text color */}
                   Try adjusting your filters or search terms to find what you&apos;re looking for.
                 </p>
                 <button
