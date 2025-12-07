@@ -7,10 +7,16 @@ import StartupLogo from '@/components/startups/StartupLogo';
 
 async function getStartup(slug: string) {
   try {
-    // Use absolute URL for production compatibility
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
-                    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
-                    'http://localhost:3000';
+    // Construct the base URL properly
+    let baseUrl: string;
+    
+    if (process.env.NEXT_PUBLIC_BASE_URL) {
+      baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+    } else if (process.env.VERCEL_URL) {
+      baseUrl = `https://${process.env.VERCEL_URL}`;
+    } else {
+      baseUrl = 'http://localhost:3000';
+    }
     
     const response = await fetch(`${baseUrl}/api/startups/${slug}`, { 
       cache: 'no-store',
