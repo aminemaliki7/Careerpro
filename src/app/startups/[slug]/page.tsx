@@ -1,5 +1,3 @@
-// app/startups/[slug]/page.tsx
-
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -9,13 +7,19 @@ import StartupLogo from '@/components/startups/StartupLogo';
 
 async function getStartup(slug: string) {
   try {
-  const baseUrl = process.env.NEXT_PUBLIC_VERCEL_URL
-  ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-  : 'http://localhost:3000';
-   const response = await fetch(`${baseUrl}/api/startups/${slug}`, { cache: 'no-store' });
-    if (!response.ok) {
-      return null;
-    }
+    // Use absolute URL for production compatibility
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                    process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+                    'http://localhost:3000';
+    
+    const response = await fetch(`${baseUrl}/api/startups/${slug}`, { 
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    
+    if (!response.ok) return null;
     return await response.json();
   } catch (error) {
     console.error('Error fetching startup:', error);
@@ -24,61 +28,46 @@ async function getStartup(slug: string) {
 }
 
 type Props = {
-  params: Promise<{ slug: string }>,
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>,
+  params: { slug: string };
+  searchParams?: { [key: string]: string | string[] | undefined };
 };
 
-export async function generateMetadata(props: Props): Promise<Metadata> {
-  const { slug } = await props.params;
-  const startup = await getStartup(slug); 
-  
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const startup = await getStartup(params.slug);
   if (!startup) {
-    return {
-      title: 'Startup Not Found'
-    };
+    return { title: 'Startup Not Found' };
   }
-  
   return generatePageMetadata({
     title: `${startup.name} - ${startup.industry} Startup`,
     description: startup.description,
     path: `/startups/${startup.slug}`,
-    image: startup.logo_url
+    image: startup.logo_url,
   });
 }
 
-// --- START OF FIX FOR StartupPage COMPONENT ---
-// Replaced synchronous destructuring { params } with the full props object
-export default async function StartupPage(props: Props) { 
-  const { slug } = await props.params;
-  const startup = await getStartup(slug);
-  // --- END OF FIX ---
-  
-  if (!startup) {
-    notFound();
-  }
+export default async function StartupPage({ params }: Props) {
+  const startup = await getStartup(params.slug);
 
-  // Format the founded date
-  const foundedYear = startup.founded_date 
-    ? new Date(startup.founded_date).getFullYear() 
+  if (!startup) notFound();
+
+  const foundedYear = startup.founded_date
+    ? new Date(startup.founded_date).getFullYear()
     : null;
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50 relative">
       
-      {/* Decorative Background Elements - Retaining mobile adjustments */}
+      {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-0 w-64 h-64 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div> 
+        <div className="absolute top-10 right-0 w-64 h-64 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div>
         <div className="hidden sm:block absolute top-60 left-10 w-80 h-80 bg-blue-400/5 rounded-full blur-3xl opacity-50"></div>
         <div className="absolute bottom-20 left-10 w-56 h-56 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div>
       </div>
 
-      {/* Main Content Container: Adjusted py-6 to py-8 for mobile breathing room */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"> 
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         
-        {/* Header Section */}
+        {/* Header */}
         <div className="mb-6 sm:mb-12">
-          
-          {/* Back Button */}
           <Link
             href="/startups"
             className="inline-flex items-center gap-2 text-gray-600 hover:text-[#0A66C2] mb-6 group transition-colors duration-300"
@@ -89,99 +78,71 @@ export default async function StartupPage(props: Props) {
             <span className="font-medium">Back to Startups</span>
           </Link>
 
-          {/* Page Badge and Title */}
-          <div className="space-y-4">
-            
-            {/* Badges */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3"> 
-              <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs sm:text-sm font-medium">
-                <Sparkles className="w-3.5 h-3.5" />
-                Startup Profile
+          {/* Badges */}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+            <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs sm:text-sm font-medium">
+              <Sparkles className="w-3.5 h-3.5" />
+              Startup Profile
+            </span>
+            {startup.featured && (
+              <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs sm:text-sm font-medium">
+                Featured
               </span>
-              
-              {/* Featured Badge */}
-              {startup.featured && (
-                <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs sm:text-sm font-medium">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                    <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
-                  </svg>
-                  Featured
-                </span>
-              )}
+            )}
+            {startup.status === 'approved' && (
+              <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-green-700 text-xs sm:text-sm font-medium">
+                Verified
+              </span>
+            )}
+          </div>
 
-              {/* Status Badge */}
-              {startup.status === 'approved' && (
-                <span className="inline-flex items-center gap-x-1.5 px-3 py-1 rounded-full bg-green-50 border border-green-200 text-green-700 text-xs sm:text-sm font-medium">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3.5 h-3.5">
-                    <path fillRule="evenodd" d="M16.403 12.652a3 3 0 000-5.304 3 3 0 00-3.75-3.751 3 3 0 00-5.305 0 3 3 0 00-3.751 3.75 3 3 0 000 5.305 3 3 0 003.75 3.751 3 3 0 005.305 0 3 3 0 003.751-3.75zm-2.546-4.46a.75.75 0 00-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-                  </svg>
-                  Verified
-                </span>
-              )}
+          {/* Logo and Description */}
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
+            <div className="flex items-start gap-4">
+              <StartupLogo logoUrl={startup.logo_url} name={startup.name} />
+              <div>
+                <h1 className="font-display font-semibold text-2xl sm:text-4xl lg:text-5xl text-gray-900 mb-1">
+                  {startup.name}
+                </h1>
+                <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
+                  {startup.description}
+                </p>
+              </div>
             </div>
 
-            {/* Company Logo, Name, Description (Main Content) */}
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6"> 
-              
-              {/* Logo and Text */}
-              <div className="flex items-start gap-4"> 
-                {/* Company Logo */}
-                <StartupLogo 
-                  logoUrl={startup.logo_url} 
-                  name={startup.name} 
-                />
-
-                <div>
-                  {/* Title size is already mobile-responsive */}
-                  <h1 className="font-display font-semibold text-2xl sm:text-4xl lg:text-5xl text-gray-900 mb-1"> 
-                    {startup.name}
-                  </h1>
-                  {/* ADDED: leading-relaxed for enhanced mobile readability */}
-                  <p className="text-base sm:text-lg text-gray-600 max-w-2xl leading-relaxed">
-                    {startup.description}
-                  </p>
+            {/* Quick Stats */}
+            <div className="grid grid-cols-2 gap-3 mt-4 sm:mt-0">
+              {foundedYear && (
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
+                  <p className="text-xs text-gray-500 mb-0.5">Founded</p>
+                  <p className="font-semibold text-gray-900">{foundedYear}</p>
                 </div>
-              </div>
-
-              {/* Quick Stats: CHANGED to grid grid-cols-2 for clean 2x2 mobile layout */}
-              <div className="grid grid-cols-2 gap-3 mt-4 sm:mt-0"> 
-                {foundedYear && (
-                  <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
-                    <p className="text-xs text-gray-500 mb-0.5">Founded</p>
-                    <p className="font-semibold text-gray-900">{foundedYear}</p>
-                  </div>
-                )}
-                {startup.size && (
-                  <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
-                    <p className="text-xs text-gray-500 mb-0.5">Team Size</p>
-                    <p className="font-semibold text-gray-900">{startup.size}</p>
-                  </div>
-                )}
-                {startup.funding_stage && (
-                  <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
-                    <p className="text-xs text-gray-500 mb-0.5">Stage</p>
-                    <p className="font-semibold text-gray-900">{startup.funding_stage}</p>
-                  </div>
-                )}
-                {startup.job_count !== undefined && startup.job_count > 0 && (
-                  <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
-                    <p className="text-xs text-gray-500 mb-0.5">Open Roles</p>
-                    <p className="font-semibold text-gray-900">{startup.job_count}</p>
-                  </div>
-                )}
-              </div>
+              )}
+              {startup.size && (
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
+                  <p className="text-xs text-gray-500 mb-0.5">Team Size</p>
+                  <p className="font-semibold text-gray-900">{startup.size}</p>
+                </div>
+              )}
+              {startup.funding_stage && (
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
+                  <p className="text-xs text-gray-500 mb-0.5">Stage</p>
+                  <p className="font-semibold text-gray-900">{startup.funding_stage}</p>
+                </div>
+              )}
+              {startup.job_count && startup.job_count > 0 && (
+                <div className="bg-white/60 backdrop-blur-sm border border-gray-200 rounded-lg px-4 py-2">
+                  <p className="text-xs text-gray-500 mb-0.5">Open Roles</p>
+                  <p className="font-semibold text-gray-900">{startup.job_count}</p>
+                </div>
+              )}
             </div>
           </div>
         </div>
-        
-        {/* Call-to-Action Footer (Buttons stack and are full-width on mobile, which is good UX) */}
+
+        {/* CTA Footer */}
         <div className="mt-8 sm:mt-12 bg-gradient-to-r from-[#0A66C2]/5 via-blue-50 to-[#0A66C2]/5 rounded-2xl p-6 sm:p-10 border border-[#0A66C2]/20 text-center">
           <div className="max-w-2xl mx-auto">
-            <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-[#0A66C2] rounded-full mb-3 sm:mb-4">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 sm:w-7 sm:h-7 text-white">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-              </svg>
-            </div>
             <h2 className="font-display font-semibold text-xl sm:text-3xl text-gray-900 mb-2 sm:mb-3">
               Interested in {startup.name}?
             </h2>
@@ -189,7 +150,7 @@ export default async function StartupPage(props: Props) {
               Explore open positions and join their team to help shape the future
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              {startup.website_url && (
+              {startup.website_url ? (
                 <>
                   <a
                     href={startup.website_url}
@@ -197,9 +158,6 @@ export default async function StartupPage(props: Props) {
                     rel="noopener noreferrer"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#0A66C2] hover:bg-[#004182] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#0A66C2]/30"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
-                    </svg>
                     Visit Website
                   </a>
                   {startup.job_count && startup.job_count > 0 && (
@@ -209,28 +167,22 @@ export default async function StartupPage(props: Props) {
                       rel="noopener noreferrer"
                       className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-medium transition-all duration-300 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2]"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
-                      </svg>
                       View Open Positions ({startup.job_count})
                     </a>
                   )}
                 </>
-              )}
-              {!startup.website_url && (
+              ) : (
                 <Link
                   href="/startups"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#0A66C2] hover:bg-[#004182] text-white px-6 py-3 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#0A66C2]/30"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                  </svg>
                   Explore More Startups
                 </Link>
               )}
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );
