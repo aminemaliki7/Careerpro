@@ -28,12 +28,13 @@ async function getStartup(slug: string) {
 }
 
 type Props = {
-  params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
+  params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const startup = await getStartup(params.slug);
+  const { slug } = await params;
+  const startup = await getStartup(slug);
   if (!startup) {
     return { title: 'Startup Not Found' };
   }
@@ -46,7 +47,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function StartupPage({ params }: Props) {
-  const startup = await getStartup(params.slug);
+  const { slug } = await params;
+  const startup = await getStartup(slug);
 
   if (!startup) notFound();
 
