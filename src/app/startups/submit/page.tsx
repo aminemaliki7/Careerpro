@@ -57,32 +57,7 @@ export default function SubmitStartupPage() {
             Get featured in our startup directory and connect with talented professionals looking for their next opportunity.
           </p>
 
-          {/* Benefits Grid */}
-          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto mb-8">
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 sm:p-5 border border-gray-200 hover:shadow-lg hover:border-[#0A66C2]/30 transition-all duration-300 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0A66C2]/10 to-[#0A66C2]/5 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Rocket className="w-5 h-5 text-[#0A66C2]" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Boost Visibility</h3>
-              <p className="text-sm text-gray-600">Get discovered by top talent</p>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 sm:p-5 border border-gray-200 hover:shadow-lg hover:border-[#0A66C2]/30 transition-all duration-300 group">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0A66C2]/10 to-[#0A66C2]/5 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <Users className="w-5 h-5 text-[#0A66C2]" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Attract Talent</h3>
-              <p className="text-sm text-gray-600">Connect with qualified candidates</p>
-            </div>
-
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 sm:p-5 border border-gray-200 hover:shadow-lg hover:border-[#0A66C2]/30 transition-all duration-300 group sm:col-span-3 sm:col-span-1">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#0A66C2]/10 to-[#0A66C2]/5 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform duration-300">
-                <TrendingUp className="w-5 h-5 text-[#0A66C2]" />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-1">Grow Faster</h3>
-              <p className="text-sm text-gray-600">Build your team efficiently</p>
-            </div>
-          </div>
+        
 
           {/* Trust Indicators */}
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-sm text-gray-600">
@@ -119,7 +94,7 @@ export default function SubmitStartupPage() {
               Need Help?
             </h2>
             <p className="text-gray-600 mb-6 text-sm sm:text-base">
-              Have questions about the submission process? We're here to help you get started.
+              Have questions about the submission process? We&lsquo;re here to help you get started.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a

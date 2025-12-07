@@ -1,4 +1,3 @@
-// app/startups/StartupsClient.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import StartupCard from '@/components/startups/StartupCard';
 import StartupFilters from '@/components/startups/StartupFilters';
 import { Startup, StartupFilters as Filters } from '@/types/startup';
-import { Loader2, TrendingUp, Sparkles, Building2 } from 'lucide-react';
+import { Loader2, Search } from 'lucide-react';
 
 export default function StartupsClient() {
   const [startups, setStartups] = useState<Startup[]>([]);
@@ -67,24 +66,21 @@ export default function StartupsClient() {
   if (error) {
     return (
       <motion.div 
-        className="text-center py-12"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        className="min-h-[60vh] flex items-center justify-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
       >
-        <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto shadow-lg">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-            </svg>
+        <div className="text-center max-w-md mx-auto px-6">
+          <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-white text-2xl">!</span>
           </div>
-          <p className="text-red-600 font-semibold text-lg mb-2">Error loading startups</p>
-          <p className="text-red-500 text-sm mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-black mb-3">Something went wrong</h2>
+          <p className="text-gray-600 mb-8">{error}</p>
           <button
             onClick={fetchStartups}
-            className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-all duration-300 hover:shadow-lg"
+            className="px-8 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
           >
-            Try Again
+            Try again
           </button>
         </div>
       </motion.div>
@@ -92,79 +88,37 @@ export default function StartupsClient() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Hero Header with Badge */}
+    <div className="max-w-7xl mx-auto px-6 py-12">
+      {/* Simple Header */}
       <motion.div 
-        className="text-center space-y-4"
-        initial={{ opacity: 0, y: -20 }}
+        className="mb-16"
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <span className="inline-flex items-center gap-x-1.5 px-4 py-1.5 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-sm font-medium">
-          <Sparkles className="w-4 h-4" />
-          Discover Innovative Startups
-        </span>
-        <h1 className="font-display font-semibold text-3xl md:text-4xl text-gray-900">
-          Explore <span className="text-[#0A66C2]">Tech Startups</span>
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Browse curated startups across industries, funding stages, and locations
+        <h1 className="text-5xl font-bold text-black mb-4">Discover startups</h1>
+        <p className="text-xl text-gray-600">
+          {loading ? 'Loading...' : `${total.toLocaleString()} ${total === 1 ? 'startup' : 'startups'} to explore`}
         </p>
       </motion.div>
 
-      <StartupFilters onFilterChange={handleFilterChange} />
+      {/* Filters */}
+      <div className="mb-12">
+        <StartupFilters onFilterChange={handleFilterChange} />
+      </div>
 
-      {/* Results Stats with Enhanced Design */}
-      <motion.div 
-        className="flex items-center justify-between bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-6 border border-gray-200"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-[#0A66C2] rounded-lg">
-            <Building2 className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <span className="block text-2xl font-bold text-gray-900">
-              {loading ? '...' : total.toLocaleString()}
-            </span>
-            <span className="text-sm text-gray-600">
-              {total === 1 ? 'Startup Found' : 'Startups Found'}
-            </span>
-          </div>
-        </div>
-        
-        {totalPages > 1 && (
-          <div className="text-right">
-            <p className="text-sm font-medium text-gray-700">
-              Page {page} of {totalPages}
-            </p>
-            <p className="text-xs text-gray-500">
-              {((page - 1) * 20 + 1).toLocaleString()} - {Math.min(page * 20, total).toLocaleString()} results
-            </p>
-          </div>
-        )}
-      </motion.div>
-
-      {/* Loading State */}
+      {/* Content */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div 
             key="loading"
-            className="flex flex-col justify-center items-center py-20"
+            className="flex flex-col justify-center items-center py-32"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <div className="relative">
-              {/* Decorative circles */}
-              <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#0A66C2]/10 rounded-full blur-2xl animate-pulse"></div>
-              <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-[#0A66C2]/5 rounded-full blur-2xl animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-              
-              <Loader2 className="w-12 h-12 text-[#0A66C2] animate-spin relative" />
-            </div>
-            <p className="mt-6 text-gray-600 font-medium">Loading startups...</p>
+            <Loader2 className="w-8 h-8 text-black animate-spin mb-4" />
+            <p className="text-gray-600">Loading startups...</p>
           </motion.div>
         ) : (
           <motion.div
@@ -172,100 +126,75 @@ export default function StartupsClient() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
           >
             {/* Startups Grid */}
             {startups.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {startups.map((startup, index) => (
-                  <motion.div
-                    key={startup.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                  {startups.map((startup, index) => (
+                    <motion.div
+                      key={startup.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4, delay: index * 0.03 }}
+                    >
+                      <StartupCard startup={startup} />
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Minimalist Pagination */}
+                {totalPages > 1 && (
+                  <motion.div 
+                    className="flex justify-center items-center gap-3 pt-8 border-t border-gray-200"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.2 }}
                   >
-                    <StartupCard startup={startup} />
+                    <button
+                      onClick={() => handlePageChange(page - 1)}
+                      disabled={page === 1}
+                      className="px-5 py-2 text-sm font-medium text-gray-700 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors"
+                    >
+                      ← Previous
+                    </button>
+                    
+                    <div className="flex items-center gap-2 px-4">
+                      <span className="text-sm text-gray-600">
+                        Page {page} of {totalPages}
+                      </span>
+                    </div>
+
+                    <button
+                      onClick={() => handlePageChange(page + 1)}
+                      disabled={page === totalPages}
+                      className="px-5 py-2 text-sm font-medium text-gray-700 hover:text-black disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:text-gray-700 transition-colors"
+                    >
+                      Next →
+                    </button>
                   </motion.div>
-                ))}
-              </div>
+                )}
+              </>
             ) : (
               <motion.div 
-                className="text-center py-20"
-                initial={{ opacity: 0, scale: 0.95 }}
+                className="text-center py-32"
+                initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.4 }}
               >
-                <div className="bg-gradient-to-br from-gray-50 to-gray-100 border border-gray-200 rounded-2xl p-12 max-w-md mx-auto shadow-lg">
-                  <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <TrendingUp className="w-10 h-10 text-gray-400" />
-                  </div>
-                  <p className="text-gray-700 font-semibold text-lg mb-2">No startups found</p>
-                  <p className="text-gray-500 text-sm mb-6">
-                    Try adjusting your filters or search query to discover more opportunities
-                  </p>
-                  <button
-                    onClick={() => handleFilterChange({})}
-                    className="px-6 py-2.5 bg-[#0A66C2] hover:bg-[#004182] text-white rounded-lg font-medium transition-all duration-300 hover:shadow-lg"
-                  >
-                    Clear All Filters
-                  </button>
+                <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Search className="w-9 h-9 text-gray-400" />
                 </div>
-              </motion.div>
-            )}
-
-            {/* Enhanced Pagination */}
-            {totalPages > 1 && (
-              <motion.div 
-                className="flex justify-center items-center gap-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-              >
+                <h2 className="text-2xl font-bold text-black mb-3">No startups found</h2>
+                <p className="text-gray-600 mb-8 max-w-md mx-auto">
+                  Try adjusting your filters or search terms to find what you&lsquo;re looking for.
+                </p>
                 <button
-                  onClick={() => handlePageChange(page - 1)}
-                  disabled={page === 1}
-                  className="px-5 py-2.5 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 hover:border-[#0A66C2] hover:text-[#0A66C2] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-300"
+                  onClick={() => handleFilterChange({})}
+                  className="px-6 py-3 bg-black text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
                 >
-                  Previous
-                </button>
-                
-                <div className="flex gap-2">
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (page <= 3) {
-                      pageNum = i + 1;
-                    } else if (page >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = page - 2 + i;
-                    }
-
-                    return (
-                      <motion.button
-                        key={pageNum}
-                        onClick={() => handlePageChange(pageNum)}
-                        className={`w-11 h-11 rounded-lg font-medium transition-all duration-300 ${
-                          page === pageNum
-                            ? 'bg-[#0A66C2] text-white shadow-lg shadow-[#0A66C2]/30'
-                            : 'border border-gray-300 hover:bg-gray-50 hover:border-[#0A66C2] hover:text-[#0A66C2]'
-                        }`}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {pageNum}
-                      </motion.button>
-                    );
-                  })}
-                </div>
-
-                <button
-                  onClick={() => handlePageChange(page + 1)}
-                  disabled={page === totalPages}
-                  className="px-5 py-2.5 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 hover:border-[#0A66C2] hover:text-[#0A66C2] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:border-gray-300 disabled:hover:text-inherit transition-all duration-300"
-                >
-                  Next
+                  Clear filters
                 </button>
               </motion.div>
             )}

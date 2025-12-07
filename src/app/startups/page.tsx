@@ -66,63 +66,10 @@ export default function StartupsPage() {
             </Link>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto mt-12">
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold text-gray-900 mb-1">500+</h2>
-              <span className="text-xs sm:text-sm text-gray-600">Startups Listed</span>
-            </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold text-gray-900 mb-1">50+</h2>
-              <span className="text-xs sm:text-sm text-gray-600">Industries</span>
-            </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-gray-200 hover:shadow-lg transition-all duration-300">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-semibold text-gray-900 mb-1">1K+</h2>
-              <span className="text-xs sm:text-sm text-gray-600">Job Openings</span>
-            </div>
-          </div>
+          
         </section>
 
-        {/* Features/Benefits Section */}
-        <section className="mb-12 lg:mb-16">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div className="group bg-white rounded-xl sm:rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-300 hover:border-[#0A66C2]/30">
-              <div className="w-12 h-12 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-[#0A66C2]">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">Fast-Growing Companies</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                Discover startups with high growth potential and exciting opportunities
-              </p>
-            </div>
-
-            <div className="group bg-white rounded-xl sm:rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-300 hover:border-[#0A66C2]/30">
-              <div className="w-12 h-12 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-[#0A66C2]">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">Verified & Curated</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                All startups are verified to ensure authentic opportunities
-              </p>
-            </div>
-
-            <div className="group bg-white rounded-xl sm:rounded-2xl p-6 border border-gray-200 hover:shadow-xl transition-all duration-300 hover:border-[#0A66C2]/30">
-              <div className="w-12 h-12 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-6 h-6 text-[#0A66C2]">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
-                </svg>
-              </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-2">Updated Daily</h3>
-              <p className="text-gray-600 text-sm leading-relaxed">
-                New startups and opportunities added every day
-              </p>
-            </div>
-          </div>
-        </section>
+       
 
         {/* Startups List Section */}
         <section id="browse" className="scroll-mt-8">

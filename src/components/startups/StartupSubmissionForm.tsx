@@ -170,7 +170,7 @@ export default function StartupSubmissionForm() {
             Submission Successful!
           </h3>
           <p className="text-gray-600 text-lg mb-8 max-w-md mx-auto">
-            Thank you for submitting your startup. We'll review it and get back to you within 2-3 business days.
+            Thank you for submitting your startup. We&lsquo;ll review it and get back to you within 2-3 business days.
           </p>
           <button
             onClick={resetForm}

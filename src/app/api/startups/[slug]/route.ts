@@ -1,13 +1,13 @@
-// app/api/startups/[slug]/route.ts
+// src/app/api/startups/[slug]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { slug: string } }
+  context: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const { slug } = params;
+    const { slug } = await context.params;
 
     const { data, error } = await supabase
       .from('startups')
@@ -30,8 +30,8 @@ export async function GET(
     }
 
     return NextResponse.json(data);
-  } catch (error) {
-    console.error('Error fetching startup:', error);
+  } catch (err) {
+    console.error('Error fetching startup:', err);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
