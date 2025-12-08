@@ -18,7 +18,6 @@ export default function StartupCard({ startup }: StartupCardProps) {
       return logoUrl;
     }
 
-    // Existing logic for logo URL construction (Assuming environment variables are set)
     if (logoUrl.startsWith('/logos/')) {
       console.warn(`Skipping invalid logo path for ${startup.name}:`, logoUrl);
       return null;
@@ -36,22 +35,20 @@ export default function StartupCard({ startup }: StartupCardProps) {
   return (
     <Link 
       href={`/startups/${startup.slug}`}
-      // Mobile Change: Reduced padding from p-6 to p-4 for better screen fit
-      className="block bg-white border border-gray-200 rounded-xl p-4 sm:p-6 hover:border-[#0A66C2] hover:shadow-lg transition-all h-full flex flex-col group"
+      className="block bg-white border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-6 hover:border-[#0A66C2] hover:shadow-lg transition-all h-full flex flex-col group"
     >
-      {/* Logo + Name Section */}
-      <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4">
-        {/* Mobile Change: Reduced logo size from w-16 h-16 to w-14 h-14 */}
-        <div className="w-14 h-14 sm:w-16 sm:h-16 flex-shrink-0 bg-gradient-to-br from-blue-50 to-[#0A66C2]/10 rounded-xl flex items-center justify-center overflow-hidden relative border border-blue-100">
+      {/* Logo + Name Section - Stacked on mobile for 2-column grid */}
+      <div className="flex flex-col sm:flex-row items-center sm:items-start gap-1.5 sm:gap-4 mb-2 sm:mb-4">
+        {/* Logo - Centered on mobile */}
+        <div className="w-12 h-12 sm:w-16 sm:h-16 flex-shrink-0 bg-gradient-to-br from-blue-50 to-[#0A66C2]/10 rounded-lg sm:rounded-xl flex items-center justify-center overflow-hidden relative border border-blue-100">
           {logoUrl ? (
             <>
               <Image
                 src={logoUrl}
                 alt={`${startup.name} logo`}
-                // Mobile Change: Adjusted width/height for new container size
-                width={56} 
-                height={56}
-                className="object-contain"
+                width={48} 
+                height={48}
+                className="object-contain w-full h-full"
                 unoptimized
                 onError={(e) => {
                   const imgElement = e.target as HTMLImageElement;
@@ -66,86 +63,81 @@ export default function StartupCard({ startup }: StartupCardProps) {
                 }}
               />
               <div className="fallback-icon w-full h-full items-center justify-center hidden">
-                {/* Mobile Change: Smaller icon inside fallback */}
-                <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A66C2]" />
+                <Building2 className="w-5 h-5 sm:w-8 sm:h-8 text-[#0A66C2]" />
               </div>
             </>
           ) : (
-             <Building2 className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A66C2]" />
+             <Building2 className="w-5 h-5 sm:w-8 sm:h-8 text-[#0A66C2]" />
           )}
         </div>
-        <div className="flex-1 min-w-0">
-          {/* Mobile Change: Slightly smaller font for title on mobile */}
-          <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-1 truncate group-hover:text-[#0A66C2] transition-colors">{startup.name}</h2>
+        
+        <div className="flex-1 min-w-0 w-full text-center sm:text-left">
+          {/* Title - Centered on mobile, line-clamp-1 for compact height */}
+          <h2 className="text-xs sm:text-lg font-bold text-gray-900 mb-0.5 sm:mb-1 line-clamp-1 group-hover:text-[#0A66C2] transition-colors leading-tight">
+            {startup.name}
+          </h2>
           {startup.featured && (
-            <span className="inline-block bg-gradient-to-r from-[#0A66C2] to-blue-600 text-white text-xs px-2 py-0.5 rounded-full font-semibold">
+            <span className="inline-block bg-gradient-to-r from-[#0A66C2] to-blue-600 text-white text-[9px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full font-semibold">
               Featured
             </span>
           )}
         </div>
       </div>
 
-      {/* Description */}
-      {/* Mobile Change: Use text-xs for description to save vertical space, maintained line-clamp-2 */}
-      <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4 line-clamp-2 h-8 sm:h-10 leading-relaxed">{startup.description}</p>
+      {/* Description - line-clamp-2 on mobile for compact height */}
+      <p className="text-[10px] sm:text-sm text-gray-600 mb-2 sm:mb-4 line-clamp-2 leading-snug sm:leading-relaxed text-center sm:text-left">
+        {startup.description}
+      </p>
 
-      {/* Stats Grid */}
-      {/* Mobile Change: Reduced vertical gap in stats grid */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-2 sm:gap-x-4 sm:gap-y-3 mb-3 sm:mb-4 text-xs sm:text-sm">
-        <div className="flex items-center gap-2">
-          {/* Mobile Change: Smaller icon container (w-6 h-6) */}
-          <div className="w-6 h-6 sm:w-7 sm:h-7 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-            {/* Mobile Change: Smaller icon (w-3 h-3) */}
-            <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-blue-600" />
+      {/* Stats - Single column on mobile for better readability in 2-col grid */}
+      <div className="flex flex-col sm:grid sm:grid-cols-2 gap-1 sm:gap-x-4 sm:gap-y-3 mb-2 sm:mb-4 text-xs">
+        <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 py-0.5 sm:py-0 min-h-[20px]">
+          <div className="w-4 h-4 sm:w-7 sm:h-7 bg-blue-50 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+            <MapPin className="w-2 h-2 sm:w-4 sm:h-4 text-blue-600" />
           </div>
-          <span className="text-gray-700 truncate">{startup.location}</span>
+          <span className="text-gray-700 truncate text-[10px] sm:text-sm leading-none">{startup.location}</span>
         </div>
-        <div className="flex items-center gap-2">
-           {/* Mobile Change: Smaller icon container (w-6 h-6) */}
-          <div className="w-6 h-6 sm:w-7 sm:h-7 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
-            {/* Mobile Change: Smaller icon (w-3 h-3) */}
-            <Users className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+        
+        <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 py-0.5 sm:py-0 min-h-[20px]">
+          <div className="w-4 h-4 sm:w-7 sm:h-7 bg-green-50 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+            <Users className="w-2 h-2 sm:w-4 sm:h-4 text-green-600" />
           </div>
-          <span className="text-gray-700 truncate">{startup.size}</span>
+          <span className="text-gray-700 truncate text-[10px] sm:text-sm leading-none">{startup.size}</span>
         </div>
-        <div className="flex items-center gap-2">
-           {/* Mobile Change: Smaller icon container (w-6 h-6) */}
-          <div className="w-6 h-6 sm:w-7 sm:h-7 bg-orange-50 rounded-lg flex items-center justify-center flex-shrink-0">
-            {/* Mobile Change: Smaller icon (w-3 h-3) */}
-            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-orange-600" />
+        
+        <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 py-0.5 sm:py-0 min-h-[20px]">
+          <div className="w-4 h-4 sm:w-7 sm:h-7 bg-orange-50 rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+            <Calendar className="w-2 h-2 sm:w-4 sm:h-4 text-orange-600" />
           </div>
-          <span className="text-gray-700 truncate">{foundedYear}</span>
+          <span className="text-gray-700 truncate text-[10px] sm:text-sm leading-none">{foundedYear}</span>
         </div>
-        <div className="flex items-center gap-2">
-           {/* Mobile Change: Tighter padding and text size for badge */}
-          <span className="inline-block px-2 py-0.5 bg-purple-50 text-purple-700 text-xs rounded-full font-medium truncate">
+        
+        <div className="flex items-center justify-center sm:justify-start gap-1.5 sm:gap-2 py-0.5 sm:py-0 min-h-[20px]">
+          <span className="inline-block px-1.5 sm:px-2 py-0.5 bg-purple-50 text-purple-700 text-[9px] sm:text-xs rounded-full font-medium truncate max-w-full leading-none">
             {startup.fundingStage}
           </span>
         </div>
       </div>
 
       {/* Open Positions - Fixed at Bottom */}
-      <div className="mt-auto pt-3 sm:pt-4 border-t border-gray-100">
+      <div className="mt-auto pt-2 sm:pt-4 border-t border-gray-100">
         {startup.jobCount && startup.jobCount > 0 ? (
-          // Mobile Change: Reduced padding from p-3 to p-2 for tightness
-          <div className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-[#0A66C2]/10 rounded-lg p-2 sm:p-3 border border-blue-100">
-            <div className="flex items-center gap-2">
-              {/* Mobile Change: Smaller icon container (w-7 h-7) */}
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-[#0A66C2] rounded-lg flex items-center justify-center">
-                {/* Mobile Change: Smaller icon (w-4 h-4) */}
-                <Briefcase className="w-4 h-4 text-white" />
+          <div className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-[#0A66C2]/10 rounded-md sm:rounded-lg p-1.5 sm:p-3 border border-blue-100 gap-0.5 sm:gap-0">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <div className="w-5 h-5 sm:w-8 sm:h-8 bg-[#0A66C2] rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+                <Briefcase className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-white" />
               </div>
-              <span className="text-sm font-semibold text-gray-900">
-                {startup.jobCount} {startup.jobCount === 1 ? 'open role' : 'open roles'}
+              <span className="text-[10px] sm:text-sm font-semibold text-gray-900">
+                {startup.jobCount} {startup.jobCount === 1 ? 'role' : 'roles'}
               </span>
             </div>
-            <span className="text-sm font-medium text-[#0A66C2] group-hover:text-blue-700">
+            <span className="text-[10px] sm:text-sm font-medium text-[#0A66C2] group-hover:text-blue-700">
               View →
             </span>
           </div>
         ) : (
-          <div className="text-center py-2 sm:py-3 bg-gray-50 rounded-lg">
-            <span className="text-sm text-gray-400">No open roles</span>
+          <div className="text-center py-1.5 sm:py-3 bg-gray-50 rounded-md sm:rounded-lg">
+            <span className="text-[10px] sm:text-sm text-gray-400">No roles</span>
           </div>
         )}
       </div>
