@@ -8,15 +8,11 @@ import StartupLogo from '@/components/startups/StartupLogo';
 
 async function getStartup(slug: string) {
   try {
-    let baseUrl;
-
-    if (process.env.NEXT_PUBLIC_BASE_URL) {
-      baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
-    } else if (process.env.VERCEL_URL) {
-      baseUrl = `https://${process.env.VERCEL_URL}`;
-    } else {
-      baseUrl = 'http://localhost:3000';
-    }
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+      ? process.env.NEXT_PUBLIC_BASE_URL
+      : process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000';
 
     const res = await fetch(`${baseUrl}/api/startups/${slug}`, {
       cache: 'no-store',
@@ -31,12 +27,13 @@ async function getStartup(slug: string) {
   }
 }
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
-
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+// ✅ FIXED: params is now Promise<{ slug: string }>
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}): Promise<Metadata> {
+  const { slug } = await params; // ✅ await params
   const startup = await getStartup(slug);
 
   if (!startup) return { title: 'Startup Not Found' };
@@ -49,8 +46,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function StartupPage({ params }: Props) {
-  const { slug } = await params;
+// ✅ FIXED: params is now Promise<{ slug: string }>
+export default async function StartupPage({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> 
+}) {
+  const { slug } = await params; // ✅ await params
   const startup = await getStartup(slug);
 
   if (!startup) notFound();
@@ -63,27 +65,26 @@ export default async function StartupPage({ params }: Props) {
     <div className="min-h-screen bg-white relative">
       {/* Background Decorations */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-0 w-64 h-64 bg-green-500/10 rounded-full blur-3xl"></div>
-        <div className="hidden sm:block absolute top-60 left-10 w-80 h-80 bg-green-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 left-10 w-56 h-56 bg-green-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-10 right-0 w-64 h-64 bg-[#0A66C2]/10 rounded-full blur-3xl"></div>
+        <div className="hidden sm:block absolute top-60 left-10 w-80 h-80 bg-[#0A66C2]/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-10 w-56 h-56 bg-[#0A66C2]/10 rounded-full blur-3xl"></div>
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
-        
-        {/* Back */}
+        {/* Back Button */}
         <Link
           href="/startups"
-          className="inline-flex items-center gap-2 text-gray-700 hover:text-green-600 mb-10 group transition"
+          className="inline-flex items-center gap-2 text-gray-700 hover:text-[#0A66C2] mb-10 group transition"
         >
-          <div className="p-1.5 rounded-lg bg-white border border-gray-200 group-hover:border-green-600 group-hover:bg-green-50 transition">
-            <ArrowLeft className="w-4 h-4 text-gray-800 group-hover:text-green-600 transition" />
+          <div className="p-1.5 rounded-lg bg-white border border-gray-200 group-hover:border-[#0A66C2] group-hover:bg-[#0A66C2]/5 transition">
+            <ArrowLeft className="w-4 h-4 text-gray-800 group-hover:text-[#0A66C2] transition" />
           </div>
           <span className="font-medium">Back to Startups</span>
         </Link>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2 mb-6">
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-500/10 border border-green-500/20 text-green-700 text-xs font-medium">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs font-medium">
             <Sparkles className="w-3.5 h-3.5" />
             Startup Profile
           </span>
@@ -144,12 +145,13 @@ export default async function StartupPage({ params }: Props) {
           </div>
         </div>
 
-       <div className="mt-8 sm:mt-12 **!bg-white** rounded-2xl p-6 sm:p-10 border **!border-gray-200** text-center">
+        {/* CTA Box */}
+        <div className="mt-8 sm:mt-12 bg-white rounded-2xl p-6 sm:p-10 border border-gray-200 text-center">
           <div className="max-w-2xl mx-auto">
-            <h2 className="font-display font-semibold text-xl sm:text-3xl **!text-gray-900** mb-2 sm:mb-3"> {/* Fixed text color */}
+            <h2 className="font-display font-semibold text-xl sm:text-3xl text-gray-900 mb-3">
               Interested in {startup.name}?
             </h2>
-            <p className="**!text-gray-600** mb-5 text-sm sm:text-base"> {/* Fixed text color */}
+            <p className="text-gray-600 mb-5 text-sm sm:text-base">
               Explore open positions and join their team to help shape the future
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -168,7 +170,7 @@ export default async function StartupPage({ params }: Props) {
                       href={`${startup.website_url}/careers`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 **!bg-white** hover:bg-gray-50 **!text-gray-700** px-6 py-3 rounded-lg font-medium transition-all duration-300 border **!border-gray-300** hover:border-[#0A66C2] hover:text-[#0A66C2]" // Fixed text/bg/border
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-6 py-3 rounded-lg font-medium transition-all duration-300 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2]"
                     >
                       View Open Positions ({startup.job_count})
                     </a>
