@@ -20,15 +20,15 @@ const HeroSection = () => {
       link: "/jobs"
     },
     {
-      url: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&auto=format&fit=crop&q=80",
-      alt: "Podcast - Recording studio with microphone",
+      url: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=600&auto=format&fit=crop&q=80",
+      alt: "Podcast - Professional studio microphone setup",
       category: "Podcast",
       link: "/podcast"
     },
     {
-      url: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=600&auto=format&fit=crop&q=80",
-      alt: "Blog - Content creation and writing",
-      category: "Blog",
+      url: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=600&auto=format&fit=crop&q=80",
+      alt: "Blog - Writing and content creation on laptop",
+      category: "Blogs",
       link: "/blog"
     },
     {
@@ -37,12 +37,13 @@ const HeroSection = () => {
       category: "Startups",
       link: "/startups"
     },
-    {
-      url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&auto=format&fit=crop&q=80",
-      alt: "Career Roadmaps - Strategic planning",
-      category: "Roadmaps",
-      link: "/roadmaps"
-    }
+ {
+  url: "https://images.unsplash.com/photo-1646617747563-4f080bddf282?w=600&auto=format&fit=crop&q=80",
+  alt: "Tech Roadmap - Flow chart and planning board",
+  category: "Roadmaps",
+  link: "/roadmaps"
+}
+
   ];
 
   // Auto-rotate images every 4 seconds
@@ -72,12 +73,7 @@ const HeroSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center gap-x-1.5 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-xs sm:text-sm font-medium">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3 h-3 sm:w-4 sm:h-4">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-            </svg>
-            career hub
-          </span>
+         
         </motion.div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6 lg:gap-x-14 sm:gap-y-8 md:items-start">
@@ -186,18 +182,25 @@ const HeroSection = () => {
                   className="relative w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer group/image"
                   onClick={() => router.push(images[currentImageIndex].link)}
                 >
-                  <AnimatePresence mode="wait">
-                    <motion.img 
-                      key={currentImageIndex}
-                      src={images[currentImageIndex].url}
-                      alt={images[currentImageIndex].alt}
-                      className="absolute inset-0 w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover/image:scale-105"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 1, ease: "easeInOut" }}
-                    />
-                  </AnimatePresence>
+                <AnimatePresence mode="wait">
+  <motion.img
+    key={currentImageIndex}
+    src={images[currentImageIndex].url}
+    alt={images[currentImageIndex].alt}
+    className="absolute inset-0 w-full h-full object-cover rounded-lg"
+    
+    initial={{ opacity: 0, y: 20, scale: 1.02 }}
+    animate={{ opacity: 1, y: 0, scale: 1 }}
+    exit={{ opacity: 0, y: -20, scale: 1.02 }}
+
+    transition={{
+      duration: 0.55,
+      ease: "easeOut"
+    }}
+  />
+</AnimatePresence>
+
+
                   
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-[#0A66C2]/0 group-hover/image:bg-[#0A66C2]/10 transition-all duration-300 rounded-lg flex items-center justify-center">
@@ -219,16 +222,17 @@ const HeroSection = () => {
                   
                   {/* Category label overlay */}
                   <motion.div 
-                    className="absolute top-3 left-3 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
-                    key={`label-${currentImageIndex}`}
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.3 }}
-                  >
-                    <span className="text-xs font-semibold text-[#0A66C2]">
-                      {images[currentImageIndex].category}
-                    </span>
-                  </motion.div>
+  className="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
+  key={`label-${currentImageIndex}`}
+  initial={{ opacity: 0, y: -10 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.5, delay: 0.3 }}
+>
+  <span className="text-xs font-semibold text-[#0A66C2]">
+    {images[currentImageIndex].category}
+  </span>
+</motion.div>
+
                 </div>
 
                 {/* Navigation dots */}
