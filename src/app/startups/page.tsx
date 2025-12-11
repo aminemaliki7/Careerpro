@@ -13,70 +13,113 @@ export const metadata: Metadata = generatePageMetadata({
 
 export default function StartupsPage() {
   return (
-    <div className="min-h-screen !bg-white"> 
+    <div className="min-h-screen bg-white relative overflow-hidden"> 
       
-      {/* Decorative Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-10 left-0 w-48 h-48 bg-[#0A66C2]/5 rounded-full blur-3xl opacity-70"></div>
-        <div className="absolute top-32 right-0 w-64 h-64 bg-blue-400/5 rounded-full blur-3xl opacity-70"></div>
-        <div className="hidden sm:block absolute bottom-20 left-1/3 w-80 h-80 bg-[#0A66C2]/5 rounded-full blur-3xl"></div> 
+      {/* Minimalistic Background Pattern */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        {/* Subtle Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-40"></div>
+        
+        {/* Soft Gradient Circles - More visible */}
+        <div className="absolute top-20 right-10 w-96 h-96 bg-[#0A66C2]/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-blue-300/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#0A66C2]/5 rounded-full blur-3xl"></div>
       </div>
+      
+      {/* Mobile Top Actions Bar */}
+      <div className="sm:hidden fixed top-16 left-0 right-0 bg-white border-b border-gray-100 z-40 px-4 py-2.5 transition-transform duration-300" id="mobile-actions">
+        <div className="flex items-center justify-center gap-2 max-w-6xl mx-auto">
+          <Link
+            href="/startups/submit"
+            className="flex items-center justify-center gap-1 bg-[#0A66C2] hover:bg-[#004182] text-white px-3 py-1.5 rounded-md font-medium text-xs transition-all duration-200"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+            Add startup
+          </Link>
+          
+          <Link
+            href="#browse"
+            className="flex items-center justify-center gap-1 bg-white hover:bg-gray-50 text-gray-700 px-3 py-1.5 rounded-md font-medium text-xs transition-all duration-200 border border-gray-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5" stroke="currentColor" className="w-3.5 h-3.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+            </svg>
+            Browse
+          </Link>
+        </div>
+      </div>
+      
+      {/* Scroll handler script */}
+      <script dangerouslySetInnerHTML={{__html: `
+        if (window.innerWidth < 640) {
+          let lastScroll = 0;
+          const mobileActions = document.getElementById('mobile-actions');
+          
+          window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll > lastScroll && currentScroll > 100) {
+              mobileActions.style.transform = 'translateY(-100%)';
+            } else {
+              mobileActions.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+          });
+        }
+      `}} />
 
       {/* Main Content Container */}
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-16 lg:py-24">
+      <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-20 lg:pt-28 pb-12 sm:pb-20 lg:pb-28 z-10">
         
         {/* Hero Section */}
-        <section className="text-center mb-6 sm:mb-8 lg:mb-20"> 
+        <section className="text-left mb-16 sm:mb-20 lg:mb-28"> 
           
-          {/* Badge */}
-          <div className="flex justify-center mb-3 sm:mb-6">
-            <span className="inline-flex items-center gap-x-1.5 px-2.5 py-1 sm:px-3 sm:py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 !text-[#0A66C2] text-[10px] sm:text-sm font-medium"> 
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3 h-3 sm:w-4 sm:h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
-              </svg>
-              Startup Directory
-            </span>
-          </div>
-
-          {/* Main Heading - More compact on mobile */}
-          <h1 className="font-display font-extrabold text-3xl sm:text-6xl md:text-7xl !text-gray-900 mb-3 sm:mb-6 leading-tight px-2"> 
-            Discover Top <span className="text-[#0A66C2]">Startups</span>
+          {/* Main Heading - Clean and bold */}
+          <h1 className="font-bold text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-gray-900 mb-6 sm:mb-8 leading-[1.1] tracking-tight"> 
+            Discover remarkable<br /><span className="text-[#0A66C2]">startups</span>
           </h1>
 
-          {/* Description - Smaller and more compact on mobile */}
-          <p className="text-sm sm:text-xl md:text-2xl !text-gray-600 max-w-4xl mx-auto mb-5 sm:mb-8 leading-snug sm:leading-normal px-4"> 
-            Explore innovative companies shaping the future. Find your next career opportunity.
+          {/* Description - Simple and clear */}
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 max-w-2xl mb-8 sm:mb-10 leading-relaxed"> 
+            A curated directory of innovative companies building the future. Find your next opportunity.
           </p>
 
-          {/* CTA Buttons - Stacked on mobile with better spacing */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-2.5 sm:gap-6 px-4">
+          {/* CTA Buttons - Hidden on mobile, shown on larger screens */}
+          <div className="hidden sm:flex items-center gap-5">
             
-            {/* Primary Button */}
+            {/* Primary Button - LinkedIn Blue */}
             <Link
               href="/startups/submit"
-              className="group inline-flex items-center justify-center gap-1.5 bg-[#0A66C2] hover:bg-[#004182] active:bg-[#003366] text-white px-4 sm:px-10 py-2.5 sm:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-lg transition-all duration-300 shadow-lg shadow-[#0A66C2]/30 hover:shadow-xl active:scale-[0.98] sm:hover:scale-[1.01]"
+              className="inline-flex items-center justify-center gap-2 bg-[#0A66C2] hover:bg-[#004182] text-white px-8 py-3.5 lg:py-4 rounded-lg font-semibold text-base lg:text-lg transition-all duration-200 hover:shadow-lg"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:rotate-12 transition-transform duration-300">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-              </svg>
-              Add Your Startup
+              Add your startup
             </Link>
             
-            {/* Secondary Button */}
+            {/* Secondary Button - Simple outline */}
             <Link
               href="#browse"
-              className="inline-flex items-center justify-center gap-1.5 !bg-white hover:bg-gray-50 active:bg-gray-100 !text-gray-700 px-4 sm:px-10 py-2.5 sm:py-4 rounded-lg sm:rounded-xl font-semibold text-sm sm:text-lg transition-all duration-300 border border-gray-300 hover:border-[#0A66C2] hover:text-[#0A66C2] active:scale-[0.98] sm:hover:shadow-lg"
+              className="inline-flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-900 px-8 py-3.5 lg:py-4 rounded-lg font-semibold text-base lg:text-lg transition-all duration-200 border-2 border-gray-900"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 sm:w-5 sm:h-5">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-              </svg>
-              Browse Startups
+              Browse directory
             </Link>
           </div>
         </section>
 
+       
         {/* Startups List Section */}
-        <section id="browse" className="scroll-mt-4 sm:scroll-mt-8">
+        <section id="browse" className="scroll-mt-20 sm:scroll-mt-8">
+          <div className="mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+              All startups
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-600">
+              Explore companies across industries
+            </p>
+          </div>
+          
           <StartupsClient />
         </section>
       </div>

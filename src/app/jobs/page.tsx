@@ -158,8 +158,13 @@ export default function JobsPage() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Find Your Dream Job</h1>
-          <p className="text-lg text-gray-600 mb-6">Discover {jobs.length} career opportunities</p>
+          <p className="text-lg text-gray-600 mb-1">
+  Explore {jobs.length} opportunities
+</p>
+<p className="text-lg text-gray-600 mb-6">
+  we can even write the email for you based on your CV and the job description.
+</p>
+
           {/* Search */}
           <div className="max-w-2xl mx-auto relative mb-4">
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
