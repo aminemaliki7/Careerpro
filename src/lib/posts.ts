@@ -223,3 +223,105 @@ export function getPostsByTag(tag: string): BlogPostWithContent[] {
     post.tags.some(t => t.toLowerCase() === tag.toLowerCase())
   )
 }
+
+
+// src/lib/posts.ts - Add these functions to your existing posts.ts file
+
+
+/**
+ * Validates if a URL is properly formatted
+ */
+function isValidUrl(url: string): boolean {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Get all posts that have valid audio URLs (podcast episodes)
+ * More efficient than filtering all posts in the component
+ */
+export function getPodcastEpisodes(): BlogPostWithContent[] {
+  const allPosts = getAllPosts();
+  
+  return allPosts.filter(post => 
+    post.audioUrl && 
+    post.audioUrl.trim() !== '' &&
+    isValidUrl(post.audioUrl)
+  ).sort((a, b) => 
+    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+}
+
+/**
+ * Get featured posts that have valid audio URLs
+ */
+export function getFeaturedPodcastEpisodes(): BlogPostWithContent[] {
+  const featuredPosts = getFeaturedPosts();
+  
+  return featuredPosts.filter(post => 
+    post.audioUrl && 
+    post.audioUrl.trim() !== '' &&
+    isValidUrl(post.audioUrl)
+  ).sort((a, b) => 
+    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  );
+}
+
+/**
+ * Get a specific podcast episode by slug
+ * Returns null if not found or doesn't have audio
+ */
+export function getPodcastEpisodeBySlug(slug: string): BlogPostWithContent | null {
+  try {
+    const post = getPostBySlug(slug);
+    
+    if (!post || !post.audioUrl || post.audioUrl.trim() === '') {
+      return null;
+    }
+    
+    if (!isValidUrl(post.audioUrl)) {
+      console.warn(`Invalid audio URL for post: ${slug}`);
+      return null;
+    }
+    
+    return post;
+  } catch (error) {
+    console.error(`Error loading podcast episode ${slug}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Get podcast episodes by tag
+ */
+export function getPodcastEpisodesByTag(tag: string): BlogPostWithContent[] {
+  const episodes = getPodcastEpisodes();
+  
+  return episodes.filter(episode => 
+    episode.tags && episode.tags.includes(tag)
+  );
+}
+
+/**
+ * Get the next and previous podcast episodes for a given slug
+ */
+export function getAdjacentPodcastEpisodes(slug: string): {
+  previous: BlogPostWithContent | null;
+  next: BlogPostWithContent | null;
+} {
+  const episodes = getPodcastEpisodes();
+  const currentIndex = episodes.findIndex(ep => ep.slug === slug);
+  
+  if (currentIndex === -1) {
+    return { previous: null, next: null };
+  }
+  
+  return {
+    previous: currentIndex > 0 ? episodes[currentIndex - 1] : null,
+    next: currentIndex < episodes.length - 1 ? episodes[currentIndex + 1] : null,
+  };
+}
