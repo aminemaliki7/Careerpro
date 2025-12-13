@@ -1,9 +1,9 @@
-// lib/posts.ts - Complete simplified version
+// lib/posts.ts - Complete simplified version with highlights support
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
 import readingTime from 'reading-time'
-import type { BlogMetadata, BlogPostWithContent, JobRoadmap, AffiliateCourseLink } from '@/types/blog'
+import type { BlogMetadata, BlogPostWithContent, JobRoadmap, AffiliateCourseLink, Highlight } from '@/types/blog'
 
 // Defining a type for a single step within a JobRoadmap
 type JobStep = {
@@ -102,12 +102,26 @@ export function getPostBySlug(slug: string): BlogPostWithContent | null {
         }))
       : undefined
 
+    // NEW: Parse highlights from frontmatter
+    const highlights: Highlight[] | undefined = data.highlights
+      ? data.highlights.map((highlight: Highlight) => ({
+          text: highlight.text,
+          color: highlight.color,
+        }))
+      : undefined
+
+    // Debug log
+    if (highlights && highlights.length > 0) {
+      console.log(`[lib/posts.ts] Found ${highlights.length} highlights for post: ${slug}`)
+    }
+
     return {
       ...(data as BlogMetadata),
       content: wrappedContent,
       readingTime: readingTime(content).minutes,
       roadmap,
       affiliateCourseLinks,
+      highlights, // NEW: Include highlights in return
     } as BlogPostWithContent
   } catch (error) {
     console.error(`Error reading post ${slug}:`, error)
@@ -149,12 +163,21 @@ export function getAllPosts(): BlogPostWithContent[] {
             }))
           : undefined
 
+        // NEW: Parse highlights (not needed for listing, but keep for consistency)
+        const highlights: Highlight[] | undefined = data.highlights
+          ? data.highlights.map((highlight: Highlight) => ({
+              text: highlight.text,
+              color: highlight.color,
+            }))
+          : undefined
+
         return {
           ...(data as BlogMetadata),
           content: '', // Empty for listing
           readingTime: readingTime(content).minutes,
           roadmap,
           affiliateCourseLinks,
+          highlights, // NEW: Include highlights
         } as BlogPostWithContent
       })
       .sort((a, b) => {

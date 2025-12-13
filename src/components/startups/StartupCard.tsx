@@ -120,27 +120,23 @@ export default function StartupCard({ startup }: StartupCardProps) {
       </div>
 
       {/* Open Positions - Fixed at Bottom */}
-      <div className="mt-auto pt-2 sm:pt-4 border-t border-gray-100">
-        {startup.jobCount && startup.jobCount > 0 ? (
-          <div className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-[#0A66C2]/10 rounded-md sm:rounded-lg p-1.5 sm:p-3 border border-blue-100 gap-0.5 sm:gap-0">
-            <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-5 h-5 sm:w-8 sm:h-8 bg-[#0A66C2] rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
-                <Briefcase className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-white" />
-              </div>
-              <span className="text-[10px] sm:text-sm font-semibold text-gray-900">
-                {startup.jobCount} {startup.jobCount === 1 ? 'role' : 'roles'}
-              </span>
-            </div>
-            <span className="text-[10px] sm:text-sm font-medium text-[#0A66C2] group-hover:text-blue-700">
-              View →
-            </span>
-          </div>
-        ) : (
-          <div className="text-center py-1.5 sm:py-3 bg-gray-50 rounded-md sm:rounded-lg">
-            <span className="text-[10px] sm:text-sm text-gray-400">No roles</span>
-          </div>
-        )}
+     <div className="mt-auto pt-2 sm:pt-4 border-t border-gray-100">
+  <div className="flex flex-col sm:flex-row items-center justify-between bg-gradient-to-r from-blue-50 to-[#0A66C2]/10 rounded-md sm:rounded-lg p-1.5 sm:p-3 border border-blue-100 gap-0.5 sm:gap-0">
+    <div className="flex items-center gap-1 sm:gap-2">
+      <div className="w-5 h-5 sm:w-8 sm:h-8 bg-[#0A66C2] rounded-md sm:rounded-lg flex items-center justify-center flex-shrink-0">
+        <Briefcase className="w-2.5 h-2.5 sm:w-4 sm:h-4 text-white" />
       </div>
+      <span className="text-[10px] sm:text-sm font-semibold text-gray-900">
+        Open roles
+      </span>
+    </div>
+
+    <span className="text-[10px] sm:text-sm font-medium text-[#0A66C2] group-hover:text-blue-700">
+      View →
+    </span>
+  </div>
+</div>
+
     </Link>
   );
 }

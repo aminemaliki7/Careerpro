@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   keywords: 'career advice, tech jobs, CV optimization, interview tips, job search, ATS systems',
 };
 
+
 export default function BlogPage() {
   const allPosts = getAllPosts();
   const featuredPosts = getFeaturedPosts();

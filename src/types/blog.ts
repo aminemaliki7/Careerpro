@@ -1,5 +1,11 @@
 import { ReactNode } from 'react'
 
+// NEW: Highlight type definition
+export interface Highlight {
+  text: string;
+  color: 'yellow' | 'blue' | 'green' | 'purple' | 'pink' | 'red';
+}
+
 export interface BlogPost {
   title: string
   description: string
@@ -16,7 +22,8 @@ export interface BlogPost {
   affiliateCourseLinks?: AffiliateCourseLink[]
   audioUrl?: string;
   audioDuration?: number; // in seconds
-  coverImage?: string; // Add this line
+  coverImage?: string;
+  highlights?: Highlight[]; // NEW: Add highlights field
 }
 
 export interface BlogMetadata {
@@ -31,6 +38,7 @@ export interface BlogMetadata {
   slug: string
   roadmap?: JobRoadmap
   affiliateCourseLinks?: AffiliateCourseLink[]
+  highlights?: Highlight[]; // NEW: Add highlights field
 }
 
 export interface BlogPostWithContent extends BlogPost {
@@ -39,6 +47,7 @@ export interface BlogPostWithContent extends BlogPost {
   roadmap: JobRoadmap
   affiliateLink?: string
   coverImage?: string
+  highlights?: Highlight[]; // NEW: Add highlights field (inherited from BlogPost, but explicit for clarity)
 }
 
 export interface JobRoadmap {
