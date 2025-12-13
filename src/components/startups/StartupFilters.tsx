@@ -1,14 +1,14 @@
 // components/startups/StartupFilters.tsx
 
-import { useState, useCallback } from 'react';
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
 import { Search, Filter, X, Check } from 'lucide-react';
-import { IndustryType, CompanySize, FundingStage } from '@/types/startup';
+import { IndustryType } from '@/types/startup';
 
 interface StartupFiltersProps {
   onFilterChange: (filters: {
     industry?: IndustryType;
-    size?: CompanySize;
-    fundingStage?: FundingStage;
     location?: string;
     search?: string;
   }) => void;
@@ -28,100 +28,149 @@ const industries: IndustryType[] = [
   'Other'
 ];
 
-const companySizes: CompanySize[] = [
-  '1-10',
-  '11-50',
-  '51-200',
-  '201-500',
-  '500+'
-];
-
-const fundingStages: FundingStage[] = [
-  'Pre-Seed',
-  'Seed',
-  'Series A',
-  'Series B',
-  'Series C',
-  'Series D+',
-  'Acquired',
-  'Public'
+// Countries list with flag emojis
+const countries = [
+  { name: 'Australia', flag: '🇦🇺' },
+  { name: 'Austria', flag: '🇦🇹' },
+  { name: 'Belgium', flag: '🇧🇪' },
+  { name: 'Brazil', flag: '🇧🇷' },
+  { name: 'Canada', flag: '🇨🇦' },
+  { name: 'China', flag: '🇨🇳' },
+  { name: 'Denmark', flag: '🇩🇰' },
+  { name: 'Finland', flag: '🇫🇮' },
+  { name: 'France', flag: '🇫🇷' },
+  { name: 'Germany', flag: '🇩🇪' },
+  { name: 'India', flag: '🇮🇳' },
+  { name: 'Ireland', flag: '🇮🇪' },
+  { name: 'Italy', flag: '🇮🇹' },
+  { name: 'Japan', flag: '🇯🇵' },
+  { name: 'Mexico', flag: '🇲🇽' },
+  { name: 'Morocco', flag: '🇲🇦' },
+  { name: 'Netherlands', flag: '🇳🇱' },
+  { name: 'New Zealand', flag: '🇳🇿' },
+  { name: 'Norway', flag: '🇳🇴' },
+  { name: 'Poland', flag: '🇵🇱' },
+  { name: 'Portugal', flag: '🇵🇹' },
+  { name: 'Singapore', flag: '🇸🇬' },
+  { name: 'South Korea', flag: '🇰🇷' },
+  { name: 'Spain', flag: '🇪🇸' },
+  { name: 'Sweden', flag: '🇸🇪' },
+  { name: 'Switzerland', flag: '🇨🇭' },
+  { name: 'UAE', flag: '🇦🇪' },
+  { name: 'United Kingdom', flag: '🇬🇧' },
+  { name: 'United States', flag: '🇺🇸' },
+  { name: 'Other', flag: '🌍' }
 ];
 
 export default function StartupFilters({ onFilterChange }: StartupFiltersProps) {
-  const [tempIndustry, setTempIndustry] = useState<IndustryType | ''>('');
-  const [tempSize, setTempSize] = useState<CompanySize | ''>('');
-  const [tempFundingStage, setTempFundingStage] = useState<FundingStage | ''>('');
-  const [tempLocation, setTempLocation] = useState('');
-
+  const [searchValue, setSearchValue] = useState('');
+  const [showFiltersModal, setShowFiltersModal] = useState(false);
+  const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Active filters (what's currently applied)
   const [activeFilters, setActiveFilters] = useState<{
-      search?: string;
-      industry?: IndustryType;
-      size?: CompanySize;
-      fundingStage?: FundingStage;
-      location?: string;
+    search?: string;
+    industry?: IndustryType;
+    location?: string;
   }>({});
 
-  const [showFiltersModal, setShowFiltersModal] = useState(false);
+  // Temporary filters (modal state before applying)
+  const [tempFilters, setTempFilters] = useState<{
+    industry: IndustryType | '';
+    location: string;
+  }>({
+    industry: '',
+    location: ''
+  });
 
-  const handleApplyFilters = useCallback(() => {
-    const newFilters = {
-      industry: tempIndustry || undefined,
-      size: tempSize || undefined,
-      fundingStage: tempFundingStage || undefined,
-      location: tempLocation || undefined,
-      search: activeFilters.search || undefined 
+  // Debounced search (300ms delay)
+  useEffect(() => {
+    if (searchTimeoutRef.current) {
+      clearTimeout(searchTimeoutRef.current);
+    }
+
+    searchTimeoutRef.current = setTimeout(() => {
+      const newFilters = {
+        ...activeFilters,
+        search: searchValue || undefined
+      };
+      setActiveFilters(newFilters);
+      onFilterChange(newFilters);
+    }, 300);
+
+    return () => {
+      if (searchTimeoutRef.current) {
+        clearTimeout(searchTimeoutRef.current);
+      }
     };
-    
-    setActiveFilters(prev => ({ 
-      ...prev, 
-      ...newFilters, 
-      search: prev.search 
-    }));
-    onFilterChange({ 
-      ...newFilters, 
-      search: activeFilters.search || undefined 
-    });
-    setShowFiltersModal(false);
-  }, [tempIndustry, tempSize, tempFundingStage, tempLocation, activeFilters.search, onFilterChange]);
-
-  const handleClearFilters = useCallback(() => {
-    setTempIndustry('');
-    setTempSize('');
-    setTempFundingStage('');
-    setTempLocation('');
-
-    setActiveFilters(prev => ({ 
-      search: prev.search || undefined 
-    }));
-    onFilterChange({ search: activeFilters.search || undefined });
-    setShowFiltersModal(false);
-  }, [activeFilters.search, onFilterChange]);
+  }, [searchValue]);
 
   const handleOpenModal = () => {
-    setTempIndustry(activeFilters.industry || '');
-    setTempSize(activeFilters.size || '');
-    setTempFundingStage(activeFilters.fundingStage || '');
-    setTempLocation(activeFilters.location || '');
+    setTempFilters({
+      industry: activeFilters.industry || '',
+      location: activeFilters.location || ''
+    });
     setShowFiltersModal(true);
   };
 
-  const handleSearchChange = (value: string) => {
-    setActiveFilters(prev => ({ ...prev, search: value || undefined }));
-    onFilterChange({ ...activeFilters, search: value || undefined });
+  const handleApplyFilters = () => {
+    const newFilters = {
+      search: activeFilters.search,
+      industry: tempFilters.industry || undefined,
+      location: tempFilters.location || undefined
+    };
+    
+    setActiveFilters(newFilters);
+    onFilterChange(newFilters);
+    setShowFiltersModal(false);
+  };
+
+  const handleClearFilters = () => {
+    setTempFilters({
+      industry: '',
+      location: ''
+    });
+    
+    const newFilters = { search: activeFilters.search };
+    setActiveFilters(newFilters);
+    onFilterChange(newFilters);
+    setShowFiltersModal(false);
+  };
+
+  const removeFilter = (filterKey: keyof typeof activeFilters) => {
+    const newFilters = { ...activeFilters };
+    delete newFilters[filterKey];
+    setActiveFilters(newFilters);
+    onFilterChange(newFilters);
   };
 
   const isFilterPanelChanged = 
-    tempIndustry !== (activeFilters.industry || '') ||
-    tempSize !== (activeFilters.size || '') ||
-    tempFundingStage !== (activeFilters.fundingStage || '') ||
-    tempLocation !== (activeFilters.location || '');
+    tempFilters.industry !== (activeFilters.industry || '') ||
+    tempFilters.location !== (activeFilters.location || '');
 
   const activeFilterCount = [
     activeFilters.industry,
-    activeFilters.size,
-    activeFilters.fundingStage,
     activeFilters.location
   ].filter(Boolean).length;
+
+  // Close modal on ESC key & prevent body scroll
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && showFiltersModal) {
+        setShowFiltersModal(false);
+      }
+    };
+
+    if (showFiltersModal) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showFiltersModal]);
 
   return (
     <>
@@ -134,10 +183,10 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
             <input
               type="text"
               placeholder="Search startups..."
-              value={activeFilters.search || ''} 
-              onChange={(e) => handleSearchChange(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && onFilterChange(activeFilters)}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
               className="w-full pl-9 sm:pl-10 pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base transition-shadow"
+              aria-label="Search startups"
             />
           </div>
           
@@ -145,7 +194,7 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
           <button
             onClick={handleOpenModal}
             className="relative flex items-center justify-center gap-2 px-3 sm:px-5 py-2.5 sm:py-3 bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg font-medium transition-all min-w-[44px]"
-            aria-label="Open filters"
+            aria-label={`Open filters${activeFilterCount > 0 ? `, ${activeFilterCount} active` : ''}`}
           >
             <Filter className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="hidden sm:inline text-sm">Filters</span>
@@ -164,39 +213,9 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
                 <span className="font-medium">Industry:</span> {activeFilters.industry}
                 <button 
-                  onClick={() => {
-                    setActiveFilters(prev => ({ ...prev, industry: undefined }));
-                    onFilterChange({ ...activeFilters, industry: undefined });
-                  }}
+                  onClick={() => removeFilter('industry')}
                   className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-            {activeFilters.size && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
-                <span className="font-medium">Size:</span> {activeFilters.size}
-                <button 
-                  onClick={() => {
-                    setActiveFilters(prev => ({ ...prev, size: undefined }));
-                    onFilterChange({ ...activeFilters, size: undefined });
-                  }}
-                  className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
-                >
-                  <X className="w-3.5 h-3.5" />
-                </button>
-              </span>
-            )}
-            {activeFilters.fundingStage && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
-                <span className="font-medium">Stage:</span> {activeFilters.fundingStage}
-                <button 
-                  onClick={() => {
-                    setActiveFilters(prev => ({ ...prev, fundingStage: undefined }));
-                    onFilterChange({ ...activeFilters, fundingStage: undefined });
-                  }}
-                  className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                  aria-label="Remove Industry filter"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -204,13 +223,12 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
             )}
             {activeFilters.location && (
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 text-sm rounded-full border border-blue-200">
-                <span className="font-medium">Location:</span> {activeFilters.location}
+                <span className="font-medium">Country:</span>
+                <span>{countries.find(c => c.name === activeFilters.location)?.flag || '🌍'} {activeFilters.location}</span>
                 <button 
-                  onClick={() => {
-                    setActiveFilters(prev => ({ ...prev, location: undefined }));
-                    onFilterChange({ ...activeFilters, location: undefined });
-                  }}
+                  onClick={() => removeFilter('location')}
                   className="hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                  aria-label="Remove Country filter"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>
@@ -222,15 +240,25 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
 
       {/* Mobile-First Filter Modal */}
       {showFiltersModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center sm:justify-center animate-fadeIn">
+        <div 
+          className="fixed inset-0 z-50 bg-black/50 flex items-end sm:items-center sm:justify-center transition-opacity duration-200"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowFiltersModal(false);
+          }}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="filter-modal-title"
+        >
           
-          {/* Modal Container - Slides up on mobile, centered on desktop */}
-          <div className="bg-white w-full max-h-[90vh] sm:max-w-2xl sm:rounded-xl shadow-2xl flex flex-col animate-slideUp sm:animate-none rounded-t-2xl sm:rounded-t-xl">
+          {/* Modal Container */}
+          <div className="bg-white w-full max-h-[90vh] sm:max-w-md sm:rounded-xl shadow-2xl flex flex-col rounded-t-2xl sm:rounded-t-xl transform transition-transform duration-300 ease-out">
             
             {/* Header - Sticky */}
             <div className="flex justify-between items-center p-4 sm:p-5 border-b border-gray-200 bg-white sticky top-0 z-10 rounded-t-2xl sm:rounded-t-xl">
               <div>
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Filter Startups</h2>
+                <h2 id="filter-modal-title" className="text-lg sm:text-xl font-semibold text-gray-900">
+                  Filter Startups
+                </h2>
                 {activeFilterCount > 0 && (
                   <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
                     {activeFilterCount} active {activeFilterCount === 1 ? 'filter' : 'filters'}
@@ -240,7 +268,7 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
               <button 
                 onClick={() => setShowFiltersModal(false)} 
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-                aria-label="Close"
+                aria-label="Close filters"
               >
                 <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-500" />
               </button>
@@ -252,12 +280,13 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
                 
                 {/* Industry */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">
+                  <label htmlFor="filter-industry" className="block text-sm font-semibold text-gray-900 mb-2.5">
                     Industry
                   </label>
                   <select
-                    value={tempIndustry}
-                    onChange={(e) => setTempIndustry(e.target.value as IndustryType)}
+                    id="filter-industry"
+                    value={tempFilters.industry}
+                    onChange={(e) => setTempFilters({ ...tempFilters, industry: e.target.value as IndustryType })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base appearance-none bg-white cursor-pointer transition-shadow"
                   >
                     <option value="">All Industries</option>
@@ -269,56 +298,24 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
                   </select>
                 </div>
 
-                {/* Company Size */}
+                {/* Country */}
                 <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">
-                    Company Size
+                  <label htmlFor="filter-country" className="block text-sm font-semibold text-gray-900 mb-2.5">
+                    Country
                   </label>
                   <select
-                    value={tempSize}
-                    onChange={(e) => setTempSize(e.target.value as CompanySize)}
+                    id="filter-country"
+                    value={tempFilters.location}
+                    onChange={(e) => setTempFilters({ ...tempFilters, location: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base appearance-none bg-white cursor-pointer transition-shadow"
                   >
-                    <option value="">All Sizes</option>
-                    {companySizes.map((s) => (
-                      <option key={s} value={s}>
-                        {s} employees
+                    <option value="">🌍 All Countries</option>
+                    {countries.map((country) => (
+                      <option key={country.name} value={country.name}>
+                        {country.flag} {country.name}
                       </option>
                     ))}
                   </select>
-                </div>
-
-                {/* Funding Stage */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">
-                    Funding Stage
-                  </label>
-                  <select
-                    value={tempFundingStage}
-                    onChange={(e) => setTempFundingStage(e.target.value as FundingStage)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base appearance-none bg-white cursor-pointer transition-shadow"
-                  >
-                    <option value="">All Stages</option>
-                    {fundingStages.map((stage) => (
-                      <option key={stage} value={stage}>
-                        {stage}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Location */}
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2.5">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g., San Francisco, CA"
-                    value={tempLocation}
-                    onChange={(e) => setTempLocation(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm sm:text-base transition-shadow"
-                  />
                 </div>
               </div>
             </div>
@@ -331,7 +328,7 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
                   className="flex items-center justify-center gap-2 px-4 sm:px-5 py-3 text-gray-700 bg-white hover:bg-gray-50 active:bg-gray-100 rounded-lg transition-colors border border-gray-300 font-medium text-sm sm:text-base min-h-[44px] flex-1"
                 >
                   <X className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Clear All</span>
+                  <span>Clear</span>
                 </button>
 
                 <button
@@ -340,30 +337,13 @@ export default function StartupFilters({ onFilterChange }: StartupFiltersProps) 
                   className="flex items-center justify-center gap-2 px-6 sm:px-8 py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-all text-sm sm:text-base min-h-[44px] flex-[2] shadow-lg shadow-blue-600/20 disabled:shadow-none"
                 >
                   <Check className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span>Apply Filters</span>
+                  <span>Apply</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
       )}
-
-      <style jsx>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideUp {
-          from { transform: translateY(100%); }
-          to { transform: translateY(0); }
-        }
-        .animate-fadeIn {
-          animation: fadeIn 0.2s ease-out;
-        }
-        .animate-slideUp {
-          animation: slideUp 0.3s ease-out;
-        }
-      `}</style>
     </>
   );
 }
