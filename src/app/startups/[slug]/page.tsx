@@ -2,7 +2,7 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft, MapPin, Sparkles } from 'lucide-react';
 import { generatePageMetadata } from '@/lib/seo';
 import StartupLogo from '@/components/startups/StartupLogo';
 
@@ -105,13 +105,21 @@ export default async function StartupPage({
           <div className="flex gap-3 sm:gap-4">
             <StartupLogo logoUrl={startup.logo_url} name={startup.name} />
             <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-xl sm:text-3xl lg:text-4xl text-gray-900 mb-1.5 sm:mb-2 leading-tight">
-                {startup.name}
-              </h1>
-              <p className="text-gray-600 text-xs sm:text-base leading-snug sm:leading-relaxed">
-                {startup.description}
-              </p>
-            </div>
+              <h1 className="font-semibold text-xl sm:text-3xl lg:text-4xl text-gray-900 mb-1 sm:mb-2 leading-tight">
+  {startup.name}
+</h1>
+
+<p className="text-gray-600 text-xs sm:text-base leading-snug sm:leading-relaxed mb-1">
+  {startup.description}
+</p>
+
+{startup.location && (
+  <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-sm text-gray-500">
+    <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+    <span>{startup.location}</span>
+  </div>
+)}
+
           </div>
 
           {/* Stats - Mobile optimized grid */}
@@ -186,6 +194,7 @@ export default async function StartupPage({
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
