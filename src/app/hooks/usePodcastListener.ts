@@ -38,9 +38,10 @@ export function usePodcastListener(
         .from('podcast_stats')
         .select('total_listens, active_listeners, total_duration_seconds')
         .eq('episode_slug', slug)
-        .single();
+        .maybeSingle();
 
-      if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
+      if (error) {
+        console.error('Error fetching stats:', error);
         throw error;
       }
 
@@ -69,16 +70,24 @@ export function usePodcastListener(
       sessionIdRef.current = generateSessionId();
       startTimeRef.current = Date.now();
 
+      const now = new Date().toISOString();
+
       const { error } = await supabase
         .from('podcast_listens')
         .insert({
           episode_slug: slug,
           session_id: sessionIdRef.current,
+          started_at: now,
           is_active: true,
           user_agent: navigator.userAgent,
+          created_at: now,
+          updated_at: now,
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Insert error details:', error);
+        throw error;
+      }
 
       setIsTracking(true);
       
@@ -126,6 +135,7 @@ export function usePodcastListener(
           is_active: false,
           ended_at: new Date().toISOString(),
           duration_seconds: durationSeconds,
+          updated_at: new Date().toISOString(),
         })
         .eq('session_id', sessionIdRef.current)
         .eq('episode_slug', slug);
@@ -221,4 +231,3 @@ export function usePodcastListener(
 
   return { stats, isTracking, error };
 }
-
