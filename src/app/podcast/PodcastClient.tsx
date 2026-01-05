@@ -177,8 +177,8 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
               </h1>
               
               <p className="text-lg sm:text-xl text-gray-500 mb-6 leading-relaxed max-w-2xl mx-auto sm:mx-0">
-                Discussions on the future of work, recruiting trends, and career acceleration.
-              </p>
+  Deep dives into <strong>tech industry trends</strong>, <strong>AI-native development</strong>, and the <strong>startup playbooks</strong> defining the next era of innovation.
+</p>
               
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
