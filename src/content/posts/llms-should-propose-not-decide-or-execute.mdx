@@ -1,0 +1,155 @@
+---
+title: "The Model Should Be Your Advisor, Not Your CEO"
+description: "We gave AI the keys and called it automation. Here's why that's a mistake - and what to do instead."
+publishedAt: "2026-06-01"
+updatedAt: "2026-06-01"
+author: "MALIKI"
+tags: ["llm", "ai-safety", "agentic-ai", "human-in-the-loop", "ai-governance"]
+seoKeywords: ["llm should not decide", "ai agents human oversight", "agentic ai risks", "human in the loop ai", "llm propose not execute"]
+slug: "llms-should-propose-not-decide-or-execute"
+audioUrl: "/audio/blog/llms-propose-not-decide.mp3"
+audioDuration: 210
+featured: true
+coverImage: "/images/llm-advisor-not-ceo.jpg"
+readingTime: 4
+
+highlights:
+  - text: "capability is not authority"
+    color: "yellow"
+  - text: "no skin in the game"
+    color: "red"
+  - text: "confuses fluency with correctness"
+    color: "purple"
+  - text: "reversibility is the missing variable"
+    color: "blue"
+  - text: "the model should be your advisor, not your CEO"
+    color: "purple"
+  - text: "autonomy without accountability isn't efficiency"
+    color: "red"
+  - text: "one-way doors"
+    color: "yellow"
+  - text: "depth the model structurally cannot have"
+    color: "blue"
+
+roadmap:
+  jobTitle: "Responsible AI Practitioner"
+  steps:
+    - stepNumber: 1
+      title: "Understand Propose vs. Decide vs. Execute"
+      description: "Learn the three modes and why only one is safe to fully delegate to an LLM."
+      estimatedTime: "1 hour"
+    - stepNumber: 2
+      title: "Audit Your AI Workflows"
+      description: "Map every point where an LLM acts and classify each by reversibility."
+      estimatedTime: "2 hours"
+    - stepNumber: 3
+      title: "Design Human Checkpoints"
+      description: "Add approval gates at irreversible or high-stakes action points."
+      estimatedTime: "2 hours"
+    - stepNumber: 4
+      title: "Build an Audit Trail"
+      description: "Log every consequential AI action with a human signature attached."
+      estimatedTime: "3 hours"
+---
+
+It started with a demo.
+
+An AI agent booking flights, replying to emails, deploying code - all in 90 seconds. The crowd clapped. Investors wrote checks. The narrative locked in: *the future of AI is agents that just do things.*
+
+That narrative is seductive. And in 2026, it's quietly breaking things in production.
+
+Not because LLMs aren't capable. They clearly are. But we've confused **capability with authority** - and those are two very different things.
+
+## Thing 1: The Model Has No Skin in the Game
+
+An LLM will recommend a rollback with the same confident tone whether it's right or catastrophically wrong. It has no career to lose, no client to face, no consequences to absorb.
+
+Your CFO, your engineer, your lawyer - they're accountable. That accountability is what makes judgment work.
+
+**An LLM has none of that.** When you let it decide rather than suggest, you hand responsibility to a system that cannot hold it.
+
+> "The best use of an LLM isn't to replace judgment. It's to inform it - faster, wider, and more thoroughly than you could alone."
+
+**What this means:** The model has no skin in the game. Your humans do. Keep the decision where the accountability is.
+
+## Thing 2: Confident Doesn't Mean Correct
+
+This is what makes LLMs more dangerous than older, dumber automation: **they are wrong with perfect confidence.**
+
+A broken formula throws an error. A rule-based system fails loudly. An LLM invents a legal precedent, hallucinates a source, or misremembers a policy - and delivers it in clean, authoritative prose with zero hesitation.
+
+We've already seen it cause real damage. Agents issuing refunds no policy permitted. Coding agents shipping vulnerabilities they themselves approved. Research agents citing papers that don't exist.
+
+> "An LLM is the world's most well-read generalist. It has never worked at your company, never met your clients, and will never be fired for a bad call."
+
+**What this means:** Confident tone is a property of the architecture, not a signal of correctness. A human who understands context needs to stand between the model's output and any real-world action.
+
+## Thing 3: Reversibility Is the Missing Variable
+
+Most teams ask the wrong question when designing agentic workflows. Not "is this task simple?" - not even "is this high-stakes?" The right question is: **if the model gets this wrong, can we undo it?**
+
+Summarize a document? Reversible - let it run. Send the email? Deploy to prod? Charge the card? Those are **one-way doors.** Once taken, recovery is expensive or impossible.
+
+### The three modes
+
+**Propose** - Model drafts options, surfaces risks, recommends a path. Human decides. Almost always safe.
+
+**Decide** - Model commits without review. Fine for low-stakes, reversible, tightly scoped tasks. Nowhere else.
+
+**Execute** - Model acts in the world. This is where *autonomy without accountability isn't efficiency - it's liability waiting to be discovered.*
+
+> "The goal isn't to slow everything down. It's to find the one-way doors and put a human in front of each one."
+
+**What this means:** Reversibility is the missing variable in most AI pipeline designs. Map every agent action against it before deciding how much autonomy to grant.
+
+## Thing 4: There's a Legal Address on That Accountability Vacuum
+
+When an autonomous AI causes harm, who's responsible? The vendor? The integrator? The developer who wrote the prompt? Without a clear human decision point, everyone has an argument and no one is clearly liable.
+
+Regulators noticed. The EU AI Act distinguishes between systems that *inform* and systems that *act*. High-stakes autonomous execution is already restricted in healthcare, finance, and hiring - and that's only going to tighten.
+
+**Propose-first is your paper trail.** The org that can show a human approved every consequential action is in a fundamentally different legal position than one that cannot.
+
+> "If your AI causes harm and there's no human signature on the decision, you own the entire liability."
+
+**What this means:** Human-in-the-loop isn't just safer engineering. In several verticals, it's already the law. Build for it now or retrofit it under pressure later.
+
+## Thing 5: Your Best Advisor Isn't Your CEO
+
+The pushback I always hear: *"If humans review every step, we lose the speed advantage."*
+
+Fair concern. Wrong target.
+
+Low-stakes, reversible tasks? Let the agent run freely - draft, summarize, analyze, sort. No gate needed. But the moment output triggers an irreversible action in the world, a two-second human confirmation creates asymmetric value that far exceeds the time it costs.
+
+The best AI workflows in 2026 follow one pattern: the model does the heavy lifting - research, synthesis, options, risk - and hands a clean proposal to a human who brings what *the model structurally cannot have*: context, judgment, and genuine accountability for the outcome.
+
+> "The best executives in history surrounded themselves with brilliant advisors. None of them handed their advisors the keys."
+
+**What this means:** Propose-first isn't a constraint on AI's value. It's what actually unlocks it - by putting the model where it excels, and keeping humans where they're irreplaceable.
+
+---
+
+## What You Should Do About It
+
+### For developers and AI engineers
+
+- **✅ Classify every agent action by reversibility** before you build - design approval gates around the one-way doors
+- **✅ Output proposals, not decisions** - structured options with tradeoffs, not just a chosen path
+- **✅ Log everything consequential** - what the model proposed, what the human approved, what ran
+
+### For everyone
+
+- **✅ Ask "what's the worst wrong?"** before enabling any automation - if it's unrecoverable, add a human step
+- **✅ Keep the human signature** on anything consequential - that accountability structure protects you legally and operationally
+- **✅ Push back on "full automation"** narratives - speed matters, so does not deploying at 3 AM because an agent misread a config
+
+## The Bottom Line
+
+LLMs are not decision-makers. They're the most capable proposal-generators ever built. Used as advisors - not executives - they create enormous value.
+
+The danger isn't the technology. It's the category error: treating a system with no stakes and no accountability as a trustworthy autonomous agent in a world where being wrong has real costs.
+
+**The model is your advisor. You're still the one who calls the play.**
+
+Which action in your current AI pipeline would cost the most to undo if the model got it wrong? 🔒
