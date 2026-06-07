@@ -84,7 +84,7 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <h1 className="font-display font-semibold text-xl sm:text-2xl md:text-3xl text-gray-900 leading-tight">
-              Don't just find a job. Become the candidate{' '}
+              Don&apos;t just find a job. Become the candidate{' '}
               <span className="text-[#0A66C2]">startups want.</span>
             </h1>
             <div className="text-gray-700 space-y-2 sm:space-y-3 mx-auto max-w-2xl lg:max-w-none text-sm sm:text-base">
