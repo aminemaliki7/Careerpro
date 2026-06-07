@@ -4,11 +4,14 @@ import React from 'react';
 interface HirelyLogoProps {
   size?: 'xs' | 'sm' | 'md' | 'lg';
   className?: string;
-  color?: string; // Customizable for brand alignment (e.g., LinkedIn blue, Indeed orange)
+  color?: string;
 }
 
-export default function HirelyLogo({ size = 'md', className = '', color = '#0A66C2' }: HirelyLogoProps) {
-  // Size configurations – tuned for balance and responsiveness
+export default function HirelyLogo({
+  size = 'md',
+  className = '',
+  color = '#0A66C2',
+}: HirelyLogoProps) {
   const sizeConfig = {
     xs: { icon: 20, text: 'text-base', spacing: 'mr-1' },
     sm: { icon: 24, text: 'text-lg', spacing: 'mr-1.5' },
@@ -20,8 +23,9 @@ export default function HirelyLogo({ size = 'md', className = '', color = '#0A66
 
   return (
     <div className={`flex items-center cursor-pointer ${className}`}>
-      {/* Icon: Moroccan star */}
-      <div className={`relative flex items-center justify-center ${config.spacing}`}>
+      <div
+        className={`relative flex items-center justify-center ${config.spacing}`}
+      >
         <svg
           width={config.icon}
           height={config.icon}
@@ -29,23 +33,49 @@ export default function HirelyLogo({ size = 'md', className = '', color = '#0A66
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Main star shape */}
+          {/* Top node */}
+          <circle cx="50" cy="19" r="9" fill={color} />
+
+          {/* Bottom left node */}
+          <circle cx="21" cy="70" r="9" fill={color} />
+
+          {/* Bottom right node */}
+          <circle cx="79" cy="70" r="9" fill={color} />
+
+          {/* Left connection */}
           <path
-            d="M50 0L61.8 38.2L100 38.2L69.1 61.8L80.9 100L50 76.4L19.1 100L30.9 61.8L0 38.2L38.2 38.2L50 0Z"
-            fill={color}
+            d="M43 25 C20 30 14 55 26 63"
+            stroke={color}
+            strokeWidth="8.5"
+            strokeLinecap="round"
+          />
+
+          {/* Bottom connection */}
+          <path
+            d="M30 72 C42 88 58 88 70 72"
+            stroke={color}
+            strokeWidth="8.5"
+            strokeLinecap="round"
+          />
+
+          {/* Right connection */}
+          <path
+            d="M74 63 C86 55 80 30 57 25"
+            stroke={color}
+            strokeWidth="8.5"
+            strokeLinecap="round"
           />
         </svg>
       </div>
-      
-      {/* Text: Bold, professional typography inspired by LinkedIn */}
+
       <div className="flex items-baseline font-sans">
-        <span className={`font-bold ${config.text} tracking-tight`} style={{ color }}>
-          Hirely
+        <span
+          className={`font-bold ${config.text} tracking-tight`}
+          style={{ color }}
+        >
+         
         </span>
       </div>
     </div>
   );
 }
-
-
-// Export the demo as default for artifact display

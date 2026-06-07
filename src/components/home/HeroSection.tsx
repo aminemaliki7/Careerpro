@@ -37,13 +37,12 @@ const HeroSection = () => {
       category: "Startups",
       link: "/startups"
     },
- {
-  url: "https://images.unsplash.com/photo-1646617747563-4f080bddf282?w=600&auto=format&fit=crop&q=80",
-  alt: "Tech Roadmap - Flow chart and planning board",
-  category: "Roadmaps",
-  link: "/roadmaps"
-}
-
+    {
+      url: "https://images.unsplash.com/photo-1646617747563-4f080bddf282?w=600&auto=format&fit=crop&q=80",
+      alt: "Tech Roadmap - Flow chart and planning board",
+      category: "Roadmaps",
+      link: "/roadmaps"
+    }
   ];
 
   // Auto-rotate images every 4 seconds
@@ -85,14 +84,15 @@ const HeroSection = () => {
             transition={{ duration: 0.7, delay: 0.2 }}
           >
             <h1 className="font-display font-semibold text-xl sm:text-2xl md:text-3xl text-gray-900 leading-tight">
-              Your complete tech career <span className="text-[#0A66C2]">hub.</span>
+              Don't just find a job. Become the candidate{' '}
+              <span className="text-[#0A66C2]">startups want.</span>
             </h1>
             <div className="text-gray-700 space-y-2 sm:space-y-3 mx-auto max-w-2xl lg:max-w-none text-sm sm:text-base">
               <p>
-                Discover curated tech jobs, explore career roadmaps, learn from industry podcasts, read insightful blogs, and connect with top startups.
+                Curated jobs, structured roadmaps, and insider content — built for developers, QA, and DevOps who want to stand out.
               </p>
               <p className="hidden sm:block">
-                Everything you need to build and advance your tech career in one platform.
+                Stop sending CVs into the void. Start building the profile that gets callbacks.
               </p>
             </div>
             <div className="flex justify-center lg:justify-start pt-2">
@@ -101,9 +101,9 @@ const HeroSection = () => {
                 <SignUpButton mode="modal">
                   <button className="px-5 sm:px-6 h-10 sm:h-11 flex items-center gap-2 rounded-lg bg-[#0A66C2] text-white text-sm transition ease-linear hover:bg-[#004182]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09 3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                     </svg>
-                    Start Your Tech Journey
+                    Build Your Tech Profile
                   </button>
                 </SignUpButton>
               </SignedOut>
@@ -115,7 +115,7 @@ const HeroSection = () => {
                   className="px-5 sm:px-6 h-10 sm:h-11 flex items-center gap-2 rounded-lg bg-[#0A66C2] text-white text-sm transition ease-linear hover:bg-[#004182]"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09 3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                   </svg>
                   Go to Dashboard
                 </button>
@@ -182,26 +182,22 @@ const HeroSection = () => {
                   className="relative w-full aspect-[3/4] rounded-lg overflow-hidden cursor-pointer group/image"
                   onClick={() => router.push(images[currentImageIndex].link)}
                 >
-                <AnimatePresence mode="wait">
-  <motion.img
-    key={currentImageIndex}
-    src={images[currentImageIndex].url}
-    alt={images[currentImageIndex].alt}
-    className="absolute inset-0 w-full h-full object-cover rounded-lg"
-    
-    initial={{ opacity: 0, y: 20, scale: 1.02 }}
-    animate={{ opacity: 1, y: 0, scale: 1 }}
-    exit={{ opacity: 0, y: -20, scale: 1.02 }}
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentImageIndex}
+                      src={images[currentImageIndex].url}
+                      alt={images[currentImageIndex].alt}
+                      className="absolute inset-0 w-full h-full object-cover rounded-lg"
+                      initial={{ opacity: 0, y: 20, scale: 1.02 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -20, scale: 1.02 }}
+                      transition={{
+                        duration: 0.55,
+                        ease: "easeOut"
+                      }}
+                    />
+                  </AnimatePresence>
 
-    transition={{
-      duration: 0.55,
-      ease: "easeOut"
-    }}
-  />
-</AnimatePresence>
-
-
-                  
                   {/* Hover overlay */}
                   <div className="absolute inset-0 bg-[#0A66C2]/0 group-hover/image:bg-[#0A66C2]/10 transition-all duration-300 rounded-lg flex items-center justify-center">
                     <motion.div 
@@ -222,17 +218,16 @@ const HeroSection = () => {
                   
                   {/* Category label overlay */}
                   <motion.div 
-  className="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
-  key={`label-${currentImageIndex}`}
-  initial={{ opacity: 0, y: -10 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.5, delay: 0.3 }}
->
-  <span className="text-xs font-semibold text-[#0A66C2]">
-    {images[currentImageIndex].category}
-  </span>
-</motion.div>
-
+                    className="absolute top-3 left-1/2 -translate-x-1/2 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-sm shadow-sm"
+                    key={`label-${currentImageIndex}`}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                  >
+                    <span className="text-xs font-semibold text-[#0A66C2]">
+                      {images[currentImageIndex].category}
+                    </span>
+                  </motion.div>
                 </div>
 
                 {/* Navigation dots */}
@@ -276,7 +271,7 @@ const HeroSection = () => {
                   <span className="font-semibold text-gray-900 text-sm sm:text-base lg:text-lg">Curated Tech Jobs</span>
                 </div>
                 <p className="text-gray-600 text-xs sm:text-sm leading-relaxed pl-0 sm:pl-11">
-                  Browse thousands of verified tech positions from leading companies and startups.
+                  Curated offers for tech profiles — no noise, only relevant positions from startups that are actually hiring.
                 </p>
               </div>
             </motion.div>
@@ -296,7 +291,7 @@ const HeroSection = () => {
                   <span className="font-semibold text-gray-900 text-sm sm:text-base lg:text-lg">Career Roadmaps</span>
                 </div>
                 <p className="text-gray-600 text-xs sm:text-sm leading-relaxed pl-0 sm:pl-11">
-                  Follow proven paths to reach your dream role with structured learning guides.
+                  Know exactly what to learn next. Role-based roadmaps designed around what startups are looking for today.
                 </p>
               </div>
             </motion.div>
@@ -316,7 +311,7 @@ const HeroSection = () => {
                   <span className="font-semibold text-gray-900 text-sm sm:text-base lg:text-lg">Insights & Community</span>
                 </div>
                 <p className="text-gray-600 text-xs sm:text-sm leading-relaxed pl-0 sm:pl-11">
-                  Learn from podcasts, blogs, and connect with innovative startups in tech.
+                  Podcast, blog, and startup network — understand what recruiters really want before you even apply.
                 </p>
               </div>
             </motion.div>
