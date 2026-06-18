@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: 'Hirely - AI, Startups & Tech Careers Worldwide',
   description:
     'Discover AI trends, startup insights, tech career roadmaps, and global job opportunities for developers, QA, DevOps, and IT professionals.',
-  icons: { icon: '/images/blog/logo1.svg' },
+  icons: { icon: '/icon.svg' },
   verification: { google: '00c4fbab1e48645b' },
   metadataBase: new URL('https://hirely.ma'),
   alternates: { canonical: 'https://hirely.ma' },

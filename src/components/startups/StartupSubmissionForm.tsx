@@ -48,13 +48,11 @@ export default function StartupSubmissionForm() {
   };
 
   const handleLogoUpload = (file: File) => {
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       setError('Please upload an image file (PNG, JPG, SVG)');
       return;
     }
 
-    // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       setError('File size must be less than 5MB');
       return;
@@ -63,7 +61,6 @@ export default function StartupSubmissionForm() {
     setError(null);
     setLogoFile(file);
 
-    // Create preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setLogoPreview(reader.result as string);
@@ -73,19 +70,14 @@ export default function StartupSubmissionForm() {
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      handleLogoUpload(file);
-    }
+    if (file) handleLogoUpload(file);
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    
     const file = e.dataTransfer.files[0];
-    if (file) {
-      handleLogoUpload(file);
-    }
+    if (file) handleLogoUpload(file);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -93,9 +85,7 @@ export default function StartupSubmissionForm() {
     setIsDragging(true);
   };
 
-  const handleDragLeave = () => {
-    setIsDragging(false);
-  };
+  const handleDragLeave = () => setIsDragging(false);
 
   const removeLogo = () => {
     setLogoFile(null);
@@ -107,26 +97,30 @@ export default function StartupSubmissionForm() {
     setLoading(true);
     setError(null);
 
-    try {
-      // If logo file exists, upload it first
-      let logoUrl = formData.logoUrl;
-      if (logoFile) {
-        const formDataUpload = new FormData();
-        formDataUpload.append('logo', logoFile);
-        
-        const uploadResponse = await fetch('/api/upload/logo', {
-          method: 'POST',
-          body: formDataUpload
-        });
+    // Logo is required
+    if (!logoFile) {
+      setError('Please upload a company logo');
+      setLoading(false);
+      return;
+    }
 
-        if (uploadResponse.ok) {
-          const uploadData = await uploadResponse.json();
-          logoUrl = uploadData.url;
-        } else {
-          // Handle upload error without stopping the submission, just logging it
-          console.error('Logo upload failed');
-        }
+    try {
+      // Upload logo
+      let logoUrl = formData.logoUrl;
+      const formDataUpload = new FormData();
+      formDataUpload.append('logo', logoFile);
+
+      const uploadResponse = await fetch('/api/upload/logo', {
+        method: 'POST',
+        body: formDataUpload
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error('Logo upload failed. Please try again.');
       }
+
+      const uploadData = await uploadResponse.json();
+      logoUrl = uploadData.url;
 
       // Submit startup data
       const response = await fetch('/api/startups/submit', {
@@ -186,7 +180,6 @@ export default function StartupSubmissionForm() {
   }
 
   return (
-    // Mobile Change: Reduced vertical space from space-y-8 to space-y-6
     <form onSubmit={handleSubmit} className="space-y-6">
       {error && (
         <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4 flex items-start gap-3">
@@ -203,18 +196,14 @@ export default function StartupSubmissionForm() {
       {/* Company Information */}
       <div className="space-y-5">
         <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b-2 border-gray-200">
-          {/* Mobile Change: Smaller icon container (w-8 h-8) */}
           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center">
-            {/* Mobile Change: Smaller icon (w-4 h-4) */}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
             </svg>
           </div>
-          {/* Mobile Change: Smaller heading size (text-lg) */}
           <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900">Company Information</h3>
         </div>
-        
-        {/* Mobile Change: Reduced vertical space from space-y-5 to space-y-4 */}
+
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
@@ -227,33 +216,24 @@ export default function StartupSubmissionForm() {
               onChange={handleChange}
               required
               placeholder="Enter your company name"
-              // Mobile Change: Reduced input padding (py-2.5 vs py-3)
               className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
             />
           </div>
 
-          {/* Logo Upload Section */}
+          {/* Logo Upload — NOW REQUIRED */}
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-              Company Logo <span className="text-gray-400 font-normal">(Optional)</span>
+              Company Logo <span className="text-red-500">*</span>
             </label>
-            
+
             {logoPreview ? (
-              // Mobile Change: Tighter padding and gap
               <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-4 sm:p-6 flex items-center gap-4 sm:gap-6">
-                {/* Mobile Change: Smaller preview box (w-20 h-20) */}
                 <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-xl border-2 border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
-                  <img 
-                    src={logoPreview} 
-                    alt="Logo preview" 
-                    className="w-full h-full object-contain"
-                  />
+                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
                 </div>
                 <div className="flex-1">
                   <p className="font-semibold text-gray-900 mb-1 text-sm">{logoFile?.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {logoFile && (logoFile.size / 1024).toFixed(1)} KB
-                  </p>
+                  <p className="text-xs text-gray-500">{logoFile && (logoFile.size / 1024).toFixed(1)} KB</p>
                 </div>
                 <button
                   type="button"
@@ -269,10 +249,9 @@ export default function StartupSubmissionForm() {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                // Mobile Change: Reduced vertical padding (p-6)
                 className={`relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-all duration-300 cursor-pointer ${
-                  isDragging 
-                    ? 'border-[#0A66C2] bg-[#0A66C2]/5 scale-[1.02]' 
+                  isDragging
+                    ? 'border-[#0A66C2] bg-[#0A66C2]/5 scale-[1.02]'
                     : 'border-gray-300 hover:border-[#0A66C2] hover:bg-gray-50'
                 }`}
               >
@@ -283,7 +262,6 @@ export default function StartupSubmissionForm() {
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
                 <div className="pointer-events-none">
-                  {/* Mobile Change: Smaller icon container (w-12 h-12) */}
                   <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#0A66C2]/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
                     {isDragging ? (
                       <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A66C2] animate-bounce" />
@@ -294,9 +272,7 @@ export default function StartupSubmissionForm() {
                   <p className="text-gray-700 font-medium mb-1 text-sm">
                     {isDragging ? 'Drop your logo here' : 'Click to upload or drag and drop'}
                   </p>
-                  <p className="text-xs text-gray-500">
-                    PNG, JPG, SVG up to 5MB
-                  </p>
+                  <p className="text-xs text-gray-500">PNG, JPG, SVG up to 5MB</p>
                 </div>
               </div>
             )}
@@ -317,9 +293,7 @@ export default function StartupSubmissionForm() {
               placeholder="Brief tagline about your company"
               className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
             />
-            <p className="text-xs text-gray-500 mt-1 text-right">
-              {formData.description.length}/150
-            </p>
+            <p className="text-xs text-gray-500 mt-1 text-right">{formData.description.length}/150</p>
           </div>
 
           <div>
@@ -330,14 +304,12 @@ export default function StartupSubmissionForm() {
               name="fullDescription"
               value={formData.fullDescription}
               onChange={handleChange}
-              rows={3} // Mobile Change: Reduced rows from 4 to 3
+              rows={3}
               placeholder="Tell us more about your company, mission, and what makes you unique..."
               className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none resize-none"
             />
           </div>
 
-          {/* This grid will naturally stack on mobile (col-1) */}
-          {/* Mobile Change: Reduced gap from 4 to 3 */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
@@ -350,9 +322,7 @@ export default function StartupSubmissionForm() {
                 required
                 className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
               >
-                {industries.map(ind => (
-                  <option key={ind} value={ind}>{ind}</option>
-                ))}
+                {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
               </select>
             </div>
 
@@ -367,9 +337,7 @@ export default function StartupSubmissionForm() {
                 required
                 className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
               >
-                {companySizes.map(s => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
+                {companySizes.map(s => <option key={s} value={s}>{s}</option>)}
               </select>
             </div>
 
@@ -384,15 +352,11 @@ export default function StartupSubmissionForm() {
                 required
                 className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
               >
-                {fundingStages.map(stage => (
-                  <option key={stage} value={stage}>{stage}</option>
-                ))}
+                {fundingStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
               </select>
             </div>
           </div>
 
-          {/* This grid will naturally stack on mobile (col-1) */}
-          {/* Mobile Change: Reduced gap from 4 to 3 */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
@@ -442,22 +406,16 @@ export default function StartupSubmissionForm() {
       </div>
 
       {/* Contact Information */}
-      {/* Mobile Change: Reduced vertical space (space-y-5 and pt-1) */}
       <div className="space-y-5 pt-1">
         <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b-2 border-gray-200">
-          {/* Mobile Change: Smaller icon container (w-8 h-8) */}
           <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center">
-            {/* Mobile Change: Smaller icon (w-4 h-4) */}
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
             </svg>
           </div>
-          {/* Mobile Change: Smaller heading size (text-lg) */}
           <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900">Contact Information</h3>
         </div>
-        
-        {/* This grid will naturally stack on mobile (col-1) */}
-        {/* Mobile Change: Reduced gap from 4 to 3 */}
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
@@ -494,7 +452,6 @@ export default function StartupSubmissionForm() {
       <button
         type="submit"
         disabled={loading}
-        // Mobile Change: Slightly smaller vertical padding (py-3.5 vs py-4) and text size (text-base vs text-lg)
         className="w-full py-3.5 sm:py-4 bg-[#0A66C2] hover:bg-[#004182] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 hover:shadow-xl hover:shadow-[#0A66C2]/30 disabled:shadow-none flex items-center justify-center gap-3 group"
       >
         {loading ? (
