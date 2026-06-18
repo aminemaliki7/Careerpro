@@ -18,14 +18,13 @@ export default function HirelyLogo({
     md: { icon: 28, text: 'text-xl', spacing: 'mr-2' },
     lg: { icon: 36, text: 'text-2xl', spacing: 'mr-2.5' },
   };
-
   const config = sizeConfig[size];
+
+  const hex = '-14.43,-8.33 0,-16.67 14.43,-8.33 14.43,8.33 0,16.67 -14.43,8.33';
 
   return (
     <div className={`flex items-center cursor-pointer ${className}`}>
-      <div
-        className={`relative flex items-center justify-center ${config.spacing}`}
-      >
+      <div className={`relative flex items-center justify-center ${config.spacing}`}>
         <svg
           width={config.icon}
           height={config.icon}
@@ -33,47 +32,21 @@ export default function HirelyLogo({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Top node */}
-          <circle cx="50" cy="19" r="9" fill={color} />
-
-          {/* Bottom left node */}
-          <circle cx="21" cy="70" r="9" fill={color} />
-
-          {/* Bottom right node */}
-          <circle cx="79" cy="70" r="9" fill={color} />
-
-          {/* Left connection */}
-          <path
-            d="M43 25 C20 30 14 55 26 63"
-            stroke={color}
-            strokeWidth="8.5"
-            strokeLinecap="round"
-          />
-
-          {/* Bottom connection */}
-          <path
-            d="M30 72 C42 88 58 88 70 72"
-            stroke={color}
-            strokeWidth="8.5"
-            strokeLinecap="round"
-          />
-
-          {/* Right connection */}
-          <path
-            d="M74 63 C86 55 80 30 57 25"
-            stroke={color}
-            strokeWidth="8.5"
-            strokeLinecap="round"
-          />
+          <g transform="translate(50,50)">
+            <polygon points={hex} fill={color} transform="translate(0,-28.87)" />
+            <polygon points={hex} fill={color} transform="translate(25,-14.43)" />
+            <polygon points={hex} fill={color} transform="translate(25,14.43)" />
+            <polygon points={hex} fill={color} transform="translate(0,28.87)" />
+            <polygon points={hex} fill={color} transform="translate(-25,14.43)" />
+            <polygon points={hex} fill={color} transform="translate(-25,-14.43)" />
+          </g>
         </svg>
       </div>
-
       <div className="flex items-baseline font-sans">
         <span
           className={`font-bold ${config.text} tracking-tight`}
           style={{ color }}
         >
-         
         </span>
       </div>
     </div>
