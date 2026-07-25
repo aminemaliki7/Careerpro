@@ -1,27 +1,27 @@
-# robots.txt for hirely.ma
-# Allow all search engines to crawl the site
+# robots.txt — hirely.ma
 
 User-agent: *
 Allow: /
 
-# Disallow admin and API routes
+# Block admin & private API routes
 Disallow: /admin/
-Disallow: /api/
+Disallow: /api/admin/
+Disallow: /dashboard/
+Disallow: /recruiter/
 
-# Disallow user authentication pages
+# Block auth pages
 Disallow: /sign-in
 Disallow: /sign-up
 
-# Allow specific pages important for SEO
+# Explicitly allow key SEO routes
+Allow: /api/startups
 Allow: /blog/
 Allow: /jobs/
 Allow: /roadmaps/
+Allow: /startups/
+Allow: /podcast/
 Allow: /about
 Allow: /contact
-Allow: /privacy-policy
 
-# Sitemap location
+# Sitemap
 Sitemap: https://hirely.ma/sitemap.xml
-
-# Crawl-delay (optional, uncomment if needed)
-# Crawl-delay: 1
