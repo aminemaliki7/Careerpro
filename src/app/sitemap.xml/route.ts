@@ -1,66 +1,89 @@
+// src/app/sitemap.xml/route.ts
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 
 const BASE_URL = 'https://hirely.ma';
 
 type SitemapUrl = {
-  loc: string;
-  changefreq: string;
-  priority: number;
-  lastmod?: string;
+  loc:         string;
+  changefreq:  string;
+  priority:    number;
+  lastmod?:    string;
 };
 
-// Get all blog posts
-const getPosts = (): { slug: string; lastmod: string }[] => {
-  const postsDir = path.join(process.cwd(), 'src/content/posts');
-  const files = fs.readdirSync(postsDir);
-  return files.map((file) => {
-    const slug = file.replace(/\.mdx?$/, '');
-    const stats = fs.statSync(path.join(postsDir, file));
-    return { slug, lastmod: stats.mtime.toISOString() };
-  });
-};
+function getPosts(): { slug: string; lastmod: string }[] {
+  const dir   = path.join(process.cwd(), 'src/content/posts');
+  return fs.readdirSync(dir).map((file) => ({
+    slug:    file.replace(/\.mdx?$/, ''),
+    lastmod: fs.statSync(path.join(dir, file)).mtime.toISOString(),
+  }));
+}
 
-// Get all roadmaps
-const getRoadmaps = (): { slug: string; lastmod: string }[] => {
-  const roadmapsDir = path.join(process.cwd(), 'src/content/roadmaps');
-  const files = fs.readdirSync(roadmapsDir);
-  return files.map((file) => {
-    const slug = file.replace(/\.json$/, '');
-    const stats = fs.statSync(path.join(roadmapsDir, file));
-    return { slug, lastmod: stats.mtime.toISOString() };
-  });
-};
+function getRoadmaps(): { slug: string; lastmod: string }[] {
+  const dir = path.join(process.cwd(), 'src/content/roadmaps');
+  return fs.readdirSync(dir).map((file) => ({
+    slug:    encodeURIComponent(file.replace(/\.json$/, '')),
+    lastmod: fs.statSync(path.join(dir, file)).mtime.toISOString(),
+  }));
+}
 
-// Export GET handler for Next.js App Router
+async function getStartupSlugs(): Promise<string[]> {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false } }
+    );
+    const { data } = await supabase
+      .from('startups')
+      .select('slug')
+      .eq('status', 'approved');
+    return (data ?? []).map((s: { slug: string }) => s.slug);
+  } catch {
+    return [];
+  }
+}
+
 export async function GET() {
-  const posts = getPosts();
-  const roadmaps = getRoadmaps();
+  const posts       = getPosts();
+  const roadmaps    = getRoadmaps();
+  const startupSlugs = await getStartupSlugs();
+  const now         = new Date().toISOString();
 
   const staticPages: SitemapUrl[] = [
-    { loc: '', changefreq: 'daily', priority: 1.0 },
-    { loc: 'about', changefreq: 'monthly', priority: 0.8 },
-    { loc: 'contact', changefreq: 'monthly', priority: 0.7 },
-    { loc: 'privacy-policy', changefreq: 'yearly', priority: 0.6 },
-    { loc: 'blog', changefreq: 'daily', priority: 0.9 },
-    { loc: 'jobs', changefreq: 'daily', priority: 0.9 },
-    { loc: 'roadmaps', changefreq: 'weekly', priority: 0.9 },
+    { loc: '',               changefreq: 'daily',   priority: 1.0, lastmod: now },
+    { loc: 'blog',           changefreq: 'daily',   priority: 0.9, lastmod: now },
+    { loc: 'jobs',           changefreq: 'daily',   priority: 0.9, lastmod: now },
+    { loc: 'startups',       changefreq: 'daily',   priority: 0.9, lastmod: now },
+    { loc: 'roadmaps',       changefreq: 'weekly',  priority: 0.9, lastmod: now },
+    { loc: 'podcast',        changefreq: 'weekly',  priority: 0.8, lastmod: now },
+    { loc: 'about',          changefreq: 'monthly', priority: 0.7 },
+    { loc: 'contact',        changefreq: 'monthly', priority: 0.6 },
+    { loc: 'privacy-policy', changefreq: 'yearly',  priority: 0.4 },
+    { loc: 'terms',          changefreq: 'yearly',  priority: 0.4 },
   ];
 
   const urls: SitemapUrl[] = [
     ...staticPages,
     ...posts.map((p) => ({
-      loc: `blog/${p.slug}`,
-      lastmod: p.lastmod,
+      loc:        `blog/${p.slug}`,
+      lastmod:    p.lastmod,
       changefreq: 'monthly',
-      priority: 0.8,
+      priority:   0.8,
     })),
     ...roadmaps.map((r) => ({
-      loc: `roadmaps/${r.slug}`,
-      lastmod: r.lastmod,
+      loc:        `roadmaps/${r.slug}`,
+      lastmod:    r.lastmod,
       changefreq: 'monthly',
-      priority: 0.8,
+      priority:   0.8,
+    })),
+    ...startupSlugs.map((slug) => ({
+      loc:        `startups/${slug}`,
+      lastmod:    now,
+      changefreq: 'weekly',
+      priority:   0.7,
     })),
   ];
 
@@ -68,16 +91,19 @@ export async function GET() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls
   .map(
-    (url) => `
-  <url>
-    <loc>${BASE_URL}/${url.loc}</loc>
-    ${url.lastmod ? `<lastmod>${url.lastmod}</lastmod>` : ''}
+    (url) => `  <url>
+    <loc>${BASE_URL}/${url.loc}</loc>${url.lastmod ? `\n    <lastmod>${url.lastmod}</lastmod>` : ''}
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
   </url>`
   )
-  .join('')}
+  .join('\n')}
 </urlset>`;
 
-  return new NextResponse(sitemap, { headers: { 'Content-Type': 'text/xml' } });
+  return new NextResponse(sitemap, {
+    headers: {
+      'Content-Type':  'text/xml; charset=utf-8',
+      'Cache-Control': 'public, max-age=3600, stale-while-revalidate=86400',
+    },
+  });
 }

@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3.6-flash' });
 
     const requirementsText = Array.isArray(requirements) && requirements.length > 0
       ? requirements.join('\n- ')

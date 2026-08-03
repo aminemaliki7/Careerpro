@@ -94,14 +94,23 @@ export default function EasyApplyModal({
 
   if (!isOpen) return null;
 
-  // --- File Extraction Logic ---
+  // --- File Extraction Logic (Updated for PDF support via unpdf) ---
   const extractTextFromFile = async (file: File): Promise<string> => {
     const fileType = file.type;
     const fileName = file.name.toLowerCase();
 
+    // TXT files handled directly
     if (fileType === 'text/plain' || fileName.endsWith('.txt')) {
       return await file.text();
-    } else if (fileName.endsWith('.docx')) {
+    }
+    
+    // PDF and DOCX files sent to parse-cv endpoint (now using unpdf for PDFs)
+    if (
+      fileType === 'application/pdf' ||
+      fileName.endsWith('.pdf') ||
+      fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      fileName.endsWith('.docx')
+    ) {
       const formData = new FormData();
       formData.append('file', file);
 
@@ -121,9 +130,9 @@ export default function EasyApplyModal({
       } catch (err) {
         throw err;
       }
-    } else {
-      throw new Error('Unable to read the file. Please try pasting your CV text.');
     }
+
+    throw new Error('Unsupported file format. Please upload PDF, DOCX, or TXT.');
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -286,132 +295,117 @@ export default function EasyApplyModal({
   };
 
   return (
- <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-1 md:p-4 overflow-y-auto">
-
-  {/* MODAL CONTAINER */}
-  <div
-    className="
-      bg-white
-      w-full
-      max-w-full
-      h-[90vh] md:h-auto       /* smaller modal on mobile */
-      md:max-w-4xl
-      md:rounded-3xl
-      rounded-lg
-      overflow-hidden
-      flex
-      flex-col
-      border
-      border-gray-200
-      shadow-2xl
-      relative                  /* for absolute close button */
-    "
-    role="dialog"
-    aria-modal="true"
-  >
-    {/* HEADER */}
-    <div className="
-      bg-gradient-to-r from-purple-600 to-blue-600 
-      px-3 py-2 md:px-8 md:py-6
-      flex flex-col gap-1
-      md:flex-row md:items-center md:justify-between
-      relative
-    ">
-      <div className="text-white">
-        {/* Title */}
-        <h2 className="text-base md:text-2xl font-light flex items-center">
-          <SparklesIcon className="h-4 w-4 md:h-6 md:w-6 mr-2 animate-pulse" />
-          Easy Apply with AI
-        </h2>
-
-        {/* Subtitle */}
-        <p className="text-[10px] md:text-sm mt-0.5 md:mt-2 text-purple-100 font-light">
-          {jobTitle} at {company}
-        </p>
-      </div>
-
-      {/* Close Button - top right corner on mobile */}
-      <button
-        onClick={onClose}
-        className="
-          absolute top-2 right-2 md:static md:p-2
-          p-1.5
-          text-white/90 hover:text-white hover:bg-white/10
-          rounded-full transition
-        "
-        aria-label="Close modal"
-      >
-        <CloseIcon className="h-4 w-4 md:h-6 md:w-6" />
-      </button>
-    </div>
-
-       {/* PROGRESS STEPS - fixed on mobile, smaller */}
-<div className="bg-gray-50 px-3 py-3 md:px-8 md:py-6 border-b border-gray-200">
-  <div className="flex items-center justify-between gap-2 md:gap-4">
-
-    {[
-      { num: 1, label: 'Your Info' },
-      { num: 2, label: 'Upload CV' },
-      { num: 3, label: 'ATS Check' },
-      { num: 4, label: 'Review & Send' }
-    ].map((step, index) => (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-1 md:p-4 overflow-y-auto">
+      {/* MODAL CONTAINER */}
       <div
-        key={step.num}
-        className="flex flex-col items-center text-center flex-1"
-        aria-current={currentStep === step.num ? 'step' : undefined}
+        className="
+          bg-white
+          w-full
+          max-w-full
+          md:max-w-xl
+          rounded-lg
+          md:rounded-2xl
+          overflow-hidden
+          flex
+          flex-col
+          border
+          border-gray-200
+          shadow-2xl
+          relative
+          my-2
+          md:my-auto
+          max-h-[92vh]
+          md:max-h-[85vh]
+        "
+        role="dialog"
+        aria-modal="true"
       >
-        {/* circle */}
-        <div
-          className={`w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-medium transition-all ${
-            currentStep > step.num
-              ? 'bg-green-500 text-white shadow-lg shadow-green-200'
-              : currentStep === step.num
-              ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-200'
-              : 'bg-gray-200 text-gray-500'
-          }`}
-        >
-          {currentStep > step.num ? (
-            <CheckCircleIcon className="h-4 w-4 md:h-6 md:w-6" />
-          ) : (
-            step.num
-          )}
+        {/* HEADER - Fixed */}
+        <div className="
+          bg-gradient-to-r from-purple-600 to-blue-600 
+          px-3 py-2 md:px-6 md:py-4
+          flex flex-col gap-0.5
+          md:flex-row md:items-center md:justify-between
+          relative
+          flex-shrink-0
+        ">
+          <div className="text-white">
+            <h2 className="text-base md:text-2xl font-light flex items-center">
+              <SparklesIcon className="h-4 w-4 md:h-6 md:w-6 mr-2 animate-pulse" />
+              Easy Apply with AI
+            </h2>
+            <p className="text-[10px] md:text-sm mt-0.5 md:mt-2 text-purple-100 font-light">
+              {jobTitle} at {company}
+            </p>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="
+              absolute top-2 right-2 md:static md:p-2
+              p-1.5
+              text-white/90 hover:text-white hover:bg-white/10
+              rounded-full transition
+            "
+            aria-label="Close modal"
+          >
+            <CloseIcon className="h-4 w-4 md:h-6 md:w-6" />
+          </button>
         </div>
 
-        {/* label */}
-        <span
-          className={`mt-1 text-[10px] md:text-sm font-medium ${
-            currentStep >= step.num ? 'text-gray-900' : 'text-gray-400'
-          }`}
-        >
-          {step.label}
-        </span>
+        {/* PROGRESS STEPS - Fixed */}
+        <div className="bg-gray-50 px-3 py-2 md:px-6 md:py-3 border-b border-gray-200 flex-shrink-0">
+          <div className="flex items-center justify-between gap-2 md:gap-4 relative">
+            {[
+              { num: 1, label: 'Your Info' },
+              { num: 2, label: 'Upload CV' },
+              { num: 3, label: 'ATS Check' },
+              { num: 4, label: 'Review & Send' }
+            ].map((step, index) => (
+              <div
+                key={step.num}
+                className="flex flex-col items-center text-center flex-1"
+                aria-current={currentStep === step.num ? 'step' : undefined}
+              >
+                <div
+                  className={`w-7 h-7 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-medium transition-all flex-shrink-0 ${
+                    currentStep > step.num
+                      ? 'bg-green-500 text-white shadow-lg shadow-green-200'
+                      : currentStep === step.num
+                      ? 'bg-gradient-to-r from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-200'
+                      : 'bg-gray-200 text-gray-500'
+                  }`}
+                >
+                  {currentStep > step.num ? (
+                    <CheckCircleIcon className="h-4 w-4 md:h-6 md:w-6" />
+                  ) : (
+                    step.num
+                  )}
+                </div>
 
-        {/* connector only on desktop */}
-        {index < 3 && (
-          <div
-            className={`hidden md:block absolute top-1/2 right-0 w-full h-1 rounded-full ${
-              currentStep > step.num ? 'bg-green-500' : 'bg-gray-200'
-            }`}
-          />
-        )}
-      </div>
-    ))}
+                <span
+                  className={`mt-1 text-[10px] md:text-sm font-medium whitespace-nowrap ${
+                    currentStep >= step.num ? 'text-gray-900' : 'text-gray-400'
+                  }`}
+                >
+                  {step.label}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
 
-  </div>
-</div>
-
-
-        {/* CONTENT AREA */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8">
+        {/* CONTENT AREA - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-3 md:p-6 pb-20 md:pb-24">
           {/* STEP 1 */}
           {currentStep === 1 && (
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="max-w-xl mx-auto space-y-4">
               <div>
-                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Let&quot;s start with your details</h3>
+                <h3 className="text-lg md:text-xl font-light text-gray-900 mb-2">Let&quot;s start with your details</h3>
                 <p className="text-gray-500 text-sm md:text-sm font-light">This information will be used to personalize your application email.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-8 space-y-4 shadow-sm">
+              <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 space-y-4 shadow-sm">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-3">
                     Full Name <span className="text-red-500">*</span>
@@ -433,30 +427,21 @@ export default function EasyApplyModal({
                   {error}
                 </div>
               )}
-
-              <div className="flex flex-col md:flex-row justify-end gap-3 pt-4">
-                <button
-                  onClick={() => setCurrentStep(2)}
-                  disabled={!canProceedToStep2}
-                  className="px-6 py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all shadow-lg"
-                >
-                  Continue to CV Upload
-                </button>
-              </div>
             </div>
           )}
 
           {/* STEP 2 */}
           {currentStep === 2 && (
-            <div className="max-w-2xl mx-auto space-y-6">
+            <div className="max-w-xl mx-auto space-y-4">
               <div>
-                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Upload your CV/Resume</h3>
+                <h3 className="text-lg md:text-xl font-light text-gray-900 mb-2">Upload your CV/Resume</h3>
                 <p className="text-gray-500 text-sm md:text-sm font-light">We&quot;ll analyze your experience to create a tailored application and run an ATS check.</p>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-2xl p-4 md:p-8 space-y-6 shadow-sm">
-                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-8 md:p-12 text-center hover:border-purple-400 hover:bg-purple-50/30 transition-all">
-                  <DocumentIcon className="h-12 w-12 md:h-16 md:w-16 mx-auto text-gray-400 mb-4" />
+              <div className="bg-white border border-gray-200 rounded-2xl p-3 md:p-5 space-y-4 shadow-sm">
+                {/* FILE UPLOAD BOX - Fixed height to prevent deformation */}
+                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-4 md:p-6 text-center hover:border-purple-400 hover:bg-purple-50/30 transition-all min-h-[160px] md:min-h-[180px] flex flex-col items-center justify-center">
+                  <DocumentIcon className="h-10 w-10 md:h-12 md:w-12 mx-auto text-gray-400 mb-4" />
                   <input
                     type="file"
                     accept=".pdf,.docx,.txt"
@@ -471,12 +456,11 @@ export default function EasyApplyModal({
                   >
                     {parsing ? 'Processing...' : 'Click to upload file'}
                   </label>
-                  <p className="text-gray-400 mt-2 font-light">or paste your CV text below</p>
-                  <p className="text-xs text-gray-400 mt-4 font-light">Supported formats: DOCX, TXT (max 10MB)</p>
+                  <p className="text-xs text-gray-400 mt-4 font-light">Supported formats: PDF, DOCX, TXT (max 10MB)</p>
 
                   {cvFile && !parsing && (
                     <div className="mt-4 inline-flex items-center bg-green-50 text-green-700 px-4 py-2 rounded-full shadow-sm">
-                      <CheckCircleIcon className="h-4 w-4 mr-2" />
+                      <CheckCircleIcon className="h-4 w-4 mr-2 flex-shrink-0" />
                       <span className="font-medium text-sm truncate max-w-[160px]">{cvFile.name}</span>
                     </div>
                   )}
@@ -487,103 +471,26 @@ export default function EasyApplyModal({
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      <span className="text-purple-600 font-medium">Extracting text...</span>
                     </div>
                   )}
 
-                  {parseError && (
+                  {parseError && !parsing && (
                     <div className="mt-4 bg-red-50 text-red-600 px-4 py-2 rounded-full text-sm inline-block">{parseError}</div>
                   )}
-                </div>
-
-                <div className="relative">
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200" />
-                  </div>
-                  <div className="relative flex justify-center text-xs">
-                    <span className="px-3 bg-white text-gray-400 font-light">OR</span>
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Paste your CV text here</label>
-                  <textarea
-                    value={cvText}
-                    onChange={(e) => {
-                      setCvText(e.target.value);
-                      setAtsResult(null);
-                    }}
-                    rows={8}
-                    className="w-full border border-gray-300 rounded-2xl p-3 md:p-4 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                    placeholder="Paste your complete CV/Resume here including work experience, education, skills, and achievements..."
-                  />
-                  <div className="flex justify-between items-center mt-3">
-                    <p className="text-xs text-gray-400 font-light">
-                      {cvText.length} characters {cvText.length >= 50 ? '(Ready)' : '(minimum 50 required)'}
-                    </p>
-                    {cvText.length >= 50 && (
-                      <span className="text-green-600 text-xs font-medium flex items-center bg-green-50 px-2 py-1 rounded-full">
-                        <CheckCircleIcon className="h-3 w-3 mr-1" /> Ready
-                      </span>
-                    )}
-                  </div>
                 </div>
               </div>
 
               {(error || atsError) && (
                 <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{error || atsError}</div>
               )}
-
-              <div className="flex flex-col-reverse md:flex-row justify-between pt-4 gap-3">
-                <button
-                  onClick={() => setCurrentStep(1)}
-                  className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
-                >
-                  Back
-                </button>
-
-                <div className="flex flex-col md:flex-row gap-3">
-                  <button
-                    onClick={handleRunAtsCheck}
-                    disabled={!canProceedToStep3 || atsLoading}
-                    className="px-6 py-3 bg-white border border-purple-600 text-purple-600 rounded-full font-medium hover:bg-purple-50 disabled:opacity-50 transition-all"
-                  >
-                    {atsLoading ? 'Running ATS...' : 'Run ATS Check'}
-                  </button>
-                  <button
-                    onClick={handleGenerateEmail}
-                    disabled={!canProceedToStep3 || loading}
-                    className="px-6 md:px-8 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center justify-center shadow-lg"
-                  >
-                    {loading ? (
-                      <>
-                        <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                        </svg>
-                        Generating with AI...
-                      </>
-                    ) : (
-                      <>
-                        <SparklesIcon className="h-4 w-4 mr-2 animate-pulse" />
-                        Generate Email
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
             </div>
           )}
 
           {/* STEP 3 - ATS RESULTS */}
           {currentStep === 3 && (
-            <div className="max-w-3xl mx-auto space-y-6">
-              <div>
-                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">ATS Checker Results 🤖</h3>
-                <p className="text-gray-500 text-sm md:text-sm font-light">See how your CV performs against the job description and get improvement suggestions.</p>
-              </div>
-
-              <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm space-y-4">
+            <div className="max-w-2xl mx-auto space-y-4">
+              
+          <div className="bg-white border border-gray-200 rounded-2xl md:rounded-3xl p-3 md:p-5 shadow-sm space-y-4">
                 {atsLoading && (
                   <div className="flex items-center gap-3">
                     <svg className="animate-spin h-5 w-5 text-purple-600" viewBox="0 0 24 24">
@@ -660,65 +567,18 @@ export default function EasyApplyModal({
               </div>
 
               {atsError && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{atsError}</div>}
-
-              <div className="flex flex-col-reverse md:flex-row justify-between pt-4 gap-3">
-
-  {/* Back button */}
-  <button
-    onClick={() => setCurrentStep(2)}
-    className="
-      px-4 py-2           /* smaller mobile */
-      text-sm             /* smaller mobile text */
-      md:px-6 md:py-3     /* normal desktop */
-      md:text-base
-      border border-gray-300 
-      text-gray-700 
-      rounded-full 
-      font-medium 
-      hover:bg-gray-50 
-      transition-all
-    "
-  >
-    Back
-  </button>
-
-  {/* Next button */}
-  <button
-    onClick={handleGenerateEmail}
-    disabled={loading}
-    className="
-      px-4 py-2            /* smaller mobile */
-      text-sm              /* smaller mobile text */
-      md:px-6 md:py-3      /* normal desktop */
-      md:text-base
-      bg-gradient-to-r from-purple-600 to-blue-600 
-      text-white 
-      rounded-full 
-      font-medium 
-      hover:from-purple-700 hover:to-blue-700 
-      disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed 
-      transition-all 
-      flex items-center justify-center 
-      shadow-lg
-    "
-  >
-    {loading ? 'Generating...' : 'Proceed to Generate Email'}
-  </button>
-
-</div>
-
             </div>
           )}
 
           {/* STEP 4 - REVIEW & SEND */}
           {currentStep === 4 && generatedEmail && (
-            <div className="max-w-3xl mx-auto space-y-6">
+            <div className="max-w-2xl mx-auto space-y-4">
               <div>
-                <h3 className="text-xl md:text-2xl font-light text-gray-900 mb-2">Your personalized application email</h3>
+                <h3 className="text-lg md:text-xl font-light text-gray-900 mb-2">Your personalized application email</h3>
                 <p className="text-gray-500 text-sm md:text-sm font-light">Review and edit your AI-generated email before sending.</p>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl md:rounded-3xl p-4 md:p-8 shadow-sm">
+              <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl md:rounded-3xl p-3 md:p-5 shadow-sm">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <span className="text-sm font-medium text-gray-700 flex items-center">
                     <SparklesIcon className="h-4 w-4 mr-2 text-purple-600 animate-pulse" />
@@ -733,26 +593,127 @@ export default function EasyApplyModal({
                 <textarea
                   value={generatedEmail}
                   onChange={(e) => setGeneratedEmail(e.target.value)}
-                  rows={12}
-                  className="w-full border border-gray-300 rounded-2xl p-3 md:p-5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white font-mono transition-all"
+                  rows={10}
+                  className="w-full border border-gray-300 rounded-2xl p-3 md:p-5 text-sm focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white font-mono transition-all resize-none"
                 />
 
                 <p className="text-xs text-gray-500 mt-4 bg-white rounded-xl px-3 py-2 border border-gray-200 font-light">Feel free to edit the email to add your personal touch before sending</p>
               </div>
 
               {error && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{error}</div>}
+            </div>
+          )}
+        </div>
 
-              <div className="flex flex-col md:flex-row gap-3 pt-4">
-                <button onClick={() => setCurrentStep(3)} className="px-6 py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all">Back</button>
+        {/* FIXED FOOTER - Always Visible */}
+        <div className="bg-white border-t border-gray-200 px-3 py-3 md:px-6 md:py-4 flex-shrink-0 shadow-lg">
+          {/* STEP 1 BUTTONS */}
+          {currentStep === 1 && (
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setCurrentStep(2)}
+                disabled={!canProceedToStep2}
+                className="px-6 py-2 md:py-3 bg-black text-white rounded-full font-medium hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition-all"
+              >
+                Continue
+              </button>
+            </div>
+          )}
 
-                <div className="flex-1 flex flex-col md:flex-row gap-3">
-                  {contactEmail ? (
-                    <button onClick={handleSendEmail} className="flex-1 px-6 py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all shadow-lg">Send via Email Client</button>
+          {/* STEP 2 BUTTONS */}
+          {currentStep === 2 && (
+            <div className="flex flex-col-reverse md:flex-row justify-between gap-3">
+              <button
+                onClick={() => setCurrentStep(1)}
+                className="px-6 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+              >
+                Back
+              </button>
+
+              <div className="flex flex-col md:flex-row gap-3">
+                <button
+                  onClick={handleRunAtsCheck}
+                  disabled={!canProceedToStep3 || atsLoading}
+                  className="px-6 py-2 md:py-3 bg-white border border-purple-600 text-purple-600 rounded-full font-medium hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                >
+                  {atsLoading ? 'Running...' : 'ATS Check'}
+                </button>
+                <button
+                  onClick={handleGenerateEmail}
+                  disabled={!canProceedToStep3 || loading}
+                  className="px-6 md:px-8 py-2 md:py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                >
+                  {loading ? (
+                    <>
+                      <svg className="animate-spin h-4 w-4 mr-2" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                      </svg>
+                      Generating...
+                    </>
                   ) : (
-                    <button onClick={handleCopyEmail} className="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all shadow-lg">Copy Email</button>
+                    <>
+                      <SparklesIcon className="h-4 w-4 mr-2 animate-pulse" />
+                      Generate Email
+                    </>
                   )}
-                  <button onClick={onClose} className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all">Close</button>
-                </div>
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* STEP 3 BUTTONS */}
+          {currentStep === 3 && (
+            <div className="flex flex-col-reverse md:flex-row justify-between gap-3">
+              <button
+                onClick={() => setCurrentStep(2)}
+                className="px-6 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+              >
+                Back
+              </button>
+
+              <button
+                onClick={handleGenerateEmail}
+                disabled={loading}
+                className="px-6 md:px-8 py-2 md:py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed transition-all"
+              >
+                {loading ? 'Generating...' : 'Generate Email'}
+              </button>
+            </div>
+          )}
+
+          {/* STEP 4 BUTTONS */}
+          {currentStep === 4 && (
+            <div className="flex flex-col md:flex-row gap-3">
+              <button
+                onClick={() => setCurrentStep(3)}
+                className="px-6 py-2 md:py-3 border border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+              >
+                Back
+              </button>
+
+              <div className="flex-1 flex flex-col md:flex-row gap-3">
+                {contactEmail ? (
+                  <button
+                    onClick={handleSendEmail}
+                    className="flex-1 px-6 py-2 md:py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all"
+                  >
+                    Send Email
+                  </button>
+                ) : (
+                  <button
+                    onClick={handleCopyEmail}
+                    className="flex-1 px-6 py-2 md:py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-medium hover:from-purple-700 hover:to-blue-700 transition-all"
+                  >
+                    Copy Email
+                  </button>
+                )}
+                <button
+                  onClick={onClose}
+                  className="px-6 py-2 md:py-3 border-2 border-gray-300 text-gray-700 rounded-full font-medium hover:bg-gray-50 transition-all"
+                >
+                  Close
+                </button>
               </div>
             </div>
           )}
