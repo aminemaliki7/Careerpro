@@ -79,7 +79,7 @@ export default function Header() {
                 }`}
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Dashboard
+           
               </Link>
             </SignedIn>
           </nav>

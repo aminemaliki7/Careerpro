@@ -42,7 +42,7 @@ export default function HirelyLogo({
         className={`font-bold tracking-tight leading-none ${textSize}`}
         style={{ color }}
       >
-        Hirely
+      
       </span>
     </div>
   );
