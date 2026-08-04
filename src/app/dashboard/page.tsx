@@ -1,7 +1,6 @@
-// src/app/dashboard/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Briefcase, 
   CheckCircle2, 
@@ -9,58 +8,68 @@ import {
   XCircle, 
   TrendingUp,
   Bot,
-  BarChart3,
-  Settings,
   Filter
 } from 'lucide-react';
 
+interface Application {
+  id: string | number;
+  company: string;
+  position: string;
+  location: string;
+  status: 'interview' | 'pending' | 'rejected' | string;
+  appliedDate: string;
+  aiApplied: boolean;
+  salary?: string;
+}
+
+interface Stats {
+  totalApplications: number;
+  pending: number;
+  interviews: number;
+  rejected: number;
+  aiApplied: number;
+}
+
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'applications' | 'profile' | 'settings'>('applications');
+  
+  // Dynamic state replacing static data
+  const [applications, setApplications] = useState<Application[]>([]);
+  const [stats, setStats] = useState<Stats>({
+    totalApplications: 0,
+    pending: 0,
+    interviews: 0,
+    rejected: 0,
+    aiApplied: 0,
+  });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Mock data - replace with real data from your backend
-  const stats = {
-    totalApplications: 47,
-    pending: 23,
-    interviews: 8,
-    rejected: 16,
-    aiApplied: 35,
-  };
+  useEffect(() => {
+    async function fetchDashboardData() {
+      try {
+        setIsLoading(true);
+        // TODO: Replace with your actual API endpoint
+        // const response = await fetch('/api/dashboard');
+        // const data = await response.json();
+        // setApplications(data.applications);
+        // setStats(data.stats);
+      } catch (error) {
+        console.error('Failed to fetch dashboard data:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-  const recentApplications = [
-    {
-      id: 1,
-      company: 'Google',
-      position: 'Senior Frontend Engineer',
-      location: 'Remote',
-      status: 'interview',
-      appliedDate: '2025-01-15',
-      aiApplied: true,
-      salary: '$150k - $200k'
-    },
-    {
-      id: 2,
-      company: 'Meta',
-      position: 'Full Stack Developer',
-      location: 'San Francisco, CA',
-      status: 'pending',
-      appliedDate: '2025-01-14',
-      aiApplied: true,
-      salary: '$140k - $180k'
-    },
-    {
-      id: 3,
-      company: 'Amazon',
-      position: 'DevOps Engineer',
-      location: 'Seattle, WA',
-      status: 'rejected',
-      appliedDate: '2025-01-12',
-      aiApplied: false,
-      salary: '$130k - $170k'
-    },
-  ];
+    fetchDashboardData();
+  }, []);
+
+  // Calculate dynamic success rate based on real stats
+  const successRate = stats.totalApplications > 0
+    ? Math.round((stats.interviews / stats.totalApplications) * 100)
+    : 0;
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'interview':
         return 'bg-green-100 text-green-700 border-green-200';
       case 'pending':
@@ -73,7 +82,7 @@ export default function Dashboard() {
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case 'interview':
         return <CheckCircle2 className="w-4 h-4" />;
       case 'pending':
@@ -133,7 +142,7 @@ export default function Dashboard() {
               <span className="text-sm text-gray-600">Success Rate</span>
               <TrendingUp className="w-5 h-5 text-green-600" />
             </div>
-            <div className="text-2xl font-bold text-gray-900">17%</div>
+            <div className="text-2xl font-bold text-gray-900">{successRate}%</div>
           </div>
         </div>
 
@@ -185,44 +194,54 @@ export default function Dashboard() {
                 </button>
               </div>
 
-              <div className="space-y-4">
-                {recentApplications.map((app) => (
-                  <div
-                    key={app.id}
-                    className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-lg font-semibold text-gray-900">{app.position}</h3>
-                          {app.aiApplied && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#0A66C2]/10 text-[#0A66C2] text-xs font-medium rounded-full">
-                              <Bot className="w-3 h-3" />
-                              AI Applied
-                            </span>
-                          )}
+              {isLoading ? (
+                <div className="py-12 text-center text-gray-500 text-sm">
+                  Loading applications...
+                </div>
+              ) : applications.length === 0 ? (
+                <div className="py-12 text-center text-gray-500 text-sm border border-dashed rounded-lg">
+                  No applications found.
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {applications.map((app) => (
+                    <div
+                      key={app.id}
+                      className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-1">
+                            <h3 className="text-lg font-semibold text-gray-900">{app.position}</h3>
+                            {app.aiApplied && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#0A66C2]/10 text-[#0A66C2] text-xs font-medium rounded-full">
+                                <Bot className="w-3 h-3" />
+                                AI Applied
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-600 mb-2">{app.company} • {app.location}</p>
+                          {app.salary && <p className="text-sm text-gray-500">{app.salary}</p>}
                         </div>
-                        <p className="text-sm text-gray-600 mb-2">{app.company} • {app.location}</p>
-                        <p className="text-sm text-gray-500">{app.salary}</p>
+                        <span
+                          className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
+                            app.status
+                          )}`}
+                        >
+                          {getStatusIcon(app.status)}
+                          {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
+                        </span>
                       </div>
-                      <span
-                        className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-full border ${getStatusColor(
-                          app.status
-                        )}`}
-                      >
-                        {getStatusIcon(app.status)}
-                        {app.status.charAt(0).toUpperCase() + app.status.slice(1)}
-                      </span>
+                      <div className="flex items-center justify-between text-xs text-gray-500">
+                        <span>Applied on {new Date(app.appliedDate).toLocaleDateString()}</span>
+                        <button className="text-[#0A66C2] hover:text-[#004182] font-medium">
+                          View Details →
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-gray-500">
-                      <span>Applied on {new Date(app.appliedDate).toLocaleDateString()}</span>
-                      <button className="text-[#0A66C2] hover:text-[#004182] font-medium">
-                        View Details →
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
