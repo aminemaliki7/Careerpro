@@ -4,6 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { Geist, Geist_Mono } from 'next/font/google';
 import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper';
 import Script from 'next/script';
+// @ts-expect-error CSS import without type declarations
 import './globals.css';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
 

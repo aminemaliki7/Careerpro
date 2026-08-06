@@ -17,10 +17,13 @@ interface EasyApplyModalProps {
   onClose: () => void;
   jobTitle: string;
   company: string;
+  jobId: string | number; // ADD THIS
   requirements?: string[];
   description?: string;
   contactEmail?: string;
   skills?: string[];
+  location?: string; // ADD THIS
+  salaryRange?: string; // ADD THIS
 }
 
 // --- Icon Components ---
@@ -38,7 +41,7 @@ const SparklesIcon = ({ className }: { className?: string }) => (
 
 const DocumentIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden>
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0013.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
   </svg>
 );
 
@@ -71,10 +74,13 @@ export default function EasyApplyModal({
   onClose,
   jobTitle,
   company,
+  jobId,
   requirements,
   description,
   contactEmail,
-  skills
+  skills,
+  location,
+  salaryRange,
 }: EasyApplyModalProps) {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [userName, setUserName] = useState<string>('');
@@ -91,6 +97,11 @@ export default function EasyApplyModal({
   const [atsLoading, setAtsLoading] = useState<boolean>(false);
   const [atsError, setAtsError] = useState<string>('');
   const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
+
+  // Save state (NEW)
+  const [saving, setSaving] = useState<boolean>(false);
+  const [saveError, setSaveError] = useState<string>('');
+  const [savingSuccess, setSavingSuccess] = useState<boolean>(false);
 
   if (!isOpen) return null;
 
@@ -251,6 +262,51 @@ export default function EasyApplyModal({
     }
   };
 
+  // Save application to database (NEW)
+  const handleSaveApplication = async () => {
+    if (!generatedEmail || !cvText) {
+      setSaveError('Missing required data');
+      return;
+    }
+
+    setSaving(true);
+    setSaveError('');
+
+    try {
+      const response = await fetch('/api/applications/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          job_id: jobId,
+          job_title: jobTitle,
+          company,
+          location: location || null,
+          salary_range: salaryRange || null,
+          cv_text: cvText.trim(),
+          generated_email: generatedEmail,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to save application');
+      }
+
+      setSavingSuccess(true);
+      // Auto close after 2 seconds
+      setTimeout(() => {
+        setSavingSuccess(false);
+        onClose();
+      }, 2000);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : 'Failed to save application');
+      console.error('Save error:', err);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleCopyEmail = async () => {
     try {
       await navigator.clipboard.writeText(generatedEmail);
@@ -267,8 +323,12 @@ export default function EasyApplyModal({
       return;
     }
 
+    // First save the application
+    handleSaveApplication();
+
+    // Then open email client
     const confirmSend = window.confirm(
-      `Quick reminder: Don't forget to attach your resume/CV to the email before sending!\n\nClick OK to open your email client.`
+      `Application saved to your dashboard!\n\nDon't forget to attach your resume/CV to the email before sending!\n\nClick OK to open your email client.`
     );
 
     if (!confirmSend) return;
@@ -578,6 +638,13 @@ export default function EasyApplyModal({
                 <p className="text-gray-500 text-sm md:text-sm font-light">Review and edit your AI-generated email before sending.</p>
               </div>
 
+              {savingSuccess && (
+                <div className="bg-green-50 border border-green-200 rounded-2xl p-3 text-green-700 text-sm mb-4 flex items-center gap-2">
+                  <CheckCircleIcon className="h-5 w-5" />
+                  Application saved to your dashboard!
+                </div>
+              )}
+
               <div className="bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200 rounded-2xl md:rounded-3xl p-3 md:p-5 shadow-sm">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-3">
                   <span className="text-sm font-medium text-gray-700 flex items-center">
@@ -601,6 +668,7 @@ export default function EasyApplyModal({
               </div>
 
               {error && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{error}</div>}
+              {saveError && <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-red-700 text-sm">{saveError}</div>}
             </div>
           )}
         </div>
@@ -696,9 +764,10 @@ export default function EasyApplyModal({
                 {contactEmail ? (
                   <button
                     onClick={handleSendEmail}
-                    className="flex-1 px-6 py-2 md:py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 transition-all"
+                    disabled={saving}
+                    className="flex-1 px-6 py-2 md:py-3 bg-green-600 text-white rounded-full font-medium hover:bg-green-700 disabled:bg-green-400 disabled:cursor-not-allowed transition-all"
                   >
-                    Send Email
+                    {saving ? 'Saving...' : 'Send Email & Save'}
                   </button>
                 ) : (
                   <button

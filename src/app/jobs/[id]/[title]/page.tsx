@@ -238,18 +238,21 @@ export default async function JobDetailsPage({
           {/* FIXED: Application Action Buttons with Correct Logic */}
           <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
             {/* Priority 1: Easy Apply with AI (when contact email exists) */}
-            {typedJob.contact_email && (
-              <div className="flex-1">
-                <EasyApplyButton 
-                  jobTitle={typedJob.title}
-                  company={typedJob.company}
-                  requirements={typedJob.requirements}
-                  description={typedJob.description}
-                  contactEmail={typedJob.contact_email}
-                  skills={typedJob.skills}
-                />
-              </div>
-            )}
+           {typedJob.contact_email && (
+  <div className="flex-1">
+    <EasyApplyButton 
+      jobTitle={typedJob.title}
+      company={typedJob.company}
+      jobId={typedJob.id}
+      requirements={typedJob.requirements}
+      description={typedJob.description}
+      contactEmail={typedJob.contact_email}
+      skills={typedJob.skills}
+      location={typedJob.location}
+      salaryRange={typedJob.salary_range}
+    />
+  </div>
+)}
 
             {/* Priority 2: Direct Email (fallback if no Easy Apply)// no it should existe even if the easy apply existe too */}
           {typedJob.contact_email && (
