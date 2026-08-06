@@ -12,7 +12,16 @@ import {
   TrendingUp,
   Bot,
   Filter,
-  AlertCircle
+  AlertCircle,
+  X,
+  FileText,
+  Mail,
+  MapPin,
+  DollarSign,
+  Calendar,
+  Copy,
+  Download,
+  Check
 } from 'lucide-react';
 import { Application } from '@/types/application';
 
@@ -22,6 +31,11 @@ interface Stats {
   interviews: number;
   rejected: number;
   aiApplied: number;
+}
+
+interface ApplicationWithCvExtras extends Application {
+  cv_url?: string;
+  cv_file_name?: string;
 }
 
 export default function Dashboard() {
@@ -39,6 +53,11 @@ export default function Dashboard() {
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>('');
+
+  // Modal State
+  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
+  const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
 
   // Redirect if not signed in
   useEffect(() => {
@@ -68,15 +87,16 @@ export default function Dashboard() {
         }
 
         const data = await response.json();
-        setApplications(data.applications || []);
+        const apps = data.applications || [];
+        setApplications(apps);
 
         // Calculate stats
         const stats: Stats = {
-          totalApplications: data.applications?.length || 0,
-          pending: data.applications?.filter((a: Application) => a.status === 'pending').length || 0,
-          interviews: data.applications?.filter((a: Application) => a.status === 'interview').length || 0,
-          rejected: data.applications?.filter((a: Application) => a.status === 'rejected').length || 0,
-          aiApplied: data.applications?.filter((a: Application) => a.ai_applied).length || 0,
+          totalApplications: apps.length,
+          pending: apps.filter((a: Application) => a.status === 'pending').length,
+          interviews: apps.filter((a: Application) => a.status === 'interview').length,
+          rejected: apps.filter((a: Application) => a.status === 'rejected').length,
+          aiApplied: apps.filter((a: Application) => a.ai_applied).length,
         };
         setStats(stats);
       } catch (err) {
@@ -90,7 +110,41 @@ export default function Dashboard() {
     fetchApplications();
   }, [isSignedIn, user]);
 
-  // Calculate success rate
+  // Update application status
+  const handleStatusChange = async (appId: string, newStatus: string) => {
+    try {
+      setIsUpdatingStatus(true);
+      const res = await fetch(`/api/applications/${appId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (res.ok) {
+        setApplications((prev) =>
+          prev.map((a) => (a.id === appId ? { ...a, status: newStatus as Application['status'] } : a))
+        );
+        if (selectedApp) {
+          setSelectedApp({ ...selectedApp, status: newStatus as Application['status'] });
+        }
+      }
+    } catch (err) {
+      console.error('Failed to update status:', err);
+    } finally {
+      setIsUpdatingStatus(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedEmail(true);
+      setTimeout(() => setCopiedEmail(false), 2000);
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+    }
+  };
+
   const successRate = stats.totalApplications > 0
     ? Math.round((stats.interviews / stats.totalApplications) * 100)
     : 0;
@@ -132,6 +186,8 @@ export default function Dashboard() {
       </div>
     );
   }
+
+  const selectedAppWithCv = selectedApp as ApplicationWithCvExtras | null;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -288,7 +344,10 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>Applied on {new Date(app.applied_date).toLocaleDateString()}</span>
-                        <button className="text-[#0A66C2] hover:text-[#004182] font-medium">
+                        <button
+                          onClick={() => setSelectedApp(app)}
+                          className="text-[#0A66C2] hover:text-[#004182] font-medium"
+                        >
                           View Details →
                         </button>
                       </div>
@@ -319,6 +378,148 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+
+      {/* Application Details Modal */}
+      {selectedApp && (
+        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4 overflow-y-auto">
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-xl">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between p-6 border-b border-gray-100">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h2 className="text-xl font-bold text-gray-900">{selectedApp.job_title}</h2>
+                  {selectedApp.ai_applied && (
+                    <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#0A66C2]/10 text-[#0A66C2] text-xs font-medium rounded-full">
+                      <Bot className="w-3 h-3" />
+                      AI Applied
+                    </span>
+                  )}
+                </div>
+                <p className="text-sm font-medium text-gray-600">{selectedApp.company}</p>
+              </div>
+              <button
+                onClick={() => setSelectedApp(null)}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 overflow-y-auto space-y-6">
+              {/* Meta Stats Bar */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 p-3 rounded-lg text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-gray-400" />
+                  <span>{selectedApp.location || 'Remote / Not specified'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-gray-400" />
+                  <span>{selectedApp.salary_range || 'Not specified'}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-gray-400" />
+                  <span>{new Date(selectedApp.applied_date).toLocaleDateString()}</span>
+                </div>
+              </div>
+
+              {/* Status Update Control */}
+              <div className="flex items-center justify-between border-t border-b border-gray-100 py-3">
+                <span className="text-sm font-medium text-gray-700">Application Status</span>
+                <select
+                  value={selectedApp.status}
+                  disabled={isUpdatingStatus}
+                  onChange={(e) => handleStatusChange(selectedApp.id, e.target.value)}
+                  className="text-sm font-medium bg-white border border-gray-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]"
+                >
+                  <option value="pending">Pending</option>
+                  <option value="interview">Interview</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Rejected</option>
+                </select>
+              </div>
+
+              {/* Generated Cover Letter / Email */}
+              {selectedApp.generated_email && (
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-[#0A66C2]" />
+                      Generated Outreach Email / Cover Letter
+                    </h3>
+                    <button
+                      onClick={() => copyToClipboard(selectedApp.generated_email!)}
+                      className="text-xs text-[#0A66C2] hover:text-[#004182] flex items-center gap-1 font-medium"
+                    >
+                      {copiedEmail ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                      {copiedEmail ? 'Copied!' : 'Copy'}
+                    </button>
+                  </div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-xs font-mono text-gray-800 whitespace-pre-wrap max-h-48 overflow-y-auto">
+                    {selectedApp.generated_email}
+                  </div>
+                </div>
+              )}
+
+             {/* Submitted CV File Download */}
+             {selectedAppWithCv?.cv_url ? (
+  <div>
+    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+      <FileText className="w-4 h-4 text-[#0A66C2]" />
+      Submitted CV Document
+    </h3>
+    
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-blue-50 text-[#0A66C2] rounded-lg">
+          <FileText className="w-6 h-6" />
+        </div>
+        <div>
+          <p className="text-sm font-medium text-gray-900">
+            {selectedAppWithCv.cv_file_name || `${selectedApp?.job_title || 'Application'}_CV.pdf`}
+          </p>
+          <p className="text-xs text-gray-500">Uploaded Resume</p>
+        </div>
+      </div>
+
+      <a
+        href={selectedAppWithCv.cv_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-medium rounded-lg transition-colors"
+      >
+        <Download className="w-3.5 h-3.5" />
+        Download CV
+      </a>
+    </div>
+  </div>
+) : selectedApp?.cv_text ? (
+  /* Fallback if older applications only saved text */
+  <div>
+    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+      <FileText className="w-4 h-4 text-[#0A66C2]" />
+      Submitted CV Text
+    </h3>
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-xs font-mono text-gray-800 whitespace-pre-wrap max-h-48 overflow-y-auto">
+      {selectedApp.cv_text}
+    </div>
+  </div>
+) : null}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-gray-100 flex justify-end">
+              <button
+                onClick={() => setSelectedApp(null)}
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

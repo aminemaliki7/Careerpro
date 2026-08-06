@@ -1,6 +1,6 @@
 // src/app/api/applications/user/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabaseAdmin';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
@@ -15,8 +15,8 @@ export async function GET() {
       );
     }
 
-    // Fetch applications from Supabase
-    const { data, error } = await supabase
+    // Fetch applications from Supabase using service role (bypasses RLS)
+    const { data, error } = await supabaseAdmin
       .from('applications')
       .select('*')
       .eq('user_id', userId)

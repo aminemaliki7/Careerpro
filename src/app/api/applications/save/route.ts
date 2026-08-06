@@ -1,6 +1,6 @@
 // src/app/api/applications/save/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '../../../../lib/supabaseAdmin';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
@@ -35,8 +35,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Save to Supabase
-    const { data, error } = await supabase
+    // Save to Supabase using service role key (bypasses RLS)
+    const { data, error } = await supabaseAdmin
       .from('applications')
       .insert([
         {

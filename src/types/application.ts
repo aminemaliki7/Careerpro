@@ -8,7 +8,9 @@ export interface Application {
   company: string;
   location?: string;
   salary_range?: string;
-  cv_text: string;
+  cv_text?: string;
+  cv_file_url?: string;
+  cv_file_name?: string;
   generated_email: string;
   status: 'pending' | 'interview' | 'rejected' | 'accepted';
   ai_applied: boolean;
@@ -25,12 +27,30 @@ export interface CreateApplicationInput {
   company: string;
   location?: string;
   salary_range?: string;
-  cv_text: string;
+  cv_text?: string;
+  cv_file_url?: string;
+  cv_file_name?: string;
   generated_email: string;
 }
 
-// For application response
+// For application update operations
+export interface UpdateApplicationInput {
+  status?: 'pending' | 'interview' | 'rejected' | 'accepted';
+  contacted_date?: string;
+  generated_email?: string;
+  cv_text?: string;
+  cv_file_url?: string;
+  cv_file_name?: string;
+}
+
+// For application single response
 export interface ApplicationResponse {
   message: string;
   application: Application;
+}
+
+// For fetching list of applications
+export interface ApplicationsListResponse {
+  applications: Application[];
+  count: number;
 }
