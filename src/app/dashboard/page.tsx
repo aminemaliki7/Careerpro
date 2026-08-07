@@ -35,6 +35,8 @@ interface Stats {
 
 interface ApplicationWithCvExtras extends Application {
   cv_url?: string;
+  cv_filename?: string;
+  cv_file_url?: string;
   cv_file_name?: string;
 }
 
@@ -43,7 +45,7 @@ export default function Dashboard() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'applications' | 'profile' | 'settings'>('applications');
   
-  const [applications, setApplications] = useState<Application[]>([]);
+  const [applications, setApplications] = useState<ApplicationWithCvExtras[]>([]);
   const [stats, setStats] = useState<Stats>({
     totalApplications: 0,
     pending: 0,
@@ -55,7 +57,7 @@ export default function Dashboard() {
   const [error, setError] = useState<string>('');
 
   // Modal State
-  const [selectedApp, setSelectedApp] = useState<Application | null>(null);
+  const [selectedApp, setSelectedApp] = useState<ApplicationWithCvExtras | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
 
@@ -87,16 +89,24 @@ export default function Dashboard() {
         }
 
         const data = await response.json();
-        const apps = data.applications || [];
+        const rawApps: ApplicationWithCvExtras[] = data.applications || [];
+
+        // Normalize DB column names (cv_url & cv_filename)
+        const apps = rawApps.map((app) => ({
+          ...app,
+          cv_file_url: app.cv_file_url || app.cv_url,
+          cv_file_name: app.cv_file_name || app.cv_filename,
+        }));
+
         setApplications(apps);
 
         // Calculate stats
         const stats: Stats = {
           totalApplications: apps.length,
-          pending: apps.filter((a: Application) => a.status === 'pending').length,
-          interviews: apps.filter((a: Application) => a.status === 'interview').length,
-          rejected: apps.filter((a: Application) => a.status === 'rejected').length,
-          aiApplied: apps.filter((a: Application) => a.ai_applied).length,
+          pending: apps.filter((a) => a.status === 'pending').length,
+          interviews: apps.filter((a) => a.status === 'interview').length,
+          rejected: apps.filter((a) => a.status === 'rejected').length,
+          aiApplied: apps.filter((a) => a.ai_applied).length,
         };
         setStats(stats);
       } catch (err) {
@@ -145,6 +155,23 @@ export default function Dashboard() {
     }
   };
 
+  const formatFileName = (name?: string, jobTitle?: string) => {
+    if (!name) return `${jobTitle || 'Application'}_CV.pdf`;
+
+    // Remove common UUID patterns (8-4-4-4-12 hex chars followed by dash or underscore)
+    const cleanedName = name.replace(
+      /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}[_-]?/,
+      ''
+    );
+
+    // If the entire filename was just the UUID + extension, return a readable default
+    if (!cleanedName || cleanedName === '.pdf') {
+      return `${jobTitle || 'Application'}_CV.pdf`;
+    }
+
+    return cleanedName;
+  };
+
   const successRate = stats.totalApplications > 0
     ? Math.round((stats.interviews / stats.totalApplications) * 100)
     : 0;
@@ -187,7 +214,9 @@ export default function Dashboard() {
     );
   }
 
-  const selectedAppWithCv = selectedApp as ApplicationWithCvExtras | null;
+  const pdfUrl = selectedApp?.cv_file_url || selectedApp?.cv_url;
+  const rawPdfName = selectedApp?.cv_file_name || selectedApp?.cv_filename;
+  const pdfName = formatFileName(rawPdfName, selectedApp?.job_title);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -461,51 +490,50 @@ export default function Dashboard() {
                 </div>
               )}
 
-             {/* Submitted CV File Download */}
-             {selectedAppWithCv?.cv_url ? (
-  <div>
-    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
-      <FileText className="w-4 h-4 text-[#0A66C2]" />
-      Submitted CV Document
-    </h3>
-    
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-blue-50 text-[#0A66C2] rounded-lg">
-          <FileText className="w-6 h-6" />
-        </div>
-        <div>
-          <p className="text-sm font-medium text-gray-900">
-            {selectedAppWithCv.cv_file_name || `${selectedApp?.job_title || 'Application'}_CV.pdf`}
-          </p>
-          <p className="text-xs text-gray-500">Uploaded Resume</p>
-        </div>
-      </div>
+              {/* Submitted CV PDF */}
+              {pdfUrl ? (
+                <div>
+                  <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
+                    <FileText className="w-4 h-4 text-[#0A66C2]" />
+                    Submitted CV (PDF)
+                  </h3>
 
-      <a
-        href={selectedAppWithCv.cv_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        download
-        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-medium rounded-lg transition-colors"
-      >
-        <Download className="w-3.5 h-3.5" />
-        Download CV
-      </a>
-    </div>
-  </div>
-) : selectedApp?.cv_text ? (
-  /* Fallback if older applications only saved text */
-  <div>
-    <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
-      <FileText className="w-4 h-4 text-[#0A66C2]" />
-      Submitted CV Text
-    </h3>
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 text-xs font-mono text-gray-800 whitespace-pre-wrap max-h-48 overflow-y-auto">
-      {selectedApp.cv_text}
-    </div>
-  </div>
-) : null}
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-3">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="p-2 bg-blue-50 text-[#0A66C2] rounded-lg">
+                          <FileText className="w-6 h-6" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">
+                            {pdfName}
+                          </p>
+                          <p className="text-xs text-gray-500">PDF resume available for download</p>
+                        </div>
+                      </div>
+
+                      <a
+                        href={pdfUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download={pdfName}
+                        className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#0A66C2] hover:bg-[#004182] text-white text-xs font-medium rounded-lg transition-colors shrink-0"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download PDF
+                      </a>
+                    </div>
+
+                    <div className="border border-gray-200 rounded-lg overflow-hidden bg-white">
+                      <iframe
+                        src={pdfUrl}
+                        title="CV PDF Preview"
+                        className="w-full h-[420px]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             {/* Modal Footer */}

@@ -273,6 +273,28 @@ export default function EasyApplyModal({
     setSaveError('');
 
     try {
+      let cvFileUrl: string | undefined;
+      let cvFileName: string | undefined;
+
+      if (cvFile) {
+        const formData = new FormData();
+        formData.append('file', cvFile);
+
+        const uploadResponse = await fetch('/api/applications/upload-cv', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const uploadData = await uploadResponse.json();
+
+        if (!uploadResponse.ok) {
+          throw new Error(uploadData.error || 'Failed to upload CV');
+        }
+
+        cvFileUrl = uploadData.url;
+        cvFileName = uploadData.filename;
+      }
+
       const response = await fetch('/api/applications/save', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -283,6 +305,8 @@ export default function EasyApplyModal({
           location: location || null,
           salary_range: salaryRange || null,
           cv_text: cvText.trim(),
+          cv_url: cvFileUrl,
+          cv_file_name: cvFileName,
           generated_email: generatedEmail,
         }),
       });

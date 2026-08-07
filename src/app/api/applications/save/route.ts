@@ -24,6 +24,8 @@ export async function POST(req: NextRequest) {
       location,
       salary_range,
       cv_text,
+      cv_url,
+      cv_file_name,
       generated_email,
     } = body;
 
@@ -35,23 +37,31 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const insertPayload = {
+      user_id: userId,
+      job_id: String(job_id),
+      job_title,
+      company,
+      location: location || null,
+      salary_range: salary_range || null,
+      cv_text,
+      generated_email,
+      ai_applied: true,
+      status: 'pending',
+    } as Record<string, unknown>;
+
+    if (cv_url) {
+      insertPayload.cv_url = cv_url;
+    }
+
+    if (cv_file_name) {
+      insertPayload.cv_file_name = cv_file_name;
+    }
+
     // Save to Supabase using service role key (bypasses RLS)
     const { data, error } = await supabaseAdmin
       .from('applications')
-      .insert([
-        {
-          user_id: userId,
-          job_id: String(job_id),
-          job_title,
-          company,
-          location: location || null,
-          salary_range: salary_range || null,
-          cv_text,
-          generated_email,
-          ai_applied: true,
-          status: 'pending',
-        },
-      ])
+      .insert([insertPayload])
       .select();
 
     if (error) {

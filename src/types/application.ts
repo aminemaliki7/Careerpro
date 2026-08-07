@@ -39,8 +39,8 @@ export interface UpdateApplicationInput {
   contacted_date?: string;
   generated_email?: string;
   cv_text?: string;
-  cv_file_url?: string;
-  cv_file_name?: string;
+  cv_url?: string;
+  cv_filename?: string;
 }
 
 // For application single response
