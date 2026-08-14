@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
 import { createJobSlug } from '@/lib/utils/format';
+import BookmarkButton from '@/components/jobs/BookmarkButton';
 
 interface Job {
   id: string;
@@ -187,104 +188,92 @@ export default async function JobDetailsPage({
             </Link>
           </nav>
 
-          <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-0">
-            <div className="flex-1 space-y-2">
-              <div className="flex items-center mb-2 flex-wrap gap-2">
-                <h1 className="text-3xl font-bold text-gray-900 mr-3">{typedJob.title}</h1>
-                {typedJob.featured && <StarIcon className="h-6 w-6 text-yellow-400" filled />}
-              </div>
-              <div className="flex flex-wrap items-center gap-4 text-gray-600">
-                <div className="flex items-center">
-                  <BuildingOfficeIcon className="h-5 w-5 mr-2 text-gray-400" />
-                  <span className="font-medium">{typedJob.company}</span>
-                </div>
-                <div className="flex items-center">
-                  <MapPinIcon className="h-5 w-5 mr-2 text-gray-400" />
-                  <span>{typedJob.location}</span>
-                </div>
-              
-                <div className="flex items-center">
-                  <ClockIcon className="h-5 w-5 mr-2 text-gray-400" />
-                  <span>{typedJob.type}</span>
-                </div>
-                {typedJob.salary_range && (
-                  <div className="flex items-center">
-                    <CurrencyDollarIcon className="h-5 w-5 mr-2 text-gray-400" />
-                    <span>{typedJob.salary_range}</span>
-                  </div>
-                )}
-              </div>
-              <div className="mt-2 text-sm text-gray-500">
-                Posted {formatDate(typedJob.posted_date)}
-              </div>
-            </div>
-
-            <div className="flex flex-wrap lg:flex-col items-start lg:items-end gap-2">
-              <button 
-                className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
-                aria-label="Share job"
-              >
-                <ShareIcon className="h-5 w-5" />
-              </button>
-              <button 
-                className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
-                aria-label="Save job"
-              >
-                <BookmarkIcon className="h-5 w-5" />
-              </button>
-            </div>
-          </div>
-
-          {/* FIXED: Application Action Buttons with Correct Logic */}
-          <div className="mt-6 flex flex-col sm:flex-row gap-3 w-full">
-            {/* Priority 1: Easy Apply with AI (when contact email exists) */}
-           {typedJob.contact_email && (
-  <div className="flex-1">
-    <EasyApplyButton 
-      jobTitle={typedJob.title}
-      company={typedJob.company}
-      jobId={typedJob.id}
-      requirements={typedJob.requirements}
-      description={typedJob.description}
-      contactEmail={typedJob.contact_email}
-      skills={typedJob.skills}
-      location={typedJob.location}
-      salaryRange={typedJob.salary_range}
-    />
+         <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
+  <div className="flex-1 space-y-2">
+    <div className="flex items-center mb-2 flex-wrap gap-2">
+      <h1 className="text-3xl font-bold text-gray-900 mr-3">{typedJob.title}</h1>
+      {typedJob.featured && <StarIcon className="h-6 w-6 text-yellow-400" filled />}
+    </div>
+    <div className="flex flex-wrap items-center gap-4 text-gray-600">
+      <div className="flex items-center">
+        <BuildingOfficeIcon className="h-5 w-5 mr-2 text-gray-400" />
+        <span className="font-medium">{typedJob.company}</span>
+      </div>
+      <div className="flex items-center">
+        <MapPinIcon className="h-5 w-5 mr-2 text-gray-400" />
+        <span>{typedJob.location}</span>
+      </div>
+      <div className="flex items-center">
+        <ClockIcon className="h-5 w-5 mr-2 text-gray-400" />
+        <span>{typedJob.type}</span>
+      </div>
+      {typedJob.salary_range && (
+        <div className="flex items-center">
+          <CurrencyDollarIcon className="h-5 w-5 mr-2 text-gray-400" />
+          <span>{typedJob.salary_range}</span>
+        </div>
+      )}
+    </div>
+    <div className="mt-2 text-sm text-gray-500">
+      Posted {formatDate(typedJob.posted_date)}
+    </div>
   </div>
-)}
 
-            {/* Priority 2: Direct Email (fallback if no Easy Apply)// no it should existe even if the easy apply existe too */}
-          {typedJob.contact_email && (
-    <a
-      href={`mailto:${typedJob.contact_email}`}
-      className="flex-1 px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
-    >
-      <EnvelopeIcon className="h-5 w-5" />
-      Contact Company
-    </a>
-  )}
-            {/* Priority 3: External Application Link */}
-            {typedJob.application_url && (
-              <a
-                href={typedJob.application_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 px-6 py-3 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
-              >
-                <ArrowTopRightOnSquareIcon className="h-5 w-5" />
-                Apply on Company Site
-              </a>
-            )}
+  {/* TOP RIGHT CORNER: Compact Action Buttons + Utility Icons */}
+  <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3 w-full lg:w-auto">
+    {/* Easy Apply */}
+    {typedJob.contact_email && (
+      <EasyApplyButton 
+        jobTitle={typedJob.title}
+        company={typedJob.company}
+        jobId={typedJob.id}
+        requirements={typedJob.requirements}
+        description={typedJob.description}
+        contactEmail={typedJob.contact_email}
+        skills={typedJob.skills}
+        location={typedJob.location}
+        salaryRange={typedJob.salary_range}
+      />
+    )}
 
-            {/* Fallback: No application method available */}
-            {!typedJob.contact_email && !typedJob.application_url && (
-              <div className="flex-1 px-6 py-3 bg-gray-100 text-gray-500 rounded-lg font-medium flex items-center justify-center gap-2 cursor-not-allowed">
-                <EnvelopeIcon className="h-5 w-5" />
-                Contact information not available
-              </div>
-            )}
-          </div>
+    {/* Contact Direct */}
+    {typedJob.contact_email && (
+      <a
+        href={`mailto:${typedJob.contact_email}?subject=Inquiry: ${encodeURIComponent(typedJob.title)} position at ${encodeURIComponent(typedJob.company)}`}
+        className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 hover:text-gray-900 transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
+      >
+        <EnvelopeIcon className="h-4 w-4 text-gray-500" />
+        <span>Contact Direct</span>
+      </a>
+    )}
+
+    {/* External Apply Site */}
+    {typedJob.application_url && (
+      <a
+        href={typedJob.application_url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
+      >
+        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
+        <span>Apply on Site</span>
+      </a>
+    )}
+
+    {/* Share & Bookmark Utilities */}
+    <div className="flex items-center gap-2">
+      <button 
+        className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
+        aria-label="Share job"
+      >
+        <ShareIcon className="h-5 w-5" />
+      </button>
+      <BookmarkButton jobId={typedJob.id} />
+    </div>
+  </div>
+</div>
+
+    
         </div>
       </div>
 

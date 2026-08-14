@@ -38,13 +38,13 @@ async function getHeroStats(): Promise<HeroStats> {
 
     return {
       jobCount:     jobsResult.count     ?? 0,
-      startupCount: startupsResult.count ?? 0,
+      companyCount: startupsResult.count ?? 0,
       postCount:    posts.length,
     };
   } catch (err) {
     console.error('[getHeroStats] failed:', err);
     // Graceful fallback — never crash the homepage
-    return { jobCount: 0, startupCount: 0, postCount: 0 };
+    return { jobCount: 0, companyCount: 0, postCount: 0 };
   }
 }
 
@@ -55,18 +55,7 @@ export default async function HomePage() {
     <div className="min-h-screen bg-white">
       <HeroSection stats={stats} />
 
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-3xl mx-auto text-center px-6">
-          <h2 className="text-4xl sm:text-5xl font-light text-gray-900 mb-6">
-            Join Our Newsletter
-          </h2>
-          <p className="text-lg text-gray-600 mb-10">
-            Receive weekly insights about AI, emerging tech, job trends, and exclusive updates.
-          </p>
-          <NewsletterCTA />
-          <p className="text-sm text-gray-400 mt-6">No spam. Unsubscribe anytime.</p>
-        </div>
-      </section>
+     
     </div>
   );
 }

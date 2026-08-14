@@ -1,15 +1,14 @@
-// src/app/dashboard/page.tsx
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { 
   Briefcase, 
   CheckCircle2, 
   Clock, 
   XCircle, 
-  TrendingUp,
   Bot,
   Filter,
   AlertCircle,
@@ -21,9 +20,12 @@ import {
   Calendar,
   Copy,
   Download,
-  Check
+  Check,
+  Bookmark,
+  ExternalLink
 } from 'lucide-react';
 import { Application } from '@/types/application';
+import { createJobSlug } from '@/lib/utils/format';
 
 interface Stats {
   totalApplications: number;
@@ -40,21 +42,35 @@ interface ApplicationWithCvExtras extends Application {
   cv_file_name?: string;
 }
 
+interface SavedJob {
+  saved_id?: string;
+  saved_at: string;
+  job_id?: string;
+  // Job details (flattened, not nested)
+  id: string;
+  title: string;
+  company: string;
+  location: string;
+  type: string;
+  salary_range?: string;
+  posted_date: string;
+}
+
+type StatusFilter = 'all' | 'pending' | 'interview' | 'accepted' | 'rejected';
+
 export default function Dashboard() {
   const { isSignedIn, user, isLoaded } = useUser();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'applications' | 'profile' | 'settings'>('applications');
+  const [activeTab, setActiveTab] = useState<'applications' | 'saved' | 'profile' | 'settings'>('applications');
   
   const [applications, setApplications] = useState<ApplicationWithCvExtras[]>([]);
-  const [stats, setStats] = useState<Stats>({
-    totalApplications: 0,
-    pending: 0,
-    interviews: 0,
-    rejected: 0,
-    aiApplied: 0,
-  });
+  const [savedJobs, setSavedJobs] = useState<SavedJob[]>([]);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [savedJobsLoading, setSavedJobsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [savedJobsError, setSavedJobsError] = useState<string>('');
 
   // Modal State
   const [selectedApp, setSelectedApp] = useState<ApplicationWithCvExtras | null>(null);
@@ -67,6 +83,29 @@ export default function Dashboard() {
       router.push('/');
     }
   }, [isLoaded, isSignedIn, router]);
+
+  // Recalculate stats dynamically whenever applications change
+  const stats: Stats = useMemo(() => {
+    return {
+      totalApplications: applications.length,
+      pending: applications.filter((a) => a.status === 'pending').length,
+      interviews: applications.filter((a) => a.status === 'interview').length,
+      rejected: applications.filter((a) => a.status === 'rejected').length,
+      aiApplied: applications.filter((a) => a.ai_applied).length,
+    };
+  }, [applications]);
+
+  const successRate = useMemo(() => {
+    return stats.totalApplications > 0
+      ? Math.round((stats.interviews / stats.totalApplications) * 100)
+      : 0;
+  }, [stats]);
+
+  // Filter applications list based on statusFilter dropdown
+  const filteredApplications = useMemo(() => {
+    if (statusFilter === 'all') return applications;
+    return applications.filter((app) => app.status === statusFilter);
+  }, [applications, statusFilter]);
 
   // Fetch applications
   useEffect(() => {
@@ -99,16 +138,6 @@ export default function Dashboard() {
         }));
 
         setApplications(apps);
-
-        // Calculate stats
-        const stats: Stats = {
-          totalApplications: apps.length,
-          pending: apps.filter((a) => a.status === 'pending').length,
-          interviews: apps.filter((a) => a.status === 'interview').length,
-          rejected: apps.filter((a) => a.status === 'rejected').length,
-          aiApplied: apps.filter((a) => a.ai_applied).length,
-        };
-        setStats(stats);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load applications');
         console.error('Error fetching applications:', err);
@@ -118,6 +147,39 @@ export default function Dashboard() {
     }
 
     fetchApplications();
+  }, [isSignedIn, user]);
+
+  // Fetch saved jobs
+  useEffect(() => {
+    if (!isSignedIn || !user) return;
+
+    async function fetchSavedJobs() {
+      try {
+        setSavedJobsLoading(true);
+        setSavedJobsError('');
+
+        const response = await fetch('/api/jobs/saved', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch saved jobs');
+        }
+
+        const data = await response.json();
+        setSavedJobs(data.saved_jobs || []);
+      } catch (err) {
+        setSavedJobsError(err instanceof Error ? err.message : 'Failed to load saved jobs');
+        console.error('Error fetching saved jobs:', err);
+      } finally {
+        setSavedJobsLoading(false);
+      }
+    }
+
+    fetchSavedJobs();
   }, [isSignedIn, user]);
 
   // Update application status
@@ -145,6 +207,29 @@ export default function Dashboard() {
     }
   };
 
+  // Remove from saved jobs
+  const handleRemoveSavedJob = async (saveIdentifier: string, targetJobId: string) => {
+    try {
+      const response = await fetch('/api/jobs/unsave', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ job_id: targetJobId }),
+      });
+
+      if (response.ok) {
+        setSavedJobs((prev) =>
+          prev.filter(
+            (job) =>
+              (job.saved_id || job.id) !== saveIdentifier &&
+              (job.job_id || job.id) !== targetJobId
+          )
+        );
+      }
+    } catch (err) {
+      console.error('Error removing saved job:', err);
+    }
+  };
+
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -158,13 +243,11 @@ export default function Dashboard() {
   const formatFileName = (name?: string, jobTitle?: string) => {
     if (!name) return `${jobTitle || 'Application'}_CV.pdf`;
 
-    // Remove common UUID patterns (8-4-4-4-12 hex chars followed by dash or underscore)
     const cleanedName = name.replace(
       /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}[_-]?/,
       ''
     );
 
-    // If the entire filename was just the UUID + extension, return a readable default
     if (!cleanedName || cleanedName === '.pdf') {
       return `${jobTitle || 'Application'}_CV.pdf`;
     }
@@ -172,9 +255,18 @@ export default function Dashboard() {
     return cleanedName;
   };
 
-  const successRate = stats.totalApplications > 0
-    ? Math.round((stats.interviews / stats.totalApplications) * 100)
-    : 0;
+  const formatDate = (dateString: string) => {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays <= 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-US');
+  };
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -224,7 +316,7 @@ export default function Dashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Application Dashboard</h1>
-          <p className="text-gray-600 mt-2">Track your job applications and AI-powered submissions</p>
+          <p className="text-gray-600 mt-2">Track your job applications, saved jobs, and AI-powered submissions</p>
         </div>
 
         {/* Stats Grid */}
@@ -250,7 +342,12 @@ export default function Dashboard() {
               <span className="text-sm text-gray-600">Interviews</span>
               <CheckCircle2 className="w-5 h-5 text-green-600" />
             </div>
-            <div className="text-2xl font-bold text-gray-900">{stats.interviews}</div>
+            <div className="flex items-baseline justify-between">
+              <span className="text-2xl font-bold text-gray-900">{stats.interviews}</span>
+              <span className="text-xs font-medium text-green-700 bg-green-50 px-1.5 py-0.5 rounded">
+                {successRate}% rate
+              </span>
+            </div>
           </div>
 
           <div className="bg-white rounded-lg border border-gray-200 p-5">
@@ -263,10 +360,10 @@ export default function Dashboard() {
 
           <div className="bg-white rounded-lg border border-gray-200 p-5">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-600">Success Rate</span>
-              <TrendingUp className="w-5 h-5 text-green-600" />
+              <span className="text-sm text-gray-600">Saved Jobs</span>
+              <Bookmark className="w-5 h-5 text-blue-600" />
             </div>
-            <div className="text-2xl font-bold text-gray-900">{successRate}%</div>
+            <div className="text-2xl font-bold text-gray-900">{savedJobs.length}</div>
           </div>
         </div>
 
@@ -284,20 +381,33 @@ export default function Dashboard() {
         {/* Tabs */}
         <div className="bg-white rounded-lg border border-gray-200 mb-8">
           <div className="border-b border-gray-200">
-            <div className="flex gap-4 px-6">
+            <div className="flex gap-4 px-6 overflow-x-auto">
               <button
+                type="button"
                 onClick={() => setActiveTab('applications')}
-                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors ${
+                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'applications'
                     ? 'border-[#0A66C2] text-[#0A66C2]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
                 }`}
               >
-                Applications
+                Applications ({applications.length})
               </button>
               <button
+                type="button"
+                onClick={() => setActiveTab('saved')}
+                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
+                  activeTab === 'saved'
+                    ? 'border-[#0A66C2] text-[#0A66C2]'
+                    : 'border-transparent text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Saved Jobs ({savedJobs.length})
+              </button>
+              <button
+                type="button"
                 onClick={() => setActiveTab('profile')}
-                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors ${
+                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'profile'
                     ? 'border-[#0A66C2] text-[#0A66C2]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -306,8 +416,9 @@ export default function Dashboard() {
                 Profile
               </button>
               <button
+                type="button"
                 onClick={() => setActiveTab('settings')}
-                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors ${
+                className={`py-4 px-2 border-b-2 text-sm font-medium transition-colors whitespace-nowrap ${
                   activeTab === 'settings'
                     ? 'border-[#0A66C2] text-[#0A66C2]'
                     : 'border-transparent text-gray-600 hover:text-gray-900'
@@ -321,27 +432,43 @@ export default function Dashboard() {
           {/* Applications Tab */}
           {activeTab === 'applications' && (
             <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
                 <h2 className="text-lg font-semibold text-gray-900">Recent Applications</h2>
-                <button className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-                  <Filter className="w-4 h-4" />
-                  Filter
-                </button>
+                
+                {/* Filter Dropdown */}
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-gray-500" />
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
+                    className="text-sm font-medium text-gray-700 bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#0A66C2]"
+                  >
+                    <option value="all">All Statuses ({applications.length})</option>
+                    <option value="pending">Pending ({stats.pending})</option>
+                    <option value="interview">Interview ({stats.interviews})</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected ({stats.rejected})</option>
+                  </select>
+                </div>
               </div>
 
               {isLoading ? (
                 <div className="py-12 text-center text-gray-500 text-sm">
                   Loading applications...
                 </div>
-              ) : applications.length === 0 ? (
+              ) : filteredApplications.length === 0 ? (
                 <div className="py-12 text-center border border-dashed rounded-lg">
                   <Briefcase className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                  <p className="text-gray-600 font-medium">No applications yet</p>
-                  <p className="text-gray-500 text-sm mt-1">Start applying to jobs to see them here</p>
+                  <p className="text-gray-600 font-medium">No applications found</p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    {statusFilter !== 'all' 
+                      ? 'No applications match the selected status filter.' 
+                      : 'Start applying to jobs to see them here'}
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {applications.map((app) => (
+                  {filteredApplications.map((app) => (
                     <div
                       key={app.id}
                       className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
@@ -374,6 +501,7 @@ export default function Dashboard() {
                       <div className="flex items-center justify-between text-xs text-gray-500">
                         <span>Applied on {new Date(app.applied_date).toLocaleDateString()}</span>
                         <button
+                          type="button"
                           onClick={() => setSelectedApp(app)}
                           className="text-[#0A66C2] hover:text-[#004182] font-medium"
                         >
@@ -387,13 +515,105 @@ export default function Dashboard() {
             </div>
           )}
 
+          {/* Saved Jobs Tab */}
+          {activeTab === 'saved' && (
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-gray-900">Saved Jobs</h2>
+                <span className="text-sm text-gray-600">{savedJobs.length} job{savedJobs.length !== 1 ? 's' : ''} saved</span>
+              </div>
+
+              {savedJobsError && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start gap-3">
+                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h3 className="text-sm font-medium text-red-900">Error Loading Saved Jobs</h3>
+                    <p className="text-sm text-red-700 mt-1">{savedJobsError}</p>
+                  </div>
+                </div>
+              )}
+
+              {savedJobsLoading ? (
+                <div className="py-12 text-center text-gray-500 text-sm">
+                  Loading saved jobs...
+                </div>
+              ) : savedJobs.length === 0 ? (
+                <div className="py-12 text-center border border-dashed rounded-lg">
+                  <Bookmark className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                  <p className="text-gray-600 font-medium">No saved jobs yet</p>
+                  <p className="text-gray-500 text-sm mt-1">Bookmark jobs from the job board to save them for later</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {savedJobs.map((save) => {
+                    const actualJobId = save.job_id || save.id;
+                    const saveId = save.saved_id || save.id;
+
+                    return (
+                      <div
+                        key={saveId}
+                        className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                      >
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-1">{save.title}</h3>
+                            <p className="text-sm text-gray-600 mb-2">
+                              {save.company} {save.location ? `• ${save.location}` : ''}
+                            </p>
+                            <div className="flex flex-wrap items-center gap-2">
+                              {save.type && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                                  {save.type}
+                                </span>
+                              )}
+                              {save.salary_range && (
+                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                                  {save.salary_range}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveSavedJob(saveId, actualJobId)}
+                              className="p-2 text-red-400 hover:text-red-600 border border-red-200 hover:bg-red-50 rounded-lg transition-all"
+                              aria-label="Remove from saved"
+                              title="Remove from saved jobs"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                            <span className="text-xs text-gray-500">Saved {formatDate(save.saved_at)}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
+                          <span className="text-xs text-gray-500">
+                            {save.posted_date ? `Posted ${formatDate(save.posted_date)}` : ''}
+                          </span>
+                          <Link
+                            href={`/jobs/${save.job_id || save.id}/${createJobSlug(save.title )}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-[#0A66C2] hover:text-[#004182] font-medium text-sm"
+                          >
+                            View Job →
+                          </Link>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Profile Tab */}
           {activeTab === 'profile' && (
             <div className="p-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-4">Your Profile</h2>
-              <div className="bg-gray-50 rounded-lg p-4">
-                <p className="text-gray-700"><span className="font-medium">Name:</span> {user?.fullName}</p>
-                <p className="text-gray-700 mt-2"><span className="font-medium">Email:</span> {user?.primaryEmailAddress?.emailAddress}</p>
+              <div className="bg-gray-50 rounded-lg p-4 max-w-xl">
+                <p className="text-gray-700"><span className="font-medium">Name:</span> {user?.fullName || 'N/A'}</p>
+                <p className="text-gray-700 mt-2"><span className="font-medium">Email:</span> {user?.primaryEmailAddress?.emailAddress || 'N/A'}</p>
               </div>
             </div>
           )}
@@ -424,9 +644,21 @@ export default function Dashboard() {
                     </span>
                   )}
                 </div>
-                <p className="text-sm font-medium text-gray-600">{selectedApp.company}</p>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm font-medium text-gray-600">{selectedApp.company}</p>
+                  {selectedApp.job_id && (
+                    <Link
+                      href={`/jobs/${selectedApp.job_id}/${createJobSlug(selectedApp.job_title || '')}`}
+                      target="_blank"
+                      className="inline-flex items-center gap-1 text-xs text-[#0A66C2] hover:underline font-medium"
+                    >
+                      View Job Posting <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  )}
+                </div>
               </div>
               <button
+                type="button"
                 onClick={() => setSelectedApp(null)}
                 className="p-1 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100"
               >
@@ -477,6 +709,7 @@ export default function Dashboard() {
                       Generated Outreach Email / Cover Letter
                     </h3>
                     <button
+                      type="button"
                       onClick={() => copyToClipboard(selectedApp.generated_email!)}
                       className="text-xs text-[#0A66C2] hover:text-[#004182] flex items-center gap-1 font-medium"
                     >
@@ -491,7 +724,7 @@ export default function Dashboard() {
               )}
 
               {/* Submitted CV PDF */}
-              {pdfUrl ? (
+              {pdfUrl && (
                 <div>
                   <h3 className="text-sm font-semibold text-gray-900 flex items-center gap-2 mb-2">
                     <FileText className="w-4 h-4 text-[#0A66C2]" />
@@ -533,12 +766,13 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-              ) : null}
+              )}
             </div>
 
             {/* Modal Footer */}
             <div className="p-4 border-t border-gray-100 flex justify-end">
               <button
+                type="button"
                 onClick={() => setSelectedApp(null)}
                 className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-sm font-medium transition-colors"
               >
