@@ -3,10 +3,11 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import Link from 'next/link';
-import { Job, getJobRegion, formatExperienceLevel, GLOBAL_REGIONS } from '@/types/job';
+import { Job, getJobRegion, GLOBAL_REGIONS } from '@/types/job';
 import { createJobSlug } from '@/lib/utils/format';
 import HirelyLogo from '@/components/ui/CircuitLogo';
 import BookmarkButton from '@/components/jobs/BookmarkButton';
+import EasyApplyButton from '@/components/jobs/EasyApplyButton';
 
 // Custom Icons
 const SearchIcon = ({ className }: { className: string }) => (
@@ -150,8 +151,6 @@ export default function JobsPage() {
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center">
-        
-
           {/* Search */}
           <div className="max-w-2xl mx-auto relative mb-4">
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -254,73 +253,101 @@ export default function JobsPage() {
           </div>
         </div>
 
-        {/* Jobs List */}
+        {/* Jobs List & Pagination Container */}
         <div className="lg:col-span-3 space-y-6">
-          {paginatedJobs.map((job: Job) => (
-            <div key={job.id} className="bg-white rounded-lg shadow-sm border hover:shadow-md transition-shadow overflow-hidden">
-              <div className="p-4 sm:p-6 flex flex-row justify-between items-start sm:items-center gap-4">
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
-                  <p className="text-sm text-gray-500">{job.company}</p>
-                  <div className="flex flex-wrap text-xs text-gray-400 mt-2 gap-2">
-                    <div className="flex items-center gap-1"><BuildingOfficeIcon className="w-3 h-3"/> {job.type}</div>
-                    <div className="flex items-center gap-1"><MapPinIcon className="w-3 h-3"/> {job.location}</div>
-                    <div className="flex items-center gap-1"><ClockIcon className="w-3 h-3"/> {formatDate(job.posted_date)}</div>
-                  </div>
-                </div>
+          <div className="space-y-4">
+            {paginatedJobs.map((job: Job) => {
+              const jobHref = `/jobs/${job.id}/${createJobSlug(job.title)}`;
 
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  <BookmarkButton jobId={job.id} />
-                  <a
-                    href={`/jobs/${job.id}/${createJobSlug(job.title)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition whitespace-nowrap text-sm font-medium"
-                  >
-                    Apply
-                  </a>
+              return (
+                <div 
+                  key={job.id} 
+                  className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 p-5 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+                >
+                  {/* Job Details Clickable Link */}
+                  <Link href={jobHref} className="flex-1 min-w-0 space-y-1 group">
+                    <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                      {job.title}
+                    </h3>
+                    <p className="text-sm font-medium text-gray-600">{job.company}</p>
+                    
+                    {/* Meta Tags */}
+                    <div className="flex flex-wrap items-center text-xs font-medium text-gray-500 mt-3 gap-3">
+                      <span className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-100">
+                        <BuildingOfficeIcon className="w-3.5 h-3.5 text-gray-400" /> 
+                        {job.type}
+                      </span>
+                      <span className="flex items-center gap-1.5 bg-gray-50 px-2.5 py-1 rounded-md border border-gray-100">
+                        <MapPinIcon className="w-3.5 h-3.5 text-gray-400" /> 
+                        {job.location}
+                      </span>
+                      <span className="flex items-center gap-1.5 text-gray-400">
+                        <ClockIcon className="w-3.5 h-3.5" /> 
+                        {formatDate(job.posted_date)}
+                      </span>
+                    </div>
+                  </Link>
+
+                  {/* Isolated Actions Bar */}
+                {/* Change z-10 to z-0 or remove relative z-index from the list item */}
+<div className="flex items-center gap-2.5 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-gray-100">
+  <BookmarkButton jobId={job.id} />
+  <EasyApplyButton
+    jobId={job.id}
+    jobTitle={job.title}
+    company={job.company}
+    description={job.description}
+    requirements={job.requirements}
+    contactEmail={job.contact_email}
+    skills={job.skills}
+    location={job.location}
+    salaryRange={job.salary_range}
+  />
+</div>
                 </div>
-              </div>
-            </div>
-          ))}
+              );
+            })}
+          </div>
 
           {/* Pagination */}
-          <div className="flex justify-center items-center gap-2 mt-4 flex-wrap">
-            <button
-              onClick={() => {
-                setCurrentPage(prev => Math.max(prev - 1, 1));
-                scrollToTop();
-              }}
-              disabled={currentPage === 1}
-              className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
-            >
-              Prev
-            </button>
-
-            {[...Array(totalPages)].map((_, i) => (
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-6 flex-wrap">
               <button
-                key={i}
                 onClick={() => {
-                  setCurrentPage(i + 1);
+                  setCurrentPage(prev => Math.max(prev - 1, 1));
                   scrollToTop();
                 }}
-                className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'hover:bg-gray-100'}`}
+                disabled={currentPage === 1}
+                className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
               >
-                {i + 1}
+                Prev
               </button>
-            ))}
 
-            <button
-              onClick={() => {
-                setCurrentPage(prev => Math.min(prev + 1, totalPages));
-                scrollToTop();
-              }}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setCurrentPage(i + 1);
+                    scrollToTop();
+                  }}
+                  className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'hover:bg-gray-100'}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => {
+                  setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                  scrollToTop();
+                }}
+                disabled={currentPage === totalPages}
+                className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
