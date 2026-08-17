@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  Search, Filter, X, Check, Loader2, Building2,
+  Search, Filter, X, Check, Building2,
   MapPin, Users, Calendar, Briefcase, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import type { Startup, IndustryType } from '@/types/startup';
@@ -41,35 +41,35 @@ const COUNTRIES = [
 ];
 
 const FUNDING_COLORS: Record<string, string> = {
-  'Pre-Seed': 'bg-gray-100 text-gray-600',
-  'Seed':     'bg-green-50 text-green-700',
-  'Series A': 'bg-blue-50 text-blue-700',
-  'Series B': 'bg-purple-50 text-purple-700',
-  'Series C': 'bg-orange-50 text-orange-700',
-  'Series D+':'bg-red-50 text-red-700',
-  'Acquired': 'bg-yellow-50 text-yellow-700',
-  'Public':   'bg-indigo-50 text-indigo-700',
+  'Pre-Seed': 'bg-slate-100 text-slate-600 border-slate-200/60',
+  'Seed':     'bg-emerald-50 text-emerald-700 border-emerald-200/60',
+  'Series A': 'bg-indigo-50 text-indigo-700 border-indigo-200/60',
+  'Series B': 'bg-purple-50 text-purple-700 border-purple-200/60',
+  'Series C': 'bg-amber-50 text-amber-700 border-amber-200/60',
+  'Series D+':'bg-rose-50 text-rose-700 border-rose-200/60',
+  'Acquired': 'bg-amber-100/80 text-amber-800 border-amber-200/80',
+  'Public':   'bg-sky-50 text-sky-700 border-sky-200/60',
 };
 
 // ─── Skeleton card ────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-5 flex flex-col gap-4 animate-pulse">
+    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col gap-4 animate-pulse">
       <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-gray-100 flex-shrink-0" />
+        <div className="w-12 h-12 rounded-xl bg-slate-100 flex-shrink-0" />
         <div className="flex-1 space-y-2">
-          <div className="h-4 bg-gray-100 rounded w-3/4" />
-          <div className="h-3 bg-gray-100 rounded w-1/2" />
+          <div className="h-4 bg-slate-100 rounded w-3/4" />
+          <div className="h-3 bg-slate-100 rounded w-1/2" />
         </div>
       </div>
       <div className="space-y-2">
-        <div className="h-3 bg-gray-100 rounded" />
-        <div className="h-3 bg-gray-100 rounded w-5/6" />
+        <div className="h-3 bg-slate-100 rounded" />
+        <div className="h-3 bg-slate-100 rounded w-5/6" />
       </div>
       <div className="flex gap-2 mt-auto">
-        <div className="h-6 bg-gray-100 rounded-full w-20" />
-        <div className="h-6 bg-gray-100 rounded-full w-16" />
+        <div className="h-6 bg-slate-100 rounded-full w-20" />
+        <div className="h-6 bg-slate-100 rounded-full w-16" />
       </div>
     </div>
   );
@@ -95,16 +95,16 @@ function StartupCard({ startup }: { startup: Startup }) {
   };
 
   const logoUrl = getLogoUrl();
-  const fundingClass = FUNDING_COLORS[startup.fundingStage] ?? 'bg-gray-100 text-gray-600';
+  const fundingClass = FUNDING_COLORS[startup.fundingStage] ?? 'bg-slate-100 text-slate-600 border-slate-200/60';
 
   return (
     <Link
       href={`/startups/${startup.slug}`}
-      className="group flex flex-col bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#0A66C2]/40 hover:shadow-lg hover:shadow-[#0A66C2]/5 transition-all duration-200 h-full"
+      className="group flex flex-col bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-indigo-600/40 hover:shadow-lg hover:shadow-indigo-600/5 transition-all duration-200 h-full"
     >
       {/* Header */}
       <div className="flex items-start gap-3 mb-3">
-        <div className="w-12 h-12 flex-shrink-0 rounded-xl border border-gray-100 bg-gray-50 flex items-center justify-center overflow-hidden">
+        <div className="w-12 h-12 flex-shrink-0 rounded-xl border border-slate-200/80 bg-slate-50 flex items-center justify-center overflow-hidden">
           {logoUrl && !imgError ? (
             <Image
               src={logoUrl}
@@ -116,7 +116,7 @@ function StartupCard({ startup }: { startup: Startup }) {
               onError={() => setImgError(true)}
             />
           ) : (
-            <span className="text-lg font-bold text-[#0A66C2]">
+            <span className="text-lg font-bold text-indigo-600">
               {startup.name.charAt(0).toUpperCase()}
             </span>
           )}
@@ -124,7 +124,7 @@ function StartupCard({ startup }: { startup: Startup }) {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-1">
-            <h2 className="text-sm font-semibold text-gray-900 leading-tight line-clamp-1 group-hover:text-[#0A66C2] transition-colors">
+            <h2 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-1 group-hover:text-indigo-600 transition-colors">
               {startup.name}
             </h2>
             {startup.featured && (
@@ -134,44 +134,44 @@ function StartupCard({ startup }: { startup: Startup }) {
             )}
           </div>
           <div className="flex items-center gap-1 mt-0.5">
-            <span className="text-[11px] text-gray-500">{startup.industry}</span>
+            <span className="text-[11px] text-slate-500">{startup.industry}</span>
           </div>
         </div>
       </div>
 
       {/* Description */}
-      <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-4 flex-1">
+      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-4 flex-1">
         {startup.description}
       </p>
 
       {/* Meta chips */}
       <div className="flex flex-wrap gap-1.5 mb-4">
         {startup.location && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-gray-600 bg-gray-50 border border-gray-100 rounded-full px-2 py-0.5">
-            <MapPin className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
+            <MapPin className="w-3 h-3 text-slate-400" />
             {startup.location}
           </span>
         )}
         {startup.size && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-gray-600 bg-gray-50 border border-gray-100 rounded-full px-2 py-0.5">
-            <Users className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
+            <Users className="w-3 h-3 text-slate-400" />
             {startup.size}
           </span>
         )}
         {foundedYear && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-gray-600 bg-gray-50 border border-gray-100 rounded-full px-2 py-0.5">
-            <Calendar className="w-3 h-3" />
+          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
+            <Calendar className="w-3 h-3 text-slate-400" />
             {foundedYear}
           </span>
         )}
       </div>
 
       {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-gray-50 mt-auto">
-        <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${fundingClass}`}>
+      <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-auto">
+        <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${fundingClass}`}>
           {startup.fundingStage}
         </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#0A66C2] group-hover:gap-2 transition-all">
+        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-2 transition-all">
           <Briefcase className="w-3 h-3" />
           View roles →
         </span>
@@ -257,29 +257,29 @@ function FilterBar({
 
   return (
     <>
-      <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
         <div className="flex gap-2">
           {/* Search */}
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
             <input
               type="text"
               placeholder="Search startups by name or description…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0A66C2]/20 focus:border-[#0A66C2] transition-all"
+              className="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-slate-900 placeholder:text-slate-400"
             />
           </div>
 
           {/* Filter button */}
           <button
             onClick={openModal}
-            className="relative flex items-center gap-2 px-4 py-2.5 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 transition-all"
+            className="relative flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition-all active:scale-[0.98]"
           >
-            <Filter className="w-4 h-4" />
+            <Filter className="w-4 h-4 text-slate-500" />
             <span className="hidden sm:inline">Filters</span>
             {activeCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 text-[10px] font-bold bg-[#0A66C2] text-white rounded-full flex items-center justify-center">
+              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 text-[10px] font-bold bg-indigo-600 text-white rounded-full flex items-center justify-center">
                 {activeCount}
               </span>
             )}
@@ -288,19 +288,19 @@ function FilterBar({
 
         {/* Active tags */}
         {activeCount > 0 && (
-          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-gray-100">
+          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
             {active.industry && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0A66C2]/5 text-[#0A66C2] text-xs rounded-full border border-[#0A66C2]/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full border border-indigo-200/60 font-medium">
                 {active.industry}
-                <button onClick={() => removeTag('industry')} className="hover:text-red-500 transition-colors">
+                <button onClick={() => removeTag('industry')} className="hover:text-rose-600 transition-colors">
                   <X className="w-3 h-3" />
                 </button>
               </span>
             )}
             {active.location && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#0A66C2]/5 text-[#0A66C2] text-xs rounded-full border border-[#0A66C2]/20">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full border border-indigo-200/60 font-medium">
                 {COUNTRIES.find(c => c.name === active.location)?.flag} {active.location}
-                <button onClick={() => removeTag('location')} className="hover:text-red-500 transition-colors">
+                <button onClick={() => removeTag('location')} className="hover:text-rose-600 transition-colors">
                   <X className="w-3 h-3" />
                 </button>
               </span>
@@ -313,7 +313,7 @@ function FilterBar({
       <AnimatePresence>
         {showModal && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center bg-black/40 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center bg-slate-900/40 backdrop-blur-sm"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -328,41 +328,41 @@ function FilterBar({
             >
               {/* Handle */}
               <div className="flex justify-center pt-3 pb-1 sm:hidden">
-                <div className="w-10 h-1 bg-gray-200 rounded-full" />
+                <div className="w-10 h-1 bg-slate-200 rounded-full" />
               </div>
 
               {/* Header */}
-              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div>
-                  <h3 className="text-base font-semibold text-gray-900">Filter Startups</h3>
+                  <h3 className="text-base font-semibold text-slate-900">Filter Startups</h3>
                   {activeCount > 0 && (
-                    <p className="text-xs text-gray-500 mt-0.5">{activeCount} active filter{activeCount > 1 ? 's' : ''}</p>
+                    <p className="text-xs text-slate-500 mt-0.5">{activeCount} active filter{activeCount > 1 ? 's' : ''}</p>
                   )}
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-gray-100 rounded-xl transition-colors">
-                  <X className="w-5 h-5 text-gray-500" />
+                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
+                  <X className="w-5 h-5 text-slate-500" />
                 </button>
               </div>
 
               {/* Body */}
               <div className="flex-1 overflow-y-auto p-5 space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Industry</label>
                   <select
                     value={temp.industry}
                     onChange={(e) => setTemp({ ...temp, industry: e.target.value as IndustryType })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0A66C2]/20 focus:border-[#0A66C2] bg-white appearance-none"
+                    className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 bg-white appearance-none text-slate-900"
                   >
                     <option value="">All Industries</option>
                     {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Country</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-2">Country</label>
                   <select
                     value={temp.location}
                     onChange={(e) => setTemp({ ...temp, location: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#0A66C2]/20 focus:border-[#0A66C2] bg-white appearance-none"
+                    className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 bg-white appearance-none text-slate-900"
                   >
                     <option value="">🌍 All Countries</option>
                     {COUNTRIES.map((c) => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
@@ -371,17 +371,17 @@ function FilterBar({
               </div>
 
               {/* Footer */}
-              <div className="flex gap-3 p-5 border-t border-gray-100">
+              <div className="flex gap-3 p-5 border-t border-slate-100">
                 <button
                   onClick={clearFilters}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   <X className="w-4 h-4" /> Clear
                 </button>
                 <button
                   onClick={applyFilters}
                   disabled={!changed}
-                  className="flex-[2] flex items-center justify-center gap-2 py-3 bg-[#0A66C2] hover:bg-[#004182] disabled:bg-gray-200 disabled:cursor-not-allowed text-white rounded-xl text-sm font-medium transition-colors"
+                  className="flex-[2] flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-600/20 transition-all active:scale-[0.98]"
                 >
                   <Check className="w-4 h-4" /> Apply filters
                 </button>
@@ -407,11 +407,11 @@ function Pagination({
   });
 
   return (
-    <div className="flex items-center justify-center gap-2 pt-8 border-t border-gray-100">
+    <div className="flex items-center justify-center gap-2 pt-8 border-t border-slate-100">
       <button
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        className="p-2 rounded-xl border border-gray-200 text-gray-500 hover:border-[#0A66C2] hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -422,8 +422,8 @@ function Pagination({
           onClick={() => onChange(p)}
           className={`w-9 h-9 rounded-xl text-sm font-medium transition-all ${
             p === page
-              ? 'bg-[#0A66C2] text-white'
-              : 'border border-gray-200 text-gray-600 hover:border-[#0A66C2] hover:text-[#0A66C2]'
+              ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/20'
+              : 'border border-slate-200 text-slate-600 hover:border-indigo-600 hover:text-indigo-600'
           }`}
         >
           {p}
@@ -433,7 +433,7 @@ function Pagination({
       <button
         onClick={() => onChange(page + 1)}
         disabled={page === totalPages}
-        className="p-2 rounded-xl border border-gray-200 text-gray-500 hover:border-[#0A66C2] hover:text-[#0A66C2] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -461,7 +461,6 @@ export default function StartupsClient({
   const [error, setError]             = useState<string | null>(null);
 
   useEffect(() => {
-    // Skip initial fetch if we got SSR data and no filters yet
     if (initialStartups.length > 0 && page === 1 && Object.keys(filters).length === 0) {
       setLoading(false);
       return;
@@ -474,7 +473,7 @@ export default function StartupsClient({
     setLoading(true);
     setError(null);
     try {
-      const params = new URLSearchParams({ page: String(page), limit: '20' });
+      const params = new URLSearchParams({ page: String(page), limit: '18' });
       if (filters.industry)  params.append('industry',  filters.industry);
       if (filters.location)  params.append('location',  filters.location);
       if (filters.search)    params.append('search',    filters.search);
@@ -512,9 +511,9 @@ export default function StartupsClient({
 
       {/* Result count */}
       {!loading && !error && (
-        <p className="text-sm text-gray-500 mb-6">
+        <p className="text-sm text-slate-500 mb-6">
           {total > 0 ? (
-            <><span className="font-semibold text-gray-900">{total}</span> startup{total > 1 ? 's' : ''} found</>
+            <><span className="font-semibold text-slate-900">{total}</span> startup{total > 1 ? 's' : ''} found</>
           ) : 'No startups match your filters'}
         </p>
       )}
@@ -522,15 +521,15 @@ export default function StartupsClient({
       {/* Error */}
       {error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-red-50 flex items-center justify-center">
-            <Building2 className="w-7 h-7 text-red-400" />
+          <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center">
+            <Building2 className="w-7 h-7 text-rose-500" />
           </div>
           <div>
-            <p className="font-semibold text-gray-900 mb-1">Something went wrong</p>
-            <p className="text-sm text-gray-500 mb-4">{error}</p>
+            <p className="font-semibold text-slate-900 mb-1">Something went wrong</p>
+            <p className="text-sm text-slate-500 mb-4">{error}</p>
             <button
               onClick={fetchStartups}
-              className="px-5 py-2.5 bg-[#0A66C2] text-white text-sm font-medium rounded-xl hover:bg-[#004182] transition-colors"
+              className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-600/20 active:scale-[0.98]"
             >
               Try again
             </button>
@@ -538,7 +537,7 @@ export default function StartupsClient({
         </div>
       )}
 
-      {/* Grid */}
+      {/* Grid: Updated to 3 columns max (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`) */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
@@ -546,9 +545,9 @@ export default function StartupsClient({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
-            {Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)}
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
           </motion.div>
         ) : !error && startups.length > 0 ? (
           <motion.div
@@ -556,7 +555,7 @@ export default function StartupsClient({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
             {startups.map((startup, i) => (
               <motion.div
@@ -576,12 +575,12 @@ export default function StartupsClient({
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-24 text-center gap-4"
           >
-            <div className="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-gray-300" />
+            <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-center">
+              <Building2 className="w-8 h-8 text-slate-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 mb-1">No startups found</p>
-              <p className="text-sm text-gray-400">Try adjusting your filters</p>
+              <p className="font-semibold text-slate-900 mb-1">No startups found</p>
+              <p className="text-sm text-slate-500">Try adjusting your filters</p>
             </div>
           </motion.div>
         )}

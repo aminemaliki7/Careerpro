@@ -24,7 +24,6 @@ interface Job {
   benefits: string[];
 }
 
-
 const formatExperienceLevel = (level: string) => {
   const levels: Record<string, string> = {
     entry: 'Entry Level',
@@ -40,7 +39,7 @@ const formatDate = (dateString: string) => {
   const diffTime = Math.abs(now.getTime() - date.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
-  if (diffDays === 1) return "Today";
+  if (diffDays === 1) return 'Today';
   if (diffDays === 2) return 'Yesterday';
   if (diffDays <= 7) return `${diffDays} days ago`;
   if (diffDays <= 30) return `${Math.floor(diffDays / 7)} weeks ago`;
@@ -52,109 +51,90 @@ const formatDate = (dateString: string) => {
   });
 };
 
-
-// Icon Components (condensed for brevity)
+// Icons
 const MapPinIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25s-7.5-4.108-7.5-11.25a7.5 7.5 0 1 1 15 0Z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
   </svg>
 );
 
 const ClockIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
   </svg>
 );
 
 const CurrencyDollarIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v12m-3-9h6a1.5 1.5 0 0 1 0 3H9m0 0a1.5 1.5 0 0 0 0 3h6" />
   </svg>
 );
 
 const BuildingOfficeIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.25 21h19.5m-18-18v18m2.25-18v18m13.5-18v18M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21" />
   </svg>
 );
 
 const UserGroupIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 2.25a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
   </svg>
 );
 
 const CheckCircleIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
   </svg>
 );
 
 const GiftIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H4.5A1.5 1.5 0 0 1 3 19.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0-2.625V21m-9-13.5h18" />
   </svg>
 );
 
 const CodeBracketIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
   </svg>
 );
 
 const ShareIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
-  </svg>
-);
-
-const BookmarkIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0-10.628a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Zm0 10.628a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Z" />
   </svg>
 );
 
 const ArrowLeftIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-  </svg>
-);
-
-const GlobeIcon = ({ className }: { className: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 919-9" />
-  </svg>
-);
-
-const StarIcon = ({ className, filled = false }: { className: string; filled?: boolean }) => (
-  <svg className={className} fill={filled ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.563.563 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5Z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
   </svg>
 );
 
 const EnvelopeIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
   </svg>
 );
 
 const ArrowTopRightOnSquareIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
   </svg>
 );
 
 const SparklesIcon = ({ className }: { className: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z" />
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09Z" />
   </svg>
 );
 
 export default async function JobDetailsPage({ 
   params 
 }: { 
-  params: Promise<{ id: string , title: string  }> 
+  params: Promise<{ id: string; title: string }> 
 }) {
   const { id } = await params;
 
@@ -172,255 +152,258 @@ export default async function JobDetailsPage({
     .from('jobs')
     .select('id, title, company, location, type')
     .neq('id', id)
-    .limit(3);
-
-
+    .limit(4);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-4 flex-wrap">
-            <Link href="/jobs" className="hover:text-blue-600 flex items-center">
-              <ArrowLeftIcon className="h-4 w-4 mr-1" />
-              Back to jobs
+    <div className="min-h-screen bg-gray-50/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* COLUMN 1: Sticky Navigation & Quick Specs (Span 3) */}
+        <div className="hidden lg:block lg:col-span-3 sticky top-6 space-y-4">
+          <div className="bg-white rounded-2xl shadow-xs border border-gray-200/80 p-4 space-y-4 backdrop-blur-xs">
+            <Link 
+              href="/jobs" 
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-blue-600 transition-colors"
+            >
+              <ArrowLeftIcon className="h-3.5 w-3.5" />
+              Back to opportunities
             </Link>
-          </nav>
 
-         <div className="flex flex-col lg:flex-row justify-between items-start gap-4 lg:gap-6">
-  <div className="flex-1 space-y-2">
-    <div className="flex items-center mb-2 flex-wrap gap-2">
-      <h1 className="text-3xl font-bold text-gray-900 mr-3">{typedJob.title}</h1>
-      {typedJob.featured && <StarIcon className="h-6 w-6 text-yellow-400" filled />}
-    </div>
-    <div className="flex flex-wrap items-center gap-4 text-gray-600">
-      <div className="flex items-center">
-        <BuildingOfficeIcon className="h-5 w-5 mr-2 text-gray-400" />
-        <span className="font-medium">{typedJob.company}</span>
-      </div>
-      <div className="flex items-center">
-        <MapPinIcon className="h-5 w-5 mr-2 text-gray-400" />
-        <span>{typedJob.location}</span>
-      </div>
-      <div className="flex items-center">
-        <ClockIcon className="h-5 w-5 mr-2 text-gray-400" />
-        <span>{typedJob.type}</span>
-      </div>
-      {typedJob.salary_range && (
-        <div className="flex items-center">
-          <CurrencyDollarIcon className="h-5 w-5 mr-2 text-gray-400" />
-          <span>{typedJob.salary_range}</span>
-        </div>
-      )}
-    </div>
-    <div className="mt-2 text-sm text-gray-500">
-      Posted {formatDate(typedJob.posted_date)}
-    </div>
-  </div>
+            <div className="pt-3 border-t border-gray-100/80 space-y-3">
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Overview</h2>
+              
+              <div className="space-y-2.5 text-xs">
+                <div className="flex items-center gap-2 text-gray-600">
+                  <BuildingOfficeIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                  <span className="font-medium text-gray-900 truncate">{typedJob.company}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <MapPinIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                  <span className="truncate">{typedJob.location}</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <ClockIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                  <span>{typedJob.type}</span>
+                </div>
+                {typedJob.salary_range && (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <CurrencyDollarIcon className="h-4 w-4 text-gray-400 shrink-0" />
+                    <span>{typedJob.salary_range}</span>
+                  </div>
+                )}
+              </div>
+            </div>
 
-  {/* TOP RIGHT CORNER: Compact Action Buttons + Utility Icons */}
-  <div className="flex flex-wrap items-center justify-start lg:justify-end gap-3 w-full lg:w-auto">
-    {/* Easy Apply */}
-    {typedJob.contact_email && (
-      <EasyApplyButton 
-        jobTitle={typedJob.title}
-        company={typedJob.company}
-        jobId={typedJob.id}
-        requirements={typedJob.requirements}
-        description={typedJob.description}
-        contactEmail={typedJob.contact_email}
-        skills={typedJob.skills}
-        location={typedJob.location}
-        salaryRange={typedJob.salary_range}
-      />
-    )}
-
-    {/* Contact Direct */}
-    {typedJob.contact_email && (
-      <a
-        href={`mailto:${typedJob.contact_email}?subject=Inquiry: ${encodeURIComponent(typedJob.title)} position at ${encodeURIComponent(typedJob.company)}`}
-        className="px-4 py-2 bg-white text-gray-700 border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50 hover:text-gray-900 transition-all flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
-      >
-        <EnvelopeIcon className="h-4 w-4 text-gray-500" />
-        <span>Contact Direct</span>
-      </a>
-    )}
-
-    {/* External Apply Site */}
-    {typedJob.application_url && (
-      <a
-        href={typedJob.application_url}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors flex items-center justify-center gap-2 shadow-sm whitespace-nowrap"
-      >
-        <ArrowTopRightOnSquareIcon className="h-4 w-4" />
-        <span>Apply on Site</span>
-      </a>
-    )}
-
-    {/* Share & Bookmark Utilities */}
-    <div className="flex items-center gap-2">
-      <button 
-        className="p-2 text-gray-400 hover:text-gray-600 border rounded-lg hover:bg-gray-50"
-        aria-label="Share job"
-      >
-        <ShareIcon className="h-5 w-5" />
-      </button>
-      <BookmarkButton jobId={typedJob.id} />
-    </div>
-  </div>
-</div>
-
-    
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left / Main Content */}
-          <div className="lg:col-span-2 space-y-8 w-full">
-            {/* Job Tags */}
-            <div className="flex flex-wrap gap-2 w-full">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                {typedJob.type}
-              </span>
-              {typedJob.remote && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                  Remote Available
+            <div className="pt-3 border-t border-gray-100/80 space-y-2">
+              <h2 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Classifications</h2>
+              <div className="flex flex-wrap gap-1.5">
+                <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700">
+                  {typedJob.type}
                 </span>
-              )}
-              {typedJob.experience_level && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
-                  {formatExperienceLevel(typedJob.experience_level)}
-                </span>
-              )}
+                {typedJob.remote && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700">
+                    Remote
+                  </span>
+                )}
+                {typedJob.experience_level && (
+                  <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700">
+                    {formatExperienceLevel(typedJob.experience_level)}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* COLUMN 2: Main Job Details Content (Span 6) */}
+        <div className="lg:col-span-6 space-y-4">
+          {/* Main Title Card */}
+          <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <h1 className="text-xl font-bold text-gray-900 leading-snug">{typedJob.title}</h1>
+                <p className="text-xs font-semibold text-gray-500">{typedJob.company} • Posted {formatDate(typedJob.posted_date)}</p>
+              </div>
               {typedJob.featured && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 shrink-0">
                   Featured
                 </span>
               )}
-              {typedJob.salary_range && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-100 text-emerald-800">
-                  {typedJob.salary_range}
-                </span>
-              )}
             </div>
 
-            {/* Description */}
-            {typedJob.description && (
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <UserGroupIcon className="h-6 w-6 mr-2 text-blue-600" />
-                  Job Description
-                </h2>
-                <div className="prose max-w-none text-gray-700">
-                  <p className="whitespace-pre-line">{typedJob.description}</p>
-                </div>
-              </div>
-            )}
+            {/* Action Buttons Bar */}
+            <div className="pt-3 border-t border-gray-100/80 flex flex-wrap items-center gap-2">
+              {typedJob.contact_email && (
+                <EasyApplyButton 
+                  jobTitle={typedJob.title}
+                  company={typedJob.company}
+                  jobId={typedJob.id}
+                  requirements={typedJob.requirements}
+                  description={typedJob.description}
+                  contactEmail={typedJob.contact_email}
+                  skills={typedJob.skills}
+                  location={typedJob.location}
+                  salaryRange={typedJob.salary_range}
+                />
+              )}
 
-            {/* Requirements */}
-            {typedJob.requirements && typedJob.requirements.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <CheckCircleIcon className="h-6 w-6 mr-2 text-green-600" />
-                  Requirements
-                </h2>
-                <ul className="list-disc list-inside text-gray-700 space-y-2">
-                  {typedJob.requirements.map((req, index) => (
-                    <li key={index}>{req}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            
-            {/* Skills */}
-            {typedJob.skills && typedJob.skills.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <CodeBracketIcon className="h-6 w-6 mr-2 text-indigo-600" />
-                  Required Skills
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {typedJob.skills.map((skill, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+              {typedJob.contact_email && (
+                <a
+                  href={`mailto:${typedJob.contact_email}?subject=Inquiry: ${encodeURIComponent(typedJob.title)} position at ${encodeURIComponent(typedJob.company)}`}
+                  className="px-3 py-1.5 bg-white text-gray-700 border border-gray-200/80 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-all flex items-center gap-1.5 shadow-2xs"
+                >
+                  <EnvelopeIcon className="h-3.5 w-3.5 text-gray-400" />
+                  <span>Contact</span>
+                </a>
+              )}
 
-            {/* Benefits */}
-            {typedJob.benefits && typedJob.benefits.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <GiftIcon className="h-6 w-6 mr-2 text-pink-600" />
-                  Benefits
-                </h2>
-                <ul className="list-disc list-inside text-gray-700 space-y-2">
-                  {typedJob.benefits.map((benefit, index) => (
-                    <li key={index}>{benefit}</li>
-                  ))}
-                </ul>
+              {typedJob.application_url && (
+                <a
+                  href={typedJob.application_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 bg-emerald-600 text-white rounded-lg text-xs font-semibold hover:bg-emerald-700 transition-colors flex items-center gap-1.5 shadow-2xs"
+                >
+                  <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
+                  <span>Apply Site</span>
+                </a>
+              )}
+
+              <div className="flex items-center gap-1.5 ml-auto">
+                <button 
+                  className="p-1.5 text-gray-400 hover:text-gray-600 border border-gray-200/80 rounded-lg hover:bg-gray-50 transition-colors"
+                  aria-label="Share job"
+                >
+                  <ShareIcon className="h-3.5 w-3.5" />
+                </button>
+                <BookmarkButton jobId={typedJob.id} />
               </div>
-            )}
+            </div>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-6 w-full lg:sticky lg:top-24 lg:self-start">
-            {/* Related Jobs */}
-            {relatedJobs && relatedJobs.length > 0 && (
-              <div className="bg-white rounded-xl shadow-sm border p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Similar Jobs</h2>
-                <ul className="space-y-3">
-                  {relatedJobs.map(job => (
-                    <li key={job.id}>
-                      <Link 
-                        href={`/jobs/${job.id}/${createJobSlug(job.title)}`} 
-                        className="block hover:text-blue-600 transition-colors"
-                      >
-                        <div className="font-medium">{job.title}</div>
-                        <div className="text-sm text-gray-500">{job.company}</div>
-                        <div className="text-xs text-gray-400 mt-1">
-                          {job.location} • {job.type}
-                        </div>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+          {/* Job Description */}
+          {typedJob.description && (
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
+              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                <UserGroupIcon className="h-4 w-4 text-blue-600" />
+                Job Description
+              </h2>
+              <div className="text-xs text-gray-600 leading-relaxed whitespace-pre-line">
+                {typedJob.description}
               </div>
-            )}
+            </div>
+          )}
 
-            {/* Application Tips (NEW) */}
-            <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl shadow-sm border-2 border-purple-200 p-6">
-              <div className="flex items-center mb-3">
-                <SparklesIcon className="h-6 w-6 text-purple-600 mr-2" />
-                <h3 className="font-semibold text-gray-900">Application Tips</h3>
-              </div>
-              <ul className="space-y-2 text-sm text-gray-700">
-                <li className="flex items-start">
-                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Use AI Easy Apply for personalized emails</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Highlight relevant skills from the job description</span>
-                </li>
-                <li className="flex items-start">
-                  <CheckCircleIcon className="h-4 w-4 text-green-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Follow up within 3-5 business days</span>
-                </li>
+          {/* Requirements */}
+          {typedJob.requirements && typedJob.requirements.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
+              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                <CheckCircleIcon className="h-4 w-4 text-emerald-600" />
+                Key Requirements
+              </h2>
+              <ul className="space-y-2 text-xs text-gray-600">
+                {typedJob.requirements.map((req, index) => (
+                  <li key={index} className="flex items-start gap-2">
+                    <span className="block w-1 h-1 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
+                    <span>{req}</span>
+                  </li>
+                ))}
               </ul>
             </div>
+          )}
+
+          {/* Required Skills */}
+          {typedJob.skills && typedJob.skills.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
+              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                <CodeBracketIcon className="h-4 w-4 text-indigo-600" />
+                Required Tech & Skills
+              </h2>
+              <div className="flex flex-wrap gap-1.5">
+                {typedJob.skills.map((skill, index) => (
+                  <span
+                    key={index}
+                    className="px-2.5 py-1 bg-gray-50 border border-gray-200/80 rounded-lg text-xs font-medium text-gray-700"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Benefits */}
+          {typedJob.benefits && typedJob.benefits.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
+              <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
+                <GiftIcon className="h-4 w-4 text-purple-600" />
+                Perks & Benefits
+              </h2>
+              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-600">
+                {typedJob.benefits.map((benefit, index) => (
+                  <li key={index} className="flex items-center gap-2 bg-gray-50/60 p-2 rounded-lg border border-gray-100">
+                    <CheckCircleIcon className="h-3.5 w-3.5 text-purple-600 shrink-0" />
+                    <span className="truncate">{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* COLUMN 3: Sticky Spotlight & Recommendations (Span 3) */}
+        <div className="hidden lg:block lg:col-span-3 sticky top-6 space-y-4">
+          {/* Similar Jobs */}
+          {relatedJobs && relatedJobs.length > 0 && (
+            <div className="bg-white rounded-2xl border border-gray-200/80 p-4 shadow-xs space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-gray-100">
+                <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide">
+                  Similar Roles
+                </h2>
+                <Link href="/jobs" className="text-[11px] text-blue-600 hover:underline font-medium">
+                  View all
+                </Link>
+              </div>
+
+              <div className="space-y-2.5">
+                {relatedJobs.map(job => (
+                  <Link 
+                    key={job.id}
+                    href={`/jobs/${job.id}/${createJobSlug(job.title)}`} 
+                    className="block p-2.5 rounded-xl hover:bg-gray-50 transition-colors border border-transparent hover:border-gray-200/60 group"
+                  >
+                    <p className="text-xs font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">
+                      {job.title}
+                    </p>
+                    <p className="text-[11px] text-gray-500 truncate">{job.company}</p>
+                    <p className="text-[10px] text-gray-400 mt-1 truncate">
+                      {job.location} • {job.type}
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* AI Application Tips */}
+          <div className="bg-gradient-to-br from-purple-50/80 to-blue-50/80 rounded-2xl border border-purple-200/60 p-4 shadow-xs space-y-3">
+            <div className="flex items-center gap-1.5">
+              <SparklesIcon className="h-4 w-4 text-purple-600" />
+              <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Application Tip</h3>
+            </div>
+            <ul className="space-y-2 text-xs text-gray-600">
+              <li className="flex items-start gap-1.5">
+                <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                <span>Tailor your pitch using Easy Apply for customized emails.</span>
+              </li>
+              <li className="flex items-start gap-1.5">
+                <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                <span>Highlight matching technical stack keywords.</span>
+              </li>
+            </ul>
           </div>
         </div>
+
       </div>
     </div>
   );

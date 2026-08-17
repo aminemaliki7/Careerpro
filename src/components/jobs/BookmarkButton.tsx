@@ -2,12 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useUser, SignInButton } from '@clerk/nextjs';
-
-const BookmarkIcon = ({ className, filled = false }: { className: string; filled?: boolean }) => (
-  <svg className={className} fill={filled ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-  </svg>
-);
+import { Bookmark } from 'lucide-react';
 
 interface BookmarkButtonProps {
   jobId: string | number;
@@ -15,7 +10,7 @@ interface BookmarkButtonProps {
 
 export default function BookmarkButton({ jobId }: BookmarkButtonProps) {
   const { isSignedIn, isLoaded } = useUser();
-  
+
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checking, setChecking] = useState(true);
@@ -80,12 +75,13 @@ export default function BookmarkButton({ jobId }: BookmarkButtonProps) {
   // 1. Loading state before auth initializes or API check finishes
   if (!isLoaded || checking) {
     return (
-      <button 
+      <button
+        type="button"
         disabled
-        className="p-2 text-gray-300 border border-gray-200 rounded-lg bg-gray-50 cursor-not-allowed"
+        className="p-2.5 text-slate-300 border border-slate-200/80 rounded-lg bg-slate-50 cursor-not-allowed"
         aria-label="Loading bookmark status..."
       >
-        <BookmarkIcon className="h-5 w-5 animate-pulse" />
+        <Bookmark className="w-4 h-4 animate-pulse" />
       </button>
     );
   }
@@ -94,12 +90,13 @@ export default function BookmarkButton({ jobId }: BookmarkButtonProps) {
   if (!isSignedIn) {
     return (
       <SignInButton mode="modal">
-        <button 
-          className="p-2 text-gray-400 hover:text-gray-600 border border-gray-300 hover:bg-gray-50 rounded-lg transition-all"
+        <button
+          type="button"
+          className="p-2.5 text-slate-400 hover:text-slate-600 border border-slate-200/80 hover:border-slate-300 hover:bg-slate-50 rounded-lg transition-colors"
           aria-label="Sign in to save job"
           title="Sign in to save jobs"
         >
-          <BookmarkIcon className="h-5 w-5" />
+          <Bookmark className="w-4 h-4" />
         </button>
       </SignInButton>
     );
@@ -107,18 +104,21 @@ export default function BookmarkButton({ jobId }: BookmarkButtonProps) {
 
   // 3. Authenticated state: Standard bookmark toggle
   return (
-    <button 
+    <button
+      type="button"
       onClick={handleBookmarkClick}
       disabled={loading}
-      className={`p-2 border rounded-lg transition-all ${
+      className={`p-2.5 border rounded-lg transition-colors ${
         isSaved
-          ? 'bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100'
-          : 'text-gray-400 hover:text-gray-600 border-gray-300 hover:bg-gray-50'
-      } ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-      aria-label={isSaved ? "Remove from saved jobs" : "Save job"}
-      title={isSaved ? "Unsave job" : "Save job"}
+          ? 'bg-indigo-50 text-indigo-600 border-indigo-200 hover:bg-indigo-100/70'
+          : 'text-slate-400 hover:text-slate-600 border-slate-200/80 hover:border-slate-300 hover:bg-slate-50'
+      } ${loading ? 'opacity-50 cursor-not-allowed' : 'active:scale-[0.98]'}`}
+      aria-label={isSaved ? 'Remove from saved jobs' : 'Save job'}
+      title={isSaved ? 'Unsave job' : 'Save job'}
     >
-      <BookmarkIcon className="h-5 w-5" filled={isSaved} />
+      <Bookmark
+        className={`w-4 h-4 ${isSaved ? 'fill-indigo-600' : 'fill-none'}`}
+      />
     </button>
   );
 }

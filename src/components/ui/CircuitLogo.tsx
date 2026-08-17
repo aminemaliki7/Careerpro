@@ -10,7 +10,7 @@ interface HirelyLogoProps {
 export default function HirelyLogo({
   size      = 'md',
   className = '',
-  color     = '#0A66C2',
+  color     = '#4F46E5', // Updated from #0A66C2 to Indigo-600
 }: HirelyLogoProps) {
   const iconSize = { xs: 20, sm: 24, md: 28, lg: 36 }[size];
   const textSize = { xs: 'text-sm', sm: 'text-base', md: 'text-lg', lg: 'text-xl' }[size];
@@ -42,7 +42,7 @@ export default function HirelyLogo({
         className={`font-bold tracking-tight leading-none ${textSize}`}
         style={{ color }}
       >
-      
+  
       </span>
     </div>
   );

@@ -1,4 +1,3 @@
-// src/app/blog/page.tsx
 import { Metadata } from 'next';
 import BlogClient from './BlogClient';
 import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
