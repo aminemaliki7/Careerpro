@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { StartupSubmission, IndustryType, CompanySize, FundingStage } from '@/types/startup';
-import { Loader2, CheckCircle, Upload, X, Image as ImageIcon } from 'lucide-react';
+import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
 const industries: IndustryType[] = [
   'AI/ML', 'FinTech', 'HealthTech', 'EdTech', 'E-commerce',
@@ -47,14 +47,19 @@ export default function StartupSubmissionForm() {
     }));
   };
 
+  const validateEmail = (email: string): boolean => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email.trim());
+  };
+
   const handleLogoUpload = (file: File) => {
     if (!file.type.startsWith('image/')) {
-      setError('Please upload an image file (PNG, JPG, SVG)');
+      setError('Please upload a valid image file (PNG, JPG, SVG).');
       return;
     }
 
     if (file.size > 5 * 1024 * 1024) {
-      setError('File size must be less than 5MB');
+      setError('File size exceeds the 5MB limit.');
       return;
     }
 
@@ -97,15 +102,20 @@ export default function StartupSubmissionForm() {
     setLoading(true);
     setError(null);
 
-    // Logo is required
+    // Explicit Professional Email Validation
+    if (!validateEmail(formData.contactEmail)) {
+      setError('Please provide a valid business email address (e.g., name@company.com).');
+      setLoading(false);
+      return;
+    }
+
     if (!logoFile) {
-      setError('Please upload a company logo');
+      setError('Please attach a company logo before submitting.');
       setLoading(false);
       return;
     }
 
     try {
-      // Upload logo
       let logoUrl = formData.logoUrl;
       const formDataUpload = new FormData();
       formDataUpload.append('logo', logoFile);
@@ -116,28 +126,31 @@ export default function StartupSubmissionForm() {
       });
 
       if (!uploadResponse.ok) {
-        throw new Error('Logo upload failed. Please try again.');
+        throw new Error('Logo upload failed. Please verify the file and try again.');
       }
 
       const uploadData = await uploadResponse.json();
       logoUrl = uploadData.url;
 
-      // Submit startup data
       const response = await fetch('/api/startups/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formData, logoUrl })
+        body: JSON.stringify({ 
+          ...formData, 
+          contactEmail: formData.contactEmail.trim(),
+          logoUrl 
+        })
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to submit startup');
+        throw new Error(data.error || 'Unable to complete submission. Please try again.');
       }
 
       setSuccess(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -147,6 +160,7 @@ export default function StartupSubmissionForm() {
     setSuccess(false);
     setLogoFile(null);
     setLogoPreview(null);
+    setError(null);
     setFormData({
       name: '', description: '', fullDescription: '',
       industry: 'AI/ML', size: '1-10', fundingStage: 'Seed',
@@ -157,20 +171,20 @@ export default function StartupSubmissionForm() {
 
   if (success) {
     return (
-      <div className="max-w-2xl mx-auto text-center py-8 sm:py-12">
-        <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-6 sm:p-10 shadow-lg">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-            <CheckCircle className="w-10 h-10 sm:w-12 sm:h-12 text-green-600" />
+      <div className="max-w-md mx-auto text-center py-6">
+        <div className="bg-gradient-to-br from-indigo-50/50 to-emerald-50/30 border border-emerald-200/80 rounded-2xl p-6 shadow-sm">
+          <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <CheckCircle className="w-6 h-6 text-emerald-600" />
           </div>
-          <h3 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 mb-2 sm:mb-3">
-            Submission Successful!
+          <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+            Submission Received
           </h3>
-          <p className="text-base text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto">
-            Thank you for submitting your startup. We&lsquo;ll review it and get back to you within 2-3 business days.
+          <p className="text-xs text-slate-600 mb-6 max-w-xs mx-auto leading-relaxed">
+            Thank you for submitting your startup. Our team will review your details and contact you via <span className="font-semibold text-slate-800">{formData.contactEmail}</span> within 2–3 business days.
           </p>
           <button
             onClick={resetForm}
-            className="px-6 py-3 sm:px-8 sm:py-3.5 bg-[#0A66C2] hover:bg-[#004182] text-white rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-[#0A66C2]/30 hover:scale-[1.02]"
+            className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs rounded-lg font-semibold transition-all duration-200 shadow-md shadow-indigo-600/20"
           >
             Submit Another Startup
           </button>
@@ -180,33 +194,31 @@ export default function StartupSubmissionForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-5 max-w-xl mx-auto text-xs">
       {error && (
-        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-3 sm:p-4 flex items-start gap-3">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z" clipRule="evenodd" />
-          </svg>
-          <p className="text-red-600 text-sm font-medium flex-1">{error}</p>
-          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600">
+        <div className="bg-red-50 border border-red-200/80 rounded-xl p-3 flex items-start gap-2.5 shadow-sm">
+          <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+          <p className="text-red-700 text-xs font-medium flex-1 leading-snug">{error}</p>
+          <button type="button" onClick={() => setError(null)} className="text-red-400 hover:text-red-600">
             <X className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Company Information */}
-      <div className="space-y-5">
-        <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b-2 border-gray-200">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
+      <div className="space-y-3.5">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
+          <div className="w-6 h-6 bg-indigo-50 rounded-md flex items-center justify-center border border-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 text-indigo-600">
               <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3.75h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
             </svg>
           </div>
-          <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900">Company Information</h3>
+          <h3 className="text-xs font-bold text-slate-900 tracking-wide uppercase">Company Information</h3>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+            <label className="block font-semibold text-slate-700 mb-1">
               Company Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -215,33 +227,33 @@ export default function StartupSubmissionForm() {
               value={formData.name}
               onChange={handleChange}
               required
-              placeholder="Enter your company name"
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+              placeholder="e.g., Acme Technologies"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all outline-none bg-white text-slate-900"
             />
           </div>
 
-          {/* Logo Upload — NOW REQUIRED */}
+          {/* Logo Upload */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+            <label className="block font-semibold text-slate-700 mb-1">
               Company Logo <span className="text-red-500">*</span>
             </label>
 
             {logoPreview ? (
-              <div className="relative bg-gradient-to-br from-gray-50 to-gray-100 border-2 border-gray-200 rounded-xl p-4 sm:p-6 flex items-center gap-4 sm:gap-6">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-xl border-2 border-gray-200 flex items-center justify-center overflow-hidden shadow-sm">
+              <div className="relative bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex items-center gap-3">
+                <div className="w-12 h-12 bg-white rounded-md border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
                   <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
                 </div>
-                <div className="flex-1">
-                  <p className="font-semibold text-gray-900 mb-1 text-sm">{logoFile?.name}</p>
-                  <p className="text-xs text-gray-500">{logoFile && (logoFile.size / 1024).toFixed(1)} KB</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-slate-900 truncate text-xs">{logoFile?.name}</p>
+                  <p className="text-[10px] text-slate-500">{logoFile && (logoFile.size / 1024).toFixed(1)} KB</p>
                 </div>
                 <button
                   type="button"
                   onClick={removeLogo}
-                  className="p-1.5 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg transition-colors duration-300"
+                  className="p-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-md transition-colors"
                   title="Remove logo"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
@@ -249,39 +261,37 @@ export default function StartupSubmissionForm() {
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
-                className={`relative border-2 border-dashed rounded-xl p-6 sm:p-8 text-center transition-all duration-300 cursor-pointer ${
+                className={`relative border border-dashed rounded-lg p-3.5 text-center transition-all cursor-pointer ${
                   isDragging
-                    ? 'border-[#0A66C2] bg-[#0A66C2]/5 scale-[1.02]'
-                    : 'border-gray-300 hover:border-[#0A66C2] hover:bg-gray-50'
+                    ? 'border-indigo-600 bg-indigo-50/50'
+                    : 'border-slate-300 hover:border-indigo-600 hover:bg-slate-50/50'
                 }`}
               >
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/png, image/jpeg, image/webp, image/svg+xml"
                   onChange={handleFileInput}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
-                <div className="pointer-events-none">
-                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-[#0A66C2]/10 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                    {isDragging ? (
-                      <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A66C2] animate-bounce" />
-                    ) : (
-                      <ImageIcon className="w-6 h-6 sm:w-8 sm:h-8 text-[#0A66C2]" />
-                    )}
-                  </div>
-                  <p className="text-gray-700 font-medium mb-1 text-sm">
-                    {isDragging ? 'Drop your logo here' : 'Click to upload or drag and drop'}
-                  </p>
-                  <p className="text-xs text-gray-500">PNG, JPG, SVG up to 5MB</p>
+                <div className="pointer-events-none flex items-center justify-center gap-2">
+                  {isDragging ? (
+                    <Upload className="w-4 h-4 text-indigo-600 animate-bounce" />
+                  ) : (
+                    <ImageIcon className="w-4 h-4 text-indigo-600" />
+                  )}
+                  <span className="text-slate-700 font-medium">
+                    {isDragging ? 'Drop logo image here' : 'Click or drop logo'}
+                  </span>
+                  <span className="text-[10px] text-slate-400">(PNG, JPG, SVG max 5MB)</span>
                 </div>
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-              Short Description <span className="text-red-500">*</span>
-              <span className="text-gray-400 font-normal ml-1 text-xs sm:text-sm">(max 150 characters)</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Short Pitch / Tagline <span className="text-red-500">*</span>
+              <span className="text-slate-400 font-normal ml-1 text-[10px]">(max 150 chars)</span>
             </label>
             <input
               type="text"
@@ -290,29 +300,29 @@ export default function StartupSubmissionForm() {
               onChange={handleChange}
               maxLength={150}
               required
-              placeholder="Brief tagline about your company"
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+              placeholder="A brief one-sentence summary of what your company does"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all outline-none bg-white text-slate-900"
             />
-            <p className="text-xs text-gray-500 mt-1 text-right">{formData.description.length}/150</p>
+            <p className="text-[10px] text-slate-400 mt-0.5 text-right">{formData.description.length}/150</p>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-              Full Description <span className="text-gray-400 font-normal">(Optional)</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Full Overview <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <textarea
               name="fullDescription"
               value={formData.fullDescription}
               onChange={handleChange}
               rows={3}
-              placeholder="Tell us more about your company, mission, and what makes you unique..."
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none resize-none"
+              placeholder="Detail your product offering, key achievements, or mission..."
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all outline-none resize-none bg-white text-slate-900"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Industry <span className="text-red-500">*</span>
               </label>
               <select
@@ -320,29 +330,29 @@ export default function StartupSubmissionForm() {
                 value={formData.industry}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
+                className="w-full px-2.5 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900 cursor-pointer"
               >
                 {industries.map(ind => <option key={ind} value={ind}>{ind}</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                Company Size <span className="text-red-500">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Team Size <span className="text-red-500">*</span>
               </label>
               <select
                 name="size"
                 value={formData.size}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
+                className="w-full px-2.5 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900 cursor-pointer"
               >
-                {companySizes.map(s => <option key={s} value={s}>{s}</option>)}
+                {companySizes.map(s => <option key={s} value={s}>{s} employees</option>)}
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Funding Stage <span className="text-red-500">*</span>
               </label>
               <select
@@ -350,16 +360,16 @@ export default function StartupSubmissionForm() {
                 value={formData.fundingStage}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none appearance-none bg-white cursor-pointer"
+                className="w-full px-2.5 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900 cursor-pointer"
               >
                 {fundingStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
               </select>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+              <label className="block font-semibold text-slate-700 mb-1">
                 Founded Date <span className="text-red-500">*</span>
               </label>
               <input
@@ -368,13 +378,13 @@ export default function StartupSubmissionForm() {
                 value={formData.foundedDate}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-                Location <span className="text-red-500">*</span>
+              <label className="block font-semibold text-slate-700 mb-1">
+                Headquarters Location <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -383,13 +393,13 @@ export default function StartupSubmissionForm() {
                 onChange={handleChange}
                 placeholder="e.g., San Francisco, CA"
                 required
-                className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
+            <label className="block font-semibold text-slate-700 mb-1">
               Website URL <span className="text-red-500">*</span>
             </label>
             <input
@@ -399,51 +409,53 @@ export default function StartupSubmissionForm() {
               onChange={handleChange}
               placeholder="https://yourcompany.com"
               required
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
             />
           </div>
         </div>
       </div>
 
-      {/* Contact Information */}
-      <div className="space-y-5 pt-1">
-        <div className="flex items-center gap-3 pb-3 sm:pb-4 border-b-2 border-gray-200">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-[#0A66C2]/10 rounded-lg flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-4 h-4 sm:w-5 sm:h-5 text-[#0A66C2]">
+      {/* Primary Point of Contact Section */}
+      <div className="space-y-3.5 pt-2">
+        <div className="flex items-center gap-2 pb-2 border-b border-slate-200">
+          <div className="w-6 h-6 bg-indigo-50 rounded-md flex items-center justify-center border border-indigo-100">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 text-indigo-600">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
             </svg>
           </div>
-          <h3 className="text-lg sm:text-xl font-display font-semibold text-gray-900">Contact Information</h3>
+          <h3 className="text-xs font-bold text-slate-900 tracking-wide uppercase">Contact Details</h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-              Contact Name <span className="text-red-500">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Contact Person <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="contactName"
               value={formData.contactName}
               onChange={handleChange}
-              placeholder="Your full name"
+              placeholder="e.g., Sarah Jenkins"
               required
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-1 sm:mb-2">
-              Contact Email <span className="text-red-500">*</span>
+            <label className="block font-semibold text-slate-700 mb-1">
+              Official Contact Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
               name="contactEmail"
               value={formData.contactEmail}
               onChange={handleChange}
-              placeholder="you@company.com"
+              placeholder="sarah@yourcompany.com"
               required
-              className="w-full px-4 py-2.5 sm:py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-[#0A66C2] focus:border-[#0A66C2] transition-all duration-300 outline-none"
+              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+              title="Please enter a valid email address (e.g., name@domain.com)"
+              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
             />
           </div>
         </div>
@@ -452,17 +464,17 @@ export default function StartupSubmissionForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full py-3.5 sm:py-4 bg-[#0A66C2] hover:bg-[#004182] disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 hover:shadow-xl hover:shadow-[#0A66C2]/30 disabled:shadow-none flex items-center justify-center gap-3 group"
+        className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-semibold text-xs transition-all duration-200 shadow-md shadow-indigo-600/20 disabled:shadow-none flex items-center justify-center gap-2 group mt-4"
       >
         {loading ? (
           <>
-            <Loader2 className="w-5 h-5 sm:w-6 sm:h-6 animate-spin" />
-            Submitting Your Startup...
+            <Loader2 className="w-4 h-4 animate-spin" />
+            Submitting Startup Profile...
           </>
         ) : (
           <>
             <span>Submit Startup</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </>

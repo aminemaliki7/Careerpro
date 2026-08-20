@@ -1,95 +1,31 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import {
-  Briefcase,
-  Map,
-  FileText,
-  Mic,
-  Brain,
-  Server,
-  Layout,
-  Cloud,
-  TestTube,
-  TrendingUp,
-  Network,
-  Building,
-  Plus,
   ArrowRight,
-  RefreshCw,
-  Globe,
-  Layers,
+  Check,
   CheckCircle2,
+  FileText,
+  Sparkles,
+  Target,
+  AlertCircle,
+  Code2,
+  Database,
+  Cloud,
+  Send,
+  Loader2,
+  Users,
+  Building2,
+  UserCheck,
+  BriefcaseBusiness,
 } from 'lucide-react';
 
-// ─── Hirely Logo Component ────────────────────────────────────────────────────
-
-interface HirelyLogoProps {
-  size?: 'xs' | 'sm' | 'md' | 'lg';
-  className?: string;
-  showWordmark?: boolean;
-}
-
-function HirelyLogo({
-  size = 'md',
-  className = '',
-  showWordmark = true,
-}: HirelyLogoProps) {
-  const iconSize = {
-    xs: 20,
-    sm: 24,
-    md: 28,
-    lg: 36,
-  }[size];
-
-  const textSize = {
-    xs: 'text-sm',
-    sm: 'text-base',
-    md: 'text-lg',
-    lg: 'text-xl',
-  }[size];
-
-  const hex =
-    '-14.43,-8.33 0,-16.67 14.43,-8.33 14.43,8.33 0,16.67 -14.43,8.33';
-
-  return (
-    <div
-      className={`inline-flex items-center gap-2 select-none ${className}`}
-    >
-      <svg
-        width={iconSize}
-        height={iconSize}
-        viewBox="-10 -10 120 120"
-        fill="currentColor"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-        className="shrink-0 transition-colors"
-      >
-        <g transform="translate(50,50)">
-          <polygon points={hex} transform="translate(0,-28.87)" />
-          <polygon points={hex} transform="translate(25,-14.43)" />
-          <polygon points={hex} transform="translate(25,14.43)" />
-          <polygon points={hex} transform="translate(0,28.87)" />
-          <polygon points={hex} transform="translate(-25,14.43)" />
-          <polygon points={hex} transform="translate(-25,-14.43)" />
-        </g>
-      </svg>
-
-      {showWordmark && (
-        <span
-          className={`font-bold tracking-tight leading-none text-current ${textSize}`}
-        >
-          Hirely
-        </span>
-      )}
-    </div>
-  );
-}
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Types
+// ─────────────────────────────────────────────────────────────────────────────
 
 export interface HeroStats {
   jobCount: number;
@@ -97,553 +33,916 @@ export interface HeroStats {
   postCount: number;
 }
 
-type Choice = {
-  label: string;
-  icon: React.ReactNode;
-  url: string;
-};
+type DemoRole = 'candidate' | 'recruiter';
+type DemoStep = number;
 
-type FlowKey = 'jobs' | 'companies' | 'roadmaps' | 'resources';
+// ─────────────────────────────────────────────────────────────────────────────
+// Small UI Components
+// ─────────────────────────────────────────────────────────────────────────────
 
-type Flow = {
-  userMsg: string;
-  q2: string;
-  choices2: Choice[];
-  finalMsg: string;
-  ctaLabel: string;
-  ctaUrl: string;
-};
-
-type Message =
-  | {
-      type: 'bot';
-      id: string;
-      text: string;
-    }
-  | {
-      type: 'user';
-      id: string;
-      text: string;
-    }
-  | {
-      type: 'choices1';
-      id: string;
-    }
-  | {
-      type: 'choices2';
-      id: string;
-      choices: Choice[];
-    }
-  | {
-      type: 'typing';
-      id: string;
-    }
-  | {
-      type: 'cta';
-      id: string;
-      label: string;
-      url: string;
-    };
-
-// ─── Flow definitions ─────────────────────────────────────────────────────────
-
-const flows: Record<FlowKey, Flow> = {
-  jobs: {
-    userMsg: 'Find open tech jobs',
-    q2: 'Select your specialization:',
-    choices2: [
-      {
-        label: 'Software Engineering',
-        icon: <Layout className="w-3.5 h-3.5" />,
-        url: '/jobs?skill=software',
-      },
-      {
-        label: 'DevOps & Cloud',
-        icon: <Cloud className="w-3.5 h-3.5" />,
-        url: '/jobs?skill=devops',
-      },
-      {
-        label: 'QA & Testing',
-        icon: <TestTube className="w-3.5 h-3.5" />,
-        url: '/jobs?skill=qa',
-      },
-      {
-        label: 'Backend / Systems',
-        icon: <Server className="w-3.5 h-3.5" />,
-        url: '/jobs?skill=backend',
-      },
-      {
-        label: 'Remote / Hybrid',
-        icon: <Globe className="w-3.5 h-3.5" />,
-        url: '/jobs?remote=true',
-      },
-    ],
-    finalMsg:
-      'Explore open roles and optimize your application match score before applying.',
-    ctaLabel: 'Browse Tech Jobs',
-    ctaUrl: '/jobs',
-  },
-
-  companies: {
-    userMsg: 'Discover tech companies',
-    q2: 'What are you looking for in a company?',
-    choices2: [
-      {
-        label: 'Hiring Tech Companies',
-        icon: <Briefcase className="w-3.5 h-3.5" />,
-        url: '/startups',
-      },
-      {
-        label: 'Directory Index',
-        icon: <Building className="w-3.5 h-3.5" />,
-        url: '/startups',
-      },
-      {
-        label: 'Submit a Company',
-        icon: <Plus className="w-3.5 h-3.5" />,
-        url: '/startups/submit',
-      },
-    ],
-    finalMsg:
-      'Direct access to top tech hubs, engineering teams, and tech employers.',
-    ctaLabel: 'Explore Companies',
-    ctaUrl: '/startups',
-  },
-
-  roadmaps: {
-    userMsg: 'View career roadmaps',
-    q2: 'Which path are you targeting?',
-    choices2: [
-      {
-        label: 'AI Engineer',
-        icon: <Brain className="w-3.5 h-3.5" />,
-        url: '/roadmaps/ai-engineer',
-      },
-      {
-        label: 'DevOps Engineer',
-        icon: <Cloud className="w-3.5 h-3.5" />,
-        url: '/roadmaps/devops-engineer',
-      },
-      {
-        label: 'QA Engineer',
-        icon: <TestTube className="w-3.5 h-3.5" />,
-        url: '/roadmaps/qa-engineer',
-      },
-      {
-        label: 'Frontend System',
-        icon: <Layout className="w-3.5 h-3.5" />,
-        url: '/roadmaps/frontend-developer',
-      },
-      {
-        label: 'Full-Stack Hybrid',
-        icon: <Layers className="w-3.5 h-3.5" />,
-        url: '/roadmaps/fullstack-devops-qa-hybrid',
-      },
-    ],
-    finalMsg:
-      'Step-by-step technical requirements tailored to what top employers expect.',
-    ctaLabel: 'Open Roadmaps',
-    ctaUrl: '/roadmaps',
-  },
-
-  resources: {
-    userMsg: 'Explore career resources',
-    q2: 'Select a content type:',
-    choices2: [
-      {
-        label: 'Articles & Guides',
-        icon: <FileText className="w-3.5 h-3.5" />,
-        url: '/blog',
-      },
-      {
-        label: 'Tech Podcast',
-        icon: <Mic className="w-3.5 h-3.5" />,
-        url: '/podcast',
-      },
-      {
-        label: 'Market Insights',
-        icon: <TrendingUp className="w-3.5 h-3.5" />,
-        url: '/blog?tag=job-market',
-      },
-      {
-        label: 'System Architecture',
-        icon: <Network className="w-3.5 h-3.5" />,
-        url: '/blog?tag=architecture',
-      },
-    ],
-    finalMsg:
-      'In-depth engineering analyses, podcast conversations, and market reports.',
-    ctaLabel: 'View Resources',
-    ctaUrl: '/blog',
-  },
-};
-
-const PILLAR_CHOICES: {
-  key: FlowKey;
-  label: string;
-  icon: React.ReactNode;
-}[] = [
-  {
-    key: 'jobs',
-    label: 'Find Jobs',
-    icon: <Briefcase className="w-3.5 h-3.5" />,
-  },
-  {
-    key: 'companies',
-    label: 'Discover Companies',
-    icon: <Building className="w-3.5 h-3.5" />,
-  },
-  {
-    key: 'roadmaps',
-    label: 'Career Roadmaps',
-    icon: <Map className="w-3.5 h-3.5" />,
-  },
-  {
-    key: 'resources',
-    label: 'Resources',
-    icon: <FileText className="w-3.5 h-3.5" />,
-  },
-];
-
-// ─── Typing Indicator ─────────────────────────────────────────────────────────
-
-function TypingIndicator() {
-  return (
-    <div className="flex items-center gap-2 pl-8">
-      <div className="flex gap-1 items-center">
-        {[0, 1, 2].map((i) => (
-          <motion.span
-            key={i}
-            className="w-1.5 h-1.5 rounded-full bg-indigo-400 dark:bg-indigo-400"
-            animate={{
-              opacity: [0.3, 1, 0.3],
-            }}
-            transition={{
-              duration: 1,
-              repeat: Infinity,
-              delay: i * 0.2,
-            }}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Bot Bubble ───────────────────────────────────────────────────────────────
-
-function BotBubble({ text }: { text: string }) {
-  return (
-    <div className="flex items-start gap-2">
-      <div className="flex-shrink-0 mt-0.5 text-indigo-500 dark:text-indigo-400">
-        <HirelyLogo
-          size="xs"
-          showWordmark={false}
-        />
-      </div>
-
-      <div className="bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl rounded-tl-sm px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-200 leading-relaxed max-w-[88%] whitespace-pre-line">
-        {text}
-      </div>
-    </div>
-  );
-}
-
-// ─── User Bubble ──────────────────────────────────────────────────────────────
-
-function UserBubble({ text }: { text: string }) {
-  return (
-    <div className="flex justify-end">
-      <div className="bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/60 text-indigo-700 dark:text-indigo-300 rounded-xl rounded-tr-sm px-3.5 py-2.5 text-sm leading-relaxed max-w-[85%] font-medium">
-        {text}
-      </div>
-    </div>
-  );
-}
-
-// ─── Choice Button ────────────────────────────────────────────────────────────
-
-function ChoiceButton({
+function Skill({
   icon,
-  label,
-  selected,
-  disabled,
-  onClick,
+  name,
+  status,
 }: {
-  icon: React.ReactNode;
-  label: string;
-  selected?: boolean;
-  disabled?: boolean;
-  onClick: () => void;
+  icon?: React.ReactNode;
+  name: string;
+  status: 'match' | 'partial' | 'missing';
 }) {
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all duration-150
-        ${
-          selected
-            ? 'bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-indigo-950/40 dark:border-indigo-800 dark:text-indigo-300'
-            : disabled
-              ? 'border-slate-200 dark:border-slate-800 text-slate-400 dark:text-slate-600 cursor-not-allowed'
-              : 'border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:border-indigo-200 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50/70 dark:hover:bg-indigo-950/20 cursor-pointer'
-        }`}
-    >
-      {icon}
-      {label}
-    </button>
+    <div className="flex items-center justify-between py-2">
+      <div className="flex items-center gap-2.5">
+        {icon || (
+          <div className="w-5 h-5 rounded-md bg-slate-100 flex items-center justify-center">
+            <Code2 className="w-3 h-3 text-slate-500" />
+          </div>
+        )}
+
+        <span className="text-xs font-medium text-slate-700">
+          {name}
+        </span>
+      </div>
+
+      {status === 'match' && (
+        <div className="flex items-center gap-1 text-[10px] font-semibold text-emerald-600">
+          <Check className="w-3 h-3" />
+          Match
+        </div>
+      )}
+
+      {status === 'partial' && (
+        <div className="flex items-center gap-1 text-[10px] font-semibold text-amber-600">
+          <span className="w-3 h-3 rounded-full border-2 border-amber-400" />
+          Partial
+        </div>
+      )}
+
+      {status === 'missing' && (
+        <div className="flex items-center gap-1 text-[10px] font-semibold text-slate-400">
+          <AlertCircle className="w-3 h-3" />
+          Missing
+        </div>
+      )}
+    </div>
   );
 }
 
-// ─── Chatbot ──────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Candidate — Step 0
+// ─────────────────────────────────────────────────────────────────────────────
 
-function ChatHero() {
-  const router = useRouter();
-  const bodyRef = useRef<HTMLDivElement>(null);
-
-  const INITIAL: Message[] = [
-    {
-      type: 'bot',
-      id: 'intro',
-      text: '👋 Hi! I can help you:\n• Find the right tech job\n• Discover companies\n• Generate an AI application\n\nWhat would you like to do?',
-    },
-    {
-      type: 'choices1',
-      id: 'c1',
-    },
-  ];
-
-  const [messages, setMessages] = useState<Message[]>(INITIAL);
-  const [step, setStep] = useState<'start' | 'step2' | 'done'>('start');
-  const [selectedKey, setSelectedKey] = useState<FlowKey | null>(null);
-  const [selectedChoice2, setSelected2] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (bodyRef.current) {
-      bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
-    }
-  }, [messages]);
-
-  function push(msgs: Message[], delay = 0) {
-    setTimeout(() => {
-      setMessages((p) => [...p, ...msgs]);
-    }, delay);
-  }
-
-  function handlePillarPick(key: FlowKey) {
-    if (step !== 'start') return;
-
-    setSelectedKey(key);
-
-    const flow = flows[key];
-
-    push([
-      {
-        type: 'user',
-        id: 'u1',
-        text: flow.userMsg,
-      },
-    ]);
-
-    push(
-      [
-        {
-          type: 'typing',
-          id: 'typing1',
-        },
-      ],
-      200
-    );
-
-    setTimeout(() => {
-      setMessages((p) => [
-        ...p.filter((m) => m.id !== 'typing1'),
-        {
-          type: 'bot',
-          id: 'q2',
-          text: flow.q2,
-        },
-        {
-          type: 'choices2',
-          id: 'c2',
-          choices: flow.choices2,
-        },
-      ]);
-
-      setStep('step2');
-    }, 600);
-  }
-
-  function handleChoice2Pick(choice: Choice) {
-    if (step !== 'step2') return;
-
-    setSelected2(choice.label);
-
-    const flow = flows[selectedKey!];
-
-    push([
-      {
-        type: 'user',
-        id: 'u2',
-        text: choice.label,
-      },
-    ]);
-
-    push(
-      [
-        {
-          type: 'typing',
-          id: 'typing2',
-        },
-      ],
-      200
-    );
-
-    setTimeout(() => {
-      setMessages((p) => [
-        ...p.filter((m) => m.id !== 'typing2'),
-        {
-          type: 'bot',
-          id: 'final',
-          text: flow.finalMsg,
-        },
-        {
-          type: 'cta',
-          id: 'cta',
-          label: flow.ctaLabel,
-          url: choice.url,
-        },
-      ]);
-
-      setStep('done');
-    }, 600);
-  }
-
-  function restart() {
-    setMessages(INITIAL);
-    setStep('start');
-    setSelectedKey(null);
-    setSelected2(null);
-  }
-
+function CandidateJobScreen() {
   return (
-    <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden shadow-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200/80 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="h-full"
+    >
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            Open position
+          </div>
 
-          <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 tracking-tight">
-            AI Assistant
+          <h3 className="text-base font-bold text-slate-900">
+            Senior Backend Engineer
+          </h3>
+
+          <p className="text-xs text-slate-500 mt-1">
+            Fintech · Casablanca · Hybrid
+          </p>
+        </div>
+
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <Database className="w-5 h-5 text-indigo-600" />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-5">
+        {['Java', 'Spring Boot', 'PostgreSQL', 'Docker'].map((skill) => (
+          <span
+            key={skill}
+            className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-[10px] font-medium text-slate-600"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Target className="w-4 h-4 text-indigo-600" />
+
+          <span className="text-xs font-semibold text-indigo-900">
+            Hirely ATS Match
           </span>
         </div>
 
-        <button
-          onClick={restart}
-          className="flex items-center gap-1 text-[11px] font-medium text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-colors"
-          aria-label="Restart conversation"
+        <p className="text-[11px] leading-relaxed text-indigo-700/80">
+          See how well your profile matches this job before you apply.
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Candidate — Step 1
+// ─────────────────────────────────────────────────────────────────────────────
+
+function CandidateAnalysisScreen() {
+  const skills = [
+    { name: 'Java', status: 'match' as const },
+    { name: 'Spring Boot', status: 'match' as const },
+    { name: 'PostgreSQL', status: 'match' as const },
+    { name: 'Docker', status: 'partial' as const },
+    { name: 'Kubernetes', status: 'missing' as const },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="h-full"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <FileText className="w-5 h-5 text-indigo-600" />
+        </div>
+
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Candidate profile
+          </div>
+
+          <div className="text-sm font-bold text-slate-900">
+            CV analyzed
+          </div>
+        </div>
+
+        <motion.div
+          className="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-indigo-600"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
         >
-          <RefreshCw className="w-3 h-3" />
-          Reset
-        </button>
+          <Sparkles className="w-3.5 h-3.5" />
+          AI analyzing
+        </motion.div>
       </div>
 
-      {/* Chat Body */}
-      <div
-        ref={bodyRef}
-        className="flex flex-col gap-3 px-4 py-4 overflow-y-auto"
-        style={{
-          minHeight: '310px',
-          maxHeight: '370px',
-        }}
-      >
-        <AnimatePresence initial={false}>
-          {messages.map((msg) => (
-            <motion.div
-              key={msg.id}
-              initial={{
-                opacity: 0,
-                y: 6,
-              }}
-              animate={{
-                opacity: 1,
-                y: 0,
-              }}
+      <div className="rounded-xl border border-slate-200 bg-white px-4">
+        {skills.map((skill, index) => (
+          <motion.div
+            key={skill.name}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.12 }}
+          >
+            <Skill
+              name={skill.name}
+              status={skill.status}
+              icon={
+                skill.name === 'Java' ? (
+                  <Code2 className="w-3 h-3 text-slate-500" />
+                ) : skill.name === 'PostgreSQL' ? (
+                  <Database className="w-3 h-3 text-slate-500" />
+                ) : skill.name === 'Docker' ? (
+                  <Cloud className="w-3 h-3 text-slate-500" />
+                ) : undefined
+              }
+            />
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Candidate — Step 2
+// ─────────────────────────────────────────────────────────────────────────────
+
+function CandidateMatchScreen() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="h-full flex flex-col"
+    >
+      <div className="text-center mb-5">
+        <div className="flex items-center justify-center gap-2 mb-1">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Your match
+          </div>
+        </div>
+
+        <div className="relative inline-flex items-center justify-center">
+          <svg
+            width="130"
+            height="130"
+            viewBox="0 0 130 130"
+            className="-rotate-90"
+          >
+            <circle
+              cx="65"
+              cy="65"
+              r="54"
+              fill="none"
+              stroke="#e2e8f0"
+              strokeWidth="8"
+            />
+
+            <motion.circle
+              cx="65"
+              cy="65"
+              r="54"
+              fill="none"
+              stroke="#4f46e5"
+              strokeWidth="8"
+              strokeLinecap="round"
+              strokeDasharray="339"
+              initial={{ strokeDashoffset: 339 }}
+              animate={{ strokeDashoffset: 44 }}
               transition={{
-                duration: 0.2,
+                duration: 1.2,
                 ease: 'easeOut',
               }}
+            />
+          </svg>
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <motion.span
+              className="text-3xl font-bold text-slate-900"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
             >
-              {msg.type === 'bot' && <BotBubble text={msg.text} />}
+              87%
+            </motion.span>
 
-              {msg.type === 'user' && <UserBubble text={msg.text} />}
-
-              {msg.type === 'typing' && <TypingIndicator />}
-
-              {msg.type === 'choices1' && (
-                <div className="flex flex-wrap gap-2 pl-8 mt-1">
-                  {PILLAR_CHOICES.map((p) => (
-                    <ChoiceButton
-                      key={p.key}
-                      icon={p.icon}
-                      label={p.label}
-                      selected={selectedKey === p.key}
-                      disabled={
-                        selectedKey !== null && selectedKey !== p.key
-                      }
-                      onClick={() => handlePillarPick(p.key)}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {msg.type === 'choices2' && (
-                <div className="flex flex-wrap gap-2 pl-8 mt-1">
-                  {msg.choices.map((c) => (
-                    <ChoiceButton
-                      key={c.label}
-                      icon={c.icon}
-                      label={c.label}
-                      selected={selectedChoice2 === c.label}
-                      disabled={
-                        selectedChoice2 !== null &&
-                        selectedChoice2 !== c.label
-                      }
-                      onClick={() => handleChoice2Pick(c)}
-                    />
-                  ))}
-                </div>
-              )}
-
-              {msg.type === 'cta' && (
-                <div className="pl-8 mt-1">
-                  <button
-                    onClick={() => router.push(msg.url)}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold transition-colors shadow-sm cursor-pointer"
-                  >
-                    {msg.label}
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          ))}
-        </AnimatePresence>
+            <span className="text-[9px] font-semibold uppercase tracking-wider text-emerald-600">
+              Strong match
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Footer */}
-      <div className="px-4 py-2.5 border-t border-slate-200/80 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-800/30">
-        <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-          {step === 'done'
-            ? 'Select the action above to proceed →'
-            : 'Choose an option to get started'}
+      <div className="grid grid-cols-3 gap-2 mt-auto">
+        {[
+          ['Skills', '92%'],
+          ['Experience', '88%'],
+          ['Context', '82%'],
+        ].map(([label, value]) => (
+          <div
+            key={label}
+            className="rounded-lg bg-slate-50 border border-slate-100 p-2.5 text-center"
+          >
+            <div className="text-sm font-bold text-slate-900">
+              {value}
+            </div>
+
+            <div className="text-[9px] text-slate-500 mt-0.5">
+              {label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] font-medium text-indigo-600">
+        <UserCheck className="w-3 h-3" />
+        Know your match before applying
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Candidate — Step 3
+// ─────────────────────────────────────────────────────────────────────────────
+
+function CandidateApplicationScreen() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="h-full"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <Sparkles className="w-5 h-5 text-indigo-600" />
+        </div>
+
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            AI application
+          </div>
+
+          <div className="text-sm font-bold text-slate-900">
+            Personalized for the role
+          </div>
+        </div>
+
+        <CheckCircle2 className="ml-auto w-5 h-5 text-emerald-500" />
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-7 h-7 rounded-full bg-white border border-slate-200 flex items-center justify-center">
+            <FileText className="w-3.5 h-3.5 text-slate-500" />
+          </div>
+
+          <div>
+            <div className="text-[10px] font-semibold text-slate-700">
+              Application generated
+            </div>
+
+            <div className="text-[9px] text-slate-400">
+              Based on your profile & job requirements
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          {[80, 95, 68, 88].map((width, index) => (
+            <motion.div
+              key={index}
+              className="h-1.5 rounded-full bg-slate-200 overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: index * 0.12 }}
+            >
+              <motion.div
+                className="h-full rounded-full bg-indigo-300"
+                initial={{ width: 0 }}
+                animate={{ width: `${width}%` }}
+                transition={{
+                  delay: 0.2 + index * 0.12,
+                  duration: 0.5,
+                }}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="flex items-center gap-2 rounded-lg border border-emerald-100 bg-emerald-50 p-2.5">
+          <Check className="w-3.5 h-3.5 text-emerald-600" />
+
+          <span className="text-[10px] font-semibold text-emerald-700">
+            Skills matched
+          </span>
+        </div>
+
+        <div className="flex items-center gap-2 rounded-lg border border-emerald-100 bg-emerald-50 p-2.5">
+          <Check className="w-3.5 h-3.5 text-emerald-600" />
+
+          <span className="text-[10px] font-semibold text-emerald-700">
+            Experience matched
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Recruiter — Step 0
+// ─────────────────────────────────────────────────────────────────────────────
+
+function RecruiterJobScreen() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="h-full"
+    >
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1">
+            Your open position
+          </div>
+
+          <h3 className="text-base font-bold text-slate-900">
+            Senior Backend Engineer
+          </h3>
+
+          <p className="text-xs text-slate-500 mt-1">
+            Fintech · Casablanca · Hybrid
+          </p>
+        </div>
+
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <BriefcaseBusiness className="w-5 h-5 text-indigo-600" />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap gap-2 mb-5">
+        {['Java', 'Spring Boot', 'PostgreSQL', 'Docker'].map((skill) => (
+          <span
+            key={skill}
+            className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 text-[10px] font-medium text-slate-600"
+          >
+            {skill}
+          </span>
+        ))}
+      </div>
+
+      <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Target className="w-4 h-4 text-indigo-600" />
+
+          <span className="text-xs font-semibold text-indigo-900">
+            Hirely ATS
+          </span>
+        </div>
+
+        <p className="text-[11px] leading-relaxed text-indigo-700/80">
+          Define what matters for the role and let Hirely identify candidates who actually fit.
         </p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Recruiter — Step 1
+// ─────────────────────────────────────────────────────────────────────────────
+
+function RecruiterAnalysisScreen() {
+  const requirements = [
+    { name: 'Java', status: 'match' as const },
+    { name: 'Spring Boot', status: 'match' as const },
+    { name: 'PostgreSQL', status: 'match' as const },
+    { name: 'Docker', status: 'match' as const },
+    { name: 'Kubernetes', status: 'partial' as const },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="h-full"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <Target className="w-5 h-5 text-indigo-600" />
+        </div>
+
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Job requirements
+          </div>
+
+          <div className="text-sm font-bold text-slate-900">
+            Role analyzed
+          </div>
+        </div>
+
+        <motion.div
+          className="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-indigo-600"
+          animate={{ opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1.5, repeat: Infinity }}
+        >
+          <Sparkles className="w-3.5 h-3.5" />
+          AI analyzing
+        </motion.div>
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-white px-4">
+        {requirements.map((requirement, index) => (
+          <motion.div
+            key={requirement.name}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.12 }}
+          >
+            <Skill
+              name={requirement.name}
+              status={requirement.status}
+            />
+          </motion.div>
+        ))}
+      </div>
+
+      <div className="mt-4 rounded-xl bg-slate-50 border border-slate-100 p-3">
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+
+          <span className="text-[10px] font-semibold text-slate-700">
+            Requirements ready for candidate matching
+          </span>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Recruiter — Step 2
+// ─────────────────────────────────────────────────────────────────────────────
+
+function RecruiterRankingScreen() {
+  const candidates = [
+    {
+      name: 'Candidate A',
+      role: 'Backend Engineer',
+      score: '94%',
+    },
+    {
+      name: 'Candidate B',
+      role: 'Software Engineer',
+      score: '87%',
+    },
+    {
+      name: 'Candidate C',
+      role: 'Java Developer',
+      score: '81%',
+    },
+  ];
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="h-full"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <Users className="w-5 h-5 text-indigo-600" />
+        </div>
+
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Candidate pool
+          </div>
+
+          <div className="text-sm font-bold text-slate-900">
+            Candidates ranked by match
+          </div>
+        </div>
+
+        <div className="ml-auto flex items-center gap-1.5 text-[10px] font-semibold text-emerald-600">
+          <Users className="w-3.5 h-3.5" />
+          12 matches
+        </div>
+      </div>
+
+      <div className="space-y-2">
+        {candidates.map((candidate, index) => (
+          <motion.div
+            key={candidate.name}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.15 }}
+            className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-3"
+          >
+            <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+              <Users className="w-3.5 h-3.5 text-slate-500" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="text-[11px] font-semibold text-slate-800">
+                {candidate.name}
+              </div>
+
+              <div className="text-[9px] text-slate-400">
+                {candidate.role}
+              </div>
+            </div>
+
+            <div className="text-right">
+              <div className="text-sm font-bold text-indigo-600">
+                {candidate.score}
+              </div>
+
+              <div className="text-[8px] text-slate-400 uppercase tracking-wide">
+                Match
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Recruiter — Step 3
+// ─────────────────────────────────────────────────────────────────────────────
+
+function RecruiterReviewScreen() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="h-full"
+    >
+      <div className="flex items-center gap-3 mb-5">
+        <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+          <UserCheck className="w-5 h-5 text-indigo-600" />
+        </div>
+
+        <div>
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+            Recruiter review
+          </div>
+
+          <div className="text-sm font-bold text-slate-900">
+            Strongest candidates first
+          </div>
+        </div>
+
+        <CheckCircle2 className="ml-auto w-5 h-5 text-emerald-500" />
+      </div>
+
+      <div className="rounded-xl border border-indigo-100 bg-indigo-50/50 p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <div className="text-[10px] font-semibold text-indigo-900">
+              Top candidate
+            </div>
+
+            <div className="text-sm font-bold text-slate-900 mt-1">
+              Candidate A
+            </div>
+          </div>
+
+          <div className="text-right">
+            <div className="text-xl font-bold text-indigo-600">
+              94%
+            </div>
+
+            <div className="text-[8px] uppercase tracking-wide text-slate-400">
+              Match
+            </div>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          {[
+            ['Technical skills', '96%'],
+            ['Experience', '94%'],
+            ['Role context', '91%'],
+          ].map(([label, value]) => (
+            <div
+              key={label}
+              className="flex items-center justify-between text-[10px]"
+            >
+              <span className="text-slate-500">
+                {label}
+              </span>
+
+              <span className="font-semibold text-emerald-600">
+                {value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-4 flex items-center gap-2 rounded-lg border border-emerald-100 bg-emerald-50 p-3">
+        <Target className="w-4 h-4 text-emerald-600" />
+
+        <span className="text-[10px] font-semibold text-emerald-700">
+          Review the candidates that fit your role first
+        </span>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Product Demo
+// ─────────────────────────────────────────────────────────────────────────────
+
+function ProductDemo() {
+  const [role, setRole] = useState<DemoRole>('candidate');
+  const [step, setStep] = useState<DemoStep>(0);
+
+  const candidateSteps = [
+    {
+      label: 'Match the job',
+      icon: <Target className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'Analyze the CV',
+      icon: <FileText className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'See the match',
+      icon: <Sparkles className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'Apply smarter',
+      icon: <Send className="w-3.5 h-3.5" />,
+    },
+  ];
+
+  const recruiterSteps = [
+    {
+      label: 'Create the job',
+      icon: <BriefcaseBusiness className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'Analyze requirements',
+      icon: <Target className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'Rank candidates',
+      icon: <Users className="w-3.5 h-3.5" />,
+    },
+    {
+      label: 'Review matches',
+      icon: <UserCheck className="w-3.5 h-3.5" />,
+    },
+  ];
+
+  const steps =
+    role === 'candidate'
+      ? candidateSteps
+      : recruiterSteps;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStep((current) => (current + 1) % steps.length);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [role, steps.length]);
+
+  const switchRole = (newRole: DemoRole) => {
+    if (newRole === role) return;
+
+    setRole(newRole);
+    setStep(0);
+  };
+
+  return (
+    <div className="relative">
+      {/* Ambient glow */}
+      <div className="absolute -inset-8 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none" />
+
+      <div className="relative bg-white rounded-2xl border border-slate-200 shadow-2xl shadow-slate-900/10 overflow-hidden">
+
+        {/* Browser header */}
+        <div className="h-11 px-4 flex items-center justify-between border-b border-slate-100 bg-slate-50/80">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+            <span className="w-2.5 h-2.5 rounded-full bg-slate-300" />
+          </div>
+
+          <div className="flex items-center gap-1.5 text-[9px] text-slate-400">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            ATS active
+          </div>
+        </div>
+
+        {/* Candidate / Recruiter switch */}
+        <div className="px-5 pt-4">
+          <div className="flex items-center justify-center">
+            <div className="inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
+
+              <button
+                type="button"
+                onClick={() => switchRole('candidate')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all ${
+                  role === 'candidate'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <UserCheck className="w-3 h-3" />
+                Candidate
+              </button>
+
+              <button
+                type="button"
+                onClick={() => switchRole('recruiter')}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all ${
+                  role === 'recruiter'
+                    ? 'bg-white text-indigo-600 shadow-sm'
+                    : 'text-slate-500 hover:text-slate-700'
+                }`}
+              >
+                <Building2 className="w-3 h-3" />
+                Recruiter
+              </button>
+
+            </div>
+          </div>
+        </div>
+
+        {/* Progress */}
+        <div className="px-5 pt-4">
+          <div className="flex items-center justify-between gap-1">
+            {steps.map((item, index) => (
+              <div
+                key={item.label}
+                className="flex items-center flex-1 min-w-0"
+              >
+                <div
+                  className={`flex items-center gap-1.5 min-w-0 ${
+                    index <= step
+                      ? 'text-indigo-600'
+                      : 'text-slate-300'
+                  }`}
+                >
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-colors duration-300 ${
+                      index < step
+                        ? 'bg-indigo-600 text-white'
+                        : index === step
+                          ? 'bg-indigo-50 text-indigo-600 ring-1 ring-indigo-200'
+                          : 'bg-slate-50 text-slate-300'
+                    }`}
+                  >
+                    {index < step ? (
+                      <Check className="w-3 h-3" />
+                    ) : (
+                      item.icon
+                    )}
+                  </div>
+
+                  <span className="hidden xl:block text-[9px] font-semibold truncate">
+                    {item.label}
+                  </span>
+                </div>
+
+                {index < steps.length - 1 && (
+                  <div className="flex-1 h-px bg-slate-100 mx-1.5" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Demo content */}
+        <div className="p-5 sm:p-6 h-[370px]">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`${role}-${step}`}
+              className="h-full"
+              initial={{ opacity: 0, x: 12 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -12 }}
+              transition={{ duration: 0.3 }}
+            >
+              {role === 'candidate' ? (
+                <>
+                  {step === 0 && <CandidateJobScreen />}
+                  {step === 1 && <CandidateAnalysisScreen />}
+                  {step === 2 && <CandidateMatchScreen />}
+                  {step === 3 && <CandidateApplicationScreen />}
+                </>
+              ) : (
+                <>
+                  {step === 0 && <RecruiterJobScreen />}
+                  {step === 1 && <RecruiterAnalysisScreen />}
+                  {step === 2 && <RecruiterRankingScreen />}
+                  {step === 3 && <RecruiterReviewScreen />}
+                </>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </div>
+
+        {/* Bottom */}
+        <div className="px-5 py-3 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Loader2 className="w-3 h-3 text-indigo-500 animate-spin" />
+
+            <span className="text-[10px] font-medium text-slate-500">
+              {steps[step].label}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1">
+            {steps.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setStep(index)}
+                aria-label={`Go to step ${index + 1}`}
+                className={`h-1 rounded-full transition-all duration-300 ${
+                  index === step
+                    ? 'w-5 bg-indigo-600'
+                    : 'w-1.5 bg-slate-200 hover:bg-slate-300'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+
       </div>
     </div>
   );
 }
 
-// ─── Main Hero Section ────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────────
+// Main Hero
+// ─────────────────────────────────────────────────────────────────────────────
 
 interface HeroSectionProps {
   stats?: HeroStats;
@@ -660,121 +959,160 @@ export default function HeroSection({
       : '250+';
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-slate-50 dark:bg-[#0F172A] transition-colors">
-      <div className="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section className="relative overflow-hidden bg-slate-50 dark:bg-[#0F172A] transition-colors">
 
-          {/* ─────────────────────────────────────────────────────────────── */}
-          {/* LEFT COLUMN */}
-          {/* ─────────────────────────────────────────────────────────────── */}
+      {/* Background decoration */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-300px] left-1/2 -translate-x-1/2 w-[700px] h-[500px] rounded-full bg-indigo-500/[0.06] blur-3xl" />
 
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-indigo-200/50 to-transparent" />
+      </div>
+
+      <div className="relative mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
+
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-center min-h-[calc(100vh-64px)] py-16 sm:py-20 lg:py-24">
+
+          {/* LEFT */}
           <motion.div
-            className="flex flex-col gap-6 text-center lg:text-left"
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-            transition={{
-              duration: 0.5,
-              ease: 'easeOut',
-            }}
+            className="flex flex-col text-center lg:text-left"
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
+
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 dark:text-white tracking-tight leading-[1.1]">
-              Find Tech Jobs.{' '}
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.7rem] xl:text-[4.1rem] font-bold text-slate-900 dark:text-white tracking-tight leading-[1.04]">
+              Stop applying
+              <br />
+
               <span className="text-indigo-600 dark:text-indigo-400">
-                Apply Smarter with AI.
+                blindly.
               </span>
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Discover top tech companies, get an ATS match score, generate
-              personalized applications with AI, and stand out from other
-              candidates.
+            <p className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Hirely matches candidates to jobs using ATS analysis before they
+              apply while helping companies identify the candidates who
+              actually fit their requirements.
             </p>
 
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 pt-1">
+            {/* Two-sided explanation */}
+            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto lg:mx-0">
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-left">
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                  <UserCheck className="w-4 h-4 text-indigo-600" />
+                </div>
+
+                <div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-white">
+                    For candidates
+                  </div>
+
+                  <div className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400 mt-0.5">
+                    Know your match before you apply.
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-left">
+                <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
+                  <Building2 className="w-4 h-4 text-indigo-600" />
+                </div>
+
+                <div>
+                  <div className="text-xs font-bold text-slate-800 dark:text-white">
+                    For companies
+                  </div>
+
+                  <div className="text-[10px] leading-relaxed text-slate-500 dark:text-slate-400 mt-0.5">
+                    Find and prioritize candidates who fit.
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 mt-8">
+
               <SignedOut>
-                {/* Primary */}
                 <button
+                  type="button"
                   onClick={() => router.push('/jobs')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
                 >
-                  Find Tech Jobs
+                  Find Your Match
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
-                {/* Secondary */}
                 <button
+                  type="button"
                   onClick={() => router.push('/startups')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
                 >
-                  Explore Companies
+                  For Companies
                 </button>
               </SignedOut>
 
               <SignedIn>
                 <button
+                  type="button"
                   onClick={() => router.push('/dashboard')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-colors shadow-sm cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   Go to Dashboard
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </SignedIn>
+
             </div>
 
-            {/* Trust Points */}
-            <div className="grid grid-cols-2 gap-y-2.5 gap-x-4 text-xs font-medium text-slate-700 dark:text-slate-300 pt-2 border-t border-slate-200 dark:border-slate-800 max-w-md mx-auto lg:mx-0">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-                <span>AI-powered applications</span>
+            {/* Trust points */}
+            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 max-w-lg mx-auto lg:mx-0">
+
+              <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Candidate ATS matching</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>Recruiter candidate ranking</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>AI-powered applications</span>
+                </div>
+
+                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                  <span>{jobCountDisplay} tech jobs</span>
+                </div>
+
               </div>
 
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-                <span>ATS Match Score</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-                <span>Discover Tech Companies</span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400 flex-shrink-0" />
-                <span>{jobCountDisplay} Tech Jobs</span>
-              </div>
             </div>
+
           </motion.div>
 
-          {/* ─────────────────────────────────────────────────────────────── */}
-          {/* RIGHT COLUMN — AI ASSISTANT */}
-          {/* ─────────────────────────────────────────────────────────────── */}
-
+          {/* RIGHT — PRODUCT DEMO */}
           <motion.div
-            initial={{
-              opacity: 0,
-              y: 16,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, x: 25 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{
-              duration: 0.5,
-              delay: 0.1,
+              duration: 0.7,
+              delay: 0.15,
               ease: 'easeOut',
             }}
           >
-            <ChatHero />
+            <ProductDemo />
           </motion.div>
+
         </div>
       </div>
     </section>
