@@ -72,7 +72,7 @@ export default function Header() {
               );
             })}
 
-            {/* Dashboards for Signed-In Users */}
+            {/* Dashboard for Signed-In Users */}
             <SignedIn>
               <div className="h-4 w-px bg-slate-200 mx-1.5" aria-hidden="true" />
 
@@ -86,18 +86,6 @@ export default function Header() {
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
                 <span>Dashboard</span>
-              </Link>
-
-              <Link
-                href="/company/dashboard"
-                className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
-                  isPathActive('/company')
-                    ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                    : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
-                }`}
-              >
-                <Building2 className="w-3.5 h-3.5" />
-                <span>For Companies</span>
               </Link>
             </SignedIn>
           </nav>
@@ -188,19 +176,6 @@ export default function Header() {
                   >
                     <LayoutDashboard className="w-4 h-4 text-slate-400" />
                     <span>Dashboard</span>
-                  </Link>
-
-                  <Link
-                    href="/company/dashboard"
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-xs font-semibold transition-colors ${
-                      isPathActive('/company')
-                        ? 'text-indigo-600 bg-indigo-50/80 font-bold'
-                        : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
-                    }`}
-                  >
-                    <Building2 className="w-4 h-4 text-slate-400" />
-                    <span>For Companies</span>
                   </Link>
                 </div>
               </SignedIn>
