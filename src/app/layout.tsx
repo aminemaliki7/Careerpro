@@ -3,6 +3,7 @@ import { type Metadata } from 'next';
 import { ClerkProvider } from '@clerk/nextjs';
 import { Geist, Geist_Mono } from 'next/font/google';
 import ClientLayoutWrapper from '@/components/layout/ClientLayoutWrapper';
+import { AuthRedirectHandler } from '@/components/AuthRedirectHandler';
 import Script from 'next/script';
 import './globals.css';
 import GoogleAnalytics from '@/components/analytics/GoogleAnalytics';
@@ -165,6 +166,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             crossOrigin="anonymous"
             strategy="afterInteractive"
           />
+
+          {/* Auth redirect handler for role-based onboarding */}
+          <AuthRedirectHandler />
 
           <ClientLayoutWrapper>{children}</ClientLayoutWrapper>
         </body>

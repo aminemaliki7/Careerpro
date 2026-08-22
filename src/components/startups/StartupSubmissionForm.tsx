@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { SignInButton, useUser } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { StartupSubmission, IndustryType, CompanySize, FundingStage } from '@/types/startup';
 import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 
@@ -16,6 +18,9 @@ const fundingStages: FundingStage[] = [
 ];
 
 export default function StartupSubmissionForm() {
+  const { isSignedIn, user, isLoaded } = useUser();
+  const router = useRouter();
+  
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -138,7 +143,8 @@ export default function StartupSubmissionForm() {
         body: JSON.stringify({ 
           ...formData, 
           contactEmail: formData.contactEmail.trim(),
-          logoUrl 
+          logoUrl,
+          ownerId: user?.id // Add owner_id from Clerk user
         })
       });
 
@@ -168,6 +174,44 @@ export default function StartupSubmissionForm() {
       contactEmail: '', contactName: ''
     });
   };
+
+  // Show loading state while checking auth
+  if (!isLoaded) {
+    return (
+      <div className="max-w-md mx-auto text-center py-6">
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6">
+          <div className="animate-pulse text-slate-600 font-medium text-sm">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show login prompt if not authenticated
+  if (!isSignedIn) {
+    return (
+      <div className="max-w-md mx-auto text-center py-6">
+        <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/30 border border-blue-200/80 rounded-2xl p-6 shadow-sm">
+          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <AlertCircle className="w-6 h-6 text-blue-600" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+            Authentication Required
+          </h3>
+          <p className="text-xs text-slate-600 mb-6 max-w-xs mx-auto leading-relaxed">
+            You need to sign in with your account to submit your startup profile.
+          </p>
+          <SignInButton mode="modal">
+            <button
+              type="button"
+              className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs rounded-lg font-semibold transition-all duration-200 shadow-md shadow-indigo-600/20"
+            >
+              Sign In to Continue
+            </button>
+          </SignInButton>
+        </div>
+      </div>
+    );
+  }
 
   if (success) {
     return (

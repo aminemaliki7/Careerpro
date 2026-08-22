@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { supabase } from '@/lib/supabase'; // Import the Supabase client
+import { auth } from '@clerk/nextjs/server';
 
 export async function GET() {
   const { data: jobs, error } = await supabase
@@ -16,7 +17,23 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const jobData = await request.json();
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('role')
+    .eq('clerk_id', userId)
+    .maybeSingle();
+
+  if (!profile || !['company', 'founder'].includes(profile.role)) {
+    return NextResponse.json({ error: 'Only company accounts can post jobs' }, { status: 403 });
+  }
+
+  const jobData = { ...(await request.json()), owner_id: userId };
 
   const { data, error } = await supabase
     .from('jobs')

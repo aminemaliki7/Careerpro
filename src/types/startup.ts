@@ -45,6 +45,10 @@ export interface Startup {
   jobCount?: number;
   logoUrl?: string;
   featured?: boolean;
+  status?: 'pending' | 'approved' | 'rejected'; // Approval status
+  ownerId?: string; // Clerk user ID of the founder
+  contactEmail?: string; // Contact email for pending submissions
+  contactName?: string; // Contact person name
   createdAt?: Date | string;
   updatedAt?: Date | string;
 }
@@ -79,4 +83,5 @@ export interface StartupSubmission {
   logoUrl?: string;
   contactEmail: string;
   contactName: string;
+  ownerId?: string; // Added for form submission
 }

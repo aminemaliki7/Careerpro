@@ -3,6 +3,7 @@
 export interface Job {
   // Database fields
   id: number | string;  // Can be uuid or number depending on your setup
+  owner_id?: string; // Clerk user ID for company-owned postings
   title: string;
   company: string;
   location: string;
@@ -66,6 +67,7 @@ export type SalaryRange =
 
 // Interface for job creation/updates
 export interface CreateJobInput {
+  owner_id?: string;
   title: string;
   company: string;
   location: string;

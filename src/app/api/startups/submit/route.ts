@@ -1,6 +1,7 @@
 // app/api/startups/submit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { auth } from '@clerk/nextjs/server';
 
 function generateSlug(name: string): string {
   return name
@@ -12,6 +13,16 @@ function generateSlug(name: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // Get authenticated user from Clerk
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'You must be signed in to submit a startup.' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
 
     // Required fields
@@ -53,7 +64,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Build payload
+    // Build payload with owner_id from Clerk
     const payload = {
       name: body.name.trim(),
       slug,
@@ -68,11 +79,12 @@ export async function POST(request: NextRequest) {
       logo_url: body.logoUrl || null,
       contact_email: body.contactEmail.trim(),
       contact_name: body.contactName.trim(),
+      owner_id: userId, // Capture Clerk user ID as owner
       status: 'pending',
       created_at: new Date().toISOString()
     };
 
-    // Insert into startups table directly
+    // Insert into startups table
     const { data, error } = await supabase
       .from('startups')
       .insert(payload)
@@ -80,7 +92,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) {
-      console.error(error);
+      console.error('Supabase error:', error);
       return NextResponse.json(
         { error: 'Failed to submit startup' },
         { status: 500 }

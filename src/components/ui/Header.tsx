@@ -19,10 +19,14 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import CircuitLogo from './CircuitLogo';
+import { useUserRole } from '@/app/hooks/useUserRole';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { isCompany } = useUserRole();
+  const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
+  const dashboardLabel = isCompany ? 'Company dashboard' : 'Dashboard';
 
   const navigation = [
     { name: 'Jobs', href: '/jobs', icon: Briefcase },
@@ -77,15 +81,15 @@ export default function Header() {
               <div className="h-4 w-px bg-slate-200 mx-1.5" aria-hidden="true" />
 
               <Link
-                href="/dashboard"
+                href={dashboardHref}
                 className={`px-3 py-2 rounded-lg text-xs font-semibold transition-all duration-150 flex items-center gap-1.5 ${
-                  isPathActive('/dashboard')
+                    isPathActive(dashboardHref)
                     ? 'text-indigo-600 bg-indigo-50/80 font-bold'
                     : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                 }`}
               >
                 <LayoutDashboard className="w-3.5 h-3.5" />
-                <span>Dashboard</span>
+                <span>{dashboardLabel}</span>
               </Link>
             </SignedIn>
           </nav>
@@ -103,7 +107,7 @@ export default function Header() {
                   </button>
                 </SignInButton>
 
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
                   <button
                     type="button"
                     className="px-4 py-2 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-all shadow-sm hover:shadow active:scale-95"
@@ -166,16 +170,16 @@ export default function Header() {
               <SignedIn>
                 <div className="pt-2 mt-2 border-t border-slate-100 space-y-1">
                   <Link
-                    href="/dashboard"
+                    href={dashboardHref}
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-xs font-semibold transition-colors ${
-                      isPathActive('/dashboard')
+                      isPathActive(dashboardHref)
                         ? 'text-indigo-600 bg-indigo-50/80 font-bold'
                         : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
                     }`}
                   >
                     <LayoutDashboard className="w-4 h-4 text-slate-400" />
-                    <span>Dashboard</span>
+                    <span>{dashboardLabel}</span>
                   </Link>
                 </div>
               </SignedIn>
@@ -191,7 +195,7 @@ export default function Header() {
                     </button>
                   </SignInButton>
 
-                  <SignUpButton mode="modal">
+                  <SignUpButton mode="modal" forceRedirectUrl="/onboarding">
                     <button
                       type="button"
                       className="w-full px-4 py-2.5 text-xs font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-center shadow-sm"
