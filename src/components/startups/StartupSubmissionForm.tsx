@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { SignInButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { StartupSubmission, IndustryType, CompanySize, FundingStage } from '@/types/startup';
-import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle, Building2 } from 'lucide-react';
+import { useUserRole } from '@/app/hooks/useUserRole';
 
 const industries: IndustryType[] = [
   'AI/ML', 'FinTech', 'HealthTech', 'EdTech', 'E-commerce',
@@ -17,10 +19,24 @@ const fundingStages: FundingStage[] = [
   'Pre-Seed', 'Seed', 'Series A', 'Series B', 'Series C', 'Series D+', 'Acquired', 'Public'
 ];
 
+// Common free / personal email providers. We only want to accept real
+// company (business domain) emails on this form, not personal inboxes.
+const PERSONAL_EMAIL_DOMAINS = new Set([
+  'gmail.com', 'googlemail.com',
+  'yahoo.com', 'yahoo.co.uk', 'yahoo.co.in', 'ymail.com', 'rocketmail.com',
+  'hotmail.com', 'hotmail.co.uk', 'outlook.com', 'live.com', 'msn.com',
+  'aol.com', 'icloud.com', 'me.com', 'mac.com',
+  'protonmail.com', 'proton.me', 'zoho.com',
+  'mail.com', 'gmx.com', 'gmx.net', 'yandex.com', 'yandex.ru',
+  'qq.com', '163.com', '126.com',
+  'inbox.com', 'fastmail.com'
+]);
+
 export default function StartupSubmissionForm() {
   const { isSignedIn, user, isLoaded } = useUser();
+  const { isCompany } = useUserRole();
   const router = useRouter();
-  
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -55,6 +71,14 @@ export default function StartupSubmissionForm() {
   const validateEmail = (email: string): boolean => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     return emailRegex.test(email.trim());
+  };
+
+  // Rejects free/personal email providers (Gmail, Yahoo, Outlook.com, etc.)
+  // so only business-domain emails are accepted — i.e. companies, not individuals.
+  const isCompanyEmail = (email: string): boolean => {
+    const domain = email.trim().split('@')[1]?.toLowerCase();
+    if (!domain) return false;
+    return !PERSONAL_EMAIL_DOMAINS.has(domain);
   };
 
   const handleLogoUpload = (file: File) => {
@@ -107,9 +131,24 @@ export default function StartupSubmissionForm() {
     setLoading(true);
     setError(null);
 
+    if (!isCompany) {
+      setError('Only company accounts can submit a startup profile.');
+      setLoading(false);
+      return;
+    }
+
+    const trimmedEmail = formData.contactEmail.trim();
+
     // Explicit Professional Email Validation
-    if (!validateEmail(formData.contactEmail)) {
+    if (!validateEmail(trimmedEmail)) {
       setError('Please provide a valid business email address (e.g., name@company.com).');
+      setLoading(false);
+      return;
+    }
+
+    // Only accept companies, not individuals using personal inboxes.
+    if (!isCompanyEmail(trimmedEmail)) {
+      setError('Please use your company email address. Personal email providers (Gmail, Yahoo, Outlook.com, etc.) are not accepted.');
       setLoading(false);
       return;
     }
@@ -140,9 +179,9 @@ export default function StartupSubmissionForm() {
       const response = await fetch('/api/startups/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          ...formData, 
-          contactEmail: formData.contactEmail.trim(),
+        body: JSON.stringify({
+          ...formData,
+          contactEmail: trimmedEmail,
           logoUrl,
           ownerId: user?.id // Add owner_id from Clerk user
         })
@@ -208,6 +247,32 @@ export default function StartupSubmissionForm() {
               Sign In to Continue
             </button>
           </SignInButton>
+        </div>
+      </div>
+    );
+  }
+
+  // Signed in, but not on a company profile — startups can only be
+  // submitted by users with a company account.
+  if (!isCompany) {
+    return (
+      <div className="max-w-md mx-auto text-center py-6">
+        <div className="bg-gradient-to-br from-blue-50/50 to-indigo-50/30 border border-blue-200/80 rounded-2xl p-6 shadow-sm">
+          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+            <Building2 className="w-6 h-6 text-blue-600" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-900 mb-1.5">
+            Company Profile Required
+          </h3>
+          <p className="text-xs text-slate-600 mb-6 max-w-xs mx-auto leading-relaxed">
+            Only company accounts can submit a startup profile. Set up a company profile to continue.
+          </p>
+          <Link
+            href="/"
+            className="inline-block px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs rounded-lg font-semibold transition-all duration-200 shadow-md shadow-indigo-600/20"
+          >
+            Set Up Company Profile
+          </Link>
         </div>
       </div>
     );
@@ -489,6 +554,7 @@ export default function StartupSubmissionForm() {
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
               Official Contact Email <span className="text-red-500">*</span>
+              <span className="text-slate-400 font-normal ml-1 text-[10px]">(company domain, not Gmail/Yahoo/etc.)</span>
             </label>
             <input
               type="email"
@@ -498,7 +564,7 @@ export default function StartupSubmissionForm() {
               placeholder="sarah@yourcompany.com"
               required
               pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-              title="Please enter a valid email address (e.g., name@domain.com)"
+              title="Please enter a valid company email address (e.g., name@company.com)"
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
             />
           </div>

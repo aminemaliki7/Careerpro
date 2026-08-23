@@ -22,6 +22,7 @@ import {
   UserCheck,
   BriefcaseBusiness,
 } from 'lucide-react';
+import { useUserRole } from '@/app/hooks/useUserRole';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -952,11 +953,14 @@ export default function HeroSection({
   stats,
 }: HeroSectionProps) {
   const router = useRouter();
+  const { isCompany } = useUserRole();
 
   const jobCountDisplay =
     stats && stats.jobCount > 0
       ? `${stats.jobCount}+`
       : '250+';
+
+  const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
 
   return (
     <section className="relative overflow-hidden bg-slate-50 dark:bg-[#0F172A] transition-colors">
@@ -1059,7 +1063,7 @@ export default function HeroSection({
               <SignedIn>
                 <button
                   type="button"
-                  onClick={() => router.push('/dashboard')}
+                  onClick={() => router.push(dashboardHref)}
                   className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   Go to Dashboard

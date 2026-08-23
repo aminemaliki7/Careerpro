@@ -40,7 +40,12 @@ export function AuthRedirectHandler() {
     '/onboarding',
   ];
 
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = publicRoutes.some(
+    (route) =>
+      route === '/'
+        ? pathname === route
+        : pathname === route || pathname.startsWith(`${route}/`)
+  );
 
   useEffect(() => {
     // Only run when both auth and role are loaded
@@ -48,9 +53,9 @@ export function AuthRedirectHandler() {
 
     // User is signed in but hasn't selected a role and is not on a public/onboarding route
     if (isSignedIn && !role && !isPublicRoute) {
-      router.push('/onboarding');
+      router.replace('/onboarding');
     }
-  }, [isSignedIn, isLoaded, role, roleLoading, isPublicRoute, pathname, router]);
+  }, [isSignedIn, isLoaded, role, roleLoading, isPublicRoute, router]);
 
   return null;
 }

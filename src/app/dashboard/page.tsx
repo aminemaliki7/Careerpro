@@ -33,6 +33,7 @@ import {
 } from 'lucide-react';
 import { Application } from '@/types/application';
 import { createJobSlug } from '@/lib/utils/format';
+import { useUserRole } from '@/app/hooks/useUserRole';
 
 interface Stats {
   totalApplications: number;
@@ -66,6 +67,7 @@ type StatusFilter = 'all' | 'pending' | 'interview' | 'accepted' | 'rejected';
 
 export default function Dashboard() {
   const { isSignedIn, user, isLoaded } = useUser();
+  const { isCompany, isLoading: roleLoading } = useUserRole();
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'applications' | 'saved' | 'profile' | 'settings'>('applications');
   
@@ -83,12 +85,16 @@ export default function Dashboard() {
   const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
   const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
 
-  // Redirect if not signed in
+  // Keep company accounts in their dedicated hiring workspace.
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
+    if (!isLoaded || roleLoading) return;
+
+    if (!isSignedIn) {
       router.push('/');
+    } else if (isCompany) {
+      router.replace('/company/dashboard');
     }
-  }, [isLoaded, isSignedIn, router]);
+  }, [isCompany, isLoaded, isSignedIn, roleLoading, router]);
 
   // Recalculate stats dynamically
   const stats: Stats = useMemo(() => {
@@ -115,7 +121,7 @@ export default function Dashboard() {
 
   // Fetch applications
   useEffect(() => {
-    if (!isSignedIn || !user) return;
+    if (!isSignedIn || !user || roleLoading || isCompany) return;
 
     async function fetchApplications() {
       try {
@@ -147,11 +153,11 @@ export default function Dashboard() {
     }
 
     fetchApplications();
-  }, [isSignedIn, user]);
+  }, [isCompany, isSignedIn, roleLoading, user]);
 
   // Fetch saved jobs
   useEffect(() => {
-    if (!isSignedIn || !user) return;
+    if (!isSignedIn || !user || roleLoading || isCompany) return;
 
     async function fetchSavedJobs() {
       try {
@@ -175,7 +181,7 @@ export default function Dashboard() {
     }
 
     fetchSavedJobs();
-  }, [isSignedIn, user]);
+  }, [isCompany, isSignedIn, roleLoading, user]);
 
   // Update application status
   const handleStatusChange = async (appId: string, newStatus: string) => {
@@ -281,7 +287,7 @@ export default function Dashboard() {
     }
   };
 
-  if (!isLoaded) {
+  if (!isLoaded || roleLoading || isCompany) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center">
         <div className="animate-pulse text-slate-400 font-medium text-sm">Loading Hirely...</div>

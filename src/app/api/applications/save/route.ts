@@ -2,6 +2,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '../../../../lib/supabaseAdmin';
 import { NextRequest, NextResponse } from 'next/server';
+import { runATSAnalysis } from '@/lib/ats';
 
 export async function POST(req: NextRequest) {
   try {
@@ -37,17 +38,62 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Resolve the listing on the server so company dashboards can always
+    // match the application to the authoritative job record. Select '*' so
+    // whatever the requirements/skills/description columns are actually
+    // called on your jobs table, they're available below for scoring.
+    const { data: job, error: jobError } = await supabaseAdmin
+      .from('jobs')
+      .select('*')
+      .eq('id', job_id)
+      .maybeSingle();
+
+    if (jobError) {
+      console.error('Job lookup error:', jobError);
+      return NextResponse.json(
+        { error: 'Failed to verify job listing' },
+        { status: 500 }
+      );
+    }
+
+    if (!job) {
+      return NextResponse.json(
+        { error: 'Job listing not found' },
+        { status: 404 }
+      );
+    }
+
+    // Compute the ATS match score once, at apply-time, so the company
+    // dashboard never has to recompute it on every load.
+    let atsScore: number | null = null;
+    try {
+      const analysis = runATSAnalysis({
+        cvText: cv_text,
+        jobTitle: job.title,
+        company: job.company,
+        requirements: Array.isArray(job.requirements) ? job.requirements : undefined,
+        skills: Array.isArray(job.skills) ? job.skills : undefined,
+        description: typeof job.description === 'string' ? job.description : undefined,
+      });
+      atsScore = analysis.matchScore;
+    } catch (scoreError) {
+      // Don't block the application if scoring fails for any reason -
+      // the candidate's submission still matters more than the score.
+      console.error('ATS scoring error (non-blocking):', scoreError);
+    }
+
     const insertPayload = {
       user_id: userId,
-      job_id: String(job_id),
-      job_title,
-      company,
-      location: location || null,
-      salary_range: salary_range || null,
+      job_id: String(job.id),
+      job_title: job.title,
+      company: job.company,
+      location: job.location || location || null,
+      salary_range: job.salary_range || salary_range || null,
       cv_text,
       generated_email,
       ai_applied: true,
       status: 'pending',
+      ats_score: atsScore,
     } as Record<string, unknown>;
 
     if (cv_url) {
