@@ -25,23 +25,17 @@ const isPublicRoute = createRouteMatcher([
 const isOnboardingRoute = createRouteMatcher(['/onboarding']);
 
 export default clerkMiddleware(async (auth, req) => {
-  const { userId } = await auth();
-  const isSignedIn = !!userId;
-
-  // If not signed in and not on a public route, redirect to sign in
-  if (!isSignedIn && !isPublicRoute(req)) {
-    return NextResponse.redirect(new URL('/sign-in', req.url));
-  }
-
-  // If signed in and on onboarding route, allow
-  if (isSignedIn && isOnboardingRoute(req)) {
+  // 1. Allow public routes without any authentication checks
+  if (isPublicRoute(req)) {
     return NextResponse.next();
   }
 
-  // If signed in and trying to access protected routes, check for role
-  if (isSignedIn && !isPublicRoute(req) && !isOnboardingRoute(req)) {
-    // For now, let the application handle role checking
-    // The useUserRole hook will redirect if needed
+  // 2. Enforce session validation for all non-public routes (including /api/company/dashboard)
+  // In production, auth.protect() ensures session cookies and headers are fully resolved.
+  await auth.protect();
+
+  // 3. Allow onboarding access for authenticated users
+  if (isOnboardingRoute(req)) {
     return NextResponse.next();
   }
 
@@ -50,9 +44,9 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // Skip Next.js internals and static files
     '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
+    // Always run for API and TRPC routes
     '/(api|trpc)(.*)',
   ],
 };
