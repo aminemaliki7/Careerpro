@@ -44,14 +44,17 @@ export default function Footer() {
         {/* Links & Socials */}
         <div className="flex items-center gap-6">
           <nav className="flex items-center gap-4 text-xs text-gray-500">
+            <Link href="/about" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+              About Us
+            </Link>
             <Link href="/privacy-policy" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-              Privacy
+              Privacy Policy
             </Link>
             <Link href="/terms" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-              Terms
+              Terms of Service
             </Link>
             <Link href="/contact" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
-              Contact
+              Contact Us
             </Link>
           </nav>
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
@@ -36,6 +36,7 @@ export interface HeroStats {
 
 type DemoRole = 'candidate' | 'recruiter';
 type DemoStep = number;
+type DemoDirection = 'step' | 'role';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Small UI Components
@@ -716,67 +717,66 @@ function RecruiterReviewScreen() {
 // ─────────────────────────────────────────────────────────────────────────────
 // Product Demo
 // ─────────────────────────────────────────────────────────────────────────────
+const STEPS_PER_ROLE = 4;
 
 function ProductDemo() {
-  const [role, setRole] = useState<DemoRole>('candidate');
-  const [step, setStep] = useState<DemoStep>(0);
+  // Single source of truth: a monotonically-increasing counter.
+  // role and step are both *derived* from it, so every state update stays
+  // pure — nothing sets multiple pieces of state inside one updater
+  // (which is what caused the role flip to get cancelled out under
+  // React 18 Strict Mode's double-invocation of updater functions).
+  const [counter, setCounter] = useState(0);
+
+  const role: DemoRole =
+    Math.floor(counter / STEPS_PER_ROLE) % 2 === 0 ? 'candidate' : 'recruiter';
+  const step: DemoStep = counter % STEPS_PER_ROLE;
+
+  // Track the previous role in a ref so we can tell, after render, whether
+  // this update was a plain step change or a full role switch — used only
+  // to pick which transition animation to play.
+  const prevRoleRef = useRef<DemoRole>(role);
+  const direction: DemoDirection = prevRoleRef.current !== role ? 'role' : 'step';
+  useEffect(() => {
+    prevRoleRef.current = role;
+  }, [role]);
 
   const candidateSteps = [
-    {
-      label: 'Match the job',
-      icon: <Target className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'Analyze the CV',
-      icon: <FileText className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'See the match',
-      icon: <Sparkles className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'Apply smarter',
-      icon: <Send className="w-3.5 h-3.5" />,
-    },
+    { label: 'Match the job', icon: <Target className="w-3.5 h-3.5" /> },
+    { label: 'Analyze the CV', icon: <FileText className="w-3.5 h-3.5" /> },
+    { label: 'See the match', icon: <Sparkles className="w-3.5 h-3.5" /> },
+    { label: 'Apply smarter', icon: <Send className="w-3.5 h-3.5" /> },
   ];
 
   const recruiterSteps = [
-    {
-      label: 'Create the job',
-      icon: <BriefcaseBusiness className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'Analyze requirements',
-      icon: <Target className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'Rank candidates',
-      icon: <Users className="w-3.5 h-3.5" />,
-    },
-    {
-      label: 'Review matches',
-      icon: <UserCheck className="w-3.5 h-3.5" />,
-    },
+    { label: 'Create the job', icon: <BriefcaseBusiness className="w-3.5 h-3.5" /> },
+    { label: 'Analyze requirements', icon: <Target className="w-3.5 h-3.5" /> },
+    { label: 'Rank candidates', icon: <Users className="w-3.5 h-3.5" /> },
+    { label: 'Review matches', icon: <UserCheck className="w-3.5 h-3.5" /> },
   ];
 
-  const steps =
-    role === 'candidate'
-      ? candidateSteps
-      : recruiterSteps;
+  const steps = role === 'candidate' ? candidateSteps : recruiterSteps;
 
+  // Seamless auto-play loop across both roles.
+  // Every tick just increments the counter by one — role/step naturally
+  // roll over (candidate step 4 -> recruiter step 1 -> ... -> back to
+  // candidate) purely from the math above, no click required.
   useEffect(() => {
     const timer = setInterval(() => {
-      setStep((current) => (current + 1) % steps.length);
+      setCounter((prev) => prev + 1);
     }, 3000);
 
     return () => clearInterval(timer);
-  }, [role, steps.length]);
+  }, []); // Run once on mount to maintain continuous loop timing
 
   const switchRole = (newRole: DemoRole) => {
     if (newRole === role) return;
+    const roleIndex = newRole === 'candidate' ? 0 : 1;
+    setCounter(roleIndex * STEPS_PER_ROLE); // jump to that role, step 0
+  };
 
-    setRole(newRole);
-    setStep(0);
+  const goToStep = (index: number) => {
+    const roleIndex = role === 'candidate' ? 0 : 1;
+    setCounter(roleIndex * STEPS_PER_ROLE + index);
   };
 
   return (
@@ -803,14 +803,22 @@ function ProductDemo() {
         {/* Candidate / Recruiter switch */}
         <div className="px-5 pt-4">
           <div className="flex items-center justify-center">
-            <div className="inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
+            <div className="relative inline-flex items-center p-1 rounded-xl bg-slate-100 border border-slate-200">
+
+              {/* Animated highlight slides under whichever tab is active,
+                  including when the switch happens automatically. */}
+              <motion.div
+                className="absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-lg bg-white shadow-sm"
+                animate={{ x: role === 'candidate' ? 0 : '100%' }}
+                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              />
 
               <button
                 type="button"
                 onClick={() => switchRole('candidate')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-colors ${
                   role === 'candidate'
-                    ? 'bg-white text-indigo-600 shadow-sm'
+                    ? 'text-indigo-600'
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -821,9 +829,9 @@ function ProductDemo() {
               <button
                 type="button"
                 onClick={() => switchRole('recruiter')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-all ${
+                className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-colors ${
                   role === 'recruiter'
-                    ? 'bg-white text-indigo-600 shadow-sm'
+                    ? 'text-indigo-600'
                     : 'text-slate-500 hover:text-slate-700'
                 }`}
               >
@@ -885,10 +893,25 @@ function ProductDemo() {
             <motion.div
               key={`${role}-${step}`}
               className="h-full"
-              initial={{ opacity: 0, x: 12 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -12 }}
-              transition={{ duration: 0.3 }}
+              initial={
+                direction === 'role'
+                  ? { opacity: 0, y: 16, scale: 0.98 }
+                  : { opacity: 0, x: 12 }
+              }
+              animate={
+                direction === 'role'
+                  ? { opacity: 1, y: 0, scale: 1 }
+                  : { opacity: 1, x: 0 }
+              }
+              exit={
+                direction === 'role'
+                  ? { opacity: 0, y: -16, scale: 0.98 }
+                  : { opacity: 0, x: -12 }
+              }
+              transition={{
+                duration: direction === 'role' ? 0.45 : 0.3,
+                ease: 'easeOut',
+              }}
             >
               {role === 'candidate' ? (
                 <>
@@ -915,7 +938,7 @@ function ProductDemo() {
             <Loader2 className="w-3 h-3 text-indigo-500 animate-spin" />
 
             <span className="text-[10px] font-medium text-slate-500">
-              {steps[step].label}
+              {steps[step]?.label}
             </span>
           </div>
 
@@ -924,7 +947,7 @@ function ProductDemo() {
               <button
                 key={index}
                 type="button"
-                onClick={() => setStep(index)}
+                onClick={() => goToStep(index)}
                 aria-label={`Go to step ${index + 1}`}
                 className={`h-1 rounded-full transition-all duration-300 ${
                   index === step
@@ -940,7 +963,6 @@ function ProductDemo() {
     </div>
   );
 }
-
 // ─────────────────────────────────────────────────────────────────────────────
 // Main Hero
 // ─────────────────────────────────────────────────────────────────────────────
