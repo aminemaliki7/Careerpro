@@ -20,6 +20,7 @@ const isPublicRoute = createRouteMatcher([
   '/terms',
   '/robots.txt',
   '/sitemap.xml',
+  '/ads.txt',
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding']);
