@@ -1,10 +1,10 @@
-// components/AuthRedirectHandler.tsx
+﻿// components/AuthRedirectHandler.tsx
 'use client';
 
 import { useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
 import { useRouter, usePathname } from 'next/navigation';
-import { useUserRole } from '@/app/hooks/useUserRole';
+import { useUserRole } from '@/hooks/useUserRole';
 
 /**
  * This component should be placed in the root layout to handle

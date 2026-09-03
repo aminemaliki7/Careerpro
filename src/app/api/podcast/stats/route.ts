@@ -1,6 +1,6 @@
-// src/app/api/podcast/stats/route.ts
+﻿// src/app/api/podcast/stats/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 // GET: fetch stats for a single episode
 export async function GET(request: NextRequest) {
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // If it's an array of episode slugs → return multiple stats
+    // If it's an array of episode slugs â†’ return multiple stats
     if (Array.isArray(body.episodeSlugs)) {
       const { data, error } = await supabase
         .from('podcast_stats')
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(statsMap);
     }
 
-    // If it's a single episodeSlug → increment listens
+    // If it's a single episodeSlug â†’ increment listens
     const { episodeSlug, duration = 0 } = body;
 
     if (!episodeSlug) {

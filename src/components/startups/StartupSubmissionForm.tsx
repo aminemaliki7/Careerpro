@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -6,7 +6,7 @@ import { SignInButton, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { StartupSubmission, IndustryType, CompanySize, FundingStage } from '@/types/startup';
 import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle, Building2 } from 'lucide-react';
-import { useUserRole } from '@/app/hooks/useUserRole';
+import { useUserRole } from '@/hooks/useUserRole';
 
 const industries: IndustryType[] = [
   'AI/ML', 'FinTech', 'HealthTech', 'EdTech', 'E-commerce',
@@ -74,7 +74,7 @@ export default function StartupSubmissionForm() {
   };
 
   // Rejects free/personal email providers (Gmail, Yahoo, Outlook.com, etc.)
-  // so only business-domain emails are accepted — i.e. companies, not individuals.
+  // so only business-domain emails are accepted â€” i.e. companies, not individuals.
   const isCompanyEmail = (email: string): boolean => {
     const domain = email.trim().split('@')[1]?.toLowerCase();
     if (!domain) return false;
@@ -252,7 +252,7 @@ export default function StartupSubmissionForm() {
     );
   }
 
-  // Signed in, but not on a company profile — startups can only be
+  // Signed in, but not on a company profile â€” startups can only be
   // submitted by users with a company account.
   if (!isCompany) {
     return (
@@ -289,7 +289,7 @@ export default function StartupSubmissionForm() {
             Submission Received
           </h3>
           <p className="text-xs text-slate-600 mb-6 max-w-xs mx-auto leading-relaxed">
-            Thank you for submitting your startup. Our team will review your details and contact you via <span className="font-semibold text-slate-800">{formData.contactEmail}</span> within 2–3 business days.
+            Thank you for submitting your startup. Our team will review your details and contact you via <span className="font-semibold text-slate-800">{formData.contactEmail}</span> within 2â€“3 business days.
           </p>
           <button
             onClick={resetForm}

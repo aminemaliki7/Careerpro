@@ -1,6 +1,6 @@
-// src/app/api/applications/user/route.ts
+﻿// src/app/api/applications/user/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextResponse } from 'next/server';
 
 export async function GET() {

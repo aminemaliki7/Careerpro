@@ -1,8 +1,159 @@
-// src/app/api/applications/save/route.ts
+﻿// src/app/api/applications/save/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin } from '../../../../lib/supabaseAdmin';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 import { runATSAnalysis } from '@/lib/ats';
+
+const ELIGIBLE_AUTOMATION_STAGES = ['application', 'review'];
+const VALID_AUTOMATION_RULE_TYPES = ['auto_shortlist', 'auto_review'];
+
+async function logApplicationEvent({
+  applicationId,
+  recruiterId,
+  eventType,
+  body,
+}: {
+  applicationId: string;
+  recruiterId: string;
+  eventType: 'application_submitted' | 'ats_analyzed' | 'stage_changed';
+  body: string;
+}) {
+  try {
+    if (!applicationId || !recruiterId) {
+      return;
+    }
+
+    const { data: existingEvent, error: lookupError } = await supabaseAdmin
+      .from('candidate_communications')
+      .select('id')
+      .eq('application_id', applicationId)
+      .eq('event_type', eventType)
+      .limit(1)
+      .maybeSingle();
+
+    if (lookupError && lookupError.code !== 'PGRST116') {
+      console.error('Communication lookup error (non-blocking):', lookupError);
+      return;
+    }
+
+    if (existingEvent) {
+      return;
+    }
+
+    const { error: insertError } = await supabaseAdmin
+      .from('candidate_communications')
+      .insert({
+        application_id: applicationId,
+        recruiter_id: recruiterId,
+        event_type: eventType,
+        body,
+      });
+
+    if (insertError) {
+      console.error('Application activity log error (non-blocking):', insertError);
+    }
+  } catch (error) {
+    console.error('Application event logging failed (non-blocking):', error);
+  }
+}
+
+async function applyAutomationToSavedApplication({
+  applicationId,
+  jobId,
+  ownerId,
+  atsScore,
+}: {
+  applicationId: string;
+  jobId: number;
+  ownerId: string;
+  atsScore: number | null;
+}) {
+  try {
+    if (!applicationId || !jobId || !ownerId) {
+      return;
+    }
+
+    const { data: rules, error: rulesError } = await supabaseAdmin
+      .from('automation_config')
+      .select('id, rule_type, threshold, action, enabled')
+      .eq('job_id', jobId)
+      .eq('enabled', true);
+
+    if (rulesError) {
+      console.error('Automation config lookup error (non-blocking):', rulesError);
+      return;
+    }
+
+    const enabledRules = (rules || []).filter((rule) =>
+      VALID_AUTOMATION_RULE_TYPES.includes(rule.rule_type as string)
+    );
+
+    if (!enabledRules.length) {
+      return;
+    }
+
+    const { data: application, error: applicationError } = await supabaseAdmin
+      .from('applications')
+      .select('id, pipeline_stage')
+      .eq('id', applicationId)
+      .maybeSingle();
+
+    if (applicationError) {
+      console.error('Application fetch for automation error (non-blocking):', applicationError);
+      return;
+    }
+
+    if (!application || !application.pipeline_stage) {
+      return;
+    }
+
+    if (!ELIGIBLE_AUTOMATION_STAGES.includes(application.pipeline_stage)) {
+      return;
+    }
+
+    const effectiveScore = Number(atsScore ?? 0);
+    const shortlistRule = enabledRules.find(
+      (rule) => rule.rule_type === 'auto_shortlist' && effectiveScore >= Number(rule.threshold)
+    );
+    const reviewRule = enabledRules.find(
+      (rule) => rule.rule_type === 'auto_review' && effectiveScore < Number(rule.threshold)
+    );
+    const targetStage = shortlistRule ? 'shortlisted' : reviewRule ? 'review' : null;
+
+    if (!targetStage || application.pipeline_stage === targetStage) {
+      return;
+    }
+
+    const { error: updateError } = await supabaseAdmin
+      .from('applications')
+      .update({
+        pipeline_stage: targetStage,
+        last_activity_date: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', applicationId);
+
+    if (updateError) {
+      console.error('Application automation update error (non-blocking):', updateError);
+      return;
+    }
+
+    const { error: communicationError } = await supabaseAdmin
+      .from('candidate_communications')
+      .insert({
+        application_id: applicationId,
+        recruiter_id: ownerId,
+        event_type: 'stage_changed',
+        body: `Automation moved candidate from ${application.pipeline_stage} to ${targetStage}`,
+      });
+
+    if (communicationError) {
+      console.error('Candidate communication insert error (non-blocking):', communicationError);
+    }
+  } catch (error) {
+    console.error('Automation follow-up failed (non-blocking):', error);
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -118,10 +269,37 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const savedApplication = data?.[0];
+
+    if (savedApplication?.id) {
+      void logApplicationEvent({
+        applicationId: savedApplication.id,
+        recruiterId: job.owner_id,
+        eventType: 'application_submitted',
+        body: 'Application submitted',
+      });
+
+      if (atsScore !== null && atsScore !== undefined) {
+        void logApplicationEvent({
+          applicationId: savedApplication.id,
+          recruiterId: job.owner_id,
+          eventType: 'ats_analyzed',
+          body: `ATS analysis completed with score ${atsScore}`,
+        });
+      }
+
+      void applyAutomationToSavedApplication({
+        applicationId: savedApplication.id,
+        jobId: Number(job.id),
+        ownerId: job.owner_id,
+        atsScore,
+      });
+    }
+
     return NextResponse.json(
       {
         message: 'Application saved successfully',
-        application: data?.[0],
+        application: savedApplication,
       },
       { status: 201 }
     );

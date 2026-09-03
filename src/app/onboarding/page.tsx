@@ -1,11 +1,11 @@
-'use client';
+﻿'use client';
 
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { SignUpButton, useUser } from '@clerk/nextjs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowRight, Briefcase, Building2, Loader2, Users } from 'lucide-react';
 import { RoleSelectionModal } from '@/components/RoleSelectionModal';
-import { useUserRole } from '@/app/hooks/useUserRole';
+import { useUserRole } from '@/hooks/useUserRole';
 
 type SignupRole = 'candidate' | 'company';
 

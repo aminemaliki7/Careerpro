@@ -1,6 +1,6 @@
-// /src/app/api/jobs/save/route.ts
+﻿// /src/app/api/jobs/save/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {

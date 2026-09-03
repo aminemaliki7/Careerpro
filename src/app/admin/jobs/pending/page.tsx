@@ -1,8 +1,8 @@
-// src/app/admin/jobs/pending/page.tsx
+﻿// src/app/admin/jobs/pending/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import { Job } from '@/types/job';
 
 export default function AdminPendingJobsPage() {
@@ -268,8 +268,8 @@ export default function AdminPendingJobsPage() {
 
                   <div className="text-sm text-gray-500 mb-4 flex flex-wrap gap-4">
                     <span>Posted: {new Date(job.posted_date).toLocaleDateString()}</span>
-                    {job.remote && <span className="text-green-600">✓ Remote</span>}
-                    {job.featured && <span className="text-purple-600">★ Featured</span>}
+                    {job.remote && <span className="text-green-600">âœ“ Remote</span>}
+                    {job.featured && <span className="text-purple-600">â˜… Featured</span>}
                   </div>
 
                   <div className="flex gap-3 pt-4 border-t">
@@ -278,14 +278,14 @@ export default function AdminPendingJobsPage() {
                       disabled={processingId === job.id}
                       className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                     >
-                      {processingId === job.id ? 'Processing...' : '✓ Approve & Publish'}
+                      {processingId === job.id ? 'Processing...' : 'âœ“ Approve & Publish'}
                     </button>
                     <button
                       onClick={() => handleReject(job.id)}
                       disabled={processingId === job.id}
                       className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                     >
-                      {processingId === job.id ? 'Processing...' : '✗ Reject'}
+                      {processingId === job.id ? 'Processing...' : 'âœ— Reject'}
                     </button>
                   </div>
                 </div>

@@ -1,37 +1,30 @@
 import { NextConfig } from "next";
 import createMDX from '@next/mdx';
-import path from 'path'; // <-- Added Node.js path module for absolute path resolution
+import path from 'path';
 
 const nextConfig: NextConfig = {
   // === NEXT.JS WARNING FIXES ===
-  
+
   // 1. Fix: Multiple Lockfiles Warning
-  // Explicitly sets the project root for file tracing. 
-  // We use `path.join(__dirname, '../../')` because your log indicated 
-  // the incorrect lockfile was two directories up (C:\Users\malik\package-lock.json).
-  // If your project root is the same folder as next.config.js, use `path.join(__dirname, './')` or just `__dirname`.
-  outputFileTracingRoot: path.join(__dirname, '../../'), 
+  // Explicitly sets the project root for file tracing.
+  outputFileTracingRoot: path.join(__dirname, '../../'),
 
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  
+
   // Disable ESLint during builds (temporary)
   eslint: {
     ignoreDuringBuilds: true,
   },
-  
+
   // Experimental features for better performance
   experimental: {
     mdxRs: true,
-    
-    // NOTE: `allowedDevOrigins` is not a recognized Next.js experimental option.
-    // If you need to adjust development CORS behavior, handle it via headers()
-    // (see the headers() config above) or a local development proxy instead.
-    
+
     // Instruct Next.js to treat pdf-parse as an external Node module.
     serverComponentsExternalPackages: ['pdf-parse'],
   },
-  
+
   // Image optimization configuration
   images: {
     remotePatterns: [
@@ -40,11 +33,11 @@ const nextConfig: NextConfig = {
         hostname: '**', // Allow all HTTPS domains - be more specific in production
       },
       {
-      protocol: 'https',
-      hostname: 'images.unsplash.com',
-      port: '',
-      pathname: '/**',
-    },
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
       {
         protocol: 'http',
         hostname: 'localhost',
@@ -53,7 +46,7 @@ const nextConfig: NextConfig = {
     ],
     formats: ['image/webp', 'image/avif'],
   },
-  
+
   // Fix for cross-origin requests in development (existing headers)
   async headers() {
     return [
@@ -74,14 +67,37 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-    ]
+    ];
   },
-  
+
   // Handle trailing slashes consistently
   trailingSlash: false,
-  
+
   // Output configuration for Vercel
   output: 'standalone',
+
+  // Webpack overrides for pdfjs-dist (previously in next.config.mjs)
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        canvas: false, // pdfjs-dist has optional canvas dependency
+      };
+
+      config.module = config.module || {};
+      config.module.rules = config.module.rules || [];
+
+      config.module.rules.push({
+        test: /pdf\.worker\.(min\.)?js/,
+        type: 'asset/resource',
+        generator: {
+          filename: 'static/worker/[hash][ext][query]',
+        },
+      });
+    }
+
+    return config;
+  },
 };
 
 const withMDX = createMDX({

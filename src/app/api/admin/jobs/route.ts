@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from 'next/server';
-import { supabase } from '@/lib/supabase'; // Import the Supabase client
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+﻿import { NextResponse, type NextRequest } from 'next/server';
+import { supabase } from '@/lib/supabase/client'; // Import the Supabase client
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { auth } from '@clerk/nextjs/server';
 
 export async function GET() {

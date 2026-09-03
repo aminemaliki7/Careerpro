@@ -1,6 +1,6 @@
-import { auth, clerkClient } from '@clerk/nextjs/server';
+﻿import { auth, clerkClient } from '@clerk/nextjs/server';
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 async function hasCompanyAccess(userId: string) {
   const { data: profile, error } = await supabaseAdmin
@@ -38,7 +38,7 @@ export async function GET() {
   const { data: applications, error: applicationsError } = jobIds.length
     ? await supabaseAdmin
         .from('applications')
-        .select('id, user_id, job_id, job_title, company, location, status, applied_date, cv_url, cv_file_name, ats_score')
+        .select('id, user_id, job_id, job_title, company, location, status, pipeline_stage, internal_notes, applied_date, last_activity_date, cv_url, cv_file_name, ats_score')
         .in('job_id', jobIds)
         .order('applied_date', { ascending: false })
     : { data: [], error: null };

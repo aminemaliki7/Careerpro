@@ -1,7 +1,7 @@
-// src/app/api/subscribe/route.ts
+﻿// src/app/api/subscribe/route.ts
 
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 
 export async function POST(request: Request) {
@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     }
 
     // Check if email already exists to prevent duplicates
-   // Version simplifiée - supprimez complètement la vérification d'erreur
+   // Version simplifiÃ©e - supprimez complÃ¨tement la vÃ©rification d'erreur
 const { data: existingEmail } = await supabase
   .from('emails')
   .select('email')

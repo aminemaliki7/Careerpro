@@ -1,6 +1,6 @@
-// hooks/usePodcastListener.ts
+﻿// hooks/usePodcastListener.ts
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 interface PodcastStats {
   totalListens: number;

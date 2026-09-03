@@ -21,7 +21,7 @@ const eslintConfig = [
     ],
   },
   {
-    files: ["src/app/api/podcast/stats/route.ts", "src/app/hooks/usePodcastListener.ts"],
+    files: ["src/app/api/podcast/stats/route.ts", "src/hooks/usePodcastListener.ts"],
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
     },

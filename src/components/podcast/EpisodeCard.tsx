@@ -1,11 +1,11 @@
-// src/components/podcast/EpisodeCard.tsx
+﻿// src/components/podcast/EpisodeCard.tsx
 'use client';
 import { memo, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Play, Pause, Bookmark, Sparkles, Share2, Check } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
-import { useRealtimeClaps } from '@/app/hooks/useRealtimeClaps';
-import { useBookmarks } from '@/app/hooks/useBookmarks';
+import { useRealtimeClaps } from '@/hooks/useRealtimeClaps';
+import { useBookmarks } from '@/hooks/useBookmarks';
 import { PodcastStatsDisplay } from '@/components/podcast/PodcastStatsDisplay';
 
 interface EpisodeCardProps {
@@ -105,7 +105,7 @@ function EpisodeCardComponent({
             </p>
             <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
               <span className="truncate">{formatDate(episode.publishedAt)}</span>
-              <span>·</span>
+              <span>Â·</span>
               <span>{episode.readingTime || 5} min</span>
             </div>
           </div>

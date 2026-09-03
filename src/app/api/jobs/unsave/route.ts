@@ -1,6 +1,6 @@
-// /src/app/api/jobs/unsave/route.ts
+﻿// /src/app/api/jobs/unsave/route.ts
 import { auth } from '@clerk/nextjs/server';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(req: NextRequest) {

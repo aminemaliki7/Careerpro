@@ -1,4 +1,4 @@
-// src/app/podcast/PodcastClient.tsx
+﻿// src/app/podcast/PodcastClient.tsx
 'use client';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
@@ -6,9 +6,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Search, User, TrendingUp, Headphones, Play, Pause } from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 import Image from 'next/image';
-import { usePodcastListener } from '@/app/hooks/usePodcastListener';
+import { usePodcastListener } from '@/hooks/usePodcastListener';
 import { LiveIndicator } from '@/components/podcast/PodcastStatsDisplay';
-import { useAudioPlayer } from '@/app/hooks/useAudioPlayer';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { EpisodeCard } from '@/components/podcast/EpisodeCard';
 import { PodcastPlayer } from '@/components/podcast/PodcastPlayer';
 
@@ -216,7 +216,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                       </h3>
                       <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
                         <span className="truncate">{formatDate(episode.publishedAt)}</span>
-                        <span>·</span>
+                        <span>Â·</span>
                         <span>{episode.readingTime || 5} min</span>
                       </div>
                     </Link>

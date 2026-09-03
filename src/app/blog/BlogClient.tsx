@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
@@ -15,14 +15,14 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { BlogPostWithContent } from '@/types/blog';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 interface BlogClientProps {
   allPosts: BlogPostWithContent[];
   featuredPosts: BlogPostWithContent[];
 }
 
-// ─── Custom Hook: Post Claps Management ──────────────────────────────────────
+// â”€â”€â”€ Custom Hook: Post Claps Management â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function usePostClaps(postSlug: string) {
   const [claps, setClaps] = useState(0);
@@ -160,7 +160,7 @@ function usePostClaps(postSlug: string) {
   return { claps, isClapping, handleClap, hasClapped };
 }
 
-// ─── Post Card Component ──────────────────────────────────────────────────────
+// â”€â”€â”€ Post Card Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function PostCard({ post, index }: { post: BlogPostWithContent; index: number }) {
   const { claps, isClapping, handleClap, hasClapped } = usePostClaps(post.slug);
@@ -228,11 +228,11 @@ function PostCard({ post, index }: { post: BlogPostWithContent; index: number })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
               <span className="truncate">{formatDate(post.publishedAt)}</span>
-              <span>·</span>
+              <span>Â·</span>
               <span>{post.readingTime || 5} min read</span>
               {post.tags && post.tags[0] && (
                 <>
-                  <span className="hidden sm:inline">·</span>
+                  <span className="hidden sm:inline">Â·</span>
                   <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
                     {post.tags[0].replace(/-/g, ' ')}
                   </span>
@@ -312,7 +312,7 @@ function PostCard({ post, index }: { post: BlogPostWithContent; index: number })
   );
 }
 
-// ─── Mobile Filter Modal Component ───────────────────────────────────────────
+// â”€â”€â”€ Mobile Filter Modal Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function MobileFilterModal({
   allTags,
@@ -380,7 +380,7 @@ function MobileFilterModal({
   );
 }
 
-// ─── Main BlogClient Component ───────────────────────────────────────────────
+// â”€â”€â”€ Main BlogClient Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -472,7 +472,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
                       <span className="truncate">{formatDate(post.publishedAt)}</span>
-                      <span>·</span>
+                      <span>Â·</span>
                       <span>{post.readingTime || 5} min read</span>
                     </div>
                   </div>

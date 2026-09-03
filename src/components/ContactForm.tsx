@@ -1,8 +1,8 @@
-// src/components/ContactForm.tsx
+﻿// src/components/ContactForm.tsx
 'use client'
 
 import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/client'
 import { Send, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 
 export default function ContactForm() {

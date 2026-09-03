@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { useUser } from '@clerk/nextjs';
@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 import { Application } from '@/types/application';
 import { createJobSlug } from '@/lib/utils/format';
-import { useUserRole } from '@/app/hooks/useUserRole';
+import { useUserRole } from '@/hooks/useUserRole';
 
 interface Stats {
   totalApplications: number;
@@ -488,7 +488,7 @@ export default function Dashboard() {
                                   {app.job_title}
                                 </h3>
                                 <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
-                                  {app.company} {app.location ? `• ${app.location}` : ''}
+                                  {app.company} {app.location ? `â€¢ ${app.location}` : ''}
                                 </p>
 
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
@@ -556,7 +556,7 @@ export default function Dashboard() {
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-sm font-bold text-slate-900">{save.title}</h3>
                                 <p className="text-xs text-slate-500 mt-0.5">
-                                  {save.company} {save.location ? `• ${save.location}` : ''}
+                                  {save.company} {save.location ? `â€¢ ${save.location}` : ''}
                                 </p>
 
                                 <div className="flex flex-wrap items-center gap-2 mt-2">

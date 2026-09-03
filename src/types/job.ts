@@ -6,7 +6,7 @@ export interface Job {
   owner_id?: string; // Clerk user ID for company-owned postings
   title: string;
   company: string;
-  location: string;
+  location: string | null;
   type: string; // More flexible than union type to support any job type
   experience_level?: string;
   salary_range?: string;
@@ -21,6 +21,7 @@ export interface Job {
   slug: string; // Added slug field for URL routing
   posted_date: string;
   updated_date?: string;
+ 
   
   status?: 'pending' | 'approved' | 'rejected';
 
@@ -153,7 +154,9 @@ export const GLOBAL_REGIONS: GlobalRegion[] = [
 ];
 
 // Utility function to get job region
-export const getJobRegion = (location: string): string | null => {
+export const getJobRegion = (location: string | null | undefined): string | null => {
+  if (!location) return null;
+
   for (const region of GLOBAL_REGIONS) {
     if (region.countries.some(country => location.toLowerCase().includes(country.toLowerCase()))) {
       return region.value;

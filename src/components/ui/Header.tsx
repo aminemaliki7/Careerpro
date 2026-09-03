@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
@@ -18,7 +18,7 @@ import {
   UserButton,
 } from '@clerk/nextjs';
 import CircuitLogo from './CircuitLogo';
-import { useUserRole } from '@/app/hooks/useUserRole';
+import { useUserRole } from '@/hooks/useUserRole';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -85,21 +85,6 @@ export default function Header() {
                 </Link>
               );
             })}
-
-            <SignedIn>
-              <div className="h-3.5 w-px bg-slate-200 mx-1" aria-hidden="true" />
-              <Link
-                href={dashboardHref}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-150 ${
-                  isPathActive(dashboardHref)
-                    ? 'bg-white text-indigo-600 shadow-xs font-semibold'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
-                }`}
-              >
-                <LayoutDashboard className={`w-3.5 h-3.5 ${isPathActive(dashboardHref) ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>{dashboardLabel}</span>
-              </Link>
-            </SignedIn>
           </nav>
 
           {/* Right Controls & Auth */}
@@ -124,16 +109,26 @@ export default function Header() {
               </div>
             </SignedOut>
 
-            <SignedIn>
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox:
-                      'w-8 h-8 rounded-full ring-2 ring-slate-200/80 hover:ring-indigo-600 transition-all',
-                  },
-                }}
-              />
-            </SignedIn>
+        <SignedIn>
+  <UserButton
+    appearance={{
+      elements: {
+        avatarBox:
+          'w-8 h-8 rounded-full ring-2 ring-slate-200/80 hover:ring-indigo-600 transition-all',
+      },
+    }}
+  >
+    <UserButton.MenuItems>
+      <UserButton.Link
+        label={dashboardLabel}
+        labelIcon={<LayoutDashboard className="w-4 h-4" />}
+        href={dashboardHref}
+      />
+      <UserButton.Action label="manageAccount" />
+      <UserButton.Action label="signOut" />
+    </UserButton.MenuItems>
+  </UserButton>
+</SignedIn>
 
             {/* Mobile Menu Trigger Button */}
             <button
@@ -171,22 +166,6 @@ export default function Header() {
                   </Link>
                 );
               })}
-
-              <SignedIn>
-                <div className="pt-2 mt-2 border-t border-slate-100">
-                  <Link
-                    href={dashboardHref}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                      isPathActive(dashboardHref)
-                        ? 'text-indigo-600 bg-indigo-50/80 font-semibold'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`}
-                  >
-                    <LayoutDashboard className={`w-4 h-4 ${isPathActive(dashboardHref) ? 'text-indigo-600' : 'text-slate-400'}`} />
-                    <span>{dashboardLabel}</span>
-                  </Link>
-                </div>
-              </SignedIn>
 
               <SignedOut>
                 <div className="pt-3 mt-2 border-t border-slate-100 space-y-2">

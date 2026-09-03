@@ -1,6 +1,6 @@
-// src/hooks/useRealtimeClaps.ts
+﻿// src/hooks/useRealtimeClaps.ts
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import type { RealtimeChannel } from '@supabase/supabase-js';
 
 // Shared channel and subscribers management

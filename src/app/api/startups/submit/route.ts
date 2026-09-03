@@ -1,6 +1,6 @@
-// app/api/startups/submit/route.ts
+﻿// app/api/startups/submit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import { auth } from '@clerk/nextjs/server';
 
 function generateSlug(name: string): string {

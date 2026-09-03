@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase';
+﻿import { supabase } from '@/lib/supabase/client';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
@@ -222,7 +222,7 @@ export default async function JobDetailsPage({
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <h1 className="text-xl font-bold text-gray-900 leading-snug">{typedJob.title}</h1>
-                <p className="text-xs font-semibold text-gray-500">{typedJob.company} • Posted {formatDate(typedJob.posted_date)}</p>
+                <p className="text-xs font-semibold text-gray-500">{typedJob.company} â€¢ Posted {formatDate(typedJob.posted_date)}</p>
               </div>
               {typedJob.featured && (
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 shrink-0">
@@ -377,7 +377,7 @@ export default async function JobDetailsPage({
                     </p>
                     <p className="text-[11px] text-gray-500 truncate">{job.company}</p>
                     <p className="text-[10px] text-gray-400 mt-1 truncate">
-                      {job.location} • {job.type}
+                      {job.location} â€¢ {job.type}
                     </p>
                   </Link>
                 ))}

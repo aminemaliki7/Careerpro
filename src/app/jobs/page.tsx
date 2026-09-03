@@ -1,7 +1,7 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 import Link from 'next/link';
 import { Job, getJobRegion, GLOBAL_REGIONS } from '@/types/job';
 import { createJobSlug } from '@/lib/utils/format';
@@ -280,7 +280,7 @@ const [startupsLoading, setStartupsLoading] = useState(true);
             </div>
 
             {/* Location & Region Grid */}
-            <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 gap-2">
               <div>
                 <label className="block text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">Location</label>
                 <div className="relative">
@@ -290,8 +290,10 @@ const [startupsLoading, setStartupsLoading] = useState(true);
                     className="w-full appearance-none bg-gray-50/80 border border-gray-200/80 text-gray-700 rounded-lg pr-7 pl-2.5 py-1.5 text-xs focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all truncate"
                   >
                     <option value="">All Cities</option>
-                    {[...new Set(jobs.map(job => job.location))].filter(Boolean).map(loc => (
-                      <option key={loc} value={loc}>{loc}</option>
+                    {[...new Set(jobs.map(job => job.location))]
+                      .filter((loc): loc is string => Boolean(loc))
+                      .map(loc => (
+                        <option key={loc} value={loc}>{loc}</option>
                     ))}
                   </select>
                   <ChevronDownIcon className="absolute right-2 top-1/2 -translate-y-1/2 h-3 w-3 text-gray-400 pointer-events-none" />
@@ -475,7 +477,7 @@ const [startupsLoading, setStartupsLoading] = useState(true);
                           requirements={job.requirements}
                           contactEmail={job.contact_email}
                           skills={job.skills}
-                          location={job.location}
+                          location={job.location ?? ''}
                           salaryRange={job.salary_range}
                         />
                       </div>
