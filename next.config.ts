@@ -7,10 +7,11 @@ const nextConfig: NextConfig = {
 
   // 1. Fix: Multiple Lockfiles Warning
   // Explicitly sets the project root for file tracing.
-  outputFileTracingRoot: path.join(__dirname, '../../'),
+  outputFileTracingRoot: __dirname,
 
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
+   serverExternalPackages: ['pdf-parse'],
 
   // Disable ESLint during builds (temporary)
   eslint: {
@@ -22,8 +23,8 @@ const nextConfig: NextConfig = {
     mdxRs: true,
 
     // Instruct Next.js to treat pdf-parse as an external Node module.
-    serverComponentsExternalPackages: ['pdf-parse'],
   },
+ 
 
   // Image optimization configuration
   images: {
