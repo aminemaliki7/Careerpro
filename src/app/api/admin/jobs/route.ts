@@ -1,53 +1,68 @@
 ﻿import { NextResponse, type NextRequest } from 'next/server';
-import { supabase } from '@/lib/supabase/client'; // Import the Supabase client
 import { supabaseAdmin } from '@/lib/supabase/admin';
-import { auth } from '@clerk/nextjs/server';
+import { requireAdmin, requireCompanyUser } from '@/lib/auth/authorization';
+import { serverError, validationError, ok } from '@/lib/api/errors';
+import { createJobSchema } from '@/schemas';
 
+const JOB_LIST_COLUMNS =
+  'id,title,company,slug,location,type,experience_level,salary_range,remote,featured,status,posted_date,updated_date,created_at';
+
+// GET: admin only. No public/client consumer depends on this endpoint, so it is
+// restricted to trusted admins accessing the service-role client. Returns a
+// bounded set of columns (never `*`) pending/approved jobs for moderation.
 export async function GET() {
-  const { data: jobs, error } = await supabase
-    .from('jobs') // Your Supabase table name
-    .select('*')
-    .order('posted_date', { ascending: false });
+  const authResult = await requireAdmin();
+  if (authResult.response) return authResult.response;
 
-  if (error) {
-    console.error('Error fetching jobs:', error);
-    return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
-  }
+  const { data: jobs, error } = await supabaseAdmin
+    .from('jobs')
+    .select(JOB_LIST_COLUMNS)
+    .order('posted_date', { ascending: false })
+    .limit(200);
 
-  return NextResponse.json(jobs);
+  if (error) return serverError(error, 'admin-jobs-get');
+
+  return ok(jobs ?? []);
 }
 
+// POST: company/recruiter/founder only. Role is resolved server-side; the
+// client-supplied role is ignored. Payload is validated with Zod. New jobs are
+// always created in 'pending' so recruiters cannot self-publish.
 export async function POST(request: NextRequest) {
-  const { userId } = await auth();
+  const authResult = await requireCompanyUser();
+  if (authResult.response) return authResult.response;
+  const { userId } = authResult;
 
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const { data: profile, error: profileError } = await supabaseAdmin
-    .from('user_profiles')
-    .select('role')
-    .eq('clerk_id', userId)
-    .maybeSingle();
+  const parsed = createJobSchema.safeParse(body);
+  if (!parsed.success) return validationError(parsed.error);
 
-  if (profileError || !profile || !['company', 'recruiter', 'founder'].includes(profile.role)) {
-    return NextResponse.json({ error: 'Only company accounts can post jobs' }, { status: 403 });
-  }
+  const { owner_id, status, posted_date, updated_date, ...rest } = parsed.data;
 
-  const jobData = { ...(await request.json()), owner_id: userId };
+  const insertPayload = {
+    ...rest,
+    owner_id: userId,
+    status: 'pending' as const,
+    posted_date: posted_date ?? new Date().toISOString(),
+    updated_date: updated_date ?? new Date().toISOString(),
+  };
 
   const { data, error } = await supabaseAdmin
     .from('jobs')
-    .insert([jobData])
-    .select();
+    .insert([insertPayload])
+    .select()
+    .single();
 
-  if (error) {
-    console.error('Error creating job:', error);
-    return new NextResponse(JSON.stringify({ error: error.message }), { status: 500 });
-  }
+  if (error) return serverError(error, 'admin-jobs-post');
 
-  return NextResponse.json({ 
-    message: 'Job created successfully', 
-    data: data[0] 
-  }, { status: 201 });
+  return NextResponse.json(
+    { message: 'Job created successfully', data },
+    { status: 201 }
+  );
 }

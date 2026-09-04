@@ -172,7 +172,7 @@ export default function Dashboard() {
         if (!response.ok) throw new Error('Failed to fetch saved jobs');
 
         const data = await response.json();
-        setSavedJobs(data.saved_jobs || []);
+        setSavedJobs(data.jobs || []);
       } catch (err) {
         setSavedJobsError(err instanceof Error ? err.message : 'Failed to load saved jobs');
       } finally {
