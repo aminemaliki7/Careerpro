@@ -11,6 +11,8 @@ const isPublicRoute = createRouteMatcher([
   '/startups(.*)',
   '/api/startups',
   '/api/startups/:slug',
+  '/api/subscribe',
+  '/api/podcast/stats',
   '/blog(.*)',
   '/podcast(.*)',
   '/roadmaps(.*)',

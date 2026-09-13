@@ -216,7 +216,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
                       </h3>
                       <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500 mb-2">
                         <span className="truncate">{formatDate(episode.publishedAt)}</span>
-                        <span>Â·</span>
+                        <span>•</span>
                         <span>{episode.readingTime || 5} min</span>
                       </div>
                     </Link>

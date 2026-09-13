@@ -1,19 +1,26 @@
 // app/api/upload/logo/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { auth } from '@clerk/nextjs/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml', 'image/webp', 'image/gif'];
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 const BUCKET_NAME = 'startup-logos';
-
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const LOGO_PATH_REGEX =
+  /^logos\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[a-z0-9]+$/i;
 
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please sign in to upload a logo' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('logo') as File;
 
@@ -27,7 +34,7 @@ export async function POST(request: NextRequest) {
     // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: 'Invalid file type. Only images (PNG, JPG, SVG, WebP, GIF) are allowed' },
+        { error: 'Invalid file type. Only images (PNG, JPG, WebP, GIF) are allowed' },
         { status: 400 }
       );
     }
@@ -50,7 +57,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload to Supabase Storage
-    const { data, error } = await supabase.storage
+    const { data, error } = await supabaseAdmin.storage
       .from(BUCKET_NAME)
       .upload(filePath, buffer, {
         contentType: file.type,
@@ -67,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get public URL
-    const { data: { publicUrl } } = supabase.storage
+    const { data: { publicUrl } } = supabaseAdmin.storage
       .from(BUCKET_NAME)
       .getPublicUrl(filePath);
 
@@ -90,8 +97,19 @@ export async function POST(request: NextRequest) {
 }
 
 // DELETE endpoint to remove old logos
+// Auth-required and scoped to the logos/ prefix so callers cannot delete
+// arbitrary objects (e.g. CVs) from storage by guessing a path.
 export async function DELETE(request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please sign in' },
+        { status: 401 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const filePath = searchParams.get('path');
 
@@ -102,7 +120,14 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const { error } = await supabase.storage
+    if (!LOGO_PATH_REGEX.test(filePath)) {
+      return NextResponse.json(
+        { error: 'Invalid logo path' },
+        { status: 400 }
+      );
+    }
+
+    const { error } = await supabaseAdmin.storage
       .from(BUCKET_NAME)
       .remove([filePath]);
 

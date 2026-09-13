@@ -1,15 +1,15 @@
-import { Metadata } from 'next';
+﻿import { Metadata } from 'next';
 import BlogClient from './BlogClient';
 import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 
 export const metadata: Metadata = {
-  title: 'Blog — AI, Startups & Tech Career Insights | Hirely',
+  title: 'Blog - AI, Startups & Tech Career Insights | Hirely',
   description:
     'Deep dives on AI trends, startup ecosystems, developer career paths, and the global tech job market. Written for engineers who want to think, not just ship.',
   keywords: 'AI trends, tech careers, startup insights, developer blog, Morocco tech, career advice',
   alternates: { canonical: 'https://hirely.ma/blog' },
   openGraph: {
-    title:       'Blog — AI, Startups & Tech Career Insights | Hirely',
+    title:       'Blog - AI, Startups & Tech Career Insights | Hirely',
     description: 'Deep dives on AI, startups, and tech careers for developers worldwide.',
     url:         'https://hirely.ma/blog',
     siteName:    'Hirely.ma',
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Blog — AI, Startups & Tech Career Insights | Hirely',
+    title:       'Blog - AI, Startups & Tech Career Insights | Hirely',
     description: 'Deep dives on AI, startups, and tech careers for developers worldwide.',
     site:        '@hirely_ma',
     creator:     '@hirely_ma',

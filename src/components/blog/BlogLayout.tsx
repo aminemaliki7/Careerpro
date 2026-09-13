@@ -388,7 +388,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
               <div className="text-sm font-medium text-gray-900 truncate">{post.author || 'Hirely'}</div>
               <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mt-0.5 flex-wrap">
                 <span className="whitespace-nowrap">{formatDate(post.publishedAt)}</span>
-                <span className="hidden sm:inline">Â·</span>
+                <span className="hidden sm:inline">•</span>
                 <span className="whitespace-nowrap">{post.readingTime || 5} min read</span>
               </div>
             </div>

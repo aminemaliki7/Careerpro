@@ -29,11 +29,13 @@ import {
   Settings as SettingsIcon,
   Sparkles,
   Layers,
-  ChevronRight
+  ChevronRight,
+  GraduationCap
 } from 'lucide-react';
 import { Application } from '@/types/application';
 import { createJobSlug } from '@/lib/utils/format';
 import { useUserRole } from '@/hooks/useUserRole';
+import SkillGapTab from '@/components/dashboard/SkillGapTab';
 
 interface Stats {
   totalApplications: number;
@@ -64,12 +66,13 @@ interface SavedJob {
 }
 
 type StatusFilter = 'all' | 'pending' | 'interview' | 'accepted' | 'rejected';
+type ActiveTab = 'applications' | 'saved' | 'skillgap' | 'profile' | 'settings';
 
 export default function Dashboard() {
   const { isSignedIn, user, isLoaded } = useUser();
   const { isCompany, isLoading: roleLoading } = useUserRole();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'applications' | 'saved' | 'profile' | 'settings'>('applications');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('applications');
   
   const [applications, setApplications] = useState<ApplicationWithCvExtras[]>([]);
   const [savedJobs, setSavedJobs] = useState<SavedJob[]>([]);
@@ -295,7 +298,10 @@ export default function Dashboard() {
     );
   }
 
-  const pdfUrl = selectedApp?.cv_file_url || selectedApp?.cv_url;
+  const hasCv =
+    Boolean(selectedApp?.cv_file_url || selectedApp?.cv_url) &&
+    Boolean(selectedApp?.id);
+  const pdfUrl = hasCv ? `/api/applications/${selectedApp?.id}/cv` : undefined;
   const rawPdfName = selectedApp?.cv_file_name || selectedApp?.cv_filename;
   const pdfName = formatFileName(rawPdfName, selectedApp?.job_title);
 
@@ -386,6 +392,19 @@ export default function Dashboard() {
                   }`}>
                     {savedJobs.length}
                   </span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('skillgap')}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all ${
+                    activeTab === 'skillgap'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                  }`}
+                >
+                  <GraduationCap className="w-4 h-4" />
+                  Skill Gap
                 </button>
 
                 <button
@@ -488,7 +507,7 @@ export default function Dashboard() {
                                   {app.job_title}
                                 </h3>
                                 <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
-                                  {app.company} {app.location ? `â€¢ ${app.location}` : ''}
+                                  {app.company} {app.location ? `• ${app.location}` : ''}
                                 </p>
 
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
@@ -556,7 +575,7 @@ export default function Dashboard() {
                               <div className="flex-1 min-w-0">
                                 <h3 className="text-sm font-bold text-slate-900">{save.title}</h3>
                                 <p className="text-xs text-slate-500 mt-0.5">
-                                  {save.company} {save.location ? `â€¢ ${save.location}` : ''}
+                                  {save.company} {save.location ? `• ${save.location}` : ''}
                                 </p>
 
                                 <div className="flex flex-wrap items-center gap-2 mt-2">
@@ -602,6 +621,9 @@ export default function Dashboard() {
                   )}
                 </div>
               )}
+
+              {/* SKILL GAP TAB */}
+             {activeTab === 'skillgap' && <SkillGapTab />}
 
               {/* PROFILE TAB */}
               {activeTab === 'profile' && (

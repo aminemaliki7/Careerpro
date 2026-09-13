@@ -1,17 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { auth } from '@clerk/nextjs/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
-const BUCKET_NAME = 'startup-logos';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
+const BUCKET_NAME = 'application-cvs';
 
 export async function POST(request: NextRequest) {
   try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'Unauthorized - Please sign in to upload a CV' },
+        { status: 401 }
+      );
+    }
+
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
 
@@ -33,7 +38,7 @@ export async function POST(request: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    const { error } = await supabase.storage
+    const { error } = await supabaseAdmin.storage
       .from(BUCKET_NAME)
       .upload(filePath, buffer, {
         contentType: file.type || 'application/pdf',
@@ -46,11 +51,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: `Failed to upload CV: ${error.message}` }, { status: 500 });
     }
 
-    const { data: { publicUrl } } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-
+    // CVs are stored in a PRIVATE bucket. The `url` field is the storage path,
+    // not a public URL - CVs must be fetched through the authorized
+    // /api/applications/[id]/cv endpoint (which issues a short-lived signed URL).
     return NextResponse.json({
       success: true,
-      url: publicUrl,
+      url: filePath,
       filename: uniqueFilename,
       path: filePath,
     });

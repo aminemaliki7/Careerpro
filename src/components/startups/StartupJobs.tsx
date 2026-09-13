@@ -1,4 +1,4 @@
-// src/components/startups/StartupJobs.tsx
+﻿// src/components/startups/StartupJobs.tsx
 import Link from 'next/link';
 import { Briefcase, MapPin, Clock, ArrowRight, Wifi } from 'lucide-react';
 import { createJobSlug } from '@/lib/utils/format';
@@ -82,7 +82,7 @@ export default async function StartupJobs({ slug, startupName }: StartupJobsProp
           href={`/jobs?company=${encodeURIComponent(startupName)}`}
           className="text-xs text-gray-400 hover:text-[#0A66C2] transition-colors"
         >
-          View all →
+          View all →’
         </Link>
       </div>
 

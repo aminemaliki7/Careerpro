@@ -3,6 +3,8 @@ import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import { NextRequest, NextResponse } from 'next/server';
 
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 export async function GET(
   req: NextRequest,
   context: { params: Promise<{ job_id: string }> }
@@ -19,9 +21,8 @@ export async function GET(
 
     const { job_id } = await context.params;
 
-    // Parse job_id as integer
-    const jobId = parseInt(job_id, 10);
-    if (isNaN(jobId)) {
+    // job_id is a UUID column in Postgres, not an integer — do not parseInt it.
+    if (!job_id || !UUID_REGEX.test(job_id)) {
       return NextResponse.json(
         { error: 'Invalid job_id format' },
         { status: 400 }
@@ -32,7 +33,7 @@ export async function GET(
     const { data: job, error: jobError } = await supabaseAdmin
       .from('jobs')
       .select('owner_id')
-      .eq('id', jobId)
+      .eq('id', job_id)
       .maybeSingle();
 
     if (jobError) {
@@ -61,7 +62,7 @@ export async function GET(
     const { data: rules, error: rulesError } = await supabaseAdmin
       .from('automation_config')
       .select('id, job_id, rule_type, threshold, action, enabled, created_at, updated_at')
-      .eq('job_id', jobId)
+      .eq('job_id', job_id)
       .order('created_at', { ascending: true });
 
     if (rulesError) {
@@ -74,7 +75,7 @@ export async function GET(
 
     return NextResponse.json(
       {
-        job_id: jobId,
+        job_id: job_id,
         rules: rules || [],
         count: (rules || []).length,
       },

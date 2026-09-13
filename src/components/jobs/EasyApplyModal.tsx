@@ -1,8 +1,15 @@
-'use client';
+﻿'use client';
 
 import { useState, ChangeEvent } from 'react';
 
 // --- Types & Interfaces ---
+interface Weakness {
+  type: string;
+  label: string;
+  severity: 'critical' | 'moderate' | 'minor';
+  detail: string;
+}
+
 interface AtsResult {
   matchScore: number;
   matchedSkills: string[];
@@ -10,6 +17,22 @@ interface AtsResult {
   strengths: string[];
   recommendations: string[];
   summary: string;
+  verdict: 'strong_match' | 'good_match' | 'weak_match' | 'not_recommended';
+  weaknesses: Weakness[];
+}
+
+interface OptimizationSuggestion {
+  type: string;
+  priority: 'high' | 'medium' | 'low';
+  title: string;
+  detail: string;
+  example?: string;
+}
+
+interface OptimizationResult {
+  suggestions: OptimizationSuggestion[];
+  missingCriticalCount: number;
+  quickWinsCount: number;
 }
 
 interface EasyApplyModalProps {
@@ -56,6 +79,20 @@ const Icons = {
   ),
 };
 
+const VERDICT_LABELS: Record<AtsResult['verdict'], string> = {
+  strong_match: 'Strong Match',
+  good_match: 'Good Match',
+  weak_match: 'Weak Match',
+  not_recommended: 'Not Recommended',
+};
+
+const VERDICT_STYLES: Record<AtsResult['verdict'], string> = {
+  strong_match: 'border-emerald-200 bg-emerald-50/60',
+  good_match: 'border-purple-200 bg-purple-50/60',
+  weak_match: 'border-amber-200 bg-amber-50/60',
+  not_recommended: 'border-red-200 bg-red-50/60',
+};
+
 export default function EasyApplyModal({
   isOpen,
   onClose,
@@ -80,6 +117,7 @@ export default function EasyApplyModal({
   const [status, setStatus] = useState({
     parsing: false,
     atsLoading: false,
+    optimizing: false,
     generating: false,
     saving: false,
     savedSuccess: false,
@@ -87,6 +125,7 @@ export default function EasyApplyModal({
   });
 
   const [atsResult, setAtsResult] = useState<AtsResult | null>(null);
+  const [optimization, setOptimization] = useState<OptimizationResult | null>(null);
 
   if (!isOpen) return null;
 
@@ -115,6 +154,7 @@ export default function EasyApplyModal({
     setCvFile(file);
     updateStatus({ parsing: true, error: '' });
     setAtsResult(null);
+    setOptimization(null);
 
     try {
       const text = await extractTextFromFile(file);
@@ -152,6 +192,26 @@ export default function EasyApplyModal({
     }
   };
 
+  const handleOptimizeCv = async () => {
+    updateStatus({ optimizing: true, error: '' });
+    try {
+      const res = await fetch('/api/jobs/optimize-cv', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cvText: cvText.trim(), jobTitle, company, requirements, description, skills }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Optimization failed.');
+
+      setOptimization(data.optimization);
+      setStep(4);
+    } catch (err) {
+      updateStatus({ error: err instanceof Error ? err.message : 'Failed to optimize CV.' });
+    } finally {
+      updateStatus({ optimizing: false });
+    }
+  };
+
   const handleGenerateEmail = async () => {
     if (cvText.trim().length < 50) return;
 
@@ -166,7 +226,7 @@ export default function EasyApplyModal({
       if (!res.ok) throw new Error('Email generation failed.');
 
       setGeneratedEmail(data.emailContent);
-      setStep(4);
+      setStep(5);
     } catch (err) {
       updateStatus({ error: 'Failed to generate application email.' });
     } finally {
@@ -228,23 +288,23 @@ export default function EasyApplyModal({
     window.location.href = mailto;
   };
 
-  const stepsList = ['Info', 'CV Upload', 'ATS Check', 'Review & Send'];
+  const stepsList = ['Info', 'CV Upload', 'ATS Check', 'Optimize', 'Review & Send'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/50 backdrop-blur-xs">
       <div className="bg-white w-full max-w-lg rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden flex flex-col max-h-[90vh]">
-        
+
         {/* Header */}
         <div className="bg-white border-b border-gray-100 p-4 flex justify-between items-center">
           <div>
             <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
-              <Icons.Sparkles className="w-4 h-4 text-purple-600" /> 
+              <Icons.Sparkles className="w-4 h-4 text-purple-600" />
               Easy Apply with AI
             </h2>
             <p className="text-xs text-gray-500 font-medium truncate mt-0.5">{jobTitle} • {company}</p>
           </div>
-          <button 
-            onClick={onClose} 
+          <button
+            onClick={onClose}
             className="p-1.5 text-gray-400 hover:text-gray-600 border border-gray-200/80 rounded-lg hover:bg-gray-50 transition-colors"
             aria-label="Close modal"
           >
@@ -262,10 +322,10 @@ export default function EasyApplyModal({
               <div key={label} className="flex flex-col items-center flex-1">
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-semibold transition ${
-                    isDone 
-                      ? 'bg-emerald-600 text-white' 
-                      : isActive 
-                        ? 'bg-purple-600 text-white shadow-2xs' 
+                    isDone
+                      ? 'bg-emerald-600 text-white'
+                      : isActive
+                        ? 'bg-purple-600 text-white shadow-2xs'
                         : 'bg-gray-200/80 text-gray-500'
                   }`}
                 >
@@ -329,26 +389,109 @@ export default function EasyApplyModal({
 
           {step === 3 && atsResult && (
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 rounded-xl border border-purple-200 bg-purple-50/60 flex justify-between items-center">
+              <div className={`p-3.5 rounded-xl border flex justify-between items-center ${VERDICT_STYLES[atsResult.verdict]}`}>
                 <div>
-                  <span className="font-bold text-purple-900 block text-xs">Match Score: {atsResult.matchScore}%</span>
-                  <span className="text-[11px] text-purple-700 mt-0.5 block">{atsResult.summary}</span>
+                  <span className="font-bold block text-xs text-gray-900">
+                    Match Score: {atsResult.matchScore}%
+                  </span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wide mt-0.5 block text-gray-700">
+                    {VERDICT_LABELS[atsResult.verdict]}
+                  </span>
+                  <span className="text-[11px] text-gray-700 mt-0.5 block">{atsResult.summary}</span>
                 </div>
               </div>
-              <div className="bg-gray-50/60 p-3.5 rounded-xl border border-gray-200/80 space-y-2">
-                <p className="font-bold text-[10px] uppercase tracking-wider text-emerald-700">Matched Skills</p>
-                <div className="flex flex-wrap gap-1">
-                  {atsResult.matchedSkills.map((s) => (
-                    <span key={s} className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-semibold px-2 py-0.5 rounded">
-                      {s}
-                    </span>
-                  ))}
+
+              {atsResult.matchedSkills.length > 0 && (
+                <div className="bg-gray-50/60 p-3.5 rounded-xl border border-gray-200/80 space-y-2">
+                  <p className="font-bold text-[10px] uppercase tracking-wider text-emerald-700">Matched Skills</p>
+                  <div className="flex flex-wrap gap-1">
+                    {atsResult.matchedSkills.map((s) => (
+                      <span key={s} className="bg-emerald-50 text-emerald-700 border border-emerald-200/80 text-[10px] font-semibold px-2 py-0.5 rounded">
+                        {s}
+                      </span>
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              {atsResult.weaknesses.length > 0 && (
+                <div className="bg-gray-50/60 p-3.5 rounded-xl border border-gray-200/80 space-y-2">
+                  <p className="font-bold text-[10px] uppercase tracking-wider text-red-700">Areas to Improve</p>
+                  <ul className="space-y-1.5">
+                    {atsResult.weaknesses.slice(0, 4).map((w, i) => (
+                      <li key={i} className="flex items-start gap-1.5">
+                        <span className={`mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                          w.severity === 'critical' ? 'bg-red-500' :
+                          w.severity === 'moderate' ? 'bg-amber-500' : 'bg-gray-400'
+                        }`} />
+                        <span className="text-[11px] text-gray-700">
+                          <span className="font-semibold text-gray-900">{w.label}</span> - {w.detail}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  {atsResult.weaknesses.length > 4 && (
+                    <p className="text-[10px] text-gray-400 font-medium pt-0.5">
+                      +{atsResult.weaknesses.length - 4} more area{atsResult.weaknesses.length - 4 > 1 ? 's' : ''} to improve
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {atsResult.recommendations.length > 0 && (
+                <div className="bg-purple-50/40 p-3.5 rounded-xl border border-purple-200/60 space-y-2">
+                  <p className="font-bold text-[10px] uppercase tracking-wider text-purple-700">Recommended Actions</p>
+                  <ul className="space-y-1.5">
+                    {atsResult.recommendations.slice(0, 4).map((r, i) => (
+                      <li key={i} className="flex items-start gap-1.5">
+                        <Icons.Sparkles className="w-3 h-3 text-purple-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-[11px] text-gray-700">{r}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 4 && optimization && (
+            <div className="space-y-3 text-xs">
+              <div className="p-3.5 rounded-xl border border-purple-200 bg-purple-50/60">
+                <span className="font-bold text-purple-900 block text-xs">
+                  {optimization.suggestions.length} suggestion{optimization.suggestions.length !== 1 ? 's' : ''} found
+                </span>
+                <span className="text-[11px] text-purple-700 mt-0.5 block">
+                  {optimization.missingCriticalCount > 0
+                    ? `${optimization.missingCriticalCount} required skill${optimization.missingCriticalCount > 1 ? 's' : ''} missing - address these first.`
+                    : 'No critical gaps - these are polish suggestions.'}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {optimization.suggestions.map((s, i) => (
+                  <div key={i} className="bg-gray-50/60 p-3 rounded-xl border border-gray-200/80">
+                    <div className="flex items-start gap-2">
+                      <span className={`mt-0.5 w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                        s.priority === 'high' ? 'bg-red-500' :
+                        s.priority === 'medium' ? 'bg-amber-500' : 'bg-gray-400'
+                      }`} />
+                      <div className="flex-1">
+                        <p className="font-semibold text-gray-900 text-[11px]">{s.title}</p>
+                        <p className="text-gray-600 text-[11px] mt-0.5">{s.detail}</p>
+                        {s.example && (
+                          <p className="text-purple-700 text-[10px] mt-1.5 italic bg-purple-50/60 rounded-lg p-2 border border-purple-100">
+                            {s.example}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
             <div className="space-y-3">
               {status.savedSuccess && (
                 <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-xs p-2.5 rounded-xl font-medium flex items-center gap-1.5">
@@ -420,6 +563,25 @@ export default function EasyApplyModal({
             )}
 
             {step === 3 && (
+              <>
+                <button
+                  onClick={handleOptimizeCv}
+                  disabled={status.optimizing}
+                  className="px-3 py-1.5 border border-purple-200 bg-purple-50 text-purple-700 text-xs font-semibold rounded-lg hover:bg-purple-100/80 disabled:opacity-40 transition-colors flex items-center gap-1.5 shadow-2xs"
+                >
+                  {status.optimizing && <Icons.Spinner />} Optimize CV
+                </button>
+                <button
+                  onClick={handleGenerateEmail}
+                  disabled={status.generating}
+                  className="px-4 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-lg hover:bg-purple-700 disabled:opacity-40 transition-colors flex items-center gap-1.5 shadow-2xs"
+                >
+                  {status.generating && <Icons.Spinner />} Skip to Email
+                </button>
+              </>
+            )}
+
+            {step === 4 && (
               <button
                 onClick={handleGenerateEmail}
                 disabled={status.generating}
@@ -429,7 +591,7 @@ export default function EasyApplyModal({
               </button>
             )}
 
-            {step === 4 && (
+            {step === 5 && (
               <button
                 onClick={handleSendEmail}
                 disabled={status.saving}

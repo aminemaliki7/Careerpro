@@ -4,25 +4,10 @@ import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
 import { createJobSlug } from '@/lib/utils/format';
 import BookmarkButton from '@/components/jobs/BookmarkButton';
-
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  description: string;
-  requirements: string[];
-  skills: string[];
-  contact_email?: string;
-  application_url?: string;
-  posted_date: string;
-  location: string;
-  type: string;
-  salary_range?: string;
-  featured: boolean;
-  remote: boolean;
-  experience_level: 'entry' | 'mid' | 'senior';
-  benefits: string[];
-}
+import { analyzeJobQuality } from '@/lib/job-quality';
+import JobQualityPanel from '@/components/jobs/JobQualityPanel';
+import type { Job } from '@/types/job';
+import type { Startup } from '@/types/startup';
 
 const formatExperienceLevel = (level: string) => {
   const levels: Record<string, string> = {
@@ -142,6 +127,7 @@ export default async function JobDetailsPage({
     .from('jobs')
     .select('*')
     .eq('id', id)
+    .eq('status', 'approved')
     .single();
 
   if (error || !job) notFound();
@@ -152,7 +138,15 @@ export default async function JobDetailsPage({
     .from('jobs')
     .select('id, title, company, location, type')
     .neq('id', id)
+    .eq('status', 'approved')
     .limit(4);
+
+  const { data: startups } = await supabase
+    .from('startups')
+    .select('*')
+    .eq('status', 'approved');
+
+  const qualityAnalysis = analyzeJobQuality(typedJob, (startups ?? []) as Startup[]);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -213,6 +207,8 @@ export default async function JobDetailsPage({
               </div>
             </div>
           </div>
+
+          <JobQualityPanel analysis={qualityAnalysis} />
         </div>
 
         {/* COLUMN 2: Main Job Details Content (Span 6) */}
@@ -222,7 +218,7 @@ export default async function JobDetailsPage({
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
                 <h1 className="text-xl font-bold text-gray-900 leading-snug">{typedJob.title}</h1>
-                <p className="text-xs font-semibold text-gray-500">{typedJob.company} â€¢ Posted {formatDate(typedJob.posted_date)}</p>
+                <p className="text-xs font-semibold text-gray-500">{typedJob.company} • Posted {formatDate(typedJob.posted_date)}</p>
               </div>
               {typedJob.featured && (
                 <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200 shrink-0">
@@ -242,7 +238,7 @@ export default async function JobDetailsPage({
                   description={typedJob.description}
                   contactEmail={typedJob.contact_email}
                   skills={typedJob.skills}
-                  location={typedJob.location}
+                  location={typedJob.location ?? undefined}
                   salaryRange={typedJob.salary_range}
                 />
               )}
@@ -377,7 +373,7 @@ export default async function JobDetailsPage({
                     </p>
                     <p className="text-[11px] text-gray-500 truncate">{job.company}</p>
                     <p className="text-[10px] text-gray-400 mt-1 truncate">
-                      {job.location} â€¢ {job.type}
+                      {job.location} • {job.type}
                     </p>
                   </Link>
                 ))}

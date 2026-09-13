@@ -13,6 +13,7 @@ export async function GET(
       .from('startups')
       .select('*')
       .eq('slug', slug)
+      .eq('status', 'approved')
       .single();
 
     if (error) {

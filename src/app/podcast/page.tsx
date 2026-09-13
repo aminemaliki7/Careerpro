@@ -1,4 +1,4 @@
-// src/app/podcast/page.tsx
+﻿// src/app/podcast/page.tsx
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import PodcastClient from './PodcastClient';
@@ -6,13 +6,13 @@ import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 import { Headphones } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Podcast — Tech, AI & Startup Insights | Hirely',
+  title: 'Podcast - Tech, AI & Startup Insights | Hirely',
   description:
     'Audio episodes covering AI trends, Morocco tech ecosystem, startup stories, and global tech career insights. Plug in and level up on your commute.',
   keywords: 'tech podcast, AI podcast, Morocco tech, startup podcast, developer podcast, Hirely',
   alternates: { canonical: 'https://hirely.ma/podcast' },
   openGraph: {
-    title:       'Podcast — Tech, AI & Startup Insights | Hirely',
+    title:       'Podcast - Tech, AI & Startup Insights | Hirely',
     description: 'Audio episodes covering AI, startups, and tech careers worldwide.',
     url:         'https://hirely.ma/podcast',
     siteName:    'Hirely.ma',
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Podcast — Tech, AI & Startup Insights | Hirely',
+    title:       'Podcast - Tech, AI & Startup Insights | Hirely',
     description: 'Audio episodes covering AI, startups, and tech careers worldwide.',
     site:        '@hirely_ma',
     creator:     '@hirely_ma',
@@ -42,7 +42,7 @@ function PodcastLoading() {
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center">
         <Headphones className="w-12 h-12 text-gray-200 mx-auto mb-4 animate-pulse" />
-        <p className="text-sm text-gray-400">Loading episodes…</p>
+        <p className="text-sm text-gray-400">Loading episodes...</p>
       </div>
     </div>
   );

@@ -15,10 +15,14 @@ export async function GET() {
       );
     }
 
-    // Fetch applications from Supabase using service role (bypasses RLS)
+    // Fetch applications from Supabase using service role (bypasses RLS).
+    // Explicit allowlist only - candidates must NEVER see internal_notes or
+    // the full cv_text extracted by the recruiter-side pipeline.
     const { data, error } = await supabaseAdmin
       .from('applications')
-      .select('*')
+      .select(
+        'id, job_id, job_title, company, location, salary_range, generated_email, status, pipeline_stage, ai_applied, applied_date, contacted_date, created_at, updated_at, cv_url, cv_file_name'
+      )
       .eq('user_id', userId)
       .order('applied_date', { ascending: false });
 

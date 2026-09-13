@@ -1,10 +1,23 @@
 ﻿// src/app/api/podcast/stats/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';
+import { getClientIp, rateLimit } from '@/lib/rate-limit';
 
 // GET: fetch stats for a single episode
 export async function GET(request: NextRequest) {
   try {
+    const rl = rateLimit(`podcast-stats:get:${getClientIp(request)}`, {
+      limit: 60,
+      windowMs: 60_000,
+    });
+
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSeconds) } }
+      );
+    }
+
     const searchParams = request.nextUrl.searchParams;
     const episodeSlug = searchParams.get('episode');
 
@@ -48,9 +61,21 @@ export async function GET(request: NextRequest) {
 // POST: fetch stats for multiple episodes OR increment listens
 export async function POST(request: NextRequest) {
   try {
+    const rl = rateLimit(`podcast-stats:post:${getClientIp(request)}`, {
+      limit: 30,
+      windowMs: 60_000,
+    });
+
+    if (!rl.allowed) {
+      return NextResponse.json(
+        { error: 'Too many requests' },
+        { status: 429, headers: { 'Retry-After': String(rl.retryAfterSeconds) } }
+      );
+    }
+
     const body = await request.json();
 
-    // If it's an array of episode slugs â†’ return multiple stats
+    // If it's an array of episode slugs → return multiple stats
     if (Array.isArray(body.episodeSlugs)) {
       const { data, error } = await supabase
         .from('podcast_stats')
@@ -67,7 +92,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(statsMap);
     }
 
-    // If it's a single episodeSlug â†’ increment listens
+    // If it's a single episodeSlug → increment listens
     const { episodeSlug, duration = 0 } = body;
 
     if (!episodeSlug) {
@@ -77,31 +102,35 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Upsert stats: increment total_listens & total_duration_seconds
-    const { data, error } = await supabase
+    // Read current totals, then write the incremented values atomically.
+    // (The previous code tried to use a non-existent `increment` RPC as an
+    // update value, which is not valid.)
+    const { data: existing, error: existingError } = await supabase
+      .from('podcast_stats')
+      .select('total_listens, total_duration_seconds')
+      .eq('episode_slug', episodeSlug)
+      .maybeSingle();
+
+    if (existingError && existingError.code !== 'PGRST116') {
+      throw existingError;
+    }
+
+    const totalListens = Number(existing?.total_listens ?? 0) + 1;
+    const totalDurationSeconds =
+      Number(existing?.total_duration_seconds ?? 0) + Number(duration ?? 0);
+
+    const { error: upsertError } = await supabase
       .from('podcast_stats')
       .upsert(
         {
           episode_slug: episodeSlug,
-          total_listens: 1,
-          total_duration_seconds: duration,
+          total_listens: totalListens,
+          total_duration_seconds: totalDurationSeconds,
         },
-        { onConflict: 'episode_slug', ignoreDuplicates: false }
-      )
-      .select();
+        { onConflict: 'episode_slug' }
+      );
 
-    if (error) throw error;
-
-    // If exists, increment instead of overwrite
-    if (data && data.length > 0) {
-      await supabase
-        .from('podcast_stats')
-        .update({
-          total_listens: supabase.rpc('increment', { x: 1 }), // or use normal arithmetic
-          total_duration_seconds: supabase.rpc('increment', { x: duration }),
-        })
-        .eq('episode_slug', episodeSlug);
-    }
+    if (upsertError) throw upsertError;
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -1,4 +1,4 @@
-// src/components/blog/AudioPlayer.tsx
+﻿// src/components/blog/AudioPlayer.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
@@ -108,7 +108,7 @@ export function AudioPlayer({ audioUrl, title, duration }: AudioPlayerProps) {
             className="text-xs text-gray-500 hover:text-gray-700 font-medium transition-colors"
             aria-label={`Playback speed: ${playbackRate}x`}
           >
-            {playbackRate}×
+            {playbackRate}Ã—
           </button>
         </div>
 

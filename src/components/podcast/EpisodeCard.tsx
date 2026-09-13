@@ -105,7 +105,7 @@ function EpisodeCardComponent({
             </p>
             <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 mb-3 sm:mb-4 flex-wrap">
               <span className="truncate">{formatDate(episode.publishedAt)}</span>
-              <span>Â·</span>
+              <span>•</span>
               <span>{episode.readingTime || 5} min</span>
             </div>
           </div>

@@ -228,11 +228,11 @@ function PostCard({ post, index }: { post: BlogPostWithContent; index: number })
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
               <span className="truncate">{formatDate(post.publishedAt)}</span>
-              <span>Â·</span>
+              <span>•</span>
               <span>{post.readingTime || 5} min read</span>
               {post.tags && post.tags[0] && (
                 <>
-                  <span className="hidden sm:inline">Â·</span>
+                  <span className="hidden sm:inline">•</span>
                   <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
                     {post.tags[0].replace(/-/g, ' ')}
                   </span>
@@ -472,7 +472,7 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
                     </div>
                     <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
                       <span className="truncate">{formatDate(post.publishedAt)}</span>
-                      <span>Â·</span>
+                      <span>•</span>
                       <span>{post.readingTime || 5} min read</span>
                     </div>
                   </div>

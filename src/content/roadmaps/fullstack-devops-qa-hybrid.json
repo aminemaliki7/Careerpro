@@ -1,4 +1,4 @@
-{
+﻿{
   "id": "fullstack-devops-qa-hybrid",
   "title": "Full-Stack + DevOps + QA Hybrid Engineer",
   "description": "Master the complete software delivery lifecycle: build backend/frontend applications, implement automated testing, and deploy to production with CI/CD and cloud infrastructure.",
@@ -322,7 +322,7 @@
         },
         {
           "type": "Course",
-          "title": "Maîtrisez JavaScript de ES6 à ES9",
+          "title": "MaÃ®trisez JavaScript de ES6 Ã  ES9",
           "url": "https://trk.udemy.com/c/6571722/3227798/39854?prodsku=course.3107506&u=https%3A%2F%2Fwww.udemy.com%2Fmaitrisez-javascript-de-es6-a-es9-cours-28-exercices&intsrc=APIG_26324",
           "provider": "Udemy",
           "rating": 4.6,
@@ -690,7 +690,7 @@
         {
           "type": "Project",
           "title": "End-to-End CI/CD Pipeline",
-          "description": "Build complete CI/CD pipeline: code commit → build → test → containerize → deploy to Kubernetes → monitor"
+          "description": "Build complete CI/CD pipeline: code commit →’ build →’ test →’ containerize →’ deploy to Kubernetes →’ monitor"
         }
       ]
     },

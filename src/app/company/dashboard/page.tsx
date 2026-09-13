@@ -690,7 +690,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                               </h2>
                               <p className="text-xs text-slate-500 font-medium mt-0.5 truncate">
                                 {application.company}
-                                {application.location ? ` â€¢ ${application.location}` : ''}
+                                {application.location ? ` • ${application.location}` : ''}
                               </p>
                               {application.candidate_email && (
                                 <p className="text-[11px] text-slate-400 mt-0.5 truncate flex items-center gap-1">
@@ -753,7 +753,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             <div className="min-w-0">
                               <h2 className="text-sm font-bold text-slate-900">{job.title}</h2>
                               <p className="text-xs text-slate-500 font-medium mt-0.5">
-                                {job.company} â€¢ {job.location}
+                                {job.company} • {job.location}
                               </p>
                               <span className="inline-flex mt-2 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
                                 {job.type || 'Full-time'}
@@ -776,7 +776,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                       <h2 className="text-sm font-bold text-slate-900">Automation rules</h2>
                       <p className="text-xs text-slate-500 mt-1">Configure automatic candidate actions based on ATS scores.</p>
                     </div>
-                    {automationSaving && <span className="text-[11px] text-slate-500 font-medium">Savingâ€¦</span>}
+                    {automationSaving && <span className="text-[11px] text-slate-500 font-medium">Saving...</span>}
                   </div>
 
                   {automationError && <div className="rounded-lg bg-rose-50 border border-rose-200 p-3 text-xs text-rose-700 font-medium">{automationError}</div>}
@@ -839,7 +839,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             </div>
                             <div>
                               <label className="text-[11px] text-slate-600 font-medium">
-                                <span className="block mb-1.5">ATS score threshold (0â€“100)</span>
+                                <span className="block mb-1.5">ATS score threshold (0-100)</span>
                                 <input
                                   type="number"
                                   min="0"
@@ -890,7 +890,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             </div>
                             <div>
                               <label className="text-[11px] text-slate-600 font-medium">
-                                <span className="block mb-1.5">ATS score threshold (0â€“100)</span>
+                                <span className="block mb-1.5">ATS score threshold (0-100)</span>
                                 <input
                                   type="number"
                                   min="0"
@@ -978,7 +978,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
             <div className="flex items-start justify-between p-5 border-b border-slate-100 bg-slate-50/50">
               <div>
                 <h2 className="text-base font-bold text-slate-900">{selectedApplication.job_title}</h2>
-                <p className="text-xs text-slate-600 mt-1">Candidate application â€¢ {formatDate(selectedApplication.applied_date)}</p>
+                <p className="text-xs text-slate-600 mt-1">Candidate application • {formatDate(selectedApplication.applied_date)}</p>
               </div>
               <button
                 type="button"
@@ -1049,7 +1049,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                 <textarea
                   value={noteDraft}
                   onChange={(event) => setNoteDraft(event.target.value)}
-                  placeholder={selectedApplication.internal_notes || 'Add recruiter notesâ€¦'}
+                  placeholder={selectedApplication.internal_notes || 'Add recruiter notes...'}
                   className="w-full min-h-[90px] rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none"
                 />
                 <div className="flex items-center justify-between gap-2">
@@ -1060,13 +1060,13 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                     onClick={() => saveNote(selectedApplication.id)}
                     className="rounded-lg bg-emerald-600 px-3 py-1.5 text-[11px] font-bold text-white disabled:opacity-50"
                   >
-                    {savingNote ? 'Savingâ€¦' : 'Save note'}
+                    {savingNote ? 'Saving...' : 'Save note'}
                   </button>
                 </div>
               </div>
               {(selectedApplication.cv_url || selectedApplication.cv_file_name) && (
                 <a
-                  href={selectedApplication.cv_url}
+                  href={`/api/applications/${selectedApplication.id}/cv`}
                   target="_blank"
                   rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-3 py-2 text-xs font-bold text-white hover:bg-slate-800"
@@ -1081,7 +1081,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                   <span className="text-[10px] text-slate-500">{timeline.length} events</span>
                 </div>
                 {timelineLoading ? (
-                  <div className="text-[11px] text-slate-400">Loading activityâ€¦</div>
+                  <div className="text-[11px] text-slate-400">Loading activity...</div>
                 ) : timeline.length === 0 ? (
                   <div className="text-[11px] text-slate-400">No activity recorded yet.</div>
                 ) : (

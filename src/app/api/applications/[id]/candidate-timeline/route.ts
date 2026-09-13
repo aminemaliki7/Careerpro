@@ -68,11 +68,18 @@ export async function GET(
     }
 
     // 3. Fetch all communications for this application, ordered by creation date (newest first)
-    const { data: communications, error: commError } = await supabaseAdmin
+    // Internal notes (`note_added`) are recruiter-only; candidates must not see them.
+    let query = supabaseAdmin
       .from('candidate_communications')
       .select('id, recruiter_id, event_type, subject, body, created_at')
       .eq('application_id', applicationId)
       .order('created_at', { ascending: false });
+
+    if (isCandidate && !isRecruiter) {
+      query = query.neq('event_type', 'note_added');
+    }
+
+    const { data: communications, error: commError } = await query;
 
     if (commError) {
       console.error('Communications fetch error:', commError);

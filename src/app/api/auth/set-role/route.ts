@@ -44,7 +44,11 @@ export async function POST(request: NextRequest) {
      * retain access to the company workspace.
      */
 
-    if (requestedRole === 'company' || requestedRole === 'recruiter') {
+    if (
+      requestedRole === 'company' ||
+      requestedRole === 'founder' ||
+      requestedRole === 'recruiter'
+    ) {
       if (!professional) {
         return NextResponse.json(
           {

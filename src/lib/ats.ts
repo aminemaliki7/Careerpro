@@ -1,4 +1,4 @@
-// src/lib/ats.ts
+﻿// src/lib/ats.ts
 // Shared ATS scoring engine. Used by both the applicant-facing
 // /api/jobs/ats-check route and the /api/applications/save route so the
 // score a candidate sees and the score stored on their application always
@@ -297,8 +297,10 @@ function calculateATSScore(
   experience: ReturnType<typeof extractWorkExperience>,
   education: ReturnType<typeof extractEducation>,
   keywordScore: number,
-  cvLength: number
-): { score: number; breakdown: Record<string, number> } {
+  cvLength: number,
+  matchedCount: number,
+  totalRequired: number
+): { score: number; breakdown: ScoreBreakdownItem[] } {
   let experienceScore = 0;
   if (experience.yearsOfExperience >= 5) experienceScore = 90;
   else if (experience.yearsOfExperience >= 3) experienceScore = 70;
@@ -323,16 +325,116 @@ function calculateATSScore(
     educationScore * weights.education +
     contentScore * weights.content;
 
-  return {
-    score: Math.round(totalScore),
-    breakdown: {
-      skillMatch: Math.round(skillMatchPercentage * weights.skillMatch),
-      experience: Math.round(experienceScore * weights.experience),
-      keywords: Math.round(keywordScore * weights.keywords),
-      education: Math.round(educationScore * weights.education),
-      content: Math.round(contentScore * weights.content),
+  const breakdown: ScoreBreakdownItem[] = [
+    {
+      label: 'Skills Match',
+      score: Math.round(skillMatchPercentage * weights.skillMatch),
+      weight: weights.skillMatch,
+      reason: totalRequired > 0
+        ? `${matchedCount} of ${totalRequired} required skills found in CV`
+        : 'No specific skills listed on the job to compare against',
     },
-  };
+    {
+      label: 'Experience',
+      score: Math.round(experienceScore * weights.experience),
+      weight: weights.experience,
+      reason: experience.yearsOfExperience > 0
+        ? `${experience.yearsOfExperience}+ years of experience detected`
+        : 'No clear years of experience found in CV',
+    },
+    {
+      label: 'Keyword Relevance',
+      score: Math.round(keywordScore * weights.keywords),
+      weight: weights.keywords,
+      reason: `${keywordScore}% of job description keywords appear in CV`,
+    },
+    {
+      label: 'Education',
+      score: Math.round(educationScore * weights.education),
+      weight: weights.education,
+      reason: education.hasEducation
+        ? `Degree or certification found: ${[...education.degrees, ...education.certifications].slice(0, 2).join(', ')}`
+        : 'No degree or certification detected in CV',
+    },
+    {
+      label: 'CV Depth',
+      score: Math.round(contentScore * weights.content),
+      weight: weights.content,
+      reason: cvLength >= 1500
+        ? 'CV has sufficient detail and length'
+        : 'CV may be too brief - consider adding more detail',
+    },
+  ];
+
+  return { score: Math.round(totalScore), breakdown };
+}
+
+function generateWeaknesses(
+  missingSkills: string[],
+  criticalSet: Set<string>,
+  experience: ReturnType<typeof extractWorkExperience>,
+  education: ReturnType<typeof extractEducation>,
+  keywordScore: number,
+  description?: string
+): Weakness[] {
+  const weaknesses: Weakness[] = [];
+
+  for (const skill of missingSkills) {
+    const isCritical = criticalSet.has(skill.toLowerCase().trim());
+    weaknesses.push({
+      type: 'missing_skill',
+      label: skill,
+      severity: isCritical ? 'critical' : 'minor',
+      detail: isCritical
+        ? `Listed as a required skill but not found anywhere in the CV`
+        : `Would strengthen the application but is not a hard requirement`,
+    });
+  }
+
+  // crude required-years extraction from description, mirrors extractWorkExperience's regex
+  if (description) {
+    const reqYearsMatch = description.toLowerCase().match(/(\d+)\s*\+?\s*(years?|yrs?)\s*(?:of\s+)?(?:experience|exp)/);
+    const requiredYears = reqYearsMatch ? parseInt(reqYearsMatch[1]) : 0;
+    if (requiredYears > 0 && experience.yearsOfExperience < requiredYears) {
+      weaknesses.push({
+        type: 'experience_gap',
+        label: `${requiredYears}+ years of experience required`,
+        severity: requiredYears - experience.yearsOfExperience >= 3 ? 'critical' : 'moderate',
+        detail: `CV shows ${experience.yearsOfExperience} years; job asks for ${requiredYears}+`,
+      });
+    }
+  }
+
+  if (!education.hasEducation && description?.toLowerCase().match(/bachelor|master|degree required/)) {
+    weaknesses.push({
+      type: 'education_gap',
+      label: 'Degree requirement',
+      severity: 'moderate',
+      detail: 'Job description references a degree requirement not found in the CV',
+    });
+  }
+
+  if (keywordScore < 40) {
+    weaknesses.push({
+      type: 'low_keyword_density',
+      label: 'Low keyword overlap with job description',
+      severity: 'moderate',
+      detail: `Only ${keywordScore}% of job description keywords appear in the CV`,
+    });
+  }
+
+  // critical first, then moderate, then minor
+  const order = { critical: 0, moderate: 1, minor: 2 };
+  return weaknesses.sort((a, b) => order[a.severity] - order[b.severity]).slice(0, 8);
+}
+
+function deriveVerdict(score: number, weaknesses: Weakness[]): Verdict {
+  const criticalCount = weaknesses.filter((w) => w.severity === 'critical').length;
+
+  if (score >= 80 && criticalCount === 0) return 'strong_match';
+  if (score >= 60 && criticalCount <= 1) return 'good_match';
+  if (score >= 40 || criticalCount <= 2) return 'weak_match';
+  return 'not_recommended';
 }
 
 function generateDetailedSummary(
@@ -343,28 +445,44 @@ function generateDetailedSummary(
   jobTitle: string,
   company: string
 ): string {
-  let verdict = '';
+  let verdictText = '';
   let recommendation = '';
 
   if (score >= 85) {
-    verdict = 'Excellent match';
+    verdictText = 'Excellent match';
     recommendation = 'You should strongly consider applying.';
   } else if (score >= 70) {
-    verdict = 'Good match';
+    verdictText = 'Good match';
     recommendation = 'You are well-qualified for this position.';
   } else if (score >= 55) {
-    verdict = 'Moderate match';
+    verdictText = 'Moderate match';
     recommendation = 'You have relevant skills but may face competition.';
   } else if (score >= 40) {
-    verdict = 'Potential fit';
+    verdictText = 'Potential fit';
     recommendation = 'You could succeed but should strengthen key areas.';
   } else {
-    verdict = 'Limited match';
+    verdictText = 'Limited match';
     recommendation = 'Consider developing more relevant skills first.';
   }
 
-  return `${verdict} for ${jobTitle} at ${company} (Score: ${score}/100). ${recommendation} You have ${matchedSkills.length} of the required skills${experience.yearsOfExperience > 0 ? ` and ${experience.yearsOfExperience}+ years of experience` : ''}.`;
+  return `${verdictText} for ${jobTitle} at ${company} (Score: ${score}/100). ${recommendation} You have ${matchedSkills.length} of the required skills${experience.yearsOfExperience > 0 ? ` and ${experience.yearsOfExperience}+ years of experience` : ''}.`;
 }
+
+export interface ScoreBreakdownItem {
+  label: string;
+  score: number; // weighted contribution, 0-100 scale of its own weight
+  weight: number; // e.g. 0.35
+  reason: string;
+}
+
+export interface Weakness {
+  type: 'missing_skill' | 'experience_gap' | 'education_gap' | 'low_keyword_density';
+  label: string;
+  severity: 'critical' | 'moderate' | 'minor';
+  detail: string;
+}
+
+export type Verdict = 'strong_match' | 'good_match' | 'weak_match' | 'not_recommended';
 
 export interface ATSAnalysis {
   matchScore: number;
@@ -373,8 +491,10 @@ export interface ATSAnalysis {
   strengths: string[];
   recommendations: string[];
   summary: string;
+  verdict: Verdict;
+  weaknesses: Weakness[];
   detailed: {
-    scoreBreakdown: Record<string, number>;
+    scoreBreakdown: ScoreBreakdownItem[];
     experience: {
       yearsOfExperience: number;
       jobTitles: string[];
@@ -407,12 +527,12 @@ export function runATSAnalysis(params: {
 }): ATSAnalysis {
   const { cvText, jobTitle, company, requirements, description, skills } = params;
 
-  const allRequiredSkills = [
-    ...(Array.isArray(skills) ? skills : []),
-    ...(Array.isArray(requirements) ? requirements : []),
-  ].filter((s) => s && s.trim());
+  const criticalSkills = (Array.isArray(requirements) ? requirements : []).filter((s) => s && s.trim());
+  const niceToHaveSkills = (Array.isArray(skills) ? skills : []).filter((s) => s && s.trim());
+  const allRequiredSkills = [...criticalSkills, ...niceToHaveSkills];
 
   const skillsAnalysis = analyzeSkillsMatch(cvText, allRequiredSkills);
+  const criticalSet = new Set(criticalSkills.map((s) => s.toLowerCase().trim()));
   const experience = extractWorkExperience(cvText);
   const education = extractEducation(cvText);
   const keywordAnalysis = analyzeKeywordDensity(cvText, description || '');
@@ -422,9 +542,21 @@ export function runATSAnalysis(params: {
     experience,
     education,
     keywordAnalysis.keywordScore,
-    cvText.length
+    cvText.length,
+    skillsAnalysis.matchedSkills.length,
+    allRequiredSkills.length
   );
 
+  const weaknesses = generateWeaknesses(
+    skillsAnalysis.missingSkills,
+    criticalSet,
+    experience,
+    education,
+    keywordAnalysis.keywordScore,
+    description
+  );
+
+  const verdict = deriveVerdict(atsScore.score, weaknesses);
   const strengths = generateStrengths(cvText, skillsAnalysis.matchedSkills, experience, education);
   const recommendations = generateRecommendations(cvText, skillsAnalysis.missingSkills, experience, keywordAnalysis.keywordScore);
   const summary = generateDetailedSummary(atsScore.score, skillsAnalysis.matchedSkills, skillsAnalysis.missingSkills, experience, jobTitle, company);
@@ -436,6 +568,8 @@ export function runATSAnalysis(params: {
     strengths,
     recommendations,
     summary,
+    verdict,
+    weaknesses,
     detailed: {
       scoreBreakdown: atsScore.breakdown,
       experience: {
@@ -454,4 +588,9 @@ export function runATSAnalysis(params: {
       skillsByCategory: skillsAnalysis.skillsByCategory,
     },
   };
+}
+// add near the bottom, alongside other exports
+export function canonicalizeSkillLabel(skill: string): string | null {
+  const normalized = skill.toLowerCase().trim();
+  return skillAliasMap[normalized] ?? null;
 }
