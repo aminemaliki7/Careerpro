@@ -7,6 +7,19 @@ import HeroSection, {
   type HeroStats,
 } from '@/components/home/HeroSection';
 
+import ProblemSection from '@/components/home/ProblemSection';
+import CoreProductSection from '@/components/home/CoreProductSection';
+import MatchSection from '@/components/home/MatchSection';
+import ApplicationSection from '@/components/home/ApplicationSection';
+import UseCasesSection from '@/components/home/UseCasesSection';
+import RecruiterSection from '@/components/home/RecruiterSection';
+import TwoSidesSection from '@/components/home/TwoSidesSection';
+import WhyDifferentSection from '@/components/home/WhyDifferentSection';
+import EcosystemSection from '@/components/home/EcosystemSection';
+import TrustSection from '@/components/home/TrustSection';
+import FAQSection from '@/components/home/FAQSection';
+import FinalCTASection from '@/components/home/FinalCTASection';
+
 import NewsletterCTA from '@/components/NewsletterCTA';
 
 import { createClient } from '@supabase/supabase-js';
@@ -124,6 +137,18 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <HeroSection stats={stats} />
+      <ProblemSection />
+      <CoreProductSection />
+      <MatchSection />
+      <ApplicationSection />
+      <UseCasesSection />
+      <RecruiterSection />
+      <TwoSidesSection />
+      <WhyDifferentSection />
+      <EcosystemSection />
+      <TrustSection stats={stats} />
+      <FAQSection />
+      <FinalCTASection />
 
       <NewsletterCTA />
     </div>
