@@ -1,4 +1,4 @@
-﻿// src/lib/job-quality.ts
+// src/lib/job-quality.ts
 // Rule-based "is this opportunity worth pursuing" analysis. Combines
 // signals already present on the job posting itself with company data
 // from the startups table when a match can be found. No external calls.
@@ -101,7 +101,7 @@ function analyzePostingSignals(job: Partial<Job>): QualitySignal[] {
     signals.push({
       type: 'concern',
       category: 'posting',
-      label: 'Vague or clichÃ© language',
+      label: 'Vague or cliché language',
       detail: `Phrases like "${buzzwordHits.slice(0, 2).join('", "')}" often signal an unclear role definition or a demanding culture without matching structure.`,
       severity: 'low',
     });

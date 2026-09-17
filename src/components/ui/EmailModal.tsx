@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
@@ -29,7 +29,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('âœ“ Subscription successful');
+        setMessage('✓ Subscription successful');
         setEmail('');
         setTimeout(() => {
           setMessage('');
@@ -102,7 +102,7 @@ export default function EmailModal({ onClose }: EmailModalProps) {
         {message && (
           <p
             className={`mt-3 text-center text-sm ${
-              message.includes('âœ“')
+              message.includes('✓')
                 ? 'text-green-600'
                 : 'text-red-500'
             }`}

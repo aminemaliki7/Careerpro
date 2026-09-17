@@ -330,8 +330,8 @@ export async function getContentAnalytics(
   period: AnalyticsPeriod
 ): Promise<AnalyticsEnvelope> {
   const envelope = emptyEnvelope(period);
-  const posts = getPostMeta();
-  const episodes = getEpisodeMeta();
+  const posts = await getPostMeta();
+  const episodes = await getEpisodeMeta();
 
   const clapRows = await supabaseAdmin
     .from('post_appreciations')

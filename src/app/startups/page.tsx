@@ -1,10 +1,10 @@
-﻿import { Metadata } from 'next';
+import { Metadata } from 'next';
 import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import StartupsClient from './StartupsClient';
 import type { Startup } from '@/types/startup';
 
-// â”€â”€â”€ SEO â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── SEO ──────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: 'Companies Directory - Discover Growing Tech Companies | Hirely',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export const revalidate = 300; // revalidate every 5 min
 
-// â”€â”€â”€ SSR fetch - first page loaded server-side â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── SSR fetch - first page loaded server-side ───────────────────────────────
 
 async function getInitialStartups(): Promise<{
   startups: Startup[];
@@ -81,7 +81,7 @@ async function getInitialStartups(): Promise<{
   }
 }
 
-// â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function StartupsPage() {
   const { startups, total, totalPages } = await getInitialStartups();
@@ -89,7 +89,7 @@ export default async function StartupsPage() {
   return (
     <div className="min-h-screen bg-slate-50/50 flex flex-col">
       
-      {/* â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden bg-white border-b border-slate-200/80">
         {/* Refined Background Gradients */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -122,13 +122,13 @@ export default async function StartupsPage() {
               href="#browse"
               className="w-full sm:w-auto inline-flex justify-center items-center gap-2 px-8 py-3.5 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-xl border border-slate-200 hover:border-slate-300 transition-all shadow-sm active:scale-[0.98]"
             >
-              Browse directory ↓
+              Browse directory ?
             </Link>
           </div>
         </div>
       </section>
 
-      {/* â”€â”€ Directory â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Directory ────────────────────────────────────────────────────── */}
       <section
         id="browse"
         className="flex-grow max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-16 sm:py-24 scroll-mt-10"
@@ -140,7 +140,7 @@ export default async function StartupsPage() {
         />
       </section>
 
-      {/* â”€â”€ Submit CTA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ── Submit CTA ───────────────────────────────────────────────────── */}
       <section className="bg-white border-t border-slate-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="relative bg-slate-900 rounded-3xl overflow-hidden px-6 py-12 sm:px-12 sm:py-16 text-center sm:text-left flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8">
@@ -168,7 +168,7 @@ export default async function StartupsPage() {
                 href="/startups/submit"
                 className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-bold rounded-xl transition-all shadow-lg shadow-indigo-500/25 active:scale-[0.98]"
               >
-                Submit your company →’
+                Submit your company ?�
               </Link>
             </div>
           </div>

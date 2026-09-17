@@ -23,6 +23,7 @@ const isPublicRoute = createRouteMatcher([
   '/robots.txt',
   '/sitemap.xml',
   '/ads.txt',
+  '/audio(.*)',
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding']);

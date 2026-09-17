@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import type { Startup, IndustryType } from '@/types/startup';
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Filters {
   search?: string;
@@ -18,7 +18,7 @@ interface Filters {
   location?: string;
 }
 
-// â”€â”€â”€ Constants â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const INDUSTRIES: IndustryType[] = [
   'AI/ML','FinTech','HealthTech','EdTech','E-commerce',
@@ -26,18 +26,18 @@ const INDUSTRIES: IndustryType[] = [
 ];
 
 const COUNTRIES = [
-  { name: 'Morocco',        flag: 'ðŸ‡²ðŸ‡¦' },
-  { name: 'France',         flag: 'ðŸ‡«ðŸ‡·' },
-  { name: 'United States',  flag: 'ðŸ‡ºðŸ‡¸' },
-  { name: 'United Kingdom', flag: 'ðŸ‡¬ðŸ‡§' },
-  { name: 'Germany',        flag: 'ðŸ‡©ðŸ‡ª' },
-  { name: 'UAE',            flag: 'ðŸ‡¦ðŸ‡ª' },
-  { name: 'Canada',         flag: 'ðŸ‡¨ðŸ‡¦' },
-  { name: 'Netherlands',    flag: 'ðŸ‡³ðŸ‡±' },
-  { name: 'Spain',          flag: 'ðŸ‡ªðŸ‡¸' },
-  { name: 'Tunisia',        flag: 'ðŸ‡¹ðŸ‡³' },
-  { name: 'Egypt',          flag: 'ðŸ‡ªðŸ‡¬' },
-  { name: 'Senegal',        flag: 'ðŸ‡¸ðŸ‡³' },
+  { name: 'Morocco',        flag: '🇲🇦' },
+  { name: 'France',         flag: '🇫🇷' },
+  { name: 'United States',  flag: '🇺🇸' },
+  { name: 'United Kingdom', flag: '🇬🇧' },
+  { name: 'Germany',        flag: '🇩🇪' },
+  { name: 'UAE',            flag: '🇦🇪' },
+  { name: 'Canada',         flag: '🇨🇦' },
+  { name: 'Netherlands',    flag: '🇳🇱' },
+  { name: 'Spain',          flag: '🇪🇸' },
+  { name: 'Tunisia',        flag: '🇹🇳' },
+  { name: 'Egypt',          flag: '🇪🇬' },
+  { name: 'Senegal',        flag: '🇸🇳' },
 ];
 
 const FUNDING_COLORS: Record<string, string> = {
@@ -51,7 +51,7 @@ const FUNDING_COLORS: Record<string, string> = {
   'Public':   'bg-sky-50 text-sky-700 border-sky-200/60',
 };
 
-// â”€â”€â”€ Skeleton card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Skeleton card ────────────────────────────────────────────────────────────
 
 function SkeletonCard() {
   return (
@@ -75,7 +75,7 @@ function SkeletonCard() {
   );
 }
 
-// â”€â”€â”€ Startup card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Startup card ─────────────────────────────────────────────────────────────
 
 function StartupCard({ startup }: { startup: Startup }) {
   const [imgError, setImgError] = useState(false);
@@ -129,7 +129,7 @@ function StartupCard({ startup }: { startup: Startup }) {
             </h2>
             {startup.featured && (
               <span className="flex-shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-medium">
-                âœ¦ Featured
+                ✦ Featured
               </span>
             )}
           </div>
@@ -173,14 +173,14 @@ function StartupCard({ startup }: { startup: Startup }) {
         </span>
         <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-2 transition-all">
           <Briefcase className="w-3 h-3" />
-          View roles →
+          View roles ?
         </span>
       </div>
     </Link>
   );
 }
 
-// â”€â”€â”€ Filter bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Filter bar ───────────────────────────────────────────────────────────────
 
 function FilterBar({
   onFilterChange,
@@ -364,7 +364,7 @@ function FilterBar({
                     onChange={(e) => setTemp({ ...temp, location: e.target.value })}
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 bg-white appearance-none text-slate-900"
                   >
-                    <option value="">ðŸŒ All Countries</option>
+                    <option value="">🌍 All Countries</option>
                     {COUNTRIES.map((c) => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
                   </select>
                 </div>
@@ -394,7 +394,7 @@ function FilterBar({
   );
 }
 
-// â”€â”€â”€ Pagination â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Pagination ───────────────────────────────────────────────────────────────
 
 function Pagination({
   page, totalPages, onChange,
@@ -441,7 +441,7 @@ function Pagination({
   );
 }
 
-// â”€â”€â”€ Main component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function StartupsClient({
   initialStartups = [],

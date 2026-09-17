@@ -20,6 +20,7 @@ import {
 } from '@clerk/nextjs';
 import CircuitLogo from './CircuitLogo';
 import { useUserRole } from '@/hooks/useUserRole';
+import { BookOpen } from 'lucide-react';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,6 +34,7 @@ export default function Header() {
     { name: 'Jobs', href: '/jobs', icon: Briefcase },
     { name: 'Career Paths', href: '/roadmaps', icon: Map },
     { name: 'Companies', href: '/startups', icon: Building2 },
+    { name: 'Articles', href: '/blog', icon: BookOpen },
   ];
 
   // Automatically close mobile menu on route change

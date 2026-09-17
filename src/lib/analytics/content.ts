@@ -18,26 +18,38 @@ function toMeta(
   } | null
 ): PostMeta | null {
   if (!post?.slug) return null;
+
   return {
     slug: post.slug,
     title: post.title ?? null,
     publishedAt: post.publishedAt ?? null,
     audioUrl: post.audioUrl ?? null,
-    audioDuration: typeof post.audioDuration === 'number' ? post.audioDuration : null,
+    audioDuration:
+      typeof post.audioDuration === 'number'
+        ? post.audioDuration
+        : null,
   };
 }
 
-export function getPostMeta(): PostMeta[] {
+export async function getPostMeta(): Promise<PostMeta[]> {
   try {
-    return (getAllPosts() ?? []).map(toMeta).filter((p): p is PostMeta => p !== null);
+    const posts = await getAllPosts();
+
+    return posts
+      .map(toMeta)
+      .filter((p): p is PostMeta => p !== null);
   } catch {
     return [];
   }
 }
 
-export function getEpisodeMeta(): PostMeta[] {
+export async function getEpisodeMeta(): Promise<PostMeta[]> {
   try {
-    return (getPodcastEpisodes() ?? []).map(toMeta).filter((p): p is PostMeta => p !== null);
+    const episodes = await getPodcastEpisodes();
+
+    return episodes
+      .map(toMeta)
+      .filter((p): p is PostMeta => p !== null);
   } catch {
     return [];
   }

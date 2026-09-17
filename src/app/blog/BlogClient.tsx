@@ -4,14 +4,14 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Search,
-  Clock,
-  Tag,
   X,
   Bookmark,
   TrendingUp,
   Filter,
   Headphones,
   Sparkles,
+  ArrowRight,
+  BookOpen,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import type { BlogPostWithContent } from '@/types/blog';
@@ -22,7 +22,19 @@ interface BlogClientProps {
   featuredPosts: BlogPostWithContent[];
 }
 
-// â”€â”€â”€ Custom Hook: Post Claps Management â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function formatTag(tag: string) {
+  return tag
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
+function formatDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
 
 function usePostClaps(postSlug: string) {
   const [claps, setClaps] = useState(0);
@@ -33,7 +45,6 @@ function usePostClaps(postSlug: string) {
     loadClaps();
     checkIfUserClapped();
 
-    // Subscribe to real-time updates
     const channel = supabase
       .channel(`post-${postSlug}`)
       .on(
@@ -45,7 +56,11 @@ function usePostClaps(postSlug: string) {
           filter: `post_slug=eq.${postSlug}`,
         },
         (payload) => {
-          if (payload.new && typeof payload.new === 'object' && 'total_claps' in payload.new) {
+          if (
+            payload.new &&
+            typeof payload.new === 'object' &&
+            'total_claps' in payload.new
+          ) {
             setClaps(payload.new.total_claps as number);
           }
         }
@@ -58,13 +73,16 @@ function usePostClaps(postSlug: string) {
   }, [postSlug]);
 
   const checkIfUserClapped = () => {
-    if (typeof window !== 'undefined') {
-      try {
-        const clappedPosts: string[] = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
-        setHasClapped(clappedPosts.includes(postSlug));
-      } catch (err) {
-        console.error('Failed to parse clappedPosts from localStorage', err);
-      }
+    if (typeof window === 'undefined') return;
+
+    try {
+      const clappedPosts: string[] = JSON.parse(
+        localStorage.getItem('clappedPosts') || '[]'
+      );
+
+      setHasClapped(clappedPosts.includes(postSlug));
+    } catch (error) {
+      console.error('Failed to parse clappedPosts:', error);
     }
   };
 
@@ -84,35 +102,43 @@ function usePostClaps(postSlug: string) {
       if (data) {
         setClaps(data.total_claps || 0);
       }
-    } catch (err) {
-      console.error('Error loading claps:', err);
+    } catch (error) {
+      console.error('Error loading claps:', error);
     }
   };
 
   const syncLocalStorage = (add: boolean) => {
     if (typeof window === 'undefined') return;
+
     try {
-      const clappedPosts: string[] = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+      const clappedPosts: string[] = JSON.parse(
+        localStorage.getItem('clappedPosts') || '[]'
+      );
+
       const updated = add
         ? [...new Set([...clappedPosts, postSlug])]
         : clappedPosts.filter((slug) => slug !== postSlug);
-      localStorage.setItem('clappedPosts', JSON.stringify(updated));
-    } catch (err) {
-      console.error('Failed to update localStorage', err);
+
+      localStorage.setItem(
+        'clappedPosts',
+        JSON.stringify(updated)
+      );
+    } catch (error) {
+      console.error('Failed to update clappedPosts:', error);
     }
   };
 
-  const handleClap = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleClap = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
 
     const nextHasClapped = !hasClapped;
     const delta = nextHasClapped ? 1 : -1;
 
-    // Optimistic UI updates
     setClaps((prev) => Math.max(0, prev + delta));
     setHasClapped(nextHasClapped);
     setIsClapping(true);
+
     syncLocalStorage(nextHasClapped);
 
     setTimeout(() => setIsClapping(false), 600);
@@ -130,189 +156,333 @@ function usePostClaps(postSlug: string) {
         if (existing) {
           const { error } = await supabase
             .from('post_appreciations')
-            .update({ total_claps: existing.total_claps + 1 })
+            .update({
+              total_claps: existing.total_claps + 1,
+            })
             .eq('post_slug', postSlug);
+
           if (error) throw error;
         } else {
           const { error } = await supabase
             .from('post_appreciations')
-            .insert({ post_slug: postSlug, total_claps: 1 });
+            .insert({
+              post_slug: postSlug,
+              total_claps: 1,
+            });
+
           if (error) throw error;
         }
-      } else {
-        if (existing && existing.total_claps > 0) {
-          const { error } = await supabase
-            .from('post_appreciations')
-            .update({ total_claps: Math.max(0, existing.total_claps - 1) })
-            .eq('post_slug', postSlug);
-          if (error) throw error;
-        }
+      } else if (existing && existing.total_claps > 0) {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .update({
+            total_claps: Math.max(0, existing.total_claps - 1),
+          })
+          .eq('post_slug', postSlug);
+
+        if (error) throw error;
       }
     } catch (error) {
       console.error('Error updating clap count:', error);
-      // Revert optimistic updates
+
       setClaps((prev) => Math.max(0, prev - delta));
       setHasClapped(!nextHasClapped);
       syncLocalStorage(!nextHasClapped);
     }
   };
 
-  return { claps, isClapping, handleClap, hasClapped };
+  return {
+    claps,
+    isClapping,
+    handleClap,
+    hasClapped,
+  };
 }
 
-// â”€â”€â”€ Post Card Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function PostCard({
+  post,
+  index,
+}: {
+  post: BlogPostWithContent;
+  index: number;
+}) {
+  const {
+    claps,
+    isClapping,
+    handleClap,
+    hasClapped,
+  } = usePostClaps(post.slug);
 
-function PostCard({ post, index }: { post: BlogPostWithContent; index: number }) {
-  const { claps, isClapping, handleClap, hasClapped } = usePostClaps(post.slug);
   const [isBookmarked, setIsBookmarked] = useState(false);
 
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-
-  const handleBookmark = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsBookmarked(!isBookmarked);
-
-    if (typeof window !== 'undefined') {
-      try {
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
-        const postUrl = `/blog/${post.slug}`;
-
-        if (isBookmarked) {
-          const filtered = bookmarks.filter((b: string) => b !== postUrl);
-          localStorage.setItem('bookmarkedPosts', JSON.stringify(filtered));
-        } else {
-          bookmarks.push(postUrl);
-          localStorage.setItem('bookmarkedPosts', JSON.stringify(bookmarks));
-        }
-      } catch (err) {
-        console.error('Error updating bookmarks in localStorage:', err);
-      }
-    }
-  };
-
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
-        const postUrl = `/blog/${post.slug}`;
-        setIsBookmarked(bookmarks.includes(postUrl));
-      } catch (err) {
-        console.error('Error loading bookmarks from localStorage:', err);
-      }
+    if (typeof window === 'undefined') return;
+
+    try {
+      const bookmarks = JSON.parse(
+        localStorage.getItem('bookmarkedPosts') || '[]'
+      );
+
+      setIsBookmarked(
+        bookmarks.includes(`/blog/${post.slug}`)
+      );
+    } catch (error) {
+      console.error('Error loading bookmarks:', error);
     }
   }, [post.slug]);
 
+  const handleBookmark = (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const nextBookmarked = !isBookmarked;
+
+    setIsBookmarked(nextBookmarked);
+
+    if (typeof window === 'undefined') return;
+
+    try {
+      const bookmarks: string[] = JSON.parse(
+        localStorage.getItem('bookmarkedPosts') || '[]'
+      );
+
+      const postUrl = `/blog/${post.slug}`;
+
+      const updated = nextBookmarked
+        ? [...new Set([...bookmarks, postUrl])]
+        : bookmarks.filter((bookmark) => bookmark !== postUrl);
+
+      localStorage.setItem(
+        'bookmarkedPosts',
+        JSON.stringify(updated)
+      );
+    } catch (error) {
+      console.error('Error updating bookmarks:', error);
+    }
+  };
+
   return (
-    <article className="group">
-      <Link href={`/blog/${post.slug}`} className="flex gap-4 sm:gap-8">
-        <div className="flex-1 min-w-0">
-          {/* Title */}
-          <div className="flex items-start gap-2 mb-1.5 sm:mb-2">
-            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
-              {post.title}
-            </h2>
-          </div>
+    <motion.article
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{
+        duration: 0.4,
+        delay: Math.min(index * 0.04, 0.2),
+      }}
+      className="group"
+    >
+      <Link
+        href={`/blog/${post.slug}`}
+        className="block"
+      >
+        <div className="grid grid-cols-[1fr_120px] gap-5 border-b border-zinc-200 pb-7 sm:grid-cols-[1fr_180px] sm:gap-7 sm:pb-9">
+          <div className="min-w-0">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              {post.tags?.slice(0, 1).map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[11px] font-semibold uppercase tracking-wider text-[#18865b]"
+                >
+                  {formatTag(tag)}
+                </span>
+              ))} 
 
-          {/* Description */}
-          <p className="text-gray-600 text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 hidden sm:block">
-            {post.description}
-          </p>
-
-          {/* Meta Info */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-gray-500 flex-wrap">
-              <span className="truncate">{formatDate(post.publishedAt)}</span>
-              <span>•</span>
-              <span>{post.readingTime || 5} min read</span>
-              {post.tags && post.tags[0] && (
-                <>
-                  <span className="hidden sm:inline">•</span>
-                  <span className="hidden sm:inline px-2 py-1 bg-gray-100 rounded-full text-xs truncate max-w-[120px]">
-                    {post.tags[0].replace(/-/g, ' ')}
-                  </span>
-                </>
+              {post.audioUrl && (
+                <span className="flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-[10px] font-medium text-zinc-500">
+                  <Headphones className="h-2.5 w-2.5" />
+                  Audio
+                </span>
               )}
             </div>
 
-            {/* Action Buttons */}
-            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
-              {/* Clap Button */}
-              <button
-                onClick={handleClap}
-                className="relative p-1.5 sm:p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group/clap"
-                aria-label={hasClapped ? 'Remove appreciation' : 'Show appreciation'}
-                title={hasClapped ? 'Remove appreciation' : 'Show appreciation'}
-              >
-                <Sparkles
-                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all duration-300 ${
-                    hasClapped
-                      ? 'text-purple-600'
-                      : isClapping
-                      ? 'text-purple-600 scale-125 rotate-12'
-                      : 'text-gray-400 group-hover/clap:text-purple-600 group-hover/clap:scale-110'
-                  }`}
-                />
-                {claps > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 bg-purple-600 text-white text-[8px] sm:text-[9px] font-bold rounded-full min-w-3 h-3 sm:min-w-4 sm:h-4 px-0.5 sm:px-1 flex items-center justify-center">
-                    {claps > 99 ? '99+' : claps}
-                  </span>
-                )}
-              </button>
+            <h2 className="line-clamp-2 text-xl font-bold leading-tight tracking-tight text-zinc-950 transition-colors group-hover:text-[#18865b] sm:text-2xl">
+              {post.title}
+            </h2>
 
-              {/* Bookmark Button */}
-              <button
-                onClick={handleBookmark}
-                className="p-1.5 sm:p-2 text-gray-400 hover:text-gray-900 transition-colors rounded-full hover:bg-gray-100"
-                aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
-              >
-                <Bookmark
-                  className={`w-3.5 h-3.5 sm:w-4 sm:h-4 transition-all ${
-                    isBookmarked ? 'fill-gray-900 text-gray-900' : ''
+            {post.description && (
+              <p className="mt-2.5 hidden line-clamp-2 text-sm leading-6 text-zinc-500 sm:block">
+                {post.description}
+              </p>
+            )}
+
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-zinc-400 sm:gap-3">
+                <span className="whitespace-nowrap">
+                  {formatDate(post.publishedAt)}
+                </span>
+
+                <span>•</span>
+
+                <span className="whitespace-nowrap">
+                  {post.readingTime || 5} min read
+                </span>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-1">
+                <button
+                  onClick={handleClap}
+                  className="relative flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium text-zinc-400 transition-all hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                  aria-label={
+                    hasClapped
+                      ? 'Remove appreciation'
+                      : 'Show appreciation'
+                  }
+                >
+                  <Sparkles
+                    className={`h-3.5 w-3.5 transition-all duration-300 ${
+                      hasClapped || isClapping
+                        ? 'scale-110 text-[#24b47e]'
+                        : ''
+                    }`}
+                  />
+
+                  {claps > 0 && (
+                    <span>
+                      {claps > 99 ? '99+' : claps}
+                    </span>
+                  )}
+                </button>
+
+                <button
+                  onClick={handleBookmark}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
+                    isBookmarked
+                      ? 'bg-zinc-950 text-white'
+                      : 'text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900'
                   }`}
-                />
-              </button>
+                  aria-label={
+                    isBookmarked
+                      ? 'Remove bookmark'
+                      : 'Bookmark article'
+                  }
+                >
+                  <Bookmark
+                    className={`h-3.5 w-3.5 ${
+                      isBookmarked ? 'fill-current' : ''
+                    }`}
+                  />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Thumbnail */}
-        {post.coverImage && (
-          <div className="w-24 h-24 sm:w-32 sm:h-32 md:w-48 md:h-32 flex-shrink-0 relative">
-            <img
-              src={post.coverImage}
-              alt={post.title}
-              className="w-full h-full object-cover rounded sm:rounded-none"
-            />
-            {post.audioUrl && (
-              <motion.div
-                className="absolute top-1.5 right-1.5 sm:top-2 sm:right-2 bg-gray-900/90 backdrop-blur-sm px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full flex items-center gap-0.5 sm:gap-1"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 + index * 0.05 }}
-                aria-label="Audio content available"
-                role="status"
-              >
-                <Headphones className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" aria-hidden="true" />
-                <span className="text-[9px] sm:text-[10px] font-semibold text-white uppercase tracking-wider hidden xs:inline">
-                  Audio
-                </span>
-              </motion.div>
-            )}
-          </div>
-        )}
+          {post.coverImage ? (
+            <div className="relative h-[90px] overflow-hidden rounded-xl bg-zinc-100 sm:h-[120px]">
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+
+              <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
+            </div>
+          ) : (
+            <div className="flex h-[90px] items-center justify-center rounded-xl bg-zinc-50 sm:h-[120px]">
+              <BookOpen className="h-6 w-6 text-zinc-200" />
+            </div>
+          )}
+        </div>
       </Link>
-    </article>
+    </motion.article>
   );
 }
 
-// â”€â”€â”€ Mobile Filter Modal Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+function FeaturedCard({
+  post,
+  large = false,
+}: {
+  post: BlogPostWithContent;
+  large?: boolean;
+}) {
+  return (
+    <article
+      className={`group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] ${
+        large ? 'h-full' : ''
+      }`}
+    >
+      <Link href={`/blog/${post.slug}`} className="block">
+        {post.coverImage ? (
+          <div
+            className={`relative overflow-hidden bg-zinc-100 ${
+              large ? 'aspect-[16/9]' : 'aspect-[16/7]'
+            }`}
+          >
+            <img
+              src={post.coverImage}
+              alt={post.title}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+
+            {post.audioUrl && (
+              <div className="absolute right-3 top-3 flex items-center gap-1.5 rounded-full bg-white/95 px-2.5 py-1 text-[10px] font-medium text-zinc-700 shadow-sm backdrop-blur">
+                <Headphones className="h-3 w-3" />
+                Audio
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            className={`flex items-center justify-center bg-zinc-50 ${
+              large ? 'aspect-[16/9]' : 'aspect-[16/7]'
+            }`}
+          >
+            <BookOpen className="h-5 w-5 text-zinc-300" />
+          </div>
+        )}
+      </Link>
+
+      <div className={large ? 'p-6 sm:p-7' : 'p-5'}>
+        <div className="mb-3 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+          {post.tags?.[0] && (
+            <>
+              <span className="text-[#18865b]">
+                {formatTag(post.tags[0])}
+              </span>
+              <span className="text-zinc-300">•</span>
+            </>
+          )}
+
+          <span>{post.readingTime || 5} min read</span>
+        </div>
+
+        <Link href={`/blog/${post.slug}`}>
+          <h3
+            className={`font-bold tracking-tight text-zinc-950 transition-colors group-hover:text-[#18865b] ${
+              large
+                ? 'text-2xl leading-tight sm:text-3xl'
+                : 'text-lg leading-snug'
+            }`}
+          >
+            {post.title}
+          </h3>
+
+          {post.description && (
+            <p
+              className={`mt-3 line-clamp-2 text-zinc-500 ${
+                large
+                  ? 'text-sm leading-6 sm:text-base'
+                  : 'text-sm leading-5'
+              }`}
+            >
+              {post.description}
+            </p>
+          )}
+        </Link>
+
+        <div className="mt-5 flex items-center justify-between border-t border-zinc-100 pt-4">
+          <span className="text-xs text-zinc-400">
+            {formatDate(post.publishedAt)}
+          </span>
+
+          <span className="text-xs font-medium text-zinc-400 transition-colors group-hover:text-[#18865b]">
+            Read article →
+          </span>
+        </div>
+      </div>
+    </article>
+  );
+}
 
 function MobileFilterModal({
   allTags,
@@ -328,50 +498,69 @@ function MobileFilterModal({
   onClose: () => void;
 }) {
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm transition-opacity duration-300">
-      <div className="absolute inset-0 bg-white overflow-y-auto">
-        <div className="flex justify-between items-center p-4 border-b border-gray-200 bg-white sticky top-0 z-10">
-          <h2 className="text-xl font-bold text-gray-900">Filter Articles</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-900">
-            <X className="w-6 h-6" />
+    <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm">
+      <div className="absolute inset-x-0 bottom-0 top-8 overflow-y-auto rounded-t-3xl bg-white">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-5 py-4">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+              Articles
+            </p>
+            <h2 className="mt-0.5 text-lg font-bold text-zinc-950">
+              Filter topics
+            </h2>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
+            aria-label="Close filters"
+          >
+            <X className="h-5 w-5" />
           </button>
         </div>
 
-        <div className="p-4 space-y-6">
+        <div className="space-y-7 p-5">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
-              <Tag className="w-5 h-5 text-gray-900" />
+            <div className="mb-3 text-sm font-semibold text-zinc-900">
               Topics
-            </h3>
+            </div>
+
             <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
-                  className={`px-4 py-2 rounded-full font-medium transition-all text-sm ${
-                    selectedTag === tag
-                      ? 'bg-gray-900 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  {tag.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                </button>
-              ))}
+              {allTags.map((tag) => {
+                const active = selectedTag === tag;
+
+                return (
+                  <button
+                    key={tag}
+                    onClick={() =>
+                      setSelectedTag(active ? '' : tag)
+                    }
+                    className={`rounded-full border px-3.5 py-2 text-sm font-medium transition-all ${
+                      active
+                        ? 'border-zinc-950 bg-zinc-950 text-white'
+                        : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'
+                    }`}
+                  >
+                    {formatTag(tag)}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
-          <div className="pt-4 border-t border-gray-200 flex gap-3 sticky bottom-0 bg-white pb-4">
+          <div className="flex gap-3 border-t border-zinc-200 pt-5">
             <button
               onClick={clearFilters}
-              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-200 text-gray-900 hover:bg-gray-300 transition-colors"
+              className="flex-1 rounded-full border border-zinc-200 px-4 py-3 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
             >
-              Clear All
+              Clear
             </button>
+
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-3 rounded-lg font-semibold bg-gray-900 text-white hover:bg-gray-800 transition-colors"
+              className="flex-1 rounded-full bg-zinc-950 px-4 py-3 text-sm font-semibold text-white hover:bg-zinc-800"
             >
-              Apply Filters
+              Done
             </button>
           </div>
         </div>
@@ -380,52 +569,67 @@ function MobileFilterModal({
   );
 }
 
-// â”€â”€â”€ Main BlogClient Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps) {
+export default function BlogClient({
+  allPosts,
+  featuredPosts,
+}: BlogClientProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const allTags = useMemo(() => {
-    const tags = allPosts.flatMap((post) => post.tags);
-    return [...new Set(tags)].sort().slice(0, 8);
+    const tags = allPosts.flatMap((post) => post.tags || []);
+
+    return [...new Set(tags)]
+      .filter(Boolean)
+      .sort()
+      .slice(0, 8);
   }, [allPosts]);
 
   const filteredPosts = useMemo(() => {
-    let posts = allPosts;
+    let posts = [...allPosts];
 
-    if (searchTerm && searchTerm.trim() !== '') {
+    if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase().trim();
-      posts = posts.filter(
-        (post) =>
-          (post.title && post.title.toLowerCase().includes(search)) ||
-          (post.description && post.description.toLowerCase().includes(search)) ||
-          (post.tags && post.tags.some((tag) => tag && tag.toLowerCase().includes(search)))
+
+      posts = posts.filter((post) => {
+        const title = post.title?.toLowerCase() || '';
+        const description =
+          post.description?.toLowerCase() || '';
+
+        const tags =
+          post.tags?.some((tag) =>
+            tag.toLowerCase().includes(search)
+          ) || false;
+
+        return (
+          title.includes(search) ||
+          description.includes(search) ||
+          tags
+        );
+      });
+    }
+
+    if (selectedTag) {
+      posts = posts.filter((post) =>
+        post.tags?.includes(selectedTag)
       );
     }
 
-    if (selectedTag && selectedTag.trim() !== '') {
-      posts = posts.filter((post) => post.tags && post.tags.includes(selectedTag));
-    }
-
     return posts.sort(
-      (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+      (a, b) =>
+        new Date(b.publishedAt).getTime() -
+        new Date(a.publishedAt).getTime()
     );
   }, [allPosts, searchTerm, selectedTag]);
-
-  const formatDate = (dateString: string) =>
-    new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
 
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedTag('');
     setShowMobileFilters(false);
   };
+
+  const featured = featuredPosts.slice(0, 3);
 
   return (
     <div className="min-h-screen bg-white">
@@ -435,114 +639,179 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
           selectedTag={selectedTag}
           setSelectedTag={setSelectedTag}
           clearFilters={clearFilters}
-          onClose={() => setShowMobileFilters(false)}
+          onClose={() =>
+            setShowMobileFilters(false)
+          }
         />
       )}
 
-      {/* Trending Section */}
-      {featuredPosts.length > 0 && (
-        <div className="border-b border-gray-200 py-6 sm:py-8">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center gap-2 mb-4 sm:mb-6">
-              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
-              <h2 className="text-xs sm:text-sm font-semibold uppercase tracking-wide">
-                Trending on Hirely
-              </h2>
+      <main className="mx-auto max-w-7xl px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:px-8">
+        <section className="border-b border-zinc-200 pb-10 sm:pb-14">
+          <div className="max-w-3xl">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#24b47e]/20 bg-[#24b47e]/5 px-3 py-1.5 text-xs font-semibold text-[#18865b]">
+              <BookOpen className="h-3.5 w-3.5" />
+              Hirely Articles
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6">
-              {featuredPosts.slice(0, 6).map((post, index) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="flex gap-3 sm:gap-4 group"
-                >
-                  <span className="text-2xl sm:text-3xl font-bold text-gray-200 group-hover:text-gray-300 transition-colors">
-                    0{index + 1}
-                  </span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start gap-2">
-                      <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-gray-600 transition-colors flex-1">
-                        {post.title}
-                      </h3>
-                      {post.audioUrl && (
-                        <span className="flex items-center gap-1 px-1.5 py-0.5 bg-gray-900 rounded-full flex-shrink-0">
-                          <Headphones className="w-3 h-3 text-white" />
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-1.5 sm:gap-2 text-xs text-gray-500">
-                      <span className="truncate">{formatDate(post.publishedAt)}</span>
-                      <span>•</span>
-                      <span>{post.readingTime || 5} min read</span>
-                    </div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
-          {/* Posts Column */}
+            <h1 className="text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl md:text-6xl">
+              Ideas that help you
+              <span className="text-[#18865b]">
+                {' '}make better career decisions.
+              </span>
+            </h1>
+
+            <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-500 sm:text-lg">
+              Practical insights on AI, tech careers,
+              startups, salaries, and the global job market.
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="relative max-w-xl flex-1">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
+
+              <input
+                type="text"
+                placeholder="Search articles..."
+                value={searchTerm}
+                onChange={(event) =>
+                  setSearchTerm(event.target.value)
+                }
+                className="h-11 w-full rounded-full border border-zinc-200 bg-zinc-50 pl-11 pr-10 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white focus:ring-2 focus:ring-[#24b47e]/10"
+              />
+
+              {searchTerm && (
+                <button
+                  onClick={() => setSearchTerm('')}
+                  className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-zinc-400 hover:bg-zinc-200 hover:text-zinc-700"
+                  aria-label="Clear search"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            <button
+              onClick={() => setShowMobileFilters(true)}
+              className="flex h-11 items-center justify-center gap-2 rounded-full border border-zinc-200 px-5 text-sm font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 lg:hidden"
+            >
+              <Filter className="h-4 w-4" />
+              Topics
+
+              {selectedTag && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-zinc-950 px-1 text-[10px] text-white">
+                  1
+                </span>
+              )}
+            </button>
+          </div>
+
+          <div className="mt-5 hidden flex-wrap gap-2 lg:flex">
+            {allTags.map((tag) => {
+              const active = selectedTag === tag;
+
+              return (
+                <button
+                  key={tag}
+                  onClick={() =>
+                    setSelectedTag(active ? '' : tag)
+                  }
+                  className={`rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${
+                    active
+                      ? 'border-zinc-950 bg-zinc-950 text-white'
+                      : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-950'
+                  }`}
+                >
+                  {formatTag(tag)}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+{featured.length > 0 && !searchTerm && !selectedTag && (
+  <section className="border-b border-zinc-200 py-8 sm:py-10">
+    <div className="mb-5 flex items-center gap-2">
+      <TrendingUp className="h-3.5 w-3.5 text-[#18865b]" />
+
+      <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-950">
+        Featured
+      </h2>
+    </div>
+
+    <div className="grid gap-4 md:grid-cols-3">
+      {featured.slice(0, 3).map((post) => (
+        <FeaturedCard
+          key={post.slug}
+          post={post}
+        />
+      ))}
+    </div>
+  </section>
+)}
+        <section className="grid grid-cols-1 gap-12 pt-10 sm:pt-14 lg:grid-cols-3 lg:gap-16">
           <div className="lg:col-span-2">
-            {/* Search & Mobile Filter Button */}
-            <div className="mb-6 sm:mb-8 space-y-3">
-              <div className="relative">
-                <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
-                <input
-                  type="text"
-                  placeholder="Search articles..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 bg-gray-50 text-gray-900 border-0 rounded-full focus:ring-1 focus:ring-gray-300 transition-all placeholder-gray-400 text-sm sm:text-base"
-                />
+            <div className="mb-7 flex items-end justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+                  Library
+                </p>
+
+                <h2 className="mt-1 text-2xl font-bold tracking-tight text-zinc-950">
+                  {selectedTag
+                    ? formatTag(selectedTag)
+                    : 'Latest Articles'}
+                </h2>
               </div>
 
-              {/* Mobile Filter Button */}
-              <button
-                onClick={() => setShowMobileFilters(true)}
-                className="lg:hidden w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gray-100 text-gray-900 rounded-full font-medium text-sm hover:bg-gray-200 transition-colors"
-              >
-                <Filter className="w-4 h-4" />
-                Filter Topics
-                {selectedTag && (
-                  <span className="px-2 py-0.5 bg-gray-900 text-white rounded-full text-xs">
-                    1
-                  </span>
-                )}
-              </button>
+              <span className="text-xs text-zinc-400">
+                {filteredPosts.length}{' '}
+                {filteredPosts.length === 1
+                  ? 'article'
+                  : 'articles'}
+              </span>
             </div>
 
-            {/* Selected Tag */}
             {selectedTag && (
-              <div className="mb-6 flex items-center gap-2">
-                <span className="text-sm text-gray-600">Filtered by:</span>
+              <div className="mb-7 flex items-center gap-2">
+                <span className="text-xs text-zinc-400">
+                  Filtered by
+                </span>
+
                 <button
                   onClick={() => setSelectedTag('')}
-                  className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded-full text-sm font-medium text-gray-900 transition-colors"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-[#24b47e]/5 px-3 py-1.5 text-xs font-semibold text-[#18865b]"
                 >
-                  {selectedTag.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                  <X className="w-3 h-3" />
+                  {formatTag(selectedTag)}
+                  <X className="h-3 w-3" />
                 </button>
               </div>
             )}
 
-            {/* Posts List */}
             {filteredPosts.length > 0 ? (
-              <div className="space-y-8 sm:space-y-12">
+              <div className="space-y-7">
                 {filteredPosts.map((post, index) => (
-                  <PostCard key={post.slug} post={post} index={index} />
+                  <PostCard
+                    key={post.slug}
+                    post={post}
+                    index={index}
+                  />
                 ))}
               </div>
             ) : (
-              <div className="text-center py-12 sm:py-16">
-                <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">No articles found</p>
+              <div className="rounded-2xl border border-dashed border-zinc-200 px-6 py-16 text-center">
+                <BookOpen className="mx-auto h-7 w-7 text-zinc-300" />
+
+                <h3 className="mt-4 text-sm font-semibold text-zinc-900">
+                  No articles found
+                </h3>
+
+                <p className="mt-1 text-sm text-zinc-400">
+                  Try a different search or topic.
+                </p>
+
                 <button
                   onClick={clearFilters}
-                  className="text-xs sm:text-sm text-gray-900 underline hover:text-gray-600"
+                  className="mt-5 text-sm font-semibold text-[#18865b] hover:underline"
                 >
                   Clear filters
                 </button>
@@ -550,60 +819,130 @@ export default function BlogClient({ allPosts, featuredPosts }: BlogClientProps)
             )}
           </div>
 
-          {/* Sidebar */}
           <aside className="hidden lg:block">
-            <div className="sticky top-8 space-y-8">
-              {/* Topics */}
+            <div className="sticky top-28 space-y-8">
               <div>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-900 mb-4">
-                  Discover more of what matters to you
-                </h3>
+                <div className="mb-4">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+                    Explore
+                  </p>
+
+                  <h3 className="mt-1 text-lg font-bold tracking-tight text-zinc-950">
+                    Topics
+                  </h3>
+                </div>
+
                 <div className="flex flex-wrap gap-2">
-                  {allTags.map((tag) => (
-                    <button
-                      key={tag}
-                      onClick={() => setSelectedTag(selectedTag === tag ? '' : tag)}
-                      className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                        selectedTag === tag
-                          ? 'bg-gray-900 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                      }`}
-                    >
-                      {tag.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                    </button>
-                  ))}
+                  {allTags.map((tag) => {
+                    const active = selectedTag === tag;
+
+                    return (
+                      <button
+                        key={tag}
+                        onClick={() =>
+                          setSelectedTag(
+                            active ? '' : tag
+                          )
+                        }
+                        className={`rounded-full border px-3.5 py-2 text-xs font-medium transition-all ${
+                          active
+                            ? 'border-zinc-950 bg-zinc-950 text-white'
+                            : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:text-zinc-950'
+                        }`}
+                      >
+                        {formatTag(tag)}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Newsletter / Reading List */}
-              <div className="border-t border-gray-200 pt-8">
-                <h3 className="text-sm font-semibold text-gray-900 mb-3">Reading list</h3>
-                <p className="text-sm text-gray-600 mb-4">
-                  Click the bookmark icon on any story to easily organize your favorite reads.
+              <div className="rounded-2xl border border-zinc-200 bg-zinc-50 p-5">
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-zinc-950">
+                  <Bookmark className="h-4 w-4 text-white" />
+                </div>
+
+                <h3 className="mt-4 text-sm font-bold text-zinc-950">
+                  Build your reading list
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-zinc-500">
+                  Save articles you want to revisit using the
+                  bookmark icon.
                 </p>
               </div>
 
-              {/* Footer Links */}
-              <div className="border-t border-gray-200 pt-8">
-                <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-gray-600">
-                  <Link href="/about" className="hover:text-gray-900">
+              <div className="border-t border-zinc-200 pt-6">
+                <p className="text-xs leading-5 text-zinc-400">
+                  Hirely helps you understand opportunities,
+                  build relevant skills, and make better career
+                  decisions.
+                </p>
+
+                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-xs font-medium text-zinc-500">
+                  <Link
+                    href="/about"
+                    className="hover:text-zinc-900"
+                  >
                     About
                   </Link>
-                  <Link href="/contact" className="hover:text-gray-900">
+
+                  <Link
+                    href="/contact"
+                    className="hover:text-zinc-900"
+                  >
                     Contact
                   </Link>
-                  <Link href="/terms" className="hover:text-gray-900">
+
+                  <Link
+                    href="/terms"
+                    className="hover:text-zinc-900"
+                  >
                     Terms
                   </Link>
-                  <Link href="/privacy-policy" className="hover:text-gray-900">
+
+                  <Link
+                    href="/privacy-policy"
+                    className="hover:text-zinc-900"
+                  >
                     Privacy
                   </Link>
                 </div>
               </div>
             </div>
           </aside>
-        </div>
-      </div>
+        </section>
+
+        {!searchTerm && !selectedTag && (
+          <section className="mt-16 border-t border-zinc-200 pt-10 sm:mt-20 sm:pt-14">
+            <div className="flex flex-col justify-between gap-5 rounded-2xl bg-zinc-950 p-6 sm:flex-row sm:items-center sm:p-8">
+              <div className="max-w-xl">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#5ed6a5]">
+                  Keep exploring
+                </p>
+
+                <h2 className="mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">
+                  Your next career decision starts
+                  with better information.
+                </h2>
+
+                <p className="mt-2 text-sm leading-6 text-zinc-400">
+                  Explore jobs, career paths, and companies
+                  alongside the latest insights.
+                </p>
+              </div>
+
+              <Link
+                href="/jobs"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#24b47e] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#1ea872]"
+              >
+                Explore Jobs
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </section>
+        )}
+      </main>
     </div>
   );
 }

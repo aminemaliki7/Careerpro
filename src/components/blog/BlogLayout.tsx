@@ -1,7 +1,24 @@
 ﻿'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Bookmark, Share2, Twitter, Facebook, Linkedin, Check, Sparkles, MessageCircle, Send, Heart, MoreVertical, Flag, Play, Pause } from 'lucide-react';
+import {
+  Bookmark,
+  Share2,
+  Twitter,
+  Facebook,
+  Linkedin,
+  Check,
+  Sparkles,
+  MessageCircle,
+  Send,
+  Heart,
+  MoreVertical,
+  Flag,
+  Play,
+  Pause,
+  ArrowLeft,
+} from 'lucide-react';
 import type { BlogPostWithContent } from '@/types/blog';
 import { supabase } from '@/lib/supabase/client';
 
@@ -18,16 +35,21 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   const [isClapping, setIsClapping] = useState(false);
   const [hasClapped, setHasClapped] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [comments, setComments] = useState<Array<{
-    id: string;
-    author: string;
-    avatar: string;
-    content: string;
-    timestamp: Date;
-    likes: number;
-    isLiked: boolean;
-  }>>([]);
+
+  const [comments, setComments] = useState<
+    Array<{
+      id: string;
+      author: string;
+      avatar: string;
+      content: string;
+      timestamp: Date;
+      likes: number;
+      isLiked: boolean;
+    }>
+  >([]);
+
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
 
@@ -40,14 +62,10 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       day: 'numeric',
     });
 
-  // ============================================================================
-  // Load claps from Supabase on mount and check if user has clapped
-  // ============================================================================
   useEffect(() => {
     loadClapsFromDatabase();
     checkIfUserClapped();
-    
-    // Subscribe to real-time updates
+
     const channel = supabase
       .channel(`post-${postSlug}`)
       .on(
@@ -59,7 +77,11 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           filter: `post_slug=eq.${postSlug}`,
         },
         (payload) => {
-          if (payload.new && typeof payload.new === 'object' && 'total_claps' in payload.new) {
+          if (
+            payload.new &&
+            typeof payload.new === 'object' &&
+            'total_claps' in payload.new
+          ) {
             setClaps(payload.new.total_claps as number);
           }
         }
@@ -72,10 +94,13 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
   }, [postSlug]);
 
   const checkIfUserClapped = () => {
-    if (typeof window !== 'undefined') {
-      const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
-      setHasClapped(clappedPosts.includes(postSlug));
-    }
+    if (typeof window === 'undefined') return;
+
+    const clappedPosts = JSON.parse(
+      localStorage.getItem('clappedPosts') || '[]'
+    );
+
+    setHasClapped(clappedPosts.includes(postSlug));
   };
 
   const loadClapsFromDatabase = async () => {
@@ -94,26 +119,30 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       if (data) {
         setClaps(data.total_claps || 0);
       }
-    } catch (err) {
-      console.error('Error loading claps:', err);
+    } catch (error) {
+      console.error('Error loading claps:', error);
     }
   };
 
-  // ============================================================================
-  // Handle clap toggle - add or remove appreciation
-  // ============================================================================
   const handleClap = async () => {
     if (hasClapped) {
-      // Remove appreciation
-      setClaps(prev => Math.max(0, prev - 1));
+      setClaps((prev) => Math.max(0, prev - 1));
       setIsClapping(true);
       setHasClapped(false);
 
-      // Remove from localStorage
       if (typeof window !== 'undefined') {
-        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
-        const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
-        localStorage.setItem('clappedPosts', JSON.stringify(filtered));
+        const clappedPosts = JSON.parse(
+          localStorage.getItem('clappedPosts') || '[]'
+        );
+
+        const filtered = clappedPosts.filter(
+          (slug: string) => slug !== postSlug
+        );
+
+        localStorage.setItem(
+          'clappedPosts',
+          JSON.stringify(filtered)
+        );
       }
 
       setTimeout(() => setIsClapping(false), 600);
@@ -128,89 +157,123 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
         if (existing && existing.total_claps > 0) {
           const { error } = await supabase
             .from('post_appreciations')
-            .update({ total_claps: existing.total_claps - 1 })
+            .update({
+              total_claps: existing.total_claps - 1,
+            })
             .eq('post_slug', postSlug);
 
           if (error) throw error;
         }
       } catch (error) {
         console.error('Error removing clap:', error);
-        // Revert on error
-        setClaps(prev => prev + 1);
+
+        setClaps((prev) => prev + 1);
         setHasClapped(true);
-        
+
         if (typeof window !== 'undefined') {
-          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
-          clappedPosts.push(postSlug);
-          localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
+          const clappedPosts = JSON.parse(
+            localStorage.getItem('clappedPosts') || '[]'
+          );
+
+          if (!clappedPosts.includes(postSlug)) {
+            clappedPosts.push(postSlug);
+          }
+
+          localStorage.setItem(
+            'clappedPosts',
+            JSON.stringify(clappedPosts)
+          );
         }
       }
-    } else {
-      // Add appreciation
-      setClaps(prev => prev + 1);
-      setIsClapping(true);
-      setHasClapped(true);
 
-      // Save to localStorage
-      if (typeof window !== 'undefined') {
-        const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
+      return;
+    }
+
+    setClaps((prev) => prev + 1);
+    setIsClapping(true);
+    setHasClapped(true);
+
+    if (typeof window !== 'undefined') {
+      const clappedPosts = JSON.parse(
+        localStorage.getItem('clappedPosts') || '[]'
+      );
+
+      if (!clappedPosts.includes(postSlug)) {
         clappedPosts.push(postSlug);
-        localStorage.setItem('clappedPosts', JSON.stringify(clappedPosts));
       }
 
-      setTimeout(() => setIsClapping(false), 600);
+      localStorage.setItem(
+        'clappedPosts',
+        JSON.stringify(clappedPosts)
+      );
+    }
 
-      try {
-        const { data: existing } = await supabase
+    setTimeout(() => setIsClapping(false), 600);
+
+    try {
+      const { data: existing } = await supabase
+        .from('post_appreciations')
+        .select('*')
+        .eq('post_slug', postSlug)
+        .single();
+
+      if (existing) {
+        const { error } = await supabase
           .from('post_appreciations')
-          .select('*')
-          .eq('post_slug', postSlug)
-          .single();
+          .update({
+            total_claps: existing.total_claps + 1,
+          })
+          .eq('post_slug', postSlug);
 
-        if (existing) {
-          const { error } = await supabase
-            .from('post_appreciations')
-            .update({ total_claps: existing.total_claps + 1 })
-            .eq('post_slug', postSlug);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('post_appreciations')
+          .insert({
+            post_slug: postSlug,
+            total_claps: 1,
+          });
 
-          if (error) throw error;
-        } else {
-          const { error } = await supabase
-            .from('post_appreciations')
-            .insert({ post_slug: postSlug, total_claps: 1 });
-
-          if (error) throw error;
-        }
-      } catch (error) {
-        console.error('Error saving clap:', error);
-        // Revert on error
-        setClaps(prev => prev - 1);
-        setHasClapped(false);
-        
-        if (typeof window !== 'undefined') {
-          const clappedPosts = JSON.parse(localStorage.getItem('clappedPosts') || '[]');
-          const filtered = clappedPosts.filter((slug: string) => slug !== postSlug);
-          localStorage.setItem('clappedPosts', JSON.stringify(filtered));
-        }
-        
-        alert('Failed to save appreciation. Please try again.');
+        if (error) throw error;
       }
+    } catch (error) {
+      console.error('Error saving clap:', error);
+
+      setClaps((prev) => Math.max(0, prev - 1));
+      setHasClapped(false);
+
+      if (typeof window !== 'undefined') {
+        const clappedPosts = JSON.parse(
+          localStorage.getItem('clappedPosts') || '[]'
+        );
+
+        const filtered = clappedPosts.filter(
+          (slug: string) => slug !== postSlug
+        );
+
+        localStorage.setItem(
+          'clappedPosts',
+          JSON.stringify(filtered)
+        );
+      }
+
+      alert('Failed to save appreciation. Please try again.');
     }
   };
 
   const toggleAudioPlay = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
+    if (!audioRef.current) return;
+
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play();
     }
   };
 
   useEffect(() => {
     const audio = audioRef.current;
+
     if (!audio) return;
 
     const handlePlay = () => setIsPlaying(true);
@@ -235,54 +298,86 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
       id: Date.now().toString(),
       author: 'Anonymous User',
       avatar: 'AU',
-      content: newComment,
+      content: newComment.trim(),
       timestamp: new Date(),
       likes: 0,
       isLiked: false,
     };
 
     const updatedComments = [comment, ...comments];
+
     setComments(updatedComments);
     setNewComment('');
-    
+
     if (typeof window !== 'undefined') {
       const postUrl = window.location.pathname;
-      const savedComments = JSON.parse(localStorage.getItem('postComments') || '{}');
+
+      const savedComments = JSON.parse(
+        localStorage.getItem('postComments') || '{}'
+      );
+
       savedComments[postUrl] = updatedComments;
-      localStorage.setItem('postComments', JSON.stringify(savedComments));
+
+      localStorage.setItem(
+        'postComments',
+        JSON.stringify(savedComments)
+      );
     }
   };
 
   const handleLikeComment = (commentId: string) => {
-    const updatedComments = comments.map(comment => {
-      if (comment.id === commentId) {
-        return {
-          ...comment,
-          likes: comment.isLiked ? comment.likes - 1 : comment.likes + 1,
-          isLiked: !comment.isLiked,
-        };
-      }
-      return comment;
+    const updatedComments = comments.map((comment) => {
+      if (comment.id !== commentId) return comment;
+
+      return {
+        ...comment,
+        likes: comment.isLiked
+          ? comment.likes - 1
+          : comment.likes + 1,
+        isLiked: !comment.isLiked,
+      };
     });
+
     setComments(updatedComments);
-    
+
     if (typeof window !== 'undefined') {
       const postUrl = window.location.pathname;
-      const savedComments = JSON.parse(localStorage.getItem('postComments') || '{}');
+
+      const savedComments = JSON.parse(
+        localStorage.getItem('postComments') || '{}'
+      );
+
       savedComments[postUrl] = updatedComments;
-      localStorage.setItem('postComments', JSON.stringify(savedComments));
+
+      localStorage.setItem(
+        'postComments',
+        JSON.stringify(savedComments)
+      );
     }
   };
 
   const formatCommentTime = (date: Date) => {
     const now = new Date();
-    const diffInSeconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
-    
+
+    const diffInSeconds = Math.floor(
+      (now.getTime() - new Date(date).getTime()) / 1000
+    );
+
     if (diffInSeconds < 60) return 'Just now';
-    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-    if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    if (diffInSeconds < 3600) {
+      return `${Math.floor(diffInSeconds / 60)}m ago`;
+    }
+    if (diffInSeconds < 86400) {
+      return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    }
+    if (diffInSeconds < 604800) {
+      return `${Math.floor(diffInSeconds / 86400)}d ago`;
+    }
+
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
   };
 
   const handleShare = async (platform?: string) => {
@@ -291,219 +386,581 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
     if (platform === 'twitter') {
       window.open(
-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+          url
+        )}&text=${encodeURIComponent(title)}`,
         '_blank',
         'width=550,height=420'
       );
-    } else if (platform === 'facebook') {
+      return;
+    }
+
+    if (platform === 'facebook') {
       window.open(
-        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          url
+        )}`,
         '_blank',
         'width=550,height=420'
       );
-    } else if (platform === 'linkedin') {
+      return;
+    }
+
+    if (platform === 'linkedin') {
       window.open(
-        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+        `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+          url
+        )}`,
         '_blank',
         'width=550,height=420'
       );
-    } else {
-      try {
-        await navigator.clipboard.writeText(url);
-        setCopySuccess(true);
-        setTimeout(() => {
-          setCopySuccess(false);
-          setShowShareMenu(false);
-        }, 2000);
-      } catch (err) {
-        const textArea = document.createElement('textarea');
-        textArea.value = url;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
-        setCopySuccess(true);
-        setTimeout(() => {
-          setCopySuccess(false);
-          setShowShareMenu(false);
-        }, 2000);
-      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+
+      setCopySuccess(true);
+
+      setTimeout(() => {
+        setCopySuccess(false);
+        setShowShareMenu(false);
+      }, 2000);
+    } catch {
+      const textArea = document.createElement('textarea');
+
+      textArea.value = url;
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+
+      setCopySuccess(true);
+
+      setTimeout(() => {
+        setCopySuccess(false);
+        setShowShareMenu(false);
+      }, 2000);
     }
   };
 
   const handleBookmark = () => {
-    setIsBookmarked(!isBookmarked);
-    if (typeof window !== 'undefined') {
-      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
-      const postUrl = window.location.pathname;
-      
-      if (isBookmarked) {
-        const filtered = bookmarks.filter((b: string) => b !== postUrl);
-        localStorage.setItem('bookmarkedPosts', JSON.stringify(filtered));
-      } else {
+    setIsBookmarked((prev) => !prev);
+
+    if (typeof window === 'undefined') return;
+
+    const bookmarks = JSON.parse(
+      localStorage.getItem('bookmarkedPosts') || '[]'
+    );
+
+    const postUrl = window.location.pathname;
+
+    if (isBookmarked) {
+      const filtered = bookmarks.filter(
+        (bookmark: string) => bookmark !== postUrl
+      );
+
+      localStorage.setItem(
+        'bookmarkedPosts',
+        JSON.stringify(filtered)
+      );
+    } else {
+      if (!bookmarks.includes(postUrl)) {
         bookmarks.push(postUrl);
-        localStorage.setItem('bookmarkedPosts', JSON.stringify(bookmarks));
       }
+
+      localStorage.setItem(
+        'bookmarkedPosts',
+        JSON.stringify(bookmarks)
+      );
     }
   };
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const bookmarks = JSON.parse(localStorage.getItem('bookmarkedPosts') || '[]');
-      const postUrl = window.location.pathname;
-      setIsBookmarked(bookmarks.includes(postUrl));
-      
-      const savedComments = JSON.parse(localStorage.getItem('postComments') || '{}');
-      setComments(savedComments[postUrl] || []);
-    }
+    if (typeof window === 'undefined') return;
+
+    const bookmarks = JSON.parse(
+      localStorage.getItem('bookmarkedPosts') || '[]'
+    );
+
+    const postUrl = window.location.pathname;
+
+    setIsBookmarked(bookmarks.includes(postUrl));
+
+    const savedComments = JSON.parse(
+      localStorage.getItem('postComments') || '{}'
+    );
+
+    setComments(savedComments[postUrl] || []);
   }, []);
 
   return (
     <div className="min-h-screen bg-white">
-      <article className="max-w-[720px] mx-auto px-4 sm:px-6 pt-[108px] sm:pt-[120px] pb-12 sm:pb-20">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 sm:mb-6 leading-[1.15] break-words">
-          {post.title}
-        </h1>
-        
-        {post.description && (
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 mb-6 sm:mb-8 leading-relaxed break-words">
-            {post.description}
-          </p>
-        )}
+      <article className="mx-auto max-w-6xl px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <Link
+            href="/blog"
+            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-[#24b47e]"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Articles
+          </Link>
 
-        {post.coverImage && (
-          <div className="mb-8 sm:mb-12 -mx-4 sm:-mx-6">
-            <img src={post.coverImage} alt={post.title} className="w-full h-auto rounded-lg" />
-          </div>
-        )}
-
-        <div className="flex items-center justify-between py-4 sm:py-5 mb-6 sm:mb-8 border-y border-gray-200">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold flex-shrink-0">
-              {post.author?.[0].toUpperCase() || 'H'}
+          <header className="mb-10 sm:mb-12">
+            <div className="mb-5 flex flex-wrap items-center gap-2">
+              {post.tags?.slice(0, 3).map((tag) => (
+                <Link
+                  key={tag}
+                  href={`/blog?tag=${encodeURIComponent(tag)}`}
+                  className="rounded-full border border-[#24b47e]/20 bg-[#24b47e]/5 px-3 py-1 text-xs font-semibold text-[#18865b] transition-colors hover:bg-[#24b47e]/10"
+                >
+                  {tag
+                    .replace(/-/g, ' ')
+                    .replace(/\b\w/g, (letter) => letter.toUpperCase())}
+                </Link>
+              ))}
             </div>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-gray-900 truncate">{post.author || 'Hirely'}</div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-600 mt-0.5 flex-wrap">
-                <span className="whitespace-nowrap">{formatDate(post.publishedAt)}</span>
-                <span className="hidden sm:inline">•</span>
-                <span className="whitespace-nowrap">{post.readingTime || 5} min read</span>
+
+            <h1 className="max-w-4xl break-words text-4xl font-bold leading-[1.08] tracking-tight text-zinc-950 sm:text-5xl md:text-6xl">
+              {post.title}
+            </h1>
+
+            {post.description && (
+              <p className="mt-6 max-w-3xl break-words text-lg leading-relaxed text-zinc-500 sm:text-xl">
+                {post.description}
+              </p>
+            )}
+
+            <div className="mt-8 flex flex-col gap-5 border-y border-zinc-200 py-5 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-zinc-950 text-sm font-semibold text-white">
+                  {post.author?.[0]?.toUpperCase() || 'H'}
+                </div>
+
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-semibold text-zinc-900">
+                    {post.author || 'Hirely'}
+                  </div>
+
+                  <div className="mt-0.5 flex flex-wrap items-center gap-2 text-xs text-zinc-500 sm:text-sm">
+                    <span>{formatDate(post.publishedAt)}</span>
+                    <span>•</span>
+                    <span>{post.readingTime || 5} min read</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-1">
+                {post.audioUrl && (
+                  <>
+                    <audio
+                      ref={audioRef}
+                      src={post.audioUrl}
+                      preload="metadata"
+                    />
+
+                    <button
+                      onClick={toggleAudioPlay}
+                      className={`flex h-9 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-all ${
+                        isPlaying
+                          ? 'border-[#24b47e]/30 bg-[#24b47e]/10 text-[#18865b]'
+                          : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50'
+                      }`}
+                      aria-label={
+                        isPlaying
+                          ? 'Pause article audio'
+                          : 'Listen to article'
+                      }
+                      title={
+                        isPlaying
+                          ? 'Pause audio'
+                          : 'Listen to article'
+                      }
+                    >
+                      {isPlaying ? (
+                        <Pause className="h-3.5 w-3.5" />
+                      ) : (
+                        <Play className="h-3.5 w-3.5" />
+                      )}
+                      <span className="hidden sm:inline">
+                        {isPlaying ? 'Pause' : 'Listen'}
+                      </span>
+                    </button>
+                  </>
+                )}
+
+                <button
+                  onClick={handleClap}
+                  className="relative flex h-9 items-center gap-1.5 rounded-full border border-zinc-200 px-3 text-xs font-semibold text-zinc-700 transition-all hover:border-[#24b47e]/30 hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                  aria-label={
+                    hasClapped
+                      ? 'Remove appreciation'
+                      : 'Show appreciation'
+                  }
+                  title={
+                    hasClapped
+                      ? 'Remove appreciation'
+                      : 'Show appreciation'
+                  }
+                >
+                  <Sparkles
+                    className={`h-3.5 w-3.5 transition-all duration-300 ${
+                      hasClapped || isClapping
+                        ? 'scale-110 text-[#24b47e]'
+                        : 'text-zinc-500'
+                    }`}
+                  />
+
+                  <span>{claps}</span>
+                </button>
+
+                <button
+                  onClick={handleBookmark}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all ${
+                    isBookmarked
+                      ? 'border-zinc-900 bg-zinc-900 text-white'
+                      : 'border-zinc-200 text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+                  }`}
+                  aria-label={
+                    isBookmarked
+                      ? 'Remove bookmark'
+                      : 'Bookmark article'
+                  }
+                  title="Save for later"
+                >
+                  <Bookmark
+                    className={`h-4 w-4 ${
+                      isBookmarked ? 'fill-current' : ''
+                    }`}
+                  />
+                </button>
+
+                <div className="relative">
+                  <button
+                    onClick={() =>
+                      setShowShareMenu((prev) => !prev)
+                    }
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 text-zinc-600 transition-all hover:border-zinc-300 hover:bg-zinc-50"
+                    aria-label="Share article"
+                    title="Share"
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </button>
+
+                  {showShareMenu && (
+                    <>
+                      <div
+                        className="fixed inset-0 z-10"
+                        onClick={() =>
+                          setShowShareMenu(false)
+                        }
+                      />
+
+                      <div className="absolute right-0 z-20 mt-2 w-56 overflow-hidden rounded-2xl border border-zinc-200 bg-white p-1.5 shadow-xl">
+                        <button
+                          onClick={() =>
+                            handleShare('twitter')
+                          }
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+                        >
+                          <Twitter className="h-4 w-4 text-[#1DA1F2]" />
+                          <span className="font-medium">
+                            Twitter
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            handleShare('facebook')
+                          }
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+                        >
+                          <Facebook className="h-4 w-4 text-[#4267B2]" />
+                          <span className="font-medium">
+                            Facebook
+                          </span>
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            handleShare('linkedin')
+                          }
+                          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+                        >
+                          <Linkedin className="h-4 w-4 text-[#0A66C2]" />
+                          <span className="font-medium">
+                            LinkedIn
+                          </span>
+                        </button>
+
+                        <div className="my-1 border-t border-zinc-100" />
+
+                        <button
+                          onClick={() => handleShare()}
+                          className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
+                        >
+                          <span className="font-medium">
+                            {copySuccess
+                              ? 'Link copied!'
+                              : 'Copy link'}
+                          </span>
+
+                          {copySuccess && (
+                            <Check className="h-4 w-4 text-[#24b47e]" />
+                          )}
+                        </button>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </header>
+
+          {post.coverImage && (
+            <div className="mb-12 overflow-hidden rounded-2xl border border-zinc-200 bg-zinc-50 shadow-sm sm:mb-16">
+              <img
+                src={post.coverImage}
+                alt={post.title}
+                className="h-auto w-full object-cover"
+              />
+            </div>
+          )}
+
+          <div className="mx-auto max-w-[720px]">
+            <div className="prose prose-lg max-w-none text-zinc-800 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-zinc-950 prose-p:leading-8 prose-p:text-zinc-700 prose-a:text-[#18865b] prose-a:no-underline hover:prose-a:underline prose-strong:text-zinc-950 prose-li:text-zinc-700 prose-blockquote:border-[#24b47e] prose-blockquote:text-zinc-600">
+              {children}
+            </div>
+          </div>
+
+          {post.tags && post.tags.length > 0 && (
+            <div className="mx-auto mt-14 max-w-[720px] border-t border-zinc-200 pt-8 sm:mt-16">
+              <div className="mb-4 text-xs font-semibold uppercase tracking-wider text-zinc-400">
+                Topics
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {post.tags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/blog?tag=${encodeURIComponent(tag)}`}
+                    className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-600 transition-all hover:border-[#24b47e]/30 hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                  >
+                    {tag
+                      .replace(/-/g, ' ')
+                      .replace(/\b\w/g, (letter) =>
+                        letter.toUpperCase()
+                      )}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="mx-auto mt-14 max-w-[720px] border-t border-zinc-200 pt-10 sm:mt-16 sm:pt-12">
+            <div className="flex flex-col gap-4 rounded-2xl border border-zinc-200 bg-zinc-50 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+              <div>
+                <p className="text-sm font-semibold text-zinc-900">
+                  Found this useful?
+                </p>
+                <p className="mt-1 text-sm text-zinc-500">
+                  Save it for later or share it with someone who
+                  might need it.
+                </p>
+              </div>
+
+              <div className="flex shrink-0 items-center gap-2">
+                <button
+                  onClick={handleClap}
+                  className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
+                    hasClapped
+                      ? 'border-[#24b47e]/30 bg-[#24b47e]/10 text-[#18865b]'
+                      : 'border-zinc-200 bg-white text-zinc-700 hover:border-[#24b47e]/30 hover:text-[#18865b]'
+                  }`}
+                >
+                  <Sparkles className="h-4 w-4" />
+                  {claps > 0 ? claps : 'Appreciate'}
+                </button>
+
+                <button
+                  onClick={handleBookmark}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border transition-all ${
+                    isBookmarked
+                      ? 'border-zinc-900 bg-zinc-900 text-white'
+                      : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'
+                  }`}
+                  aria-label={
+                    isBookmarked
+                      ? 'Remove bookmark'
+                      : 'Bookmark article'
+                  }
+                >
+                  <Bookmark
+                    className={`h-4 w-4 ${
+                      isBookmarked ? 'fill-current' : ''
+                    }`}
+                  />
+                </button>
               </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-1 ml-3">
-            {post.audioUrl && (
-              <>
-                <audio ref={audioRef} src={post.audioUrl} preload="metadata" />
-                <button
-                  onClick={toggleAudioPlay}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
-                  aria-label={isPlaying ? 'Pause audio' : 'Play audio'}
-                  title={isPlaying ? 'Pause audio' : 'Listen to article'}
-                >
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 group-hover:text-gray-900" />
-                  ) : (
-                    <Play className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 group-hover:text-gray-900" />
-                  )}
-                </button>
-              </>
-            )}
+          <section className="mx-auto mt-14 max-w-[720px] border-t border-zinc-200 pt-10 sm:mt-16 sm:pt-12">
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight text-zinc-950">
+                  Discussion
+                </h2>
+                <p className="mt-1 text-sm text-zinc-500">
+                  Share your thoughts on this article.
+                </p>
+              </div>
 
-            {/* UPDATED: Clap Button - Toggle Add/Remove */}
-            <button
-              onClick={handleClap}
-              className="relative p-2 hover:bg-gradient-to-br hover:from-purple-50 hover:to-pink-50 rounded-full transition-all duration-200 group"
-              aria-label={hasClapped ? "Remove appreciation" : "Show appreciation"}
-              title={hasClapped ? "Remove appreciation" : "Show appreciation"}
-            >
-              <Sparkles 
-                className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-300 ${
-                  hasClapped
-                    ? 'text-purple-600'
-                    : isClapping 
-                    ? 'text-purple-600 scale-125 rotate-12' 
-                    : 'text-gray-700 group-hover:text-purple-600 group-hover:scale-110'
-                }`}
-              />
-              {claps > 0 && (
-                <span className="absolute -top-1 -right-1 bg-purple-600 text-white text-[10px] font-bold rounded-full min-w-5 h-5 px-1 flex items-center justify-center">
-                  {claps > 999 ? '999+' : claps}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={handleBookmark}
-              className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
-              aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark article'}
-              title="Save for later"
-            >
-              <Bookmark
-                className={`w-4 h-4 sm:w-5 sm:h-5 transition-all duration-200 ${
-                  isBookmarked
-                    ? 'fill-gray-900 text-gray-900'
-                    : 'text-gray-700 group-hover:text-gray-900 group-hover:scale-110'
-                }`}
-              />
-            </button>
-
-            <div className="relative">
-              <button
-                onClick={() => setShowShareMenu(!showShareMenu)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-all duration-200 group"
-                aria-label="Share article"
-                title="Share"
-              >
-                <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700 group-hover:text-gray-900 group-hover:scale-110 transition-all" />
-              </button>
-              {showShareMenu && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setShowShareMenu(false)} />
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-20">
-                    <button onClick={() => handleShare('twitter')} className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3">
-                      <Twitter className="w-4 h-4 text-[#1DA1F2]" /><span className="font-medium">Twitter</span>
-                    </button>
-                    <button onClick={() => handleShare('facebook')} className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3">
-                      <Facebook className="w-4 h-4 text-[#4267B2]" /><span className="font-medium">Facebook</span>
-                    </button>
-                    <button onClick={() => handleShare('linkedin')} className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-3">
-                      <Linkedin className="w-4 h-4 text-[#0A66C2]" /><span className="font-medium">LinkedIn</span>
-                    </button>
-                    <div className="border-t border-gray-200 my-2" />
-                    <button onClick={() => handleShare()} className="w-full px-4 py-2.5 text-left text-sm text-gray-700 hover:bg-gray-50 flex items-center justify-between">
-                      <span className="font-medium">{copySuccess ? 'Link copied!' : 'Copy link'}</span>
-                      {copySuccess && <Check className="w-4 h-4 text-green-600" />}
-                    </button>
-                  </div>
-                </>
-              )}
+              <MessageCircle className="h-5 w-5 text-zinc-400" />
             </div>
+
+            <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-4">
+              <textarea
+                value={newComment}
+                onChange={(event) =>
+                  setNewComment(event.target.value)
+                }
+                placeholder="What do you think?"
+                rows={4}
+                className="w-full resize-none bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+              />
+
+              <div className="mt-3 flex justify-end">
+                <button
+                  onClick={handleAddComment}
+                  disabled={!newComment.trim()}
+                  className="flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  <Send className="h-3.5 w-3.5" />
+                  Comment
+                </button>
+              </div>
+            </div>
+
+            {comments.length > 0 ? (
+              <div className="space-y-5">
+                {comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="rounded-2xl border border-zinc-200 bg-white p-5"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-xs font-semibold text-zinc-700">
+                          {comment.avatar}
+                        </div>
+
+                        <div>
+                          <div className="text-sm font-semibold text-zinc-900">
+                            {comment.author}
+                          </div>
+
+                          <div className="text-xs text-zinc-400">
+                            {formatCommentTime(
+                              comment.timestamp
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      <button
+                        className="text-zinc-400 transition-colors hover:text-zinc-700"
+                        aria-label="More options"
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                      </button>
+                    </div>
+
+                    <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-zinc-700">
+                      {comment.content}
+                    </p>
+
+                    <div className="mt-4 flex items-center gap-4">
+                      <button
+                        onClick={() =>
+                          handleLikeComment(comment.id)
+                        }
+                        className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
+                          comment.isLiked
+                            ? 'text-[#18865b]'
+                            : 'text-zinc-400 hover:text-zinc-700'
+                        }`}
+                      >
+                        <Heart
+                          className={`h-3.5 w-3.5 ${
+                            comment.isLiked
+                              ? 'fill-current'
+                              : ''
+                          }`}
+                        />
+                        {comment.likes > 0 &&
+                          comment.likes}
+                        <span>
+                          {comment.isLiked
+                            ? 'Liked'
+                            : 'Like'}
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={() =>
+                          setReplyingTo(
+                            replyingTo === comment.id
+                              ? null
+                              : comment.id
+                          )
+                        }
+                        className="text-xs font-medium text-zinc-400 transition-colors hover:text-zinc-700"
+                      >
+                        Reply
+                      </button>
+
+                      <button className="text-zinc-400 transition-colors hover:text-zinc-700">
+                        <Flag className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+
+                    {replyingTo === comment.id && (
+                      <div className="mt-4 border-t border-zinc-100 pt-4">
+                        <p className="text-xs text-zinc-400">
+                          Replies can be added here.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-dashed border-zinc-200 py-10 text-center">
+                <MessageCircle className="mx-auto h-6 w-6 text-zinc-300" />
+                <p className="mt-3 text-sm font-medium text-zinc-600">
+                  No comments yet
+                </p>
+                <p className="mt-1 text-xs text-zinc-400">
+                  Start the conversation.
+                </p>
+              </div>
+            )}
+          </section>
+
+          <div className="mx-auto mt-16 max-w-[720px] border-t border-zinc-200 pt-8">
+            <Link
+              href="/blog"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-zinc-700 transition-colors hover:text-[#18865b]"
+            >
+              <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+              Explore more Articles
+            </Link>
           </div>
         </div>
-
-        <div className="prose prose-lg max-w-none">
-          {children}
-        </div>
-
-        {post.tags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-10 sm:mt-16 pt-8 sm:pt-10 border-t-2 border-gray-200">
-            {post.tags.map(tag => (
-              <Link 
-                key={tag} 
-                href={`/blog?tag=${tag}`} 
-                className="px-3 py-2 sm:px-4 sm:py-2 bg-gray-100 hover:bg-gray-900 hover:text-white rounded-full text-xs sm:text-sm text-gray-700 font-medium transition-all duration-200"
-              >
-                {tag.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-              </Link>
-            ))}
-          </div>
-        )}
-
-        {/* Comments section remains the same */}
       </article>
     </div>
   );

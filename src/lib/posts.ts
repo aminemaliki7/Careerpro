@@ -1,327 +1,661 @@
-// lib/posts.ts - Complete simplified version with highlights support
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
+import 'server-only'
+
+import { createClient } from '@supabase/supabase-js'
 import readingTime from 'reading-time'
-import type { BlogMetadata, BlogPostWithContent, JobRoadmap, AffiliateCourseLink, Highlight } from '@/types/blog'
 
-// Defining a type for a single step within a JobRoadmap
-type JobStep = {
-  stepNumber: number;
-  title: string;
-  description: string;
-  estimatedTime: string;
-  resources: {
-    title: string;
-    link: string;
-  }[];
-};
+import type {
+  BlogMetadata,
+  BlogPostWithContent,
+  JobRoadmap,
+  AffiliateCourseLink,
+  Highlight,
+} from '@/types/blog'
 
-const postsDirectory = path.join(process.cwd(), 'src/content/posts')
+type ArticleRow = {
+  id: string
+  slug: string
+  title: string
+  description: string
+  content: string
+  published_at: string
+  updated_at: string
+  author: string
+  tags: string[]
+  seo_keywords: string[]
+  featured: boolean
+  cover_image: string | null
+  audio_url: string | null
+  audio_duration: number | null
+  highlights: Highlight[] | null
+  roadmap: JobRoadmap | null
+  affiliate_course_links: AffiliateCourseLink[] | null
+  status: 'draft' | 'published' | 'archived'
+  created_at: string
+}
 
-// Get a single blog post by slug
-export function getPostBySlug(slug: string): BlogPostWithContent | null {
+const supabaseUrl =
+  process.env.NEXT_PUBLIC_SUPABASE_URL
+
+const supabaseAnonKey =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    'Missing Supabase environment variables'
+  )
+}
+
+const supabase = createClient(
+  supabaseUrl,
+  supabaseAnonKey
+)
+
+/**
+ * Convert the Markdown stored in Supabase
+ * into the same HTML structure previously
+ * returned by the MDX loader.
+ */
+function markdownToHtml(
+  markdown: string
+): string {
+  const htmlContent = markdown
+
+    // Code blocks first
+    .replace(
+      /```[\s\S]*?```/g,
+      (match) => {
+        const codeContent = match
+          .replace(/^```\w*\n?/, '')
+          .replace(/```$/, '')
+
+        return `<pre><code>${codeContent}</code></pre>`
+      }
+    )
+
+    // Headers
+    .replace(
+      /^#### (.*)$/gim,
+      '<h4>$1</h4>'
+    )
+    .replace(
+      /^### (.*)$/gim,
+      '<h3>$1</h3>'
+    )
+    .replace(
+      /^## (.*)$/gim,
+      '<h2>$1</h2>'
+    )
+    .replace(
+      /^# (.*)$/gim,
+      '<h1>$1</h1>'
+    )
+
+    // Bold
+    .replace(
+      /\*\*(.*?)\*\*/g,
+      '<strong>$1</strong>'
+    )
+
+    // Italic
+    .replace(
+      /(?<!\*)\*([^*]+)\*(?!\*)/g,
+      '<em>$1</em>'
+    )
+
+    // Inline code
+    .replace(
+      /`([^`]+)`/g,
+      '<code>$1</code>'
+    )
+
+    // Links
+    .replace(
+      /\[([^\]]+)\]\(([^)]+)\)/g,
+      '<a href="$2">$1</a>'
+    )
+
+    // Unordered lists
+    .replace(
+      /^- (.*)$/gim,
+      '<li>$1</li>'
+    )
+
+    // Ordered lists
+    .replace(
+      /^\d+\. (.*)$/gim,
+      '<li>$1</li>'
+    )
+
+    // Paragraph breaks
+    .replace(
+      /\n\n+/g,
+      '</p><p>'
+    )
+
+    // Single line breaks
+    .replace(
+      /\n/g,
+      ' '
+    )
+
+  const contentWithLists =
+    htmlContent.replace(
+      /(<li>[\s\S]*?<\/li>)/g,
+      '<ul>$1</ul>'
+    )
+
+  const wrappedContent =
+    `<p>${contentWithLists}</p>`
+
+      .replace(
+        /<p><h/g,
+        '<h'
+      )
+
+      .replace(
+        /<\/h([1-6])><\/p>/g,
+        '</h$1>'
+      )
+
+      .replace(
+        /<p><ul>/g,
+        '<ul>'
+      )
+
+      .replace(
+        /<\/ul><\/p>/g,
+        '</ul>'
+      )
+
+      .replace(
+        /<p><pre>/g,
+        '<pre>'
+      )
+
+      .replace(
+        /<\/pre><\/p>/g,
+        '</pre>'
+      )
+
+      .replace(
+        /<p><\/p>/g,
+        ''
+      )
+
+      .replace(
+        /<p>\s*<\/p>/g,
+        ''
+      )
+
+  return wrappedContent
+}
+
+function normalizeRoadmap(
+  roadmap: ArticleRow['roadmap']
+): JobRoadmap | undefined {
+  if (!roadmap) {
+    return undefined
+  }
+
+  return {
+    jobTitle: roadmap.jobTitle,
+    steps: Array.isArray(roadmap.steps)
+      ? roadmap.steps.map((step) => ({
+          stepNumber: step.stepNumber,
+          title: step.title,
+          description: step.description,
+          estimatedTime: step.estimatedTime,
+          resources: step.resources ?? [],
+          difficulty: step.difficulty ?? '',
+          duration: step.duration ?? '',
+          skills: step.skills ?? [],
+          alternatives: step.alternatives ?? [],
+        }))
+      : [],
+  }
+}
+
+function normalizeAffiliateLinks(
+  links: ArticleRow['affiliate_course_links']
+): AffiliateCourseLink[] | undefined {
+  if (!Array.isArray(links)) {
+    return undefined
+  }
+
+  return links.map((link) => ({
+    courseTitle: link.courseTitle,
+    affiliateUrl: link.affiliateUrl,
+    provider: link.provider,
+    description: link.description,
+  }))
+}
+
+function normalizeHighlights(
+  highlights: ArticleRow['highlights']
+): Highlight[] | undefined {
+  if (!Array.isArray(highlights)) {
+    return undefined
+  }
+
+  return highlights.map((highlight) => ({
+    text: highlight.text,
+    color: highlight.color,
+  }))
+}
+
+function mapArticle(
+  article: ArticleRow,
+  includeContent: boolean
+): BlogPostWithContent {
+  const content = article.content ?? ''
+
+  const roadmap =
+    normalizeRoadmap(article.roadmap)
+
+  const affiliateCourseLinks =
+    normalizeAffiliateLinks(
+      article.affiliate_course_links
+    )
+
+  const highlights =
+    normalizeHighlights(
+      article.highlights
+    )
+
+  return {
+    title: article.title,
+    description: article.description,
+
+    publishedAt:
+      article.published_at,
+
+    updatedAt:
+      article.updated_at,
+
+    tags:
+      article.tags ?? [],
+
+    author:
+      article.author,
+
+    featured:
+      article.featured,
+
+    seoKeywords:
+      article.seo_keywords ?? [],
+
+    slug:
+      article.slug,
+
+    content:
+      includeContent
+        ? markdownToHtml(content)
+        : '',
+
+    readingTime:
+      readingTime(content).minutes,
+
+    roadmap,
+
+    affiliateCourseLinks,
+
+    audioUrl:
+      article.audio_url ??
+      undefined,
+
+    audioDuration:
+      article.audio_duration ??
+      undefined,
+
+    coverImage:
+      article.cover_image ??
+      undefined,
+
+    highlights,
+
+  } as BlogPostWithContent
+}
+
+/**
+ * Get a single article by slug.
+ */
+export async function getPostBySlug(
+  slug: string
+): Promise<BlogPostWithContent | null> {
   try {
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
-    
-    if (!fs.existsSync(fullPath)) {
+    const { data, error } =
+      await supabase
+        .from('articles')
+        .select('*')
+        .eq('slug', slug)
+        .eq('status', 'published')
+        .maybeSingle()
+
+    if (error) {
+      console.error(
+        `Error loading article ${slug}:`,
+        error
+      )
+
       return null
     }
 
-    const fileContents = fs.readFileSync(fullPath, 'utf8')
-    const { data, content } = matter(fileContents)
-
-    // Convert basic markdown to HTML with tighter spacing
-    const htmlContent = content
-      // Headers
-      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-      .replace(/^#### (.*$)/gim, '<h4>$1</h4>')
-      
-      // Bold and italic
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.*?)\*/g, '<em>$1</em>')
-      
-      // Inline code
-      .replace(/`([^`]+)`/g, '<code>$1</code>')
-      
-      // Code blocks
-      .replace(/```[\s\S]*?```/g, (match) => {
-        const codeContent = match.replace(/```\w*\n?/, '').replace(/```$/, '')
-        return `<pre><code>${codeContent}</code></pre>`
-      })
-      
-      // Links
-      .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
-      
-      // Lists (handle before paragraph processing)
-      .replace(/^\- (.*$)/gim, '<li>$1</li>')
-      .replace(/^(\d+)\. (.*$)/gim, '<li>$2</li>')
-      
-      // Convert double line breaks to paragraph breaks
-      .replace(/\n\n+/g, '</p><p>')
-      
-      // Remove single line breaks (they create too much spacing)
-      .replace(/\n/g, ' ')
-
-    // Wrap lists in ul tags
-    const contentWithLists = htmlContent.replace(/(<li>[\s\S]*?<\/li>)/g, '<ul>$1</ul>')
-
-    // Wrap content in paragraphs and clean up
-    const wrappedContent = `<p>${contentWithLists}</p>`
-      .replace(/<p><h/g, '<h')
-      .replace(/<\/h([1-6])><\/p>/g, '</h$1>')
-      .replace(/<p><ul>/g, '<ul>')
-      .replace(/<\/ul><\/p>/g, '</ul>')
-      .replace(/<p><pre>/g, '<pre>')
-      .replace(/<\/pre><\/p>/g, '</pre>')
-      .replace(/<p><\/p>/g, '')
-      .replace(/<p>\s*<\/p>/g, '')
-
-    // Ensure roadmap and affiliateCourseLinks are properly typed
-    const roadmap: JobRoadmap | undefined = data.roadmap
-      ? {
-          jobTitle: data.roadmap.jobTitle,
-          steps: data.roadmap.steps.map((step: JobStep) => ({
-            stepNumber: step.stepNumber,
-            title: step.title,
-            description: step.description,
-            estimatedTime: step.estimatedTime,
-            resources: step.resources || [],
-          })),
-        }
-      : undefined
-
-    const affiliateCourseLinks: AffiliateCourseLink[] | undefined = data.affiliateCourseLinks
-      ? data.affiliateCourseLinks.map((link: AffiliateCourseLink) => ({
-          courseTitle: link.courseTitle,
-          affiliateUrl: link.affiliateUrl,
-          provider: link.provider,
-          description: link.description,
-        }))
-      : undefined
-
-    // NEW: Parse highlights from frontmatter
-    const highlights: Highlight[] | undefined = data.highlights
-      ? data.highlights.map((highlight: Highlight) => ({
-          text: highlight.text,
-          color: highlight.color,
-        }))
-      : undefined
-
-    // Debug log
-    if (highlights && highlights.length > 0) {
-      console.log(`[lib/posts.ts] Found ${highlights.length} highlights for post: ${slug}`)
+    if (!data) {
+      return null
     }
 
-    return {
-      ...(data as BlogMetadata),
-      content: wrappedContent,
-      readingTime: readingTime(content).minutes,
-      roadmap,
-      affiliateCourseLinks,
-      highlights, // NEW: Include highlights in return
-    } as BlogPostWithContent
+    return mapArticle(
+      data as ArticleRow,
+      true
+    )
   } catch (error) {
-    console.error(`Error reading post ${slug}:`, error)
+    console.error(
+      `Error loading article ${slug}:`,
+      error
+    )
+
     return null
   }
 }
 
-// Get all blog posts (for listing pages)
-export function getAllPosts(): BlogPostWithContent[] {
+/**
+ * Get all published articles.
+ */
+export async function getAllPosts(): Promise<
+  BlogPostWithContent[]
+> {
   try {
-    const fileNames = fs.readdirSync(postsDirectory)
-    const allPostsData = fileNames
-      .filter((name) => name.endsWith('.mdx'))
-      .map((name) => {
-        const fullPath = path.join(postsDirectory, name)
-        const fileContents = fs.readFileSync(fullPath, 'utf8')
-        const { data, content } = matter(fileContents)
-        
-        // For listing pages, we don't need compiled content, just metadata
-        const roadmap: JobRoadmap | undefined = data.roadmap
-          ? {
-              jobTitle: data.roadmap.jobTitle,
-              steps: data.roadmap.steps.map((step: JobStep) => ({
-                stepNumber: step.stepNumber,
-                title: step.title,
-                description: step.description,
-                estimatedTime: step.estimatedTime,
-                resources: step.resources || [],
-              })),
-            }
-          : undefined
+    const { data, error } =
+      await supabase
+        .from('articles')
+        .select('*')
+        .eq('status', 'published')
+        .order(
+          'published_at',
+          {
+            ascending: false,
+          }
+        )
 
-        const affiliateCourseLinks: AffiliateCourseLink[] | undefined = data.affiliateCourseLinks
-          ? data.affiliateCourseLinks.map((link: AffiliateCourseLink) => ({
-              courseTitle: link.courseTitle,
-              affiliateUrl: link.affiliateUrl,
-              provider: link.provider,
-              description: link.description,
-            }))
-          : undefined
+    if (error) {
+      console.error(
+        'Error loading articles:',
+        error
+      )
 
-        // NEW: Parse highlights (not needed for listing, but keep for consistency)
-        const highlights: Highlight[] | undefined = data.highlights
-          ? data.highlights.map((highlight: Highlight) => ({
-              text: highlight.text,
-              color: highlight.color,
-            }))
-          : undefined
+      return []
+    }
 
-        return {
-          ...(data as BlogMetadata),
-          content: '', // Empty for listing
-          readingTime: readingTime(content).minutes,
-          roadmap,
-          affiliateCourseLinks,
-          highlights, // NEW: Include highlights
-        } as BlogPostWithContent
-      })
-      .sort((a, b) => {
-        return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-      })
-
-    return allPostsData
+    return (
+      (data as ArticleRow[] | null) ?? []
+    ).map((article) =>
+      mapArticle(article, false)
+    )
   } catch (error) {
-    console.error('Error reading posts:', error)
+    console.error(
+      'Error loading articles:',
+      error
+    )
+
     return []
   }
 }
 
-// Get all post slugs for static generation
-export function getAllPostSlugs(): string[] {
+/**
+ * Get all published article slugs.
+ */
+export async function getAllPostSlugs(): Promise<
+  string[]
+> {
   try {
-    const fileNames = fs.readdirSync(postsDirectory)
-    return fileNames
-      .filter((name) => name.endsWith('.mdx'))
-      .map((name) => name.replace(/\.mdx$/, ''))
+    const { data, error } =
+      await supabase
+        .from('articles')
+        .select('slug')
+        .eq('status', 'published')
+
+    if (error) {
+      console.error(
+        'Error loading article slugs:',
+        error
+      )
+
+      return []
+    }
+
+    return (
+      data?.map(
+        (article) => article.slug
+      ) ?? []
+    )
   } catch (error) {
-    console.error('Error reading post slugs:', error)
+    console.error(
+      'Error loading article slugs:',
+      error
+    )
+
     return []
   }
 }
 
-// Get featured posts for homepage
-export function getFeaturedPosts(): BlogPostWithContent[] {
-  const allPosts = getAllPosts()
-  return allPosts.filter(post => post.featured).slice(0, 3)
+/**
+ * Get featured articles.
+ */
+export async function getFeaturedPosts(): Promise<
+  BlogPostWithContent[]
+> {
+  const allPosts =
+    await getAllPosts()
+
+  return allPosts
+    .filter(
+      (post) => post.featured
+    )
+    .slice(0, 3)
 }
 
-// Get recent posts
-export function getRecentPosts(limit: number = 5): BlogPostWithContent[] {
-  const allPosts = getAllPosts()
-  return allPosts.slice(0, limit)
-}
+/**
+ * Get recent articles.
+ */
+export async function getRecentPosts(
+  limit: number = 5
+): Promise<BlogPostWithContent[]> {
+  const allPosts =
+    await getAllPosts()
 
-// Get posts by tag
-export function getPostsByTag(tag: string): BlogPostWithContent[] {
-  const allPosts = getAllPosts()
-  return allPosts.filter(post =>
-    post.tags.some(t => t.toLowerCase() === tag.toLowerCase())
+  return allPosts.slice(
+    0,
+    limit
   )
 }
 
+/**
+ * Get articles by tag.
+ */
+export async function getPostsByTag(
+  tag: string
+): Promise<BlogPostWithContent[]> {
+  const allPosts =
+    await getAllPosts()
 
-// src/lib/posts.ts - Add these functions to your existing posts.ts file
-
+  return allPosts.filter(
+    (post) =>
+      post.tags.some(
+        (t) =>
+          t.toLowerCase() ===
+          tag.toLowerCase()
+      )
+  )
+}
 
 /**
- * Validates if a URL is properly formatted
+ * Accept both absolute URLs and
+ * local Hirely audio paths.
  */
-function isValidUrl(url: string): boolean {
+function isValidAudioUrl(
+  url: string
+): boolean {
+  if (!url || !url.trim()) {
+    return false
+  }
+
+  if (url.startsWith('/')) {
+    return true
+  }
+
   try {
-    new URL(url);
-    return true;
+    new URL(url)
+    return true
   } catch {
-    return false;
+    return false
   }
 }
 
 /**
- * Get all posts that have valid audio URLs (podcast episodes)
- * More efficient than filtering all posts in the component
+ * Get all podcast episodes.
  */
-export function getPodcastEpisodes(): BlogPostWithContent[] {
-  const allPosts = getAllPosts();
-  
-  return allPosts.filter(post => 
-    post.audioUrl && 
-    post.audioUrl.trim() !== '' &&
-    isValidUrl(post.audioUrl)
-  ).sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+export async function getPodcastEpisodes(): Promise<
+  BlogPostWithContent[]
+> {
+  const allPosts =
+    await getAllPosts()
+
+  return allPosts
+    .filter(
+      (post) =>
+        post.audioUrl &&
+        isValidAudioUrl(
+          post.audioUrl
+        )
+    )
+    .sort(
+      (a, b) =>
+        new Date(
+          b.publishedAt
+        ).getTime() -
+        new Date(
+          a.publishedAt
+        ).getTime()
+    )
 }
 
 /**
- * Get featured posts that have valid audio URLs
+ * Get featured podcast episodes.
  */
-export function getFeaturedPodcastEpisodes(): BlogPostWithContent[] {
-  const featuredPosts = getFeaturedPosts();
-  
-  return featuredPosts.filter(post => 
-    post.audioUrl && 
-    post.audioUrl.trim() !== '' &&
-    isValidUrl(post.audioUrl)
-  ).sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-  );
+export async function getFeaturedPodcastEpisodes(): Promise<
+  BlogPostWithContent[]
+> {
+  const featuredPosts =
+    await getFeaturedPosts()
+
+  return featuredPosts
+    .filter(
+      (post) =>
+        post.audioUrl &&
+        isValidAudioUrl(
+          post.audioUrl
+        )
+    )
+    .sort(
+      (a, b) =>
+        new Date(
+          b.publishedAt
+        ).getTime() -
+        new Date(
+          a.publishedAt
+        ).getTime()
+    )
 }
 
 /**
- * Get a specific podcast episode by slug
- * Returns null if not found or doesn't have audio
+ * Get a podcast episode by slug.
  */
-export function getPodcastEpisodeBySlug(slug: string): BlogPostWithContent | null {
+export async function getPodcastEpisodeBySlug(
+  slug: string
+): Promise<BlogPostWithContent | null> {
   try {
-    const post = getPostBySlug(slug);
-    
-    if (!post || !post.audioUrl || post.audioUrl.trim() === '') {
-      return null;
+    const post =
+      await getPostBySlug(slug)
+
+    if (
+      !post ||
+      !post.audioUrl ||
+      !isValidAudioUrl(
+        post.audioUrl
+      )
+    ) {
+      return null
     }
-    
-    if (!isValidUrl(post.audioUrl)) {
-      console.warn(`Invalid audio URL for post: ${slug}`);
-      return null;
-    }
-    
-    return post;
+
+    return post
   } catch (error) {
-    console.error(`Error loading podcast episode ${slug}:`, error);
-    return null;
+    console.error(
+      `Error loading podcast episode ${slug}:`,
+      error
+    )
+
+    return null
   }
 }
 
 /**
- * Get podcast episodes by tag
+ * Get podcast episodes by tag.
  */
-export function getPodcastEpisodesByTag(tag: string): BlogPostWithContent[] {
-  const episodes = getPodcastEpisodes();
-  
-  return episodes.filter(episode => 
-    episode.tags && episode.tags.includes(tag)
-  );
+export async function getPodcastEpisodesByTag(
+  tag: string
+): Promise<BlogPostWithContent[]> {
+  const episodes =
+    await getPodcastEpisodes()
+
+  return episodes.filter(
+    (episode) =>
+      episode.tags.some(
+        (episodeTag) =>
+          episodeTag.toLowerCase() ===
+          tag.toLowerCase()
+      )
+  )
 }
 
 /**
- * Get the next and previous podcast episodes for a given slug
+ * Get previous and next podcast episodes.
  */
-export function getAdjacentPodcastEpisodes(slug: string): {
-  previous: BlogPostWithContent | null;
-  next: BlogPostWithContent | null;
-} {
-  const episodes = getPodcastEpisodes();
-  const currentIndex = episodes.findIndex(ep => ep.slug === slug);
-  
+export async function getAdjacentPodcastEpisodes(
+  slug: string
+): Promise<{
+  previous: BlogPostWithContent | null
+  next: BlogPostWithContent | null
+}> {
+  const episodes =
+    await getPodcastEpisodes()
+
+  const currentIndex =
+    episodes.findIndex(
+      (episode) =>
+        episode.slug === slug
+    )
+
   if (currentIndex === -1) {
-    return { previous: null, next: null };
+    return {
+      previous: null,
+      next: null,
+    }
   }
-  
+
   return {
-    previous: currentIndex > 0 ? episodes[currentIndex - 1] : null,
-    next: currentIndex < episodes.length - 1 ? episodes[currentIndex + 1] : null,
-  };
+    previous:
+      currentIndex > 0
+        ? episodes[
+            currentIndex - 1
+          ]
+        : null,
+
+    next:
+      currentIndex <
+      episodes.length - 1
+        ? episodes[
+            currentIndex + 1
+          ]
+        : null,
+  }
 }

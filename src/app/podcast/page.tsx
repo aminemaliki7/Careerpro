@@ -60,9 +60,9 @@ function PodcastEmpty() {
   );
 }
 
-export default function PodcastPage() {
-  const allPosts      = getAllPosts();
-  const featuredPosts = getFeaturedPosts();
+export default async function PodcastPage() {
+  const allPosts = await getAllPosts();
+  const featuredPosts = await getFeaturedPosts();
 
   const isValidAudio = (url?: string) => {
     if (!url || url.trim() === '') return false;
@@ -72,17 +72,28 @@ export default function PodcastPage() {
 
   const podcastEpisodes = allPosts
     .filter((p) => isValidAudio(p.audioUrl))
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() -
+        new Date(a.publishedAt).getTime()
+    );
 
   const featuredEpisodes = featuredPosts
     .filter((p) => isValidAudio(p.audioUrl))
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() -
+        new Date(a.publishedAt).getTime()
+    );
 
   if (podcastEpisodes.length === 0) return <PodcastEmpty />;
 
   return (
     <Suspense fallback={<PodcastLoading />}>
-      <PodcastClient allEpisodes={podcastEpisodes} featuredEpisodes={featuredEpisodes} />
+      <PodcastClient
+        allEpisodes={podcastEpisodes}
+        featuredEpisodes={featuredEpisodes}
+      />
     </Suspense>
   );
 }

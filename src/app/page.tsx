@@ -107,7 +107,7 @@ async function getHeroStats(): Promise<HeroStats> {
     ]);
 
     // MDX post count is local and does not require a network request.
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
 
     return {
       jobCount: jobsResult.count ?? 0,
