@@ -12,6 +12,9 @@
     }>;
   }
 
+  export const revalidate = 60;      // ← add this line
+  export const dynamicParams = true; // ← add this line too
+
   export async function generateStaticParams() {
     const slugs = await getAllPostSlugs();
 

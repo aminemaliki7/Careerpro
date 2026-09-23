@@ -3,6 +3,8 @@ import { Metadata } from 'next';
 import BlogClient from './BlogClient';
 import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 
+export const revalidate = 60;   // ← add this line
+
 export const metadata: Metadata = {
   title: 'Articles - AI, Tech Careers & Job Market Insights | Hirely',
   description:
