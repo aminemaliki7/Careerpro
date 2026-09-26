@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   Search, Filter, X, Check, Building2,
-  MapPin, Users, Calendar, Briefcase, ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import type { Startup, IndustryType } from '@/types/startup';
 
@@ -40,44 +40,37 @@ const COUNTRIES = [
   { name: 'Senegal',        flag: '🇸🇳' },
 ];
 
+// flat, text-only funding tags — no colored pill backgrounds (matches TrustMRR's plain-text metric style)
 const FUNDING_COLORS: Record<string, string> = {
-  'Pre-Seed': 'bg-slate-100 text-slate-600 border-slate-200/60',
-  'Seed':     'bg-emerald-50 text-emerald-700 border-emerald-200/60',
-  'Series A': 'bg-indigo-50 text-indigo-700 border-indigo-200/60',
-  'Series B': 'bg-purple-50 text-purple-700 border-purple-200/60',
-  'Series C': 'bg-amber-50 text-amber-700 border-amber-200/60',
-  'Series D+':'bg-rose-50 text-rose-700 border-rose-200/60',
-  'Acquired': 'bg-amber-100/80 text-amber-800 border-amber-200/80',
-  'Public':   'bg-sky-50 text-sky-700 border-sky-200/60',
+  'Pre-Seed': 'text-slate-500',
+  'Seed':     'text-emerald-600',
+  'Series A': 'text-indigo-600',
+  'Series B': 'text-purple-600',
+  'Series C': 'text-amber-600',
+  'Series D+':'text-rose-600',
+  'Acquired': 'text-amber-700',
+  'Public':   'text-sky-600',
 };
 
-// ─── Skeleton card ────────────────────────────────────────────────────────────
+// ─── Skeleton row ─────────────────────────────────────────────────────────────
 
-function SkeletonCard() {
+function SkeletonRow() {
   return (
-    <div className="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col gap-4 animate-pulse">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 rounded-xl bg-slate-100 flex-shrink-0" />
-        <div className="flex-1 space-y-2">
-          <div className="h-4 bg-slate-100 rounded w-3/4" />
-          <div className="h-3 bg-slate-100 rounded w-1/2" />
-        </div>
+    <div className="flex items-center gap-4 py-4 border-b border-slate-100 animate-pulse">
+      <div className="w-10 h-10 rounded-lg bg-slate-100 flex-shrink-0" />
+      <div className="flex-1 space-y-2">
+        <div className="h-3.5 bg-slate-100 rounded w-1/3" />
+        <div className="h-3 bg-slate-100 rounded w-2/3" />
       </div>
-      <div className="space-y-2">
-        <div className="h-3 bg-slate-100 rounded" />
-        <div className="h-3 bg-slate-100 rounded w-5/6" />
-      </div>
-      <div className="flex gap-2 mt-auto">
-        <div className="h-6 bg-slate-100 rounded-full w-20" />
-        <div className="h-6 bg-slate-100 rounded-full w-16" />
-      </div>
+      <div className="hidden sm:block h-3 bg-slate-100 rounded w-16" />
+      <div className="h-3 bg-slate-100 rounded w-10" />
     </div>
   );
 }
 
-// ─── Startup card ─────────────────────────────────────────────────────────────
+// ─── Startup row ──────────────────────────────────────────────────────────────
 
-function StartupCard({ startup }: { startup: Startup }) {
+function StartupRow({ startup, rank }: { startup: Startup; rank: number }) {
   const [imgError, setImgError] = useState(false);
   const foundedYear = startup.foundedDate
     ? new Date(startup.foundedDate).getFullYear()
@@ -95,86 +88,75 @@ function StartupCard({ startup }: { startup: Startup }) {
   };
 
   const logoUrl = getLogoUrl();
-  const fundingClass = FUNDING_COLORS[startup.fundingStage] ?? 'bg-slate-100 text-slate-600 border-slate-200/60';
+  const fundingClass = FUNDING_COLORS[startup.fundingStage] ?? 'text-slate-500';
 
   return (
     <Link
       href={`/startups/${startup.slug}`}
-      className="group flex flex-col bg-white border border-slate-200/80 rounded-2xl p-5 hover:border-indigo-600/40 hover:shadow-lg hover:shadow-indigo-600/5 transition-all duration-200 h-full"
+      className="group flex items-center gap-4 py-4 border-b border-slate-100 hover:bg-slate-50/70 transition-colors -mx-3 px-3 rounded-lg"
     >
-      {/* Header */}
-      <div className="flex items-start gap-3 mb-3">
-        <div className="w-12 h-12 flex-shrink-0 rounded-xl border border-slate-200/80 bg-slate-50 flex items-center justify-center overflow-hidden">
-          {logoUrl && !imgError ? (
-            <Image
-              src={logoUrl}
-              alt={startup.name}
-              width={48}
-              height={48}
-              className="object-contain w-full h-full"
-              unoptimized
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <span className="text-lg font-bold text-indigo-600">
-              {startup.name.charAt(0).toUpperCase()}
+      {/* Rank */}
+      <span className="hidden sm:block w-5 text-xs font-mono text-slate-400 flex-shrink-0 text-right">
+        {rank}
+      </span>
+
+      {/* Logo */}
+      <div className="w-10 h-10 flex-shrink-0 rounded-lg border border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden">
+        {logoUrl && !imgError ? (
+          <Image
+            src={logoUrl}
+            alt={startup.name}
+            width={40}
+            height={40}
+            className="object-contain w-full h-full"
+            unoptimized
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span className="text-sm font-bold text-slate-400">
+            {startup.name.charAt(0).toUpperCase()}
+          </span>
+        )}
+      </div>
+
+      {/* Name + description */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <h2 className="text-sm font-semibold text-slate-900 leading-tight truncate group-hover:text-slate-600 transition-colors">
+            {startup.name}
+          </h2>
+          {startup.featured && (
+            <span className="flex-shrink-0 text-[10px] font-semibold text-amber-600">
+              ★ Featured
             </span>
           )}
         </div>
-
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start justify-between gap-1">
-            <h2 className="text-sm font-semibold text-slate-900 leading-tight line-clamp-1 group-hover:text-indigo-600 transition-colors">
-              {startup.name}
-            </h2>
-            {startup.featured && (
-              <span className="flex-shrink-0 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 font-medium">
-                ✦ Featured
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-1 mt-0.5">
-            <span className="text-[11px] text-slate-500">{startup.industry}</span>
-          </div>
-        </div>
+        <p className="text-xs text-slate-500 truncate mt-0.5">
+          {startup.description}
+        </p>
       </div>
 
-      {/* Description */}
-      <p className="text-xs text-slate-500 leading-relaxed line-clamp-2 mb-4 flex-1">
-        {startup.description}
-      </p>
-
-      {/* Meta chips */}
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {startup.location && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
-            <MapPin className="w-3 h-3 text-slate-400" />
-            {startup.location}
-          </span>
-        )}
-        {startup.size && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
-            <Users className="w-3 h-3 text-slate-400" />
-            {startup.size}
-          </span>
-        )}
-        {foundedYear && (
-          <span className="inline-flex items-center gap-1 text-[11px] text-slate-600 bg-slate-50 border border-slate-200/60 rounded-full px-2 py-0.5">
-            <Calendar className="w-3 h-3 text-slate-400" />
-            {foundedYear}
-          </span>
-        )}
+      {/* Meta: industry / location / founded — plain text, mono-ish, no pill chrome */}
+      <div className="hidden md:flex flex-col items-end gap-0.5 text-right w-28 flex-shrink-0">
+        <span className="text-xs text-slate-600">{startup.industry}</span>
+        <span className="text-[11px] text-slate-400 truncate max-w-full">
+          {[startup.location, foundedYear].filter(Boolean).join(' · ')}
+        </span>
       </div>
 
-      {/* Footer */}
-      <div className="flex items-center justify-between pt-3 border-t border-slate-100 mt-auto">
-        <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full border ${fundingClass}`}>
+      {/* Funding stage */}
+      <div className="hidden sm:block w-20 flex-shrink-0 text-right">
+        <span className={`text-xs font-semibold ${fundingClass}`}>
           {startup.fundingStage}
         </span>
-        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-indigo-600 group-hover:gap-2 transition-all">
-          <Briefcase className="w-3 h-3" />
-          View roles ?
+      </div>
+
+      {/* Open roles — the "metric" column, TrustMRR-style */}
+      <div className="w-16 flex-shrink-0 text-right">
+        <span className="text-sm font-mono font-semibold text-slate-900">
+          {startup.jobCount}
         </span>
+        <span className="block text-[10px] text-slate-400 -mt-0.5">roles</span>
       </div>
     </Link>
   );
@@ -193,7 +175,6 @@ function FilterBar({
   const [temp, setTemp]               = useState({ industry: '' as IndustryType | '', location: '' });
   const timerRef                      = useRef<NodeJS.Timeout | null>(null);
 
-  // Debounced search
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     timerRef.current = setTimeout(() => {
@@ -205,7 +186,6 @@ function FilterBar({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
-  // ESC + scroll lock
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setShowModal(false); };
     if (showModal) {
@@ -257,57 +237,55 @@ function FilterBar({
 
   return (
     <>
-      <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-        <div className="flex gap-2">
-          {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            <input
-              type="text"
-              placeholder="Search startups by name or description..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-3 py-2.5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all text-slate-900 placeholder:text-slate-400"
-            />
-          </div>
-
-          {/* Filter button */}
-          <button
-            onClick={openModal}
-            className="relative flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 transition-all active:scale-[0.98]"
-          >
-            <Filter className="w-4 h-4 text-slate-500" />
-            <span className="hidden sm:inline">Filters</span>
-            {activeCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 w-5 h-5 text-[10px] font-bold bg-indigo-600 text-white rounded-full flex items-center justify-center">
-                {activeCount}
-              </span>
-            )}
-          </button>
+      <div className="flex gap-2 pb-4 border-b border-slate-200">
+        {/* Search */}
+        <div className="flex-1 relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search companies..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 focus:border-slate-400 transition-all text-slate-900 placeholder:text-slate-400"
+          />
         </div>
 
-        {/* Active tags */}
-        {activeCount > 0 && (
-          <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
-            {active.industry && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full border border-indigo-200/60 font-medium">
-                {active.industry}
-                <button onClick={() => removeTag('industry')} className="hover:text-rose-600 transition-colors">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
-            {active.location && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-indigo-50 text-indigo-700 text-xs rounded-full border border-indigo-200/60 font-medium">
-                {COUNTRIES.find(c => c.name === active.location)?.flag} {active.location}
-                <button onClick={() => removeTag('location')} className="hover:text-rose-600 transition-colors">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
-          </div>
-        )}
+        {/* Filter button */}
+        <button
+          onClick={openModal}
+          className="relative flex items-center gap-2 px-3 py-2 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 transition-all"
+        >
+          <Filter className="w-4 h-4 text-slate-500" />
+          <span className="hidden sm:inline">Filters</span>
+          {activeCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 w-4 h-4 text-[10px] font-bold bg-slate-900 text-white rounded-full flex items-center justify-center">
+              {activeCount}
+            </span>
+          )}
+        </button>
       </div>
+
+      {/* Active tags */}
+      {activeCount > 0 && (
+        <div className="flex flex-wrap gap-2 pt-3">
+          {active.industry && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs rounded-full font-medium">
+              {active.industry}
+              <button onClick={() => removeTag('industry')} className="hover:text-rose-600 transition-colors">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+          {active.location && (
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-100 text-slate-700 text-xs rounded-full font-medium">
+              {COUNTRIES.find(c => c.name === active.location)?.flag} {active.location}
+              <button onClick={() => removeTag('location')} className="hover:text-rose-600 transition-colors">
+                <X className="w-3 h-3" />
+              </button>
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Filter modal */}
       <AnimatePresence>
@@ -320,38 +298,35 @@ function FilterBar({
             onClick={(e) => { if (e.target === e.currentTarget) setShowModal(false); }}
           >
             <motion.div
-              className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden"
+              className="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-xl shadow-xl flex flex-col overflow-hidden"
               initial={{ y: 60, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 60, opacity: 0 }}
               transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             >
-              {/* Handle */}
               <div className="flex justify-center pt-3 pb-1 sm:hidden">
                 <div className="w-10 h-1 bg-slate-200 rounded-full" />
               </div>
 
-              {/* Header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
                 <div>
-                  <h3 className="text-base font-semibold text-slate-900">Filter Startups</h3>
+                  <h3 className="text-base font-semibold text-slate-900">Filter Companies</h3>
                   {activeCount > 0 && (
                     <p className="text-xs text-slate-500 mt-0.5">{activeCount} active filter{activeCount > 1 ? 's' : ''}</p>
                   )}
                 </div>
-                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 rounded-xl transition-colors">
+                <button onClick={() => setShowModal(false)} className="p-2 hover:bg-slate-100 rounded-lg transition-colors">
                   <X className="w-5 h-5 text-slate-500" />
                 </button>
               </div>
 
-              {/* Body */}
               <div className="flex-1 overflow-y-auto p-5 space-y-5">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-2">Industry</label>
                   <select
                     value={temp.industry}
                     onChange={(e) => setTemp({ ...temp, industry: e.target.value as IndustryType })}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 bg-white appearance-none text-slate-900"
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 focus:border-slate-400 bg-white appearance-none text-slate-900"
                   >
                     <option value="">All Industries</option>
                     {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -362,7 +337,7 @@ function FilterBar({
                   <select
                     value={temp.location}
                     onChange={(e) => setTemp({ ...temp, location: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 bg-white appearance-none text-slate-900"
+                    className="w-full px-3 py-2.5 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-slate-400 focus:border-slate-400 bg-white appearance-none text-slate-900"
                   >
                     <option value="">🌍 All Countries</option>
                     {COUNTRIES.map((c) => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
@@ -370,18 +345,17 @@ function FilterBar({
                 </div>
               </div>
 
-              {/* Footer */}
               <div className="flex gap-3 p-5 border-t border-slate-100">
                 <button
                   onClick={clearFilters}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="flex-1 flex items-center justify-center gap-2 py-2.5 border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                 >
                   <X className="w-4 h-4" /> Clear
                 </button>
                 <button
                   onClick={applyFilters}
                   disabled={!changed}
-                  className="flex-[2] flex items-center justify-center gap-2 py-3 bg-indigo-600 hover:bg-indigo-700 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-600/20 transition-all active:scale-[0.98]"
+                  className="flex-[2] flex items-center justify-center gap-2 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed text-white rounded-lg text-sm font-semibold transition-all"
                 >
                   <Check className="w-4 h-4" /> Apply filters
                 </button>
@@ -411,7 +385,7 @@ function Pagination({
       <button
         onClick={() => onChange(page - 1)}
         disabled={page === 1}
-        className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
       >
         <ChevronLeft className="w-4 h-4" />
       </button>
@@ -420,10 +394,10 @@ function Pagination({
         <button
           key={p}
           onClick={() => onChange(p)}
-          className={`w-9 h-9 rounded-xl text-sm font-medium transition-all ${
+          className={`w-8 h-8 rounded-lg text-sm font-medium font-mono transition-all ${
             p === page
-              ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/20'
-              : 'border border-slate-200 text-slate-600 hover:border-indigo-600 hover:text-indigo-600'
+              ? 'bg-slate-900 text-white'
+              : 'border border-slate-200 text-slate-600 hover:border-slate-400 hover:text-slate-900'
           }`}
         >
           {p}
@@ -433,7 +407,7 @@ function Pagination({
       <button
         onClick={() => onChange(page + 1)}
         disabled={page === totalPages}
-        className="p-2 rounded-xl border border-slate-200 text-slate-500 hover:border-indigo-600 hover:text-indigo-600 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+        className="p-2 rounded-lg border border-slate-200 text-slate-500 hover:border-slate-400 hover:text-slate-900 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
       >
         <ChevronRight className="w-4 h-4" />
       </button>
@@ -502,34 +476,36 @@ export default function StartupsClient({
     document.getElementById('browse')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  const startRank = (page - 1) * 18 + 1;
+
   return (
     <div>
       {/* Filter bar */}
-      <div className="mb-8">
+      <div className="mb-6">
         <FilterBar onFilterChange={handleFilterChange} />
       </div>
 
       {/* Result count */}
       {!loading && !error && (
-        <p className="text-sm text-slate-500 mb-6">
+        <p className="text-xs text-slate-400 mb-2 uppercase tracking-wide font-medium">
           {total > 0 ? (
-            <><span className="font-semibold text-slate-900">{total}</span> startup{total > 1 ? 's' : ''} found</>
-          ) : 'No startups match your filters'}
+            <>{total} compan{total > 1 ? 'ies' : 'y'} found</>
+          ) : 'No companies match your filters'}
         </p>
       )}
 
       {/* Error */}
       {error && (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-rose-50 flex items-center justify-center">
-            <Building2 className="w-7 h-7 text-rose-500" />
+          <div className="w-12 h-12 rounded-xl bg-rose-50 flex items-center justify-center">
+            <Building2 className="w-6 h-6 text-rose-500" />
           </div>
           <div>
             <p className="font-semibold text-slate-900 mb-1">Something went wrong</p>
             <p className="text-sm text-slate-500 mb-4">{error}</p>
             <button
               onClick={fetchStartups}
-              className="px-5 py-2.5 bg-indigo-600 text-white text-sm font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-md shadow-indigo-600/20 active:scale-[0.98]"
+              className="px-4 py-2 bg-slate-900 text-white text-sm font-semibold rounded-lg hover:bg-slate-800 transition-all"
             >
               Try again
             </button>
@@ -537,7 +513,7 @@ export default function StartupsClient({
         </div>
       )}
 
-      {/* Grid: Updated to 3 columns max (`grid-cols-1 md:grid-cols-2 lg:grid-cols-3`) */}
+      {/* List */}
       <AnimatePresence mode="wait">
         {loading ? (
           <motion.div
@@ -545,26 +521,24 @@ export default function StartupsClient({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
-            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+            {Array.from({ length: 8 }).map((_, i) => <SkeletonRow key={i} />)}
           </motion.div>
         ) : !error && startups.length > 0 ? (
           <motion.div
-            key="grid"
+            key="list"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
             {startups.map((startup, i) => (
               <motion.div
                 key={startup.id}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: i * 0.03 }}
+                transition={{ duration: 0.25, delay: i * 0.02 }}
               >
-                <StartupCard startup={startup} />
+                <StartupRow startup={startup} rank={startRank + i} />
               </motion.div>
             ))}
           </motion.div>
@@ -575,11 +549,11 @@ export default function StartupsClient({
             animate={{ opacity: 1 }}
             className="flex flex-col items-center justify-center py-24 text-center gap-4"
           >
-            <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-center">
-              <Building2 className="w-8 h-8 text-slate-400" />
+            <div className="w-14 h-14 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+              <Building2 className="w-7 h-7 text-slate-400" />
             </div>
             <div>
-              <p className="font-semibold text-slate-900 mb-1">No startups found</p>
+              <p className="font-semibold text-slate-900 mb-1">No companies found</p>
               <p className="text-sm text-slate-500">Try adjusting your filters</p>
             </div>
           </motion.div>
@@ -593,4 +567,3 @@ export default function StartupsClient({
     </div>
   );
 }
-

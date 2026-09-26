@@ -1,3 +1,4 @@
+
 // app/startups/[slug]/page.tsx
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -61,122 +62,138 @@ export default async function StartupPage({
     : null;
 
   return (
-    <div className="min-h-screen bg-white relative">
-      {/* Background Decorations */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-10 right-0 w-64 h-64 bg-[#0A66C2]/10 rounded-full blur-3xl" />
-        <div className="hidden sm:block absolute top-60 left-10 w-80 h-80 bg-[#0A66C2]/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-20 left-10 w-56 h-56 bg-[#0A66C2]/10 rounded-full blur-3xl" />
-      </div>
+    <div className="min-h-screen bg-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8">
 
-      <div className="relative max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-16">
-        {/* Back Button */}
         <Link
           href="/startups"
-          className="inline-flex items-center gap-1.5 sm:gap-2 text-gray-700 hover:text-[#0A66C2] mb-4 sm:mb-10 group transition"
+          className="inline-flex items-center gap-1.5 text-slate-500 hover:text-slate-900 mb-4 group transition-colors"
         >
-          <div className="p-1 sm:p-1.5 rounded-lg bg-white border border-gray-200 group-hover:border-[#0A66C2] group-hover:bg-[#0A66C2]/5 transition">
-            <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-800 group-hover:text-[#0A66C2] transition" />
-          </div>
-          <span className="font-medium text-sm sm:text-base">Back to Startups</span>
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span className="text-sm font-medium">Back to directory</span>
         </Link>
 
-        {/* Badges */}
-        <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
-          <span className="inline-flex items-center gap-1 px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-[#0A66C2]/10 border border-[#0A66C2]/20 text-[#0A66C2] text-[10px] sm:text-xs font-medium">
-            <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-            Startup Profile
+        <div className="flex flex-wrap gap-1.5 mb-3">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-medium">
+            <Sparkles className="w-3 h-3" />
+            Company profile
           </span>
 
           {startup.featured && (
-            <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] sm:text-xs font-medium">
+            <span className="px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-semibold">
               Featured
             </span>
           )}
 
           {startup.status === 'approved' && (
-            <span className="px-2 py-0.5 sm:px-3 sm:py-1 rounded-full bg-green-50 border border-green-200 text-green-700 text-[10px] sm:text-xs font-medium">
+            <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-semibold">
               Verified
             </span>
           )}
         </div>
 
-        {/* Header */}
-        <div className="flex flex-col gap-4 sm:gap-6 mb-6 sm:mb-8">
-          <div className="flex gap-3 sm:gap-4">
-            <StartupLogo logoUrl={startup.logo_url} name={startup.name} />
-            <div className="flex-1 min-w-0">
-              <h1 className="font-semibold text-xl sm:text-3xl lg:text-4xl text-gray-900 mb-1 sm:mb-2 leading-tight">
-                {startup.name}
-              </h1>
-              <p className="text-gray-600 text-xs sm:text-base leading-snug sm:leading-relaxed mb-1">
-                {startup.description}
-              </p>
-              {startup.location && (
-                <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-sm text-gray-500">
-                  <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span>{startup.location}</span>
-                </div>
-              )}
-            </div>
-          </div>
+        <div className="flex gap-3 sm:gap-4 pb-5 border-b border-slate-200">
+          <StartupLogo
+            logoUrl={startup.logo_url}
+            name={startup.name}
+          />
 
-          {/* Stats grid */}
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            {foundedYear && (
-              <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2">
-                <p className="text-[10px] sm:text-xs text-gray-500">Founded</p>
-                <p className="font-semibold text-sm sm:text-base text-gray-900">{foundedYear}</p>
-              </div>
-            )}
-            {startup.size && (
-              <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2">
-                <p className="text-[10px] sm:text-xs text-gray-500">Team Size</p>
-                <p className="font-semibold text-sm sm:text-base text-gray-900">{startup.size}</p>
-              </div>
-            )}
-            {startup.funding_stage && (
-              <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2">
-                <p className="text-[10px] sm:text-xs text-gray-500">Stage</p>
-                <p className="font-semibold text-sm sm:text-base text-gray-900 truncate">
-                  {startup.funding_stage}
-                </p>
-              </div>
-            )}
-            {startup.job_count > 0 && (
-              <div className="bg-white border border-gray-200 rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2">
-                <p className="text-[10px] sm:text-xs text-gray-500">Open Roles</p>
-                <p className="font-semibold text-sm sm:text-base text-gray-900">{startup.job_count}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="font-bold text-xl sm:text-2xl text-slate-900 leading-tight mb-1">
+              {startup.name}
+            </h1>
+
+            <p className="text-slate-500 text-sm leading-snug mb-1.5 max-w-2xl">
+              {startup.description}
+            </p>
+
+            {startup.location && (
+              <div className="inline-flex items-center gap-1 text-xs text-slate-400">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>{startup.location}</span>
               </div>
             )}
           </div>
         </div>
 
-        {/* ── Jobs intégrés ── */}
-        <StartupJobs slug={slug} startupName={startup.name} />
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-slate-200 border-b border-slate-200">
+          {foundedYear && (
+            <div className="px-3 py-3 first:pl-0">
+              <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-0.5">
+                Founded
+              </p>
+              <p className="font-mono font-semibold text-sm text-slate-900">
+                {foundedYear}
+              </p>
+            </div>
+          )}
 
-        {/* ── CTA secondaire ── */}
-        <div className="mt-6 rounded-xl border border-gray-100 bg-gray-50 p-6 text-center sm:p-8">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="font-semibold text-base sm:text-xl text-gray-900 mb-2">
+          {startup.size && (
+            <div className="px-3 py-3">
+              <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-0.5">
+                Team size
+              </p>
+              <p className="font-mono font-semibold text-sm text-slate-900">
+                {startup.size}
+              </p>
+            </div>
+          )}
+
+          {startup.funding_stage && (
+            <div className="px-3 py-3">
+              <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-0.5">
+                Stage
+              </p>
+              <p className="font-mono font-semibold text-sm text-slate-900 truncate">
+                {startup.funding_stage}
+              </p>
+            </div>
+          )}
+
+          {startup.job_count > 0 && (
+            <div className="px-3 py-3">
+              <p className="text-[10px] uppercase tracking-wide text-slate-400 mb-0.5">
+                Open roles
+              </p>
+              <p className="font-mono font-semibold text-sm text-slate-900">
+                {startup.job_count}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="pt-6">
+          <StartupJobs
+            slug={slug}
+            startupName={startup.name}
+          />
+        </div>
+
+        <div className="mt-6 rounded-lg border border-slate-200 bg-slate-50/60 p-5 text-center">
+          <div className="max-w-xl mx-auto">
+            <h2 className="font-semibold text-sm sm:text-base text-slate-900 mb-1">
               Want to learn more about {startup.name}?
             </h2>
-            <p className="text-gray-500 mb-4 text-xs sm:text-sm">
+
+            <p className="text-slate-500 mb-3 text-xs">
               Visit their website to explore the company in depth.
             </p>
+
             {startup.website_url && (
               <a
                 href={startup.website_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-medium text-[#0A66C2] hover:underline"
+                className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:underline"
               >
-                Visit website →
+                Visit website
               </a>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );
 }
+
