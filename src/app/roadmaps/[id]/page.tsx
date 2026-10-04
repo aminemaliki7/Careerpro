@@ -4,10 +4,26 @@ import Link from 'next/link';
 import { ArrowLeft, Clock, DollarSign, Star, TrendingUp } from 'lucide-react';
 import { getRoadmapById, getAllRoadmaps } from '@/lib/roadmaps';
 import type { Roadmap } from '@/types/roadmap';
+import type { Metadata } from 'next';
 import InteractiveRoadmapClient from './InteractiveRoadmapClient';
 
 interface RoadmapDetailPageProps {
   params: Promise<{ id: string }>;
+}
+
+
+export async function generateMetadata({ params }: RoadmapDetailPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const roadmap = getRoadmapById(id);
+  if (!roadmap) return { title: 'Roadmap not found', robots: { index: false } };
+  const canonical = `/roadmaps/${encodeURIComponent(roadmap.id)}`;
+  const title = `${roadmap.title} Roadmap`;
+  return {
+    title,
+    description: roadmap.description.slice(0, 160),
+    alternates: { canonical },
+    openGraph: { url: canonical, title: `${title} | Hirely`, description: roadmap.description.slice(0, 160) },
+  };
 }
 
 export default async function RoadmapDetailPage({ params }: RoadmapDetailPageProps) {

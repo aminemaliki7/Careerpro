@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'About Hirely',
+  description:
+    'Hirely shows you how well your CV matches a tech job before you apply, and helps recruiters rank candidates by fit.',
+  alternates: { canonical: '/about' },
+  openGraph: { url: '/about', title: 'About Hirely | Hirely', description: 'Hirely shows you how well your CV matches a tech job before you apply, and helps recruiters rank candidates by fit.' },
+};
+
 import Link from 'next/link';
 import { Target, Users, Sparkles, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 

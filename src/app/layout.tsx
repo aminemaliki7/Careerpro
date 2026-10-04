@@ -64,16 +64,11 @@ export const metadata: Metadata = {
     google: '00c4fbab1e48645b',
   },
 
-  alternates: {
-    canonical: 'https://hirely.ma/',
-  },
 
   openGraph: {
     type: 'website',
 
     locale: 'en_US',
-
-    url: 'https://hirely.ma/',
 
     siteName: 'Hirely',
 

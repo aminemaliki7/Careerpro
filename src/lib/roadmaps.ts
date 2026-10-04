@@ -15,31 +15,37 @@ function getRoadmapFiles(): string[] {
   }
 }
 
-export function getAllRoadmaps(): Roadmap[] {
+export function getAllRoadmapEntries(): { roadmap: Roadmap; lastmod: string }[] {
   try {
     const filenames = getRoadmapFiles();
     if (filenames.length === 0) {
       console.warn('No roadmap JSON files found in:', roadmapsDirectory); // Debug: Warn if no files
     }
-    const roadmaps = filenames.map(filename => {
+    const entries = filenames.map(filename => {
       const filePath = path.join(roadmapsDirectory, filename);
       try {
-        const fileContents = fs.readFileSync(filePath, 'utf-8');
+        const fileContents = fs.readFileSync(filePath, 'utf-8').replace(/^\uFEFF/, '');
         console.log(`Successfully read file: ${filename}`); // Debug: Confirm file read
-        return JSON.parse(fileContents) as Roadmap;
+        return {
+          roadmap: JSON.parse(fileContents) as Roadmap,
+          lastmod: fs.statSync(filePath).mtime.toISOString(),
+        };
       } catch (error) {
         console.error(`Error parsing JSON file ${filename}:`, error);
         return null;
       }
-    }).filter((roadmap): roadmap is Roadmap => roadmap !== null); // Remove null entries
-    // Sort the roadmaps alphabetically by title
-    roadmaps.sort((a, b) => a.title.localeCompare(b.title));
-    console.log('Roadmaps loaded:', roadmaps.map(r => r.id)); // Debug: Log loaded roadmap IDs
-    return roadmaps;
+    }).filter((entry): entry is { roadmap: Roadmap; lastmod: string } => entry !== null);
+    entries.sort((a, b) => a.roadmap.title.localeCompare(b.roadmap.title));
+    console.log('Roadmaps loaded:', entries.map(({ roadmap }) => roadmap.id)); // Debug: Log loaded roadmap IDs
+    return entries;
   } catch (error) {
     console.error('Error in getAllRoadmaps:', error);
     return [];
   }
+}
+
+export function getAllRoadmaps(): Roadmap[] {
+  return getAllRoadmapEntries().map(({ roadmap }) => roadmap);
 }
 
 export function getRoadmapById(id: string): Roadmap | undefined {

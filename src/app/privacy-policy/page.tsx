@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description:
+    'How Hirely collects, uses and protects your data, including the CVs you upload for job matching.',
+  alternates: { canonical: '/privacy-policy' },
+  openGraph: { url: '/privacy-policy', title: 'Privacy Policy | Hirely', description: 'How Hirely collects, uses and protects your data, including the CVs you upload for job matching.' },
+};
+
 import Link from 'next/link';
 export default function PrivacyPage() {
   return (

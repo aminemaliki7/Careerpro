@@ -111,7 +111,7 @@ function CandidateJobScreen() {
           </h3>
 
           <p className="text-xs text-slate-500 mt-1">
-            Fintech � Casablanca � Hybrid
+            Fintech · Casablanca · Hybrid
           </p>
         </div>
 
@@ -430,7 +430,7 @@ function RecruiterJobScreen() {
           </h3>
 
           <p className="text-xs text-slate-500 mt-1">
-            Fintech � Casablanca � Hybrid
+            Fintech · Casablanca · Hybrid
           </p>
         </div>
 

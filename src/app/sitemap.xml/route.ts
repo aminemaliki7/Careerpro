@@ -2,6 +2,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
+import { createJobSlug } from '@/lib/utils/format';
+import { getAllRoadmapEntries } from '@/lib/roadmaps';
 import path from 'path';
 
 const BASE_URL = 'https://hirely.ma';
@@ -22,10 +24,9 @@ function getPosts(): { slug: string; lastmod: string }[] {
 }
 
 function getRoadmaps(): { slug: string; lastmod: string }[] {
-  const dir = path.join(process.cwd(), 'src/content/roadmaps');
-  return fs.readdirSync(dir).map((file) => ({
-    slug:    encodeURIComponent(file.replace(/\.json$/, '')),
-    lastmod: fs.statSync(path.join(dir, file)).mtime.toISOString(),
+  return getAllRoadmapEntries().map(({ roadmap, lastmod }) => ({
+    slug: roadmap.id,
+    lastmod,
   }));
 }
 
@@ -46,10 +47,31 @@ async function getStartupSlugs(): Promise<string[]> {
   }
 }
 
+async function getJobEntries(): Promise<{ loc: string; lastmod: string }[]> {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false } }
+    );
+    const { data } = await supabase
+      .from('jobs')
+      .select('id, title, posted_date, updated_date')
+      .eq('status', 'approved');
+    return (data ?? []).map((j: { id: string | number; title: string; posted_date: string; updated_date?: string }) => ({
+      loc: `jobs/${j.id}/${createJobSlug(j.title)}`,
+      lastmod: new Date(j.updated_date || j.posted_date).toISOString(),
+    }));
+  } catch {
+    return [];
+  }
+}
+
 export async function GET() {
   const posts       = getPosts();
   const roadmaps    = getRoadmaps();
   const startupSlugs = await getStartupSlugs();
+  const jobEntries   = await getJobEntries();
   const now         = new Date().toISOString();
 
   const staticPages: SitemapUrl[] = [
@@ -77,6 +99,12 @@ export async function GET() {
       loc:        `roadmaps/${r.slug}`,
       lastmod:    r.lastmod,
       changefreq: 'monthly',
+      priority:   0.8,
+    })),
+    ...jobEntries.map((j) => ({
+      loc:        j.loc,
+      lastmod:    j.lastmod,
+      changefreq: 'weekly',
       priority:   0.8,
     })),
     ...startupSlugs.map((slug) => ({

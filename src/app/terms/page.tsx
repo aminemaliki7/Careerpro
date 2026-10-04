@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service',
+  description:
+    'The terms that apply when you use Hirely to find jobs, match your CV and apply.',
+  alternates: { canonical: '/terms' },
+  openGraph: { url: '/terms', title: 'Terms of Service | Hirely', description: 'The terms that apply when you use Hirely to find jobs, match your CV and apply.' },
+};
+
 export default function TermsPage() {
   return (
     <div className="bg-slate-50 min-h-screen py-16 sm:py-24">

@@ -1,4 +1,4 @@
-﻿import { supabase } from '@/lib/supabase/client';
+import { supabase } from '@/lib/supabase/client';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import EasyApplyButton from '@/components/jobs/EasyApplyButton';
@@ -7,6 +7,7 @@ import BookmarkButton from '@/components/jobs/BookmarkButton';
 import { analyzeJobQuality } from '@/lib/job-quality';
 import JobQualityPanel from '@/components/jobs/JobQualityPanel';
 import type { Job } from '@/types/job';
+import type { Metadata } from 'next';
 import type { Startup } from '@/types/startup';
 
 const formatExperienceLevel = (level: string) => {
@@ -116,6 +117,40 @@ const SparklesIcon = ({ className }: { className: string }) => (
   </svg>
 );
 
+
+const EMPLOYMENT_TYPE: Record<string, string> = {
+  'full-time': 'FULL_TIME', cdi: 'FULL_TIME', 'part-time': 'PART_TIME',
+  contract: 'CONTRACTOR', cdd: 'CONTRACTOR', freelance: 'CONTRACTOR',
+  internship: 'INTERN', stage: 'INTERN',
+};
+
+async function getApprovedJob(id: string): Promise<Job | null> {
+  const { data } = await supabase
+    .from('jobs').select('*').eq('id', id).eq('status', 'approved').single();
+  return (data as Job) ?? null;
+}
+
+export async function generateMetadata(
+  { params }: { params: Promise<{ id: string; title: string }> }
+): Promise<Metadata> {
+  const { id } = await params;
+  const job = await getApprovedJob(id);
+  if (!job) return { title: 'Job not found', robots: { index: false, follow: false } };
+
+  const canonical = `/jobs/${job.id}/${createJobSlug(job.title)}`;
+  const where = job.remote ? 'Remote' : job.location || '';
+  const title = `${job.title} at ${job.company}${where ? ` (${where})` : ''}`;
+  const description = (job.description || `${job.title} at ${job.company}. Check your CV match before you apply.`)
+    .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155);
+
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: { type: 'article', url: canonical, title: `${title} | Hirely`, description },
+  };
+}
+
 export default async function JobDetailsPage({ 
   params 
 }: { 
@@ -148,8 +183,28 @@ export default async function JobDetailsPage({
 
   const qualityAnalysis = analyzeJobQuality(typedJob, (startups ?? []) as Startup[]);
 
+  const jobPostingJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: typedJob.title,
+    description: typedJob.description || `${typedJob.title} at ${typedJob.company}`,
+    datePosted: typedJob.posted_date,
+    ...(typedJob.application_deadline ? { validThrough: typedJob.application_deadline } : {}),
+    employmentType: EMPLOYMENT_TYPE[(typedJob.type || '').toLowerCase()] || 'OTHER',
+    hiringOrganization: { '@type': 'Organization', name: typedJob.company,
+      ...(typedJob.company_logo_url ? { logo: typedJob.company_logo_url } : {}) },
+    ...(typedJob.remote ? { jobLocationType: 'TELECOMMUTE' } : {}),
+    ...(typedJob.location ? { jobLocation: { '@type': 'Place',
+      address: { '@type': 'PostalAddress', addressLocality: typedJob.location } } } : {}),
+    url: `https://hirely.ma/jobs/${typedJob.id}/${createJobSlug(typedJob.title)}`,
+  };
+
   return (
     <div className="min-h-screen bg-gray-50/50">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd).replace(/</g, '\\u003c') }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* COLUMN 1: Sticky Navigation & Quick Specs (Span 3) */}

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Twitter, Linkedin, Github, ArrowUp } from 'lucide-react';
+import { Twitter, Linkedin, ArrowUp } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import HirelyLogo from './CircuitLogo';
 
@@ -24,7 +24,6 @@ export default function Footer() {
   const socialLinks = [
     { name: 'LinkedIn', href: 'https://www.linkedin.com/company/hirely-ma', icon: Linkedin },
     { name: 'Twitter', href: 'https://twitter.com/hirely_ma', icon: Twitter },
-    { name: 'GitHub', href: 'https://github.com/hirely', icon: Github },
   ];
 
   return (

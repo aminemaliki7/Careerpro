@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, ChangeEvent } from 'react';
 
@@ -378,6 +378,11 @@ export default function EasyApplyModal({
                 <label htmlFor="cv-upload" className="cursor-pointer text-purple-600 font-semibold text-xs mt-1 hover:underline">
                   {status.parsing ? 'Processing file...' : 'Upload CV (PDF, DOCX, TXT)'}
                 </label>
+                <p className="mt-3 max-w-xs text-[10px] leading-snug text-gray-500">
+                  Your CV is read only to compute your match and to send your application to this employer.
+                  We never sell it or share it with anyone else. See our{' '}
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
+                </p>
                 {cvFile && !status.parsing && (
                   <span className="mt-2.5 text-[10px] font-semibold bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-md border border-emerald-200">
                     {cvFile.name}

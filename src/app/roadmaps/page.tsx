@@ -1,3 +1,13 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Tech Career Roadmaps',
+  description:
+    'Step-by-step career paths for developers, data, DevOps, QA and more, with skills to learn, timelines and salary ranges.',
+  alternates: { canonical: '/roadmaps' },
+  openGraph: { url: '/roadmaps', title: 'Tech Career Roadmaps | Hirely', description: 'Step-by-step career paths for developers, data, DevOps, QA and more, with skills to learn, timelines and salary ranges.' },
+};
+
 import { getAllRoadmaps } from '@/lib/roadmaps';
 
 import RoadmapsGrid from '@/components/roadmaps/RoadmapsGrid';
