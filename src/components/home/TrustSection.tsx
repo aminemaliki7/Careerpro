@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { ShieldCheck, Briefcase, Building2, BookOpen } from 'lucide-react';
 import type { HeroStats } from './HeroSection';
 
@@ -14,15 +15,15 @@ export default function TrustSection({ stats }: TrustSectionProps) {
   const postCount = stats && stats.postCount > 0 ? `${stats.postCount}+` : null;
 
   const metrics = [
-    { icon: Briefcase, value: jobCount, label: 'Tech jobs on Hirely' },
-    { icon: Building2, value: companyCount, label: 'Companies listed' },
+    { icon: Briefcase, value: jobCount, label: 'Tech jobs on Hirely', href: '/jobs' },
+    { icon: Building2, value: companyCount, label: 'Companies listed', href: '/startups' },
     ...(postCount
-      ? [{ icon: BookOpen, value: postCount, label: 'Career guides & articles' }]
+      ? [{ icon: BookOpen, value: postCount, label: 'Career guides & articles', href: '/blog' }]
       : []),
   ];
 
   return (
-    <section className="bg-slate-900 py-16 sm:py-20">
+    <section className="bg-slate-900 py-10 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -42,23 +43,25 @@ export default function TrustSection({ stats }: TrustSectionProps) {
             {metrics.map((metric) => {
               const Icon = metric.icon;
               return (
-                <div key={metric.label} className="flex flex-col items-center">
+                <Link
+                  key={metric.label}
+                  href={metric.href}
+                  className="group flex flex-col items-center rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                >
                   <Icon className="w-4 h-4 text-slate-500 mb-2" />
-                  <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums">
+                  <div className="text-2xl sm:text-3xl font-bold text-white tabular-nums group-hover:text-emerald-300">
                     {metric.value}
                   </div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-xs text-slate-400 mt-1 group-hover:text-white">
                     {metric.label}
                   </div>
-                </div>
+                </Link>
               );
             })}
           </div>
 
-          <p className="mt-8 max-w-xl text-xs text-slate-500 leading-relaxed">
-            The match score is a decision-support tool, not a hiring
-            guarantee. It doesn&apos;t promise an interview, and the recruiter
-            always makes the final call.
+          <p className="mt-6 max-w-xl text-xs text-slate-500 leading-relaxed">
+            Match scores guide review; recruiters make the final decision.
           </p>
         </motion.div>
       </div>

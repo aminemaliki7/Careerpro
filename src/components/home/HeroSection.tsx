@@ -827,7 +827,6 @@ function ProductDemo() {
               </button>
 
               <button
-                type="button"
                 onClick={() => switchRole('recruiter')}
                 className={`relative z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[9px] font-semibold transition-colors ${
                   role === 'recruiter'
@@ -996,7 +995,7 @@ export default function HeroSection({
 
       <div className="relative mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
 
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-16 items-center min-h-[calc(100vh-64px)] py-16 sm:py-20 lg:py-24">
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center min-h-[calc(100svh-3.5rem)] sm:min-h-0 lg:min-h-[calc(100vh-3.5rem)] py-10 sm:py-20 lg:py-24">
 
           {/* LEFT */}
           <motion.div
@@ -1008,21 +1007,18 @@ export default function HeroSection({
 
             {/* Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-[3.7rem] xl:text-[4.1rem] font-bold text-slate-900 dark:text-white tracking-tight leading-[1.04]">
-              Stop applying
+              Better matches
               <br />
-
-              <span className="text-indigo-600 dark:text-indigo-400">
-                blindly.
-              </span>
+              <span className="text-indigo-600 dark:text-indigo-400">for both sides.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
-             We tell you which opportunities are actually worth your time 
+            <p className="mt-4 sm:mt-6 text-sm sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Candidates find roles worth applying to. Recruiters find people who fit.
             </p>
 
             {/* Two-sided explanation */}
-            <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto lg:mx-0">
+            <div className="hidden sm:grid mt-5 grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto lg:mx-0">
 
               <div className="flex items-start gap-3 p-3 rounded-xl bg-white/80 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700 text-left">
                 <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center shrink-0">
@@ -1059,24 +1055,27 @@ export default function HeroSection({
             </div>
 
             {/* CTA */}
-            <div className="flex flex-col sm:flex-row justify-center lg:justify-start gap-3 mt-8">
+            <div className="grid grid-cols-2 sm:flex sm:flex-row justify-center lg:justify-start gap-2 sm:gap-3 mt-6 sm:mt-8">
 
               <SignedOut>
                 <button
                   type="button"
                   onClick={() => router.push('/jobs')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-1 sm:gap-2 px-2 sm:px-6 py-3 sm:py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-semibold transition-all shadow-sm hover:shadow-md"
                 >
-                  Find Your Match
+                  <span className="sm:hidden">Find roles</span>
+                  <span className="hidden sm:inline">Find Your Match</span>
                   <ArrowRight className="w-4 h-4" />
                 </button>
 
                 <button
                   type="button"
                   onClick={() => router.push('/onboarding?role=company')}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 text-sm font-semibold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-1 sm:gap-2 px-2 sm:px-6 py-3 sm:py-3.5 rounded-lg border border-indigo-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-indigo-800 dark:text-slate-100 text-xs sm:text-sm font-semibold hover:bg-indigo-50 dark:hover:bg-slate-700 transition-colors"
                 >
-                  For Companies
+                  <span className="sm:hidden">Hire talent</span>
+                  <span className="hidden sm:inline">For Companies</span>
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </SignedOut>
 
@@ -1084,7 +1083,7 @@ export default function HeroSection({
                 <button
                   type="button"
                   onClick={() => router.push(dashboardHref)}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   Go to Dashboard
                   <ArrowRight className="w-4 h-4" />
@@ -1094,7 +1093,7 @@ export default function HeroSection({
             </div>
 
             {/* Trust points */}
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 max-w-lg mx-auto lg:mx-0">
+            <div className="hidden sm:block mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 max-w-lg mx-auto lg:mx-0">
 
               <div className="grid grid-cols-2 gap-x-5 gap-y-3">
 
@@ -1126,6 +1125,7 @@ export default function HeroSection({
 
           {/* RIGHT - PRODUCT DEMO */}
           <motion.div
+            className="hidden lg:block"
             initial={{ opacity: 0, x: 25 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{

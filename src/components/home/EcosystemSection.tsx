@@ -33,7 +33,7 @@ const ECOSYSTEM = [
 
 export default function EcosystemSection() {
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-white py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -46,13 +46,11 @@ export default function EcosystemSection() {
             More than matching, when you need it.
           </h2>
           <p className="mt-3 text-sm text-slate-600 leading-relaxed">
-            Matching is the core of Hirely. Everything else exists to support
-            the same goal: helping you navigate a tech career and a hiring
-            process with less guesswork.
+            Explore jobs, career paths, companies, and career conversations.
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
           {ECOSYSTEM.map((item, index) => {
             const Icon = item.icon;
             return (

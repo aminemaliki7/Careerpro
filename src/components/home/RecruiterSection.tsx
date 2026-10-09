@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   Building2,
   FileSliders,
@@ -11,12 +12,12 @@ import {
 } from 'lucide-react';
 
 const WORKFLOW = [
-  { icon: Building2, title: 'Create a role', detail: 'Post the job with the skills and experience that actually matter.' },
-  { icon: FileSliders, title: 'Define what matters', detail: 'Required skills become the criteria candidates are checked against.' },
-  { icon: ScanSearch, title: 'Analyze requirements', detail: 'Hirely reads the posting the same way it reads a candidate\u2019s CV.' },
-  { icon: Users, title: 'Match candidates', detail: 'Each applicant\u2019s CV is scored against this specific role.' },
-  { icon: ArrowUpDown, title: 'Rank candidates', detail: 'Applicants are sorted by match score, highest first.' },
-  { icon: BadgeCheck, title: 'Review strongest matches first', detail: 'Auto-shortlist or auto-review rules can act on score thresholds.' },
+  { icon: Building2, title: 'Create a role', detail: 'Post a job with clear requirements.' },
+  { icon: FileSliders, title: 'Set criteria', detail: 'Choose the skills and experience that matter.' },
+  { icon: ScanSearch, title: 'Analyze the role', detail: 'Key requirements are extracted from the posting.' },
+  { icon: Users, title: 'Match candidates', detail: 'Score each applicant against the role.' },
+  { icon: ArrowUpDown, title: 'Rank candidates', detail: 'Review applicants by match score.' },
+  { icon: BadgeCheck, title: 'Review top matches', detail: 'Use score thresholds to flag candidates.' },
 ];
 
 const CANDIDATES = [
@@ -27,14 +28,14 @@ const CANDIDATES = [
 
 export default function RecruiterSection() {
   return (
-    <section className="bg-slate-900 py-20 sm:py-28">
+    <section className="bg-slate-900 py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-12 sm:mb-16"
+          className="max-w-2xl mb-8 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-emerald-400 mb-4">
             <Building2 className="w-4 h-4" />
@@ -43,19 +44,17 @@ export default function RecruiterSection() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
-            Candidates aren&apos;t the only ones trying to find the right match.
+          <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
+            Find the right candidates, faster.
           </h2>
 
-          <p className="mt-4 text-base text-slate-300 leading-relaxed max-w-xl">
-            Candidates have too many opportunities to evaluate. Recruiters have
-            too many candidates to evaluate. It&apos;s the same problem, seen
-            from the other side , &ldquo;Should I apply?&rdquo; becomes
-            &ldquo;Who should I review?&rdquo;
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
+            Compare applicants with role requirements and prioritize strong
+            matches. You make every hiring decision.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-12 items-start">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-6 sm:gap-8 lg:gap-12 items-start">
           {/* LEFT: workflow */}
           <div className="grid sm:grid-cols-2 gap-3.5">
             {WORKFLOW.map((step, index) => {
@@ -67,13 +66,18 @@ export default function RecruiterSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.4, delay: (index % 2) * 0.08 }}
-                  className="rounded-xl border border-slate-700/80 bg-slate-800/60 p-4"
+                  className="group relative rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 hover:border-emerald-400/70 hover:bg-slate-800 transition-colors"
                 >
+                  <Link
+                    href="/onboarding?role=company"
+                    className="absolute inset-0 z-10 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                    aria-label={`${step.title}: start hiring with Hirely`}
+                  />
                   <div className="flex items-center gap-2.5 mb-2">
                     <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
                       <Icon className="w-3.5 h-3.5" />
                     </div>
-                    <h3 className="text-xs font-bold text-white">
+                    <h3 className="text-xs font-bold text-white group-hover:text-emerald-300">
                       {step.title}
                     </h3>
                   </div>
@@ -143,10 +147,7 @@ export default function RecruiterSection() {
 
               <div className="px-5 pb-5">
                 <p className="text-[11px] text-slate-400 leading-relaxed">
-                  Instead of treating every application equally, Hirely helps
-                  recruiters prioritize candidates by fit. The recruiter still
-                  makes the hiring decision , ranking isn&apos;t automatic
-                  hiring, and it isn&apos;t claimed to be perfect.
+                  Match scores help prioritize review. Recruiters make the final decision.
                 </p>
               </div>
             </div>

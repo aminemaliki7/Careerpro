@@ -7,15 +7,15 @@ export default function NewsletterCTA() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="py-12 bg-black text-white relative overflow-hidden">
+    <section className="py-10 sm:py-12 bg-black text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20"></div>
 
       <div className="relative z-10 max-w-2xl mx-auto text-center px-4">
-        <h2 className="text-2xl sm:text-3xl font-medium mb-4">
+        <h2 className="text-2xl sm:text-3xl font-medium mb-3">
           Stay Updated
         </h2>
-        <p className="text-gray-400 text-sm mb-6">
-          Get career tips and job alerts in your inbox.
+        <p className="text-gray-400 text-sm mb-5">
+          Career tips and job alerts, by email.
         </p>
 
         <button

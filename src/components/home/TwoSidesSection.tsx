@@ -1,11 +1,12 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { UserCheck, Building2, ArrowDown } from 'lucide-react';
 import CircuitLogo from '@/components/ui/CircuitLogo';
 
 export default function TwoSidesSection() {
-return ( <section className="relative overflow-hidden bg-white py-20 sm:py-28"> <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+return ( <section className="relative overflow-hidden bg-white py-12 sm:py-20 lg:py-28"> <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 <motion.div
 initial={{ opacity: 0, y: 20 }}
 whileInView={{ opacity: 1, y: 0 }}
@@ -16,13 +17,12 @@ className="text-center"
 The matching layer </p>
 
 
-      <h2 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+      <h2 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-4xl">
         One problem. Two perspectives.
       </h2>
 
-      <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600 sm:text-lg">
-        Hirely connects what candidates are looking for with what companies
-        actually need.
+      <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-slate-600 sm:mt-4 sm:text-lg sm:leading-7">
+        One matching layer for candidates and hiring teams.
       </p>
 
       <div className="mt-12 grid items-center gap-6 md:grid-cols-[1fr_auto_1fr] md:gap-8">
@@ -31,8 +31,13 @@ The matching layer </p>
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="rounded-3xl border border-indigo-200 bg-indigo-50/60 p-6 text-left shadow-sm sm:p-7"
+          className="group relative rounded-3xl border border-indigo-200 bg-indigo-50/60 p-6 text-left shadow-sm transition-colors hover:bg-indigo-50 sm:p-7"
         >
+          <Link
+            href="/jobs"
+            className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+            aria-label="For candidates: explore tech jobs"
+          />
           <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100">
             <UserCheck className="h-5 w-5 text-indigo-600" />
           </div>
@@ -46,7 +51,7 @@ The matching layer </p>
           </h3>
 
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Understand the opportunity before you spend your time applying.
+            Check your fit before you apply.
           </p>
         </motion.div>
 
@@ -66,8 +71,13 @@ The matching layer </p>
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="rounded-3xl border border-emerald-200 bg-emerald-50/60 p-6 text-left shadow-sm sm:p-7"
+          className="group relative rounded-3xl border border-emerald-200 bg-emerald-50/60 p-6 text-left shadow-sm transition-colors hover:bg-emerald-50 sm:p-7"
         >
+          <Link
+            href="/onboarding?role=company"
+            className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            aria-label="For companies: start hiring with Hirely"
+          />
           <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
             <Building2 className="h-5 w-5 text-emerald-600" />
           </div>
@@ -81,7 +91,7 @@ The matching layer </p>
           </h3>
 
           <p className="mt-3 text-sm leading-6 text-slate-600">
-            Find candidates who actually match the requirements of the role.
+            Prioritize candidates by role fit.
           </p>
         </motion.div>
       </div>

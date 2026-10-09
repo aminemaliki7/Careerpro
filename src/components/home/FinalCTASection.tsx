@@ -12,7 +12,7 @@ export default function FinalCTASection() {
   const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
 
   return (
-    <section className="bg-indigo-600 py-20 sm:py-24">
+    <section className="bg-indigo-600 py-12 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -20,16 +20,15 @@ export default function FinalCTASection() {
           viewport={{ once: true, margin: '-60px' }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
             Stop guessing. Know your match.
           </h2>
 
-          <p className="mt-4 text-base text-indigo-100 leading-relaxed max-w-lg mx-auto">
-            Find the opportunities that make sense for you, understand your
-            fit, and apply with confidence.
+          <p className="mt-3 sm:mt-4 text-sm sm:text-base text-indigo-100 leading-relaxed max-w-lg mx-auto">
+            Check your fit, then apply with confidence.
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <SignedOut>
               <button
                 type="button"

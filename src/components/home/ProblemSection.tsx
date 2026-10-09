@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   FileQuestion,
   HelpCircle,
@@ -99,13 +100,13 @@ function FlowColumn({
 
       {isActive && (
         <div className="mt-5 pt-4 border-t border-indigo-100 text-xs text-indigo-700/80 leading-relaxed">
-          You decide before you spend 30 minutes writing an application.
+          Check your fit before you apply.
         </div>
       )}
 
       {!isActive && (
         <div className="mt-5 pt-4 border-t border-slate-200 text-xs text-slate-400 leading-relaxed">
-          Most of the effort happens before you know if it was worth it.
+          Often, you only learn after applying.
         </div>
       )}
     </div>
@@ -114,14 +115,14 @@ function FlowColumn({
 
 export default function ProblemSection() {
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-white py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-12 sm:mb-16"
+          className="max-w-2xl mb-8 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-indigo-600 mb-4">
             <FileQuestion className="w-4 h-4" />
@@ -130,16 +131,13 @@ export default function ProblemSection() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
             Not every job deserves an application.
           </h2>
 
-          <p className="mt-4 text-base text-slate-600 leading-relaxed">
-            Job descriptions list required skills, preferred skills, and years
-            of experience. But none of that tells you how well you actually
-            fit. So most people see an interesting job, read the description,
-            second-guess the requirements, and apply anyway , then wait, and
-            often hear nothing back.
+          <p className="mt-3 text-sm sm:text-base text-slate-600 leading-relaxed">
+            Job descriptions rarely show how well you fit. Hirely compares your
+            profile with each role before you apply.
           </p>
         </motion.div>
 
@@ -154,11 +152,17 @@ export default function ProblemSection() {
           </motion.div>
 
           <motion.div
+            className="relative"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
+            <Link
+              href="/jobs"
+              className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              aria-label="With Hirely: explore jobs and check your fit"
+            />
             <FlowColumn title="With Hirely" tone="active" steps={WITH_STEPS} />
           </motion.div>
         </div>

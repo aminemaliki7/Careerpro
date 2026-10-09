@@ -11,7 +11,6 @@ import ProblemSection from '@/components/home/ProblemSection';
 import CoreProductSection from '@/components/home/CoreProductSection';
 import MatchSection from '@/components/home/MatchSection';
 import ApplicationSection from '@/components/home/ApplicationSection';
-import UseCasesSection from '@/components/home/UseCasesSection';
 import RecruiterSection from '@/components/home/RecruiterSection';
 import TwoSidesSection from '@/components/home/TwoSidesSection';
 import WhyDifferentSection from '@/components/home/WhyDifferentSection';
@@ -141,7 +140,6 @@ export default async function HomePage() {
       <CoreProductSection />
       <MatchSection />
       <ApplicationSection />
-      <UseCasesSection />
       <RecruiterSection />
       <TwoSidesSection />
       <WhyDifferentSection />

@@ -7,43 +7,43 @@ import { ChevronDown, CircleHelp } from 'lucide-react';
 const FAQS = [
   {
     q: 'What is Hirely?',
-    a: 'Hirely is a career and hiring platform that compares jobs with candidates. It helps candidates understand their fit for a job before applying, and helps recruiters identify and prioritize candidates who fit their roles.',
+    a: 'Hirely matches candidates to jobs and helps recruiters prioritize applicants.',
   },
   {
     q: 'How does the job match work?',
-    a: 'Hirely compares your CV against a specific job\u2019s required skills, experience level, keywords from the description, education, and CV depth. Each dimension is weighted and combined into a single score, with a breakdown of why you got it.',
+    a: 'It compares your CV with a role\u2019s skills, experience, keywords, and education, then explains your score.',
   },
   {
     q: 'Do I need to upload my CV?',
-    a: 'Yes, to see a match score. You upload it once, in Hirely\u2019s Easy Apply flow, and it\u2019s used to run the comparison against the job you\u2019re viewing.',
+    a: 'Yes. Upload it once to see match scores for jobs.',
   },
   {
     q: 'Does a high match guarantee an interview?',
-    a: 'No. The match score reflects how well your CV lines up with a job\u2019s stated requirements. It doesn\u2019t guarantee an interview, an offer, or employment \u2014 hiring decisions are made by the recruiter.',
+    a: 'No. The score supports decisions; recruiters make the final call.',
   },
   {
     q: 'What happens if I don\u2019t match all requirements?',
-    a: 'You\u2019ll see exactly which skills are missing or only partially covered, alongside the ones you do have. That\u2019s meant to help you decide whether to apply, strengthen your CV first, or look elsewhere.',
+    a: 'Review matched and missing skills, then decide whether to apply or build your experience.',
   },
   {
     q: 'Can I use Hirely before applying?',
-    a: 'Yes \u2014 that\u2019s the point. You can check your match for a job without committing to an application, so you can decide if it\u2019s worth your time first.',
+    a: 'Yes. Check your fit before deciding to apply.',
   },
   {
     q: 'Is Hirely only for software engineers?',
-    a: 'Hirely is built primarily around tech roles \u2014 engineering, data, product, and similar \u2014 but the matching approach works for any role with clearly listed skills and requirements.',
+    a: 'Hirely focuses on tech, product, and data roles with clearly listed requirements.',
   },
   {
     q: 'Can recruiters use Hirely?',
-    a: 'Yes. Recruiters can post roles, see applicants ranked by match score, and set rules to auto-shortlist or auto-flag candidates based on score thresholds.',
+    a: 'Yes. Recruiters can post roles and review applicants ranked by role fit.',
   },
   {
     q: 'How does candidate ranking work?',
-    a: 'Each applicant\u2019s CV is scored against the job\u2019s requirements using the same matching engine candidates see, then sorted so recruiters can review the strongest matches first.',
+    a: 'Applicants are scored against the job requirements and sorted by match.',
   },
   {
     q: 'Does Hirely make the hiring decision?',
-    a: 'No. Hirely surfaces fit and helps prioritize review. The recruiter remains responsible for every hiring decision.',
+    a: 'No. Recruiters make every hiring decision.',
   },
 ];
 
@@ -64,7 +64,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-white py-12 sm:py-20 lg:py-28">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -76,7 +76,7 @@ export default function FAQSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="mb-10"
+          className="mb-6 sm:mb-10"
         >
           <div className="inline-flex items-center gap-2 text-indigo-600 mb-4">
             <CircleHelp className="w-4 h-4" />
@@ -85,7 +85,7 @@ export default function FAQSection() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight">
             Questions, answered plainly.
           </h2>
         </motion.div>
@@ -100,7 +100,7 @@ export default function FAQSection() {
                   type="button"
                   onClick={() => setOpenIndex(isOpen ? null : index)}
                   aria-expanded={isOpen}
-                  className="w-full flex items-center justify-between gap-4 py-4 text-left"
+                  className="w-full flex items-center justify-between gap-4 py-3.5 sm:py-4 text-left"
                 >
                   <span className="text-sm font-semibold text-slate-900">
                     {item.q}

@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Check, AlertCircle, Gauge, HelpCircle } from 'lucide-react';
 
 const BREAKDOWN = [
@@ -28,9 +29,9 @@ const QUESTIONS = [
 
 export default function MatchSection() {
   return (
-    <section className="bg-white py-20 sm:py-28">
+    <section className="bg-white py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* LEFT: copy */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -45,20 +46,18 @@ export default function MatchSection() {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
               The score isn&apos;t the product.
-              <br />
+              <br className="hidden sm:block" />
               The explanation is.
             </h2>
 
-            <p className="mt-4 text-base text-slate-600 leading-relaxed max-w-md">
-              A percentage on its own doesn&apos;t help you decide anything.
-              Hirely breaks the score down by skills, experience, keyword
-              overlap, education, and CV depth , so you can see exactly where
-              you stand, not just what number you got.
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-600 leading-relaxed max-w-md">
+              See how your skills and experience match the role, including your
+              strengths and gaps.
             </p>
 
-            <div className="mt-8 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-5">
+            <div className="hidden sm:block mt-8 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-5">
               <div className="flex items-center gap-2 mb-3">
                 <HelpCircle className="w-4 h-4 text-indigo-600" />
                 <span className="text-xs font-bold text-indigo-900 uppercase tracking-wider">
@@ -82,12 +81,18 @@ export default function MatchSection() {
 
           {/* RIGHT: breakdown card */}
           <motion.div
+            className="relative group"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden">
+            <Link
+              href="/jobs"
+              className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              aria-label="Explore tech jobs and see your match"
+            />
+            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
               <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">

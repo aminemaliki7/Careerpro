@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { Mail, Target, ScanSearch, UserCheck, Send } from 'lucide-react';
 
 const SEQUENCE = [
@@ -12,9 +13,9 @@ const SEQUENCE = [
 
 export default function ApplicationSection() {
   return (
-    <section className="bg-slate-50 py-20 sm:py-28">
+    <section className="bg-slate-50 py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
           {/* LEFT: copy + sequence */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -29,17 +30,14 @@ export default function ApplicationSection() {
               </span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
               Once you know you&apos;re a fit,
               <br />
               apply smarter.
             </h2>
 
-            <p className="mt-4 text-base text-slate-600 leading-relaxed max-w-md">
-              Hirely isn&apos;t &ldquo;AI writes your application for you.&rdquo; It&apos;s
-              understanding the opportunity first, then applying with a
-              pitch that&apos;s actually based on your profile and this
-              specific role , which you review and send yourself.
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-600 leading-relaxed max-w-md">
+              Review a role-specific pitch, edit it, and send it yourself.
             </p>
 
             <div className="mt-8 flex flex-wrap items-center gap-2">
@@ -64,12 +62,18 @@ export default function ApplicationSection() {
 
           {/* RIGHT: pitch email mock */}
           <motion.div
+            className="relative group"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden">
+            <Link
+              href="/jobs"
+              className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              aria-label="Explore jobs and apply with context"
+            />
+            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
               <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center">
                   <Mail className="w-3.5 h-3.5 text-indigo-600" />

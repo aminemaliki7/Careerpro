@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 import {
   Layers,
   Briefcase,
@@ -16,50 +17,50 @@ const STEPS = [
   {
     icon: Briefcase,
     title: 'Choose a job',
-    detail: 'Pick any listing on Hirely you\u2019re considering.',
+    detail: 'Choose a role you\u2019re considering.',
   },
   {
     icon: ScanSearch,
     title: 'Hirely reads the role',
-    detail: 'Required skills, experience level, and key requirements are pulled from the posting.',
+    detail: 'We identify its key skills and requirements.',
   },
   {
     icon: FileText,
     title: 'Hirely reads your CV',
-    detail: 'Upload your CV once. It\u2019s parsed for skills, experience, and education.',
+    detail: 'We extract your skills, experience, and education.',
   },
   {
     icon: Scale,
     title: 'Your profile is compared',
-    detail: 'Skills, years of experience, keyword overlap, and education are checked against the role.',
+    detail: 'Your profile is compared with the role requirements.',
   },
   {
     icon: PieChart,
     title: 'You see your match',
-    detail: 'A score with a breakdown , not just a number, but why it\u2019s that number.',
+    detail: 'See your score and what contributes to it.',
   },
   {
     icon: CircleCheckBig,
     title: 'You decide',
-    detail: 'Strong fit, partial fit, or not yet. You choose whether it\u2019s worth your time.',
+    detail: 'Decide whether the role is worth pursuing.',
   },
   {
     icon: Mail,
     title: 'Apply with a personalized pitch',
-    detail: 'If you go ahead, Hirely drafts an email pitch based on your profile and the role, for you to review and send.',
+    detail: 'Review and send a pitch tailored to the role.',
   },
 ];
 
 export default function CoreProductSection() {
   return (
-    <section className="bg-slate-50 py-20 sm:py-28">
+    <section className="bg-slate-50 py-12 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-12 sm:mb-16"
+          className="max-w-2xl mb-8 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-indigo-600 mb-4">
             <Layers className="w-4 h-4" />
@@ -68,12 +69,38 @@ export default function CoreProductSection() {
             </span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
             Turn a job description into a decision.
           </h2>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid gap-3 sm:hidden">
+          {STEPS.filter((step) =>
+            ['Choose a job', 'You see your match', 'You decide'].includes(step.title)
+          ).map((step) => {
+            const Icon = step.icon;
+
+            return (
+              <Link
+                key={step.title}
+                href="/jobs"
+                className="group flex items-start gap-3 border-t border-slate-200 py-3 last:border-b focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+              >
+                <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-indigo-600">
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-700">{step.title}</h3>
+                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                    {step.detail}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+
+        <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {STEPS.map((step, index) => {
             const Icon = step.icon;
 
@@ -90,6 +117,11 @@ export default function CoreProductSection() {
                     : 'border-slate-200'
                 }`}
               >
+                <Link
+                  href="/jobs"
+                  className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
+                  aria-label={`${step.title}: explore tech jobs`}
+                />
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-9 h-9 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
                     <Icon className="w-4 h-4" />
