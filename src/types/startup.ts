@@ -45,6 +45,8 @@ export interface Startup {
   jobCount?: number;
   logoUrl?: string;
   featured?: boolean;
+  voteScore?: number;
+  userVote?: -1 | 0 | 1;
   status?: 'pending' | 'approved' | 'rejected'; // Approval status
   ownerId?: string; // Clerk user ID of the founder
   contactEmail?: string; // Contact email for pending submissions

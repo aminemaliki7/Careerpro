@@ -52,6 +52,7 @@ async function getInitialStartups(): Promise<{
       .from('startups')
       .select('*', { count: 'exact' })
       .eq('status', 'approved')
+      .order('vote_score', { ascending: false })
       .order('created_at', { ascending: false })
       .range(0, 17);
 
@@ -71,6 +72,8 @@ async function getInitialStartups(): Promise<{
       websiteUrl:      s.website_url,
       logoUrl:         s.logo_url,
       featured:        s.featured ?? false,
+      voteScore:       s.vote_score ?? 0,
+      userVote:        0,
       jobCount:        s.job_count ?? 0,
       createdAt:       s.created_at,
       updatedAt:       s.updated_at,
@@ -142,16 +145,7 @@ export default async function StartupsPage() {
 
         {/* Category strip */}
         <div className="relative border-t border-slate-100 bg-slate-50/60">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-2 flex flex-wrap gap-1.5">
-            {CATEGORIES.map((c) => (
-              <span
-                key={c}
-                className="text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded-full px-2.5 py-0.5 hover:border-slate-300 hover:text-slate-900 transition-colors cursor-default"
-              >
-                {c}
-              </span>
-            ))}
-          </div>
+          
         </div>
       </section>
 

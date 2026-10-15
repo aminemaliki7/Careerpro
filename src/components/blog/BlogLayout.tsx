@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { SignInButton, useUser } from '@clerk/nextjs';
 import {
   Bookmark,
   Share2,
@@ -28,6 +29,7 @@ interface BlogLayoutProps {
 }
 
 export default function BlogLayout({ post, children }: BlogLayoutProps) {
+  const { isLoaded, isSignedIn } = useUser();
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
@@ -52,6 +54,9 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
   const [newComment, setNewComment] = useState('');
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+  const [commentError, setCommentError] = useState('');
+  const [isLoadingComments, setIsLoadingComments] = useState(true);
 
   const postSlug = post.slug;
 
@@ -291,37 +296,33 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     };
   }, []);
 
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
+  const handleAddComment = async () => {
+    const content = newComment.trim();
+    if (!content || !isSignedIn || isSubmittingComment) return;
 
-    const comment = {
-      id: Date.now().toString(),
-      author: 'Anonymous User',
-      avatar: 'AU',
-      content: newComment.trim(),
-      timestamp: new Date(),
-      likes: 0,
-      isLiked: false,
-    };
+    setIsSubmittingComment(true);
+    setCommentError('');
 
-    const updatedComments = [comment, ...comments];
+    try {
+      const response = await fetch('/api/blog/comments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ postSlug, content }),
+      });
+      const result = await response.json();
 
-    setComments(updatedComments);
-    setNewComment('');
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to post comment.');
+      }
 
-    if (typeof window !== 'undefined') {
-      const postUrl = window.location.pathname;
-
-      const savedComments = JSON.parse(
-        localStorage.getItem('postComments') || '{}'
+      setComments((current) => [result.comment, ...current]);
+      setNewComment('');
+    } catch (error) {
+      setCommentError(
+        error instanceof Error ? error.message : 'Failed to post comment.'
       );
-
-      savedComments[postUrl] = updatedComments;
-
-      localStorage.setItem(
-        'postComments',
-        JSON.stringify(savedComments)
-      );
+    } finally {
+      setIsSubmittingComment(false);
     }
   };
 
@@ -339,21 +340,6 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
     });
 
     setComments(updatedComments);
-
-    if (typeof window !== 'undefined') {
-      const postUrl = window.location.pathname;
-
-      const savedComments = JSON.parse(
-        localStorage.getItem('postComments') || '{}'
-      );
-
-      savedComments[postUrl] = updatedComments;
-
-      localStorage.setItem(
-        'postComments',
-        JSON.stringify(savedComments)
-      );
-    }
   };
 
   const formatCommentTime = (date: Date) => {
@@ -490,12 +476,24 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
     setIsBookmarked(bookmarks.includes(postUrl));
 
-    const savedComments = JSON.parse(
-      localStorage.getItem('postComments') || '{}'
-    );
+    const loadComments = async () => {
+      setIsLoadingComments(true);
+      try {
+        const response = await fetch(
+          `/api/blog/comments?slug=${encodeURIComponent(postSlug)}`
+        );
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error);
+        setComments(result.comments || []);
+      } catch (error) {
+        console.error('Error loading blog comments:', error);
+      } finally {
+        setIsLoadingComments(false);
+      }
+    };
 
-    setComments(savedComments[postUrl] || []);
-  }, []);
+    void loadComments();
+  }, [postSlug]);
 
   return (
     <div className="min-h-screen bg-white">
@@ -822,30 +820,54 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
               <MessageCircle className="h-5 w-5 text-zinc-400" />
             </div>
 
-            <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-4">
-              <textarea
-                value={newComment}
-                onChange={(event) =>
-                  setNewComment(event.target.value)
-                }
-                placeholder="What do you think?"
-                rows={4}
-                className="w-full resize-none bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
-              />
-
-              <div className="mt-3 flex justify-end">
-                <button
-                  onClick={handleAddComment}
-                  disabled={!newComment.trim()}
-                  className="flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  <Send className="h-3.5 w-3.5" />
-                  Comment
-                </button>
+            {!isLoaded ? (
+              <div className="mb-8 rounded-2xl border border-zinc-200 bg-zinc-50 p-5 text-sm text-zinc-500">
+                Checking sign-in status...
               </div>
-            </div>
+            ) : isSignedIn ? (
+              <div className="mb-8 rounded-2xl border border-zinc-200 bg-white p-4">
+                <textarea
+                  value={newComment}
+                  onChange={(event) => setNewComment(event.target.value)}
+                  placeholder="What do you think?"
+                  rows={4}
+                  maxLength={2000}
+                  className="w-full resize-none bg-transparent text-sm text-zinc-900 outline-none placeholder:text-zinc-400"
+                />
+                {commentError && (
+                  <p role="alert" className="mt-2 text-sm text-red-600">
+                    {commentError}
+                  </p>
+                )}
+                <div className="mt-3 flex justify-end">
+                  <button
+                    onClick={handleAddComment}
+                    disabled={!newComment.trim() || isSubmittingComment}
+                    className="flex items-center gap-2 rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <Send className="h-3.5 w-3.5" />
+                    {isSubmittingComment ? 'Posting...' : 'Comment'}
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="mb-8 flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <p className="text-sm text-zinc-600">
+                  Sign in to join the discussion.
+                </p>
+                <SignInButton mode="modal">
+                  <button className="rounded-full bg-zinc-950 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-zinc-800">
+                    Sign in to comment
+                  </button>
+                </SignInButton>
+              </div>
+            )}
 
-            {comments.length > 0 ? (
+            {isLoadingComments ? (
+              <p className="py-8 text-center text-sm text-zinc-500">
+                Loading comments...
+              </p>
+            ) : comments.length > 0 ? (
               <div className="space-y-5">
                 {comments.map((comment) => (
                   <div

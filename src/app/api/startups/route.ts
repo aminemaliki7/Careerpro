@@ -1,6 +1,8 @@
 ﻿// app/api/startups/route.ts
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@clerk/nextjs/server';
 import { supabase } from '@/lib/supabase/client';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET(request: NextRequest) {
   try {
@@ -20,6 +22,7 @@ export async function GET(request: NextRequest) {
       .from('startups')
       .select('*', { count: 'exact' })
       .eq('status', 'approved')
+      .order('vote_score', { ascending: false })
       .order('created_at', { ascending: false });
 
     // Apply filters
@@ -37,6 +40,23 @@ export async function GET(request: NextRequest) {
     if (error) {
       console.error('Supabase error:', error);
       return NextResponse.json({ error: 'Failed to fetch startups' }, { status: 500 });
+    }
+
+    const { userId } = await auth();
+    const startupIds = (data || []).map((startup) => String(startup.id));
+    let userVotes: Record<string, -1 | 1> = {};
+
+    if (userId && startupIds.length > 0) {
+      const { data: votes, error: votesError } = await supabaseAdmin
+        .from('startup_votes')
+        .select('startup_id, vote_value')
+        .eq('user_id', userId)
+        .in('startup_id', startupIds);
+
+      if (votesError) throw votesError;
+      userVotes = Object.fromEntries(
+        (votes || []).map((vote) => [String(vote.startup_id), vote.vote_value])
+      );
     }
 
     // Map database fields to frontend format
@@ -57,6 +77,8 @@ export async function GET(request: NextRequest) {
         websiteUrl: startup.website_url,
         logoUrl: startup.logo_url, // Pass through exactly as stored
         featured: startup.featured || false,
+        voteScore: startup.vote_score || 0,
+        userVote: userVotes[String(startup.id)] || 0,
         jobCount: startup.job_count || 0,
         createdAt: startup.created_at,
         updatedAt: startup.updated_at
