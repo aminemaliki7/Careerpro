@@ -9,6 +9,7 @@ export const metadata: Metadata = generatePageMetadata({
   description:
     'Add your startup to our curated directory. Connect with top talent, early-stage investors, and potential customers. Fast approval and free listing.',
   path: '/startups/submit',
+  noIndex: true,
 });
 
 export default function SubmitStartupPage() {

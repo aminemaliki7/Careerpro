@@ -1,10 +1,8 @@
 // src/app/sitemap.xml/route.ts
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import fs from 'fs';
 import { createJobSlug } from '@/lib/utils/format';
 import { getAllRoadmapEntries } from '@/lib/roadmaps';
-import path from 'path';
 
 const BASE_URL = 'https://hirely.ma';
 
@@ -15,12 +13,40 @@ type SitemapUrl = {
   lastmod?:    string;
 };
 
-function getPosts(): { slug: string; lastmod: string }[] {
-  const dir   = path.join(process.cwd(), 'src/content/posts');
-  return fs.readdirSync(dir).map((file) => ({
-    slug:    file.replace(/\.mdx?$/, ''),
-    lastmod: fs.statSync(path.join(dir, file)).mtime.toISOString(),
-  }));
+function toLastmod(value?: string | null): string | undefined {
+  if (!value) return undefined;
+
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp)
+    ? new Date(timestamp).toISOString()
+    : undefined;
+}
+
+async function getPosts(): Promise<{ slug: string; lastmod?: string }[]> {
+  try {
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { auth: { persistSession: false } }
+    );
+    const { data, error } = await supabase
+      .from('articles')
+      .select('slug, published_at, updated_at')
+      .eq('status', 'published');
+
+    if (error) {
+      console.error('Error loading sitemap articles:', error);
+      return [];
+    }
+
+    return (data ?? []).map((article) => ({
+      slug: article.slug,
+      lastmod: toLastmod(article.updated_at || article.published_at),
+    }));
+  } catch (error) {
+    console.error('Error loading sitemap articles:', error);
+    return [];
+  }
 }
 
 function getRoadmaps(): { slug: string; lastmod: string }[] {
@@ -47,7 +73,7 @@ async function getStartupSlugs(): Promise<string[]> {
   }
 }
 
-async function getJobEntries(): Promise<{ loc: string; lastmod: string }[]> {
+async function getJobEntries(): Promise<{ loc: string; lastmod?: string }[]> {
   try {
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -60,7 +86,7 @@ async function getJobEntries(): Promise<{ loc: string; lastmod: string }[]> {
       .eq('status', 'approved');
     return (data ?? []).map((j: { id: string | number; title: string; posted_date: string; updated_date?: string }) => ({
       loc: `jobs/${j.id}/${createJobSlug(j.title)}`,
-      lastmod: new Date(j.updated_date || j.posted_date).toISOString(),
+      lastmod: toLastmod(j.updated_date || j.posted_date),
     }));
   } catch {
     return [];
@@ -68,19 +94,18 @@ async function getJobEntries(): Promise<{ loc: string; lastmod: string }[]> {
 }
 
 export async function GET() {
-  const posts       = getPosts();
+  const posts       = await getPosts();
   const roadmaps    = getRoadmaps();
   const startupSlugs = await getStartupSlugs();
   const jobEntries   = await getJobEntries();
-  const now         = new Date().toISOString();
 
   const staticPages: SitemapUrl[] = [
-    { loc: '',               changefreq: 'daily',   priority: 1.0, lastmod: now },
-    { loc: 'blog',           changefreq: 'daily',   priority: 0.9, lastmod: now },
-    { loc: 'jobs',           changefreq: 'daily',   priority: 0.9, lastmod: now },
-    { loc: 'startups',       changefreq: 'daily',   priority: 0.9, lastmod: now },
-    { loc: 'roadmaps',       changefreq: 'weekly',  priority: 0.9, lastmod: now },
-    { loc: 'podcast',        changefreq: 'weekly',  priority: 0.8, lastmod: now },
+    { loc: '',               changefreq: 'daily',   priority: 1.0 },
+    { loc: 'blog',           changefreq: 'daily',   priority: 0.9 },
+    { loc: 'jobs',           changefreq: 'daily',   priority: 0.9 },
+    { loc: 'startups',       changefreq: 'daily',   priority: 0.9 },
+    { loc: 'roadmaps',       changefreq: 'weekly',  priority: 0.9 },
+    { loc: 'podcast',        changefreq: 'weekly',  priority: 0.8 },
     { loc: 'about',          changefreq: 'monthly', priority: 0.7 },
     { loc: 'contact',        changefreq: 'monthly', priority: 0.6 },
     { loc: 'privacy-policy', changefreq: 'yearly',  priority: 0.4 },
@@ -109,7 +134,6 @@ export async function GET() {
     })),
     ...startupSlugs.map((slug) => ({
       loc:        `startups/${slug}`,
-      lastmod:    now,
       changefreq: 'weekly',
       priority:   0.7,
     })),

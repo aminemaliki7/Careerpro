@@ -26,5 +26,14 @@ export default async function JobsPage() {
     .eq('status', 'approved')
     .order('posted_date', { ascending: false });
 
-  return <JobsClient initialJobs={(data ?? []) as Job[]} />;
+  return (
+    <>
+      <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          Find tech jobs that match your CV
+        </h1>
+      </div>
+      <JobsClient initialJobs={(data ?? []) as Job[]} />
+    </>
+  );
 }

@@ -6,7 +6,7 @@ import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 export const revalidate = 60;   // ← add this line
 
 export const metadata: Metadata = {
-  title: 'Articles - AI, Tech Careers & Job Market Insights | Hirely',
+  title: 'Articles - AI, Tech Careers & Job Market Insights',
   description:
     'Practical insights on AI, tech careers, startups, salaries, and the global job market. Make better career decisions with Hirely.',
   keywords: [

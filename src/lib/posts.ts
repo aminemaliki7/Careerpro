@@ -87,7 +87,7 @@ function markdownToHtml(
     )
     .replace(
       /^# (.*)$/gim,
-      '<h1>$1</h1>'
+      '<h2>$1</h2>'
     )
 
     // Bold

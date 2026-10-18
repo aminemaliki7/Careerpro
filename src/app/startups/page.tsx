@@ -7,7 +7,7 @@ import type { Startup } from '@/types/startup';
 // ─── SEO ──────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Companies Directory - Discover Growing Tech Companies | Hirely',
+  title: 'Companies Directory - Discover Growing Tech Companies',
   description:
     'Explore 277+ curated companies across AI/ML, FinTech, HealthTech, SaaS and more. Find your next career opportunity at a fast-growing company.',
   alternates: { canonical: 'https://hirely.ma/startups' },

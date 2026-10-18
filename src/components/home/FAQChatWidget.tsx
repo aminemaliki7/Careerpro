@@ -78,26 +78,7 @@ export default function FAQChatWidget() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: FAQS.map((item) => ({
-      '@type': 'Question',
-      name: item.q,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: item.a,
-      },
-    })),
-  };
-
   return (
-    <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       <div
         data-faq-chat-widget
         className="fixed bottom-4 right-4 z-40 sm:bottom-6 sm:right-6"
@@ -207,6 +188,5 @@ export default function FAQChatWidget() {
           <span>{isOpen ? 'Close' : 'FAQs'}</span>
         </button>
       </div>
-    </>
   );
 }

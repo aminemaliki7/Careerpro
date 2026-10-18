@@ -126,51 +126,6 @@ export default function RootLayout({
       <html lang="en">
         <head>
           {/* -----------------------------------------------------------------
-              Podcast structured data
-          ------------------------------------------------------------------ */}
-
-          <Script
-            id="podcast-schema"
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                '@context': 'https://schema.org',
-                '@type': 'PodcastSeries',
-
-                name: 'Hirely Tech Podcast',
-
-                description:
-                  'A podcast sharing AI, startup, and tech career insights with global professionals.',
-
-                url: 'https://hirely.ma/podcast',
-
-                inLanguage: 'en',
-
-                areaServed: {
-                  '@type': 'Audience',
-                  audienceType: 'English speaking countries worldwide',
-                },
-
-                publisher: {
-                  '@type': 'Organization',
-                  name: 'Hirely',
-                  url: 'https://hirely.ma',
-
-                  logo: {
-                    '@type': 'ImageObject',
-                    url: 'https://hirely.ma/images/blog/logo1.svg',
-                  },
-                },
-
-                creator: {
-                  '@type': 'Person',
-                  name: 'Amine',
-                },
-              }),
-            }}
-          />
-
-          {/* -----------------------------------------------------------------
               Google Tag Manager
           ------------------------------------------------------------------ */}
 
@@ -261,16 +216,6 @@ export default function RootLayout({
                   'AI-powered career intelligence for discovering, evaluating, and pursuing global tech opportunities.',
 
                 inLanguage: 'en',
-
-                potentialAction: {
-                  '@type': 'SearchAction',
-
-                  target:
-                    'https://hirely.ma/jobs?search={search_term_string}',
-
-                  'query-input':
-                    'required name=search_term_string',
-                },
               }),
             }}
           />

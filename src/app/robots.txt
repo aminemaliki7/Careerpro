@@ -7,6 +7,7 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/admin/
 Disallow: /dashboard/
+Disallow: /company/
 Disallow: /recruiter/
 
 # Block auth pages

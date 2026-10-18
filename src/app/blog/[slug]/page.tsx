@@ -31,20 +31,25 @@
 
     if (!post) {
       return {
-        title: 'Article not found | Hirely',
+        title: 'Article not found',
         description: 'The article you are looking for does not exist.',
+        robots: { index: false, follow: false },
       };
     }
 
+    const canonical = `/blog/${encodeURIComponent(post.slug)}`;
+
     return {
-      title: `${post.title} | Hirely`,
+      title: post.title,
       description: post.description,
       keywords: post.seoKeywords?.join(', ') || undefined,
+      alternates: { canonical },
 
       openGraph: {
         title: post.title,
         description: post.description,
         type: 'article',
+        url: canonical,
         publishedTime: post.publishedAt,
         modifiedTime: post.updatedAt,
         authors: [post.author],
@@ -132,13 +137,51 @@
       post.highlights
     );
 
+    const canonical = `https://hirely.ma/blog/${encodeURIComponent(post.slug)}`;
+    const articleJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'BlogPosting',
+      headline: post.title,
+      description: post.description,
+      datePublished: post.publishedAt,
+      dateModified: post.updatedAt || post.publishedAt,
+      author: {
+        '@type': 'Person',
+        name: post.author,
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: 'Hirely',
+        url: 'https://hirely.ma',
+        logo: {
+          '@type': 'ImageObject',
+          url: 'https://hirely.ma/images/blog/logo1.svg',
+        },
+      },
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': canonical,
+      },
+      ...(post.coverImage && /^https?:\/\//i.test(post.coverImage)
+        ? { image: post.coverImage }
+        : {}),
+    };
+
     return (
-      <BlogLayout post={post}>
-        <div
+      <>
+        <script
+          type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: highlightedContent,
+            __html: JSON.stringify(articleJsonLd).replace(/</g, '\\u003c'),
           }}
         />
-      </BlogLayout>
+        <BlogLayout post={post}>
+          <div
+            dangerouslySetInnerHTML={{
+              __html: highlightedContent,
+            }}
+          />
+        </BlogLayout>
+      </>
     );
   }

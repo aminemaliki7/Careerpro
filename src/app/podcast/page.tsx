@@ -6,7 +6,7 @@ import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 import { Headphones } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Podcast - Tech, AI & Startup Insights | Hirely',
+  title: 'Podcast - Tech, AI & Startup Insights',
   description:
     'Audio episodes covering AI trends, Morocco tech ecosystem, startup stories, and global tech career insights. Plug in and level up on your commute.',
   keywords: 'tech podcast, AI podcast, Morocco tech, startup podcast, developer podcast, Hirely',
@@ -42,6 +42,7 @@ function PodcastLoading() {
     <div className="min-h-screen bg-white flex items-center justify-center">
       <div className="text-center">
         <Headphones className="w-12 h-12 text-gray-200 mx-auto mb-4 animate-pulse" />
+        <h1 className="text-xl font-semibold text-gray-900 mb-2">Hirely Tech Podcast</h1>
         <p className="text-sm text-gray-400">Loading episodes...</p>
       </div>
     </div>
@@ -86,14 +87,58 @@ export default async function PodcastPage() {
         new Date(a.publishedAt).getTime()
     );
 
-  if (podcastEpisodes.length === 0) return <PodcastEmpty />;
+  const podcastStructuredData = (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          '@context': 'https://schema.org',
+          '@type': 'PodcastSeries',
+          name: 'Hirely Tech Podcast',
+          description:
+            'A podcast sharing AI, startup, and tech career insights with global professionals.',
+          url: 'https://hirely.ma/podcast',
+          inLanguage: 'en',
+          areaServed: {
+            '@type': 'Audience',
+            audienceType: 'English speaking countries worldwide',
+          },
+          publisher: {
+            '@type': 'Organization',
+            name: 'Hirely',
+            url: 'https://hirely.ma',
+            logo: {
+              '@type': 'ImageObject',
+              url: 'https://hirely.ma/images/blog/logo1.svg',
+            },
+          },
+          creator: {
+            '@type': 'Person',
+            name: 'Amine',
+          },
+        }),
+      }}
+    />
+  );
+
+  if (podcastEpisodes.length === 0) {
+    return (
+      <>
+        {podcastStructuredData}
+        <PodcastEmpty />
+      </>
+    );
+  }
 
   return (
-    <Suspense fallback={<PodcastLoading />}>
-      <PodcastClient
-        allEpisodes={podcastEpisodes}
-        featuredEpisodes={featuredEpisodes}
-      />
-    </Suspense>
+    <>
+      {podcastStructuredData}
+      <Suspense fallback={<PodcastLoading />}>
+        <PodcastClient
+          allEpisodes={podcastEpisodes}
+          featuredEpisodes={featuredEpisodes}
+        />
+      </Suspense>
+    </>
   );
 }

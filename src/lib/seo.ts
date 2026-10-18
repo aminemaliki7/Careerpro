@@ -82,7 +82,7 @@ export function generateSEOMetadata({
   ];
 
   return {
-    title: fullTitle,
+    title,
 
     description,
 

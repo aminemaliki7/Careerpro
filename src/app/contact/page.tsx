@@ -4,9 +4,10 @@ import ContactForm from '@/components/ContactForm'
 import { Clock, MapPin, Mail, Sparkles } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Contact Us | Hirely',
+  title: 'Contact Us',
   description: 'Reach out to Hirely for inquiries about our AI-powered ATS platform, candidate match scoring, or recruitment partnerships.',
   keywords: 'contact, recruitment ATS, AI job matching, hiring solutions, candidate ranking',
+  alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contact Us | Hirely',
     description: 'Get in touch to learn how Hirely connects candidates and recruiters with AI precision.',
