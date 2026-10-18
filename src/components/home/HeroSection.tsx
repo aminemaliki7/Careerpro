@@ -29,9 +29,9 @@ import { useUserRole } from '@/hooks/useUserRole';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface HeroStats {
-  jobCount: number;
-  companyCount: number;
-  postCount: number;
+  jobCount: number | null;
+  companyCount: number | null;
+  postCount: number | null;
 }
 
 type DemoRole = 'candidate' | 'recruiter';
@@ -796,7 +796,7 @@ function ProductDemo() {
 
           <div className="flex items-center gap-1.5 text-[9px] text-slate-400">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            ATS active
+            Illustrative preview
           </div>
         </div>
 
@@ -977,9 +977,9 @@ export default function HeroSection({
   const { isCompany } = useUserRole();
 
   const jobCountDisplay =
-    stats && stats.jobCount > 0
-      ? `${stats.jobCount}+`
-      : '250+';
+    stats?.jobCount != null
+      ? stats.jobCount.toLocaleString()
+      : null;
 
   const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
 
@@ -995,7 +995,7 @@ export default function HeroSection({
 
       <div className="relative mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8">
 
-        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center min-h-[calc(100svh-3.5rem)] sm:min-h-0 lg:min-h-[calc(100vh-3.5rem)] py-10 sm:py-20 lg:py-24">
+        <div className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-16 items-center min-h-0 lg:min-h-[calc(100vh-3.5rem)] py-10 sm:py-20 lg:py-24">
 
           {/* LEFT */}
           <motion.div
@@ -1112,10 +1112,12 @@ export default function HeroSection({
                   <span>AI-powered applications</span>
                 </div>
 
-                <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>{jobCountDisplay} tech jobs</span>
-                </div>
+                {jobCountDisplay !== null && (
+                  <div className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                    <span>{jobCountDisplay} tech jobs</span>
+                  </div>
+                )}
 
               </div>
 

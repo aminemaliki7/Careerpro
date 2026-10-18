@@ -53,14 +53,14 @@ const STEPS = [
 
 export default function CoreProductSection() {
   return (
-    <section className="bg-slate-50 py-12 sm:py-20 lg:py-28">
+    <section className="bg-slate-50 py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-8 sm:mb-16"
+          className="max-w-2xl mb-6 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-indigo-600 mb-4">
             <Layers className="w-4 h-4" />

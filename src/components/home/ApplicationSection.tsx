@@ -13,9 +13,9 @@ const SEQUENCE = [
 
 export default function ApplicationSection() {
   return (
-    <section className="bg-slate-50 py-12 sm:py-20 lg:py-28">
+    <section className="bg-slate-50 py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-5 sm:gap-12 lg:gap-16 items-center">
           {/* LEFT: copy + sequence */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -40,7 +40,7 @@ export default function ApplicationSection() {
               Review a role-specific pitch, edit it, and send it yourself.
             </p>
 
-            <div className="mt-8 flex flex-wrap items-center gap-2">
+            <div className="mt-5 sm:mt-8 flex flex-wrap items-center gap-2">
               {SEQUENCE.map((step, index) => {
                 const Icon = step.icon;
                 return (
@@ -73,14 +73,14 @@ export default function ApplicationSection() {
               className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label="Explore jobs and apply with context"
             />
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
-              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2.5">
+            <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white shadow-lg sm:shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
+              <div className="px-4 py-3 sm:px-5 sm:py-3.5 border-b border-slate-100 flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-full bg-indigo-50 flex items-center justify-center">
                   <Mail className="w-3.5 h-3.5 text-indigo-600" />
                 </div>
                 <div>
                   <div className="text-xs font-bold text-slate-900">
-                    Draft pitch
+                    Example draft pitch
                   </div>
                   <div className="text-[10px] text-slate-400">
                     Based on your profile &amp; this job&apos;s requirements
@@ -88,7 +88,7 @@ export default function ApplicationSection() {
                 </div>
               </div>
 
-              <div className="p-5 space-y-2.5 font-mono text-[11px] leading-relaxed text-slate-600">
+              <div className="p-3 sm:p-5 space-y-2 font-mono text-[11px] leading-relaxed text-slate-600">
                 <p className="text-slate-400">To: hiring@fintechco.com</p>
                 <p className="text-slate-400">
                   Subject: Application , Senior Backend Engineer
@@ -115,7 +115,7 @@ export default function ApplicationSection() {
                 </div>
               </div>
 
-              <div className="px-5 pb-5 flex items-center justify-between">
+              <div className="px-4 pb-4 sm:px-5 sm:pb-5 flex items-center justify-between">
                 <span className="text-[11px] font-semibold text-slate-500">
                   Editable before you send it
                 </span>

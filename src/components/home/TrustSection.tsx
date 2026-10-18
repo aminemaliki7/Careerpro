@@ -10,20 +10,20 @@ interface TrustSectionProps {
 }
 
 export default function TrustSection({ stats }: TrustSectionProps) {
-  const jobCount = stats && stats.jobCount > 0 ? `${stats.jobCount}+` : '250+';
-  const companyCount = stats && stats.companyCount > 0 ? `${stats.companyCount}+` : '200+';
-  const postCount = stats && stats.postCount > 0 ? `${stats.postCount}+` : null;
+  const jobCount = stats?.jobCount?.toLocaleString() ?? '—';
+  const companyCount = stats?.companyCount?.toLocaleString() ?? '—';
+  const postCount = stats?.postCount;
 
   const metrics = [
     { icon: Briefcase, value: jobCount, label: 'Tech jobs on Hirely', href: '/jobs' },
     { icon: Building2, value: companyCount, label: 'Companies listed', href: '/startups' },
-    ...(postCount
-      ? [{ icon: BookOpen, value: postCount, label: 'Career guides & articles', href: '/blog' }]
+    ...(postCount != null
+      ? [{ icon: BookOpen, value: postCount.toLocaleString(), label: 'Career guides & articles', href: '/blog' }]
       : []),
   ];
 
   return (
-    <section className="bg-slate-900 py-10 sm:py-16 lg:py-20">
+    <section className="bg-slate-900 py-6 sm:py-16 lg:py-20">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -32,14 +32,14 @@ export default function TrustSection({ stats }: TrustSectionProps) {
           transition={{ duration: 0.5 }}
           className="flex flex-col items-center text-center"
         >
-          <div className="inline-flex items-center gap-2 text-slate-400 mb-6">
+          <div className="inline-flex items-center gap-2 text-slate-400 mb-4 sm:mb-6">
             <ShieldCheck className="w-4 h-4" />
             <span className="text-xs font-bold uppercase tracking-wider">
               Built on real product data
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-16">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-6 sm:gap-16">
             {metrics.map((metric) => {
               const Icon = metric.icon;
               return (
@@ -60,7 +60,7 @@ export default function TrustSection({ stats }: TrustSectionProps) {
             })}
           </div>
 
-          <p className="mt-6 max-w-xl text-xs text-slate-500 leading-relaxed">
+          <p className="mt-4 sm:mt-6 max-w-xl text-xs text-slate-500 leading-relaxed">
             Match scores guide review; recruiters make the final decision.
           </p>
         </motion.div>

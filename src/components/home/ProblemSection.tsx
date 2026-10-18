@@ -43,28 +43,28 @@ function FlowColumn({
 
   return (
     <div
-      className={`rounded-2xl border p-5 sm:p-6 h-full ${
+      className={`rounded-xl sm:rounded-2xl border p-3 sm:p-6 h-full ${
         isActive
           ? 'border-indigo-200 bg-white shadow-lg shadow-indigo-900/5'
           : 'border-slate-200 bg-slate-50/70'
       }`}
     >
       <div
-        className={`text-[11px] font-bold uppercase tracking-wider mb-5 ${
+        className={`text-[11px] font-bold uppercase tracking-wider mb-4 sm:mb-5 ${
           isActive ? 'text-indigo-600' : 'text-slate-400'
         }`}
       >
         {title}
       </div>
 
-      <div className="flex flex-col">
+      <div className="grid grid-cols-2 gap-x-2 gap-y-3 sm:flex sm:flex-col sm:gap-y-0">
         {steps.map((step, index) => {
           const Icon = step.icon;
           const isLast = index === steps.length - 1;
 
           return (
             <div key={step.label}>
-              <div className="flex items-center gap-3">
+              <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
                     isActive
@@ -76,7 +76,7 @@ function FlowColumn({
                 </div>
 
                 <span
-                  className={`text-sm font-semibold ${
+                  className={`min-w-0 text-xs sm:text-sm font-semibold ${
                     isActive ? 'text-slate-900' : 'text-slate-500'
                   }`}
                 >
@@ -85,7 +85,7 @@ function FlowColumn({
               </div>
 
               {!isLast && (
-                <div className="pl-4 py-1.5">
+                <div className="hidden sm:block pl-4 py-1.5">
                   <ArrowDown
                     className={`w-3.5 h-3.5 ${
                       isActive ? 'text-indigo-300' : 'text-slate-300'
@@ -99,13 +99,13 @@ function FlowColumn({
       </div>
 
       {isActive && (
-        <div className="mt-5 pt-4 border-t border-indigo-100 text-xs text-indigo-700/80 leading-relaxed">
+        <div className="mt-4 pt-3 sm:mt-5 sm:pt-4 border-t border-indigo-100 text-xs text-indigo-700/80 leading-relaxed">
           Check your fit before you apply.
         </div>
       )}
 
       {!isActive && (
-        <div className="mt-5 pt-4 border-t border-slate-200 text-xs text-slate-400 leading-relaxed">
+        <div className="mt-4 pt-3 sm:mt-5 sm:pt-4 border-t border-slate-200 text-xs text-slate-400 leading-relaxed">
           Often, you only learn after applying.
         </div>
       )}
@@ -115,14 +115,14 @@ function FlowColumn({
 
 export default function ProblemSection() {
   return (
-    <section className="bg-white py-12 sm:py-20 lg:py-28">
+    <section className="bg-white py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-8 sm:mb-16"
+          className="max-w-2xl mb-6 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-indigo-600 mb-4">
             <FileQuestion className="w-4 h-4" />
@@ -141,7 +141,7 @@ export default function ProblemSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
+        <div className="grid sm:grid-cols-2 gap-3 sm:gap-6">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -172,10 +172,10 @@ export default function ProblemSection() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="mt-10 flex items-center gap-2 justify-center text-sm text-slate-500"
+          className="mt-6 sm:mt-10 flex items-center gap-2 justify-center text-sm text-slate-500"
         >
           <UserCircle2 className="w-4 h-4 text-slate-400" />
-          Hirely moves the decision point earlier , before you apply, not after.
+          Hirely moves the decision point earlier, before you apply, not after.
           <ArrowRight className="w-3.5 h-3.5 text-slate-300 hidden sm:block" />
         </motion.div>
       </div>

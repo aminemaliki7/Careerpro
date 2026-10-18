@@ -6,7 +6,7 @@ import { UserCheck, Building2, ArrowDown } from 'lucide-react';
 import CircuitLogo from '@/components/ui/CircuitLogo';
 
 export default function TwoSidesSection() {
-return ( <section className="relative overflow-hidden bg-white py-12 sm:py-20 lg:py-28"> <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+return ( <section className="relative overflow-hidden bg-white py-6 sm:py-20 lg:py-28"> <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
 <motion.div
 initial={{ opacity: 0, y: 20 }}
 whileInView={{ opacity: 1, y: 0 }}
@@ -25,20 +25,20 @@ The matching layer </p>
         One matching layer for candidates and hiring teams.
       </p>
 
-      <div className="mt-12 grid items-center gap-6 md:grid-cols-[1fr_auto_1fr] md:gap-8">
+      <div className="mt-8 sm:mt-12 grid items-center gap-4 sm:gap-6 md:grid-cols-[1fr_auto_1fr] md:gap-8">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="group relative rounded-3xl border border-indigo-200 bg-indigo-50/60 p-6 text-left shadow-sm transition-colors hover:bg-indigo-50 sm:p-7"
+          className="group relative rounded-2xl sm:rounded-3xl border border-indigo-200 bg-indigo-50/60 p-3 text-left shadow-sm transition-colors hover:bg-indigo-50 sm:p-7"
         >
           <Link
             href="/jobs"
             className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
             aria-label="For candidates: explore tech jobs"
           />
-          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100">
+          <div className="mb-4 sm:mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100">
             <UserCheck className="h-5 w-5 text-indigo-600" />
           </div>
 
@@ -46,7 +46,7 @@ The matching layer </p>
             For candidates
           </p>
 
-          <h3 className="mt-2 text-xl font-bold tracking-tight text-slate-900">
+          <h3 className="mt-2 text-lg sm:text-xl font-bold tracking-tight text-slate-900">
             Is this job right for me?
           </h3>
 
@@ -71,14 +71,14 @@ The matching layer </p>
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="group relative rounded-3xl border border-emerald-200 bg-emerald-50/60 p-6 text-left shadow-sm transition-colors hover:bg-emerald-50 sm:p-7"
+          className="group relative rounded-2xl sm:rounded-3xl border border-emerald-200 bg-emerald-50/60 p-3 text-left shadow-sm transition-colors hover:bg-emerald-50 sm:p-7"
         >
           <Link
             href="/onboarding?role=company"
             className="absolute inset-0 z-10 rounded-3xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             aria-label="For companies: start hiring with Hirely"
           />
-          <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
+          <div className="mb-4 sm:mb-5 flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-100">
             <Building2 className="h-5 w-5 text-emerald-600" />
           </div>
 
@@ -86,7 +86,7 @@ The matching layer </p>
             For companies
           </p>
 
-          <h3 className="mt-2 text-xl font-bold tracking-tight text-slate-900">
+          <h3 className="mt-2 text-lg sm:text-xl font-bold tracking-tight text-slate-900">
             Is this candidate right for the role?
           </h3>
 
@@ -101,9 +101,9 @@ The matching layer </p>
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.3 }}
-        className="mt-10"
+        className="mt-6 sm:mt-10"
       >
-        <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm font-semibold text-slate-700">
+        <span className="inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-4 py-2 sm:px-5 sm:py-2.5 text-sm font-semibold text-slate-700">
           One matching layer.
         </span>
       </motion.div>

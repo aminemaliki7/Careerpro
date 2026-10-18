@@ -32,7 +32,14 @@ export default function ClientLayoutWrapper({
       return; // Do nothing if the modal has already been shown
     }
 
-    const handleUserInteraction = () => {
+    const handleUserInteraction = (event: MouseEvent) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest('[data-faq-chat-widget]')
+      ) {
+        return;
+      }
+
       if (!hasShownModal) {
         handleShowModal();
         document.removeEventListener('click', handleUserInteraction);

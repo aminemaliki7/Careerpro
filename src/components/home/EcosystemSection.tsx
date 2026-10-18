@@ -33,7 +33,7 @@ const ECOSYSTEM = [
 
 export default function EcosystemSection() {
   return (
-    <section className="bg-white py-12 sm:py-20 lg:py-28">
+    <section className="bg-white py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -50,7 +50,7 @@ export default function EcosystemSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mt-6 sm:mt-8">
+        <div className="grid grid-cols-1 min-[390px]:grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 mt-5 sm:mt-8">
           {ECOSYSTEM.map((item, index) => {
             const Icon = item.icon;
             return (
@@ -63,21 +63,23 @@ export default function EcosystemSection() {
               >
                 <Link
                   href={item.href}
-                  className="group flex flex-col h-full rounded-2xl border border-slate-200 p-5 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors"
+                  className="group flex h-full items-start gap-3 rounded-xl border border-slate-200 p-3 sm:flex-col sm:rounded-2xl sm:p-5 hover:border-indigo-200 hover:bg-indigo-50/30 transition-colors"
                 >
-                  <div className="w-9 h-9 rounded-xl bg-slate-100 group-hover:bg-white flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors mb-4">
+                  <div className="w-8 h-8 shrink-0 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-slate-100 group-hover:bg-white flex items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors sm:mb-4">
                     <Icon className="w-4 h-4" />
                   </div>
-                  <h3 className="text-sm font-bold text-slate-900 mb-1.5">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed mb-3">
-                    {item.detail}
-                  </p>
-                  <span className="mt-auto inline-flex items-center gap-1 text-xs font-semibold text-slate-400 group-hover:text-indigo-600 transition-colors">
-                    Explore
-                    <ArrowRight className="w-3 h-3" />
-                  </span>
+                  <div className="min-w-0 flex-1 sm:contents">
+                    <h3 className="text-sm font-bold text-slate-900 mb-1.5">
+                      {item.title}
+                    </h3>
+                    <p className="text-[11px] sm:text-xs text-slate-500 leading-relaxed mb-2 sm:mb-3">
+                      {item.detail}
+                    </p>
+                    <span className="mt-1 sm:mt-auto inline-flex items-center gap-1 text-xs font-semibold text-slate-400 group-hover:text-indigo-600 transition-colors">
+                      Explore
+                      <ArrowRight className="w-3 h-3" />
+                    </span>
+                  </div>
                 </Link>
               </motion.div>
             );

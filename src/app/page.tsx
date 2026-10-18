@@ -16,7 +16,7 @@ import TwoSidesSection from '@/components/home/TwoSidesSection';
 import WhyDifferentSection from '@/components/home/WhyDifferentSection';
 import EcosystemSection from '@/components/home/EcosystemSection';
 import TrustSection from '@/components/home/TrustSection';
-import FAQSection from '@/components/home/FAQSection';
+import FAQChatWidget from '@/components/home/FAQChatWidget';
 import FinalCTASection from '@/components/home/FinalCTASection';
 
 import NewsletterCTA from '@/components/NewsletterCTA';
@@ -109,8 +109,8 @@ async function getHeroStats(): Promise<HeroStats> {
     const posts = await getAllPosts();
 
     return {
-      jobCount: jobsResult.count ?? 0,
-      companyCount: startupsResult.count ?? 0,
+      jobCount: jobsResult.count ?? null,
+      companyCount: startupsResult.count ?? null,
       postCount: posts.length,
     };
   } catch (err) {
@@ -119,9 +119,9 @@ async function getHeroStats(): Promise<HeroStats> {
     // Graceful fallback.
     // The homepage should never crash because statistics failed.
     return {
-      jobCount: 0,
-      companyCount: 0,
-      postCount: 0,
+      jobCount: null,
+      companyCount: null,
+      postCount: null,
     };
   }
 }
@@ -145,7 +145,7 @@ export default async function HomePage() {
       <WhyDifferentSection />
       <EcosystemSection />
       <TrustSection stats={stats} />
-      <FAQSection />
+      <FAQChatWidget />
       <FinalCTASection />
 
       <NewsletterCTA />

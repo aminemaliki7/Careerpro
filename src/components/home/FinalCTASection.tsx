@@ -12,7 +12,7 @@ export default function FinalCTASection() {
   const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
 
   return (
-    <section className="bg-indigo-600 py-12 sm:py-20 lg:py-24">
+    <section className="bg-indigo-600 py-6 sm:py-20 lg:py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 16 }}

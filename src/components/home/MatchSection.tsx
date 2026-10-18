@@ -29,9 +29,9 @@ const QUESTIONS = [
 
 export default function MatchSection() {
   return (
-    <section className="bg-white py-12 sm:py-20 lg:py-28">
+    <section className="bg-white py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-5 sm:gap-12 lg:gap-16 items-center">
           {/* LEFT: copy */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -92,11 +92,11 @@ export default function MatchSection() {
               className="absolute inset-0 z-10 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500"
               aria-label="Explore tech jobs and see your match"
             />
-            <div className="rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
-              <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+            <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white shadow-lg sm:shadow-xl shadow-slate-900/5 overflow-hidden transition-colors group-hover:border-indigo-300">
+              <div className="px-3 py-2.5 sm:px-5 sm:py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Score breakdown
+                    Example score breakdown
                   </div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
                     Senior Backend Engineer
@@ -110,7 +110,7 @@ export default function MatchSection() {
                 </div>
               </div>
 
-              <div className="p-5 space-y-3.5">
+              <div className="p-3 sm:p-5 space-y-2 sm:space-y-3.5">
                 {BREAKDOWN.map((row, index) => (
                   <div key={row.label}>
                     <div className="flex items-center justify-between mb-1">
@@ -134,9 +134,9 @@ export default function MatchSection() {
                 ))}
               </div>
 
-              <div className="px-5 pb-5">
-                <div className="rounded-xl border border-slate-100 bg-slate-50/70 p-4">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2.5">
+              <div className="px-4 pb-4 sm:px-5 sm:pb-5">
+                <div className="rounded-lg sm:rounded-xl border border-slate-100 bg-slate-50/70 p-2.5 sm:p-4">
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-2 sm:mb-2.5">
                     Skills, matched against the role
                   </div>
                   <div className="flex flex-wrap gap-1.5">

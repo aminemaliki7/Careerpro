@@ -7,7 +7,7 @@ export default function NewsletterCTA() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <section className="py-10 sm:py-12 bg-black text-white relative overflow-hidden">
+    <section className="py-8 sm:py-12 bg-black text-white relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-purple-900/20"></div>
 
       <div className="relative z-10 max-w-2xl mx-auto text-center px-4">

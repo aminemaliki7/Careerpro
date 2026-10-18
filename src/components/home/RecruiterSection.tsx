@@ -28,14 +28,14 @@ const CANDIDATES = [
 
 export default function RecruiterSection() {
   return (
-    <section className="bg-slate-900 py-12 sm:py-20 lg:py-28">
+    <section className="bg-slate-900 py-6 sm:py-20 lg:py-28">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mb-8 sm:mb-16"
+          className="max-w-2xl mb-6 sm:mb-16"
         >
           <div className="inline-flex items-center gap-2 text-emerald-400 mb-4">
             <Building2 className="w-4 h-4" />
@@ -54,9 +54,9 @@ export default function RecruiterSection() {
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-6 sm:gap-8 lg:gap-12 items-start">
+        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 lg:gap-12 items-start">
           {/* LEFT: workflow */}
-          <div className="grid sm:grid-cols-2 gap-3.5">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-3.5">
             {WORKFLOW.map((step, index) => {
               const Icon = step.icon;
               return (
@@ -66,14 +66,14 @@ export default function RecruiterSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-60px' }}
                   transition={{ duration: 0.4, delay: (index % 2) * 0.08 }}
-                  className="group relative rounded-xl border border-slate-700/80 bg-slate-800/60 p-4 hover:border-emerald-400/70 hover:bg-slate-800 transition-colors"
+                  className="group relative rounded-lg sm:rounded-xl border border-slate-700/80 bg-slate-800/60 p-2.5 sm:p-4 hover:border-emerald-400/70 hover:bg-slate-800 transition-colors"
                 >
                   <Link
                     href="/onboarding?role=company"
                     className="absolute inset-0 z-10 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     aria-label={`${step.title}: start hiring with Hirely`}
                   />
-                  <div className="flex items-center gap-2.5 mb-2">
+                  <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
                       <Icon className="w-3.5 h-3.5" />
                     </div>
@@ -96,8 +96,8 @@ export default function RecruiterSection() {
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <div className="rounded-2xl border border-slate-700 bg-slate-800 shadow-xl shadow-black/20 overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-700 flex items-center justify-between">
+            <div className="rounded-xl sm:rounded-2xl border border-slate-700 bg-slate-800 shadow-lg sm:shadow-xl shadow-black/20 overflow-hidden">
+              <div className="px-4 py-3 sm:px-5 sm:py-4 border-b border-slate-700 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                     Senior Backend Engineer
@@ -108,11 +108,11 @@ export default function RecruiterSection() {
                 </div>
                 <div className="flex items-center gap-1.5 text-[10px] font-semibold text-emerald-400">
                   <Users className="w-3.5 h-3.5" />
-                  12 matches
+                  Example data
                 </div>
               </div>
 
-              <div className="p-4 space-y-2">
+              <div className="p-3 sm:p-4 space-y-2">
                 {CANDIDATES.map((candidate, index) => (
                   <motion.div
                     key={candidate.name}
@@ -120,7 +120,7 @@ export default function RecruiterSection() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.12 }}
-                    className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900/60 p-3"
+                    className="flex items-center gap-2 sm:gap-3 rounded-lg sm:rounded-xl border border-slate-700 bg-slate-900/60 p-2 sm:p-3"
                   >
                     <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center shrink-0">
                       <Users className="w-3.5 h-3.5 text-slate-300" />
@@ -145,7 +145,7 @@ export default function RecruiterSection() {
                 ))}
               </div>
 
-              <div className="px-5 pb-5">
+              <div className="px-4 pb-4 sm:px-5 sm:pb-5">
                 <p className="text-[11px] text-slate-400 leading-relaxed">
                   Match scores help prioritize review. Recruiters make the final decision.
                 </p>
