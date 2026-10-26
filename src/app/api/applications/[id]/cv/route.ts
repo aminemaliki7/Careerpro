@@ -24,7 +24,7 @@ export async function GET(
     // 1. Fetch application to verify it exists
     const { data: application, error: appError } = await supabaseAdmin
       .from('applications')
-      .select('id, user_id, job_id, cv_url, cv_file_url')
+      .select('id, user_id, job_id, cv_url')
       .eq('id', applicationId)
       .maybeSingle();
 
@@ -71,7 +71,7 @@ export async function GET(
 
     // 3. Resolve the CV reference. Legacy rows store a full public URL;
     // new rows store a storage path inside the private application-cvs bucket.
-    const cvRef = application.cv_file_url || application.cv_url;
+    const cvRef = application.cv_url;
 
     if (!cvRef) {
       return NextResponse.json(

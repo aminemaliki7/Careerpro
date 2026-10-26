@@ -1,5 +1,6 @@
 ﻿import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isMissingCommunicationsTable } from '@/lib/application-communications';
 import { NextRequest, NextResponse } from 'next/server';
 
 const ELIGIBLE_STAGES = ['application', 'review'];
@@ -136,7 +137,10 @@ export async function POST(req: NextRequest) {
             body: `Automation moved candidate from ${currentStage} to ${targetStage}`,
           });
 
-        if (communicationError) {
+        if (
+          communicationError &&
+          !isMissingCommunicationsTable(communicationError)
+        ) {
           console.error('Candidate communication insert failed:', communicationError);
         }
 

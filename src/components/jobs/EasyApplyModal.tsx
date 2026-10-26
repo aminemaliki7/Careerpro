@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, ChangeEvent } from 'react';
+import { trackHirelyEvent } from '@/lib/analytics/track-event';
 
 // --- Types & Interfaces ---
 interface Weakness {
@@ -173,6 +174,7 @@ export default function EasyApplyModal({
   const handleRunAtsCheck = async () => {
     if (cvText.trim().length < 50) return;
 
+    trackHirelyEvent('match_analysis_started');
     updateStatus({ atsLoading: true, error: '' });
     try {
       const res = await fetch('/api/jobs/ats-check', {
@@ -185,6 +187,7 @@ export default function EasyApplyModal({
 
       setAtsResult(data);
       setStep(3);
+      trackHirelyEvent('match_analysis_completed');
     } catch (err) {
       updateStatus({ error: err instanceof Error ? err.message : 'ATS Check failed.' });
     } finally {
@@ -215,6 +218,7 @@ export default function EasyApplyModal({
   const handleGenerateEmail = async () => {
     if (cvText.trim().length < 50) return;
 
+    trackHirelyEvent('application_preparation_started');
     updateStatus({ generating: true, error: '' });
     try {
       const res = await fetch('/api/jobs/generate-email', {
@@ -227,6 +231,7 @@ export default function EasyApplyModal({
 
       setGeneratedEmail(data.emailContent);
       setStep(5);
+      trackHirelyEvent('application_preparation_completed');
     } catch (err) {
       updateStatus({ error: 'Failed to generate application email.' });
     } finally {

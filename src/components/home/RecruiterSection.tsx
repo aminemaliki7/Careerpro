@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { trackHirelyEvent } from '@/lib/analytics/track-event';
 import Link from 'next/link';
 import {
   Building2,
@@ -8,6 +9,7 @@ import {
   ScanSearch,
   Users,
   ArrowUpDown,
+  ArrowRight,
   BadgeCheck,
 } from 'lucide-react';
 
@@ -21,9 +23,9 @@ const WORKFLOW = [
 ];
 
 const CANDIDATES = [
-  { name: 'Candidate A', role: 'Backend Engineer', score: 94 },
-  { name: 'Candidate B', role: 'Software Engineer', score: 87 },
-  { name: 'Candidate C', role: 'Java Developer', score: 81 },
+  { name: 'Candidate A', role: 'Backend Engineer', status: 'Review skills' },
+  { name: 'Candidate B', role: 'Software Engineer', status: 'Review experience' },
+  { name: 'Candidate C', role: 'Java Developer', status: 'Review profile' },
 ];
 
 export default function RecruiterSection() {
@@ -45,13 +47,23 @@ export default function RecruiterSection() {
           </div>
 
           <h2 className="text-2xl sm:text-4xl font-bold text-white tracking-tight leading-tight">
-            Find the right candidates, faster.
+            Spend less time screening. Focus on the right candidates.
           </h2>
 
           <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
-            Compare applicants with role requirements and prioritize strong
-            matches. You make every hiring decision.
+            Use Hirely&apos;s matching capabilities to prioritize applicants
+            against the requirements of your open roles. You make every hiring
+            decision.
           </p>
+
+          <Link
+            href="/onboarding?role=company"
+            onClick={() => trackHirelyEvent('company_cta_click', { destination: '/onboarding?role=company', placement: 'recruiter_section' })}
+            className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-emerald-400 hover:text-emerald-300"
+          >
+            Explore hiring with Hirely
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </motion.div>
 
         <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-3 sm:gap-8 lg:gap-12 items-start">
@@ -70,6 +82,7 @@ export default function RecruiterSection() {
                 >
                   <Link
                     href="/onboarding?role=company"
+                  onClick={() => trackHirelyEvent('company_cta_click', { destination: '/onboarding?role=company', placement: 'recruiter_section' })}
                     className="absolute inset-0 z-10 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     aria-label={`${step.title}: start hiring with Hirely`}
                   />
@@ -134,11 +147,8 @@ export default function RecruiterSection() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-bold text-emerald-400">
-                        {candidate.score}%
-                      </div>
-                      <div className="text-[8px] text-slate-500 uppercase tracking-wide">
-                        Match
+                      <div className="text-[10px] font-semibold text-emerald-400">
+                        {candidate.status}
                       </div>
                     </div>
                   </motion.div>

@@ -9,6 +9,9 @@ import {
   MessageSquareText,
   ListFilter,
   Zap,
+  Briefcase,
+  Users,
+  ArrowRight,
 } from 'lucide-react';
 
 const PRINCIPLES = [
@@ -80,40 +83,67 @@ export default function WhyDifferentSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.5 }}
-          className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-center"
         >
-          <div>
-            <h3 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-snug">
-              Different from a job board.
-            </h3>
-            <p className="mt-3 text-sm text-slate-600 leading-relaxed max-w-md">
-              Hirely connects job listings with candidate fit and recruiter needs.
-            </p>
-          </div>
+          <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Different from a job board.
+          </h3>
+          <p className="mt-1.5 text-sm text-slate-600 leading-relaxed max-w-xl">
+            Hirely connects job listings with candidate fit and recruiter needs.
+          </p>
 
-          <div className="grid sm:grid-cols-2 gap-3.5">
-            <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-white p-3 sm:p-4">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-3">
+          <div className="mt-5 max-w-3xl">
+            <div className="mb-2 hidden grid-cols-[1fr_auto_1fr] gap-3 sm:grid">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                 Traditional job boards
-              </div>
-              <p className="text-sm text-slate-500 leading-relaxed mb-3">
-                &ldquo;Here are jobs.&rdquo;
-              </p>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                &ldquo;Here are candidates.&rdquo;
-              </p>
+              </span>
+              <span />
+              <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-600">
+                Hirely
+              </span>
             </div>
 
-            <div className="rounded-xl sm:rounded-2xl border border-indigo-200 bg-indigo-50/50 p-3 sm:p-4">
-              <div className="text-[10px] font-bold uppercase tracking-wider text-indigo-500 mb-3">
-                Hirely
+            <div className="divide-y divide-slate-200 border-y border-slate-200">
+              <div className="grid items-center gap-2 py-3 sm:grid-cols-[1fr_auto_1fr] sm:gap-3">
+                <div className="flex items-start gap-2.5">
+                  <Briefcase className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" />
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 sm:hidden">
+                      Traditional job boards
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      Here are jobs.
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="hidden h-3.5 w-3.5 text-slate-300 sm:block" />
+                <div className="flex items-start gap-2.5">
+                  <Target className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-600" />
+                  <p className="text-sm font-medium text-slate-800">
+                    Here&apos;s how this job relates to you.
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-slate-800 font-medium leading-relaxed mb-3">
-                &ldquo;Here&apos;s how this job relates to you.&rdquo;
-              </p>
-              <p className="text-sm text-slate-800 font-medium leading-relaxed">
-                &ldquo;Here are candidates ranked by fit for this role.&rdquo;
-              </p>
+
+              <div className="grid items-center gap-2 py-3 sm:grid-cols-[1fr_auto_1fr] sm:gap-3">
+                <div className="flex items-start gap-2.5">
+                  <Users className="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400" />
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 sm:hidden">
+                      Traditional job boards
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      Here are candidates.
+                    </p>
+                  </div>
+                </div>
+                <ArrowRight className="hidden h-3.5 w-3.5 text-slate-300 sm:block" />
+                <div className="flex items-start gap-2.5">
+                  <ListFilter className="mt-0.5 h-3.5 w-3.5 shrink-0 text-indigo-600" />
+                  <p className="text-sm font-medium text-slate-800">
+                    Here are candidates ranked by fit for this role.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </motion.div>

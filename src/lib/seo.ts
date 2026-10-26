@@ -18,7 +18,7 @@ export const siteConfig = {
 
   url: 'https://hirely.ma',
 
-  ogImage: 'https://hirely.ma/images/og-default.jpg',
+  ogImage: 'https://hirely.ma/og-image.jpg',
 
   twitterHandle: '@hirely_ma',
 
@@ -98,13 +98,8 @@ export function generateSEOMetadata({
 
     metadataBase: new URL(siteConfig.url),
 
-    alternates: {
-      canonical: url,
-
-      languages: {
-        'en-US': url,
-      },
-    },
+    // There are no translated URL variants yet, so do not emit hreflang links.
+    alternates: { canonical: url },
 
     openGraph: {
       type,

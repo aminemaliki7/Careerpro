@@ -30,10 +30,10 @@ import { getAllPosts } from '@/lib/posts';
 // -----------------------------------------------------------------------------
 
 export const metadata: Metadata = {
-  title: 'AI Career Intelligence & Global Tech Jobs',
+  title: 'Know Your Match Before You Apply',
 
   description:
-    'Find better tech jobs with AI-powered career intelligence. Match your skills to opportunities, understand your fit, improve your CV, explore career paths, and discover startups worldwide.',
+    'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
 
   alternates: {
     canonical: '/',
@@ -42,10 +42,12 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
 
-    title: 'AI Career Intelligence & Global Tech Jobs | Hirely',
+    title: 'Know Your Match Before You Apply | Hirely',
 
     description:
-      'Find better tech jobs with AI-powered career intelligence. Match your skills to opportunities, understand your fit, improve your CV, explore career paths, and discover startups worldwide.',
+      'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
+
+    images: ['/og-image.jpg'],
 
     url: 'https://hirely.ma/',
   },
@@ -53,10 +55,12 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
 
-    title: 'AI Career Intelligence & Global Tech Jobs | Hirely',
+    title: 'Know Your Match Before You Apply | Hirely',
 
     description:
-      'Find better tech jobs with AI-powered career intelligence. Match your skills to opportunities, understand your fit, improve your CV, explore career paths, and discover startups worldwide.',
+      'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
+
+    images: ['/og-image.jpg'],
   },
 };
 

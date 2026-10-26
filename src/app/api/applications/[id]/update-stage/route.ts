@@ -1,6 +1,7 @@
 ﻿// src/app/api/applications/[id]/update-stage/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isMissingCommunicationsTable } from '@/lib/application-communications';
 import { NextRequest, NextResponse } from 'next/server';
 
 const VALID_STAGES = ['application', 'review', 'shortlisted', 'interview', 'offer', 'hired', 'rejected'];
@@ -113,9 +114,8 @@ export async function POST(
         body: `Candidate moved from ${application.pipeline_stage} to ${pipeline_stage}`,
       });
 
-    if (commError) {
+    if (commError && !isMissingCommunicationsTable(commError)) {
       console.error('Communication record error (non-blocking):', commError);
-      // Don't fail the entire request if communication logging fails
     }
 
     return NextResponse.json(

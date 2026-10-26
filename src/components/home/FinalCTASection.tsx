@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { SignedIn, SignedOut } from '@clerk/nextjs';
 import { ArrowRight } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
+import { trackHirelyEvent } from '@/lib/analytics/track-event';
 
 export default function FinalCTASection() {
   const router = useRouter();
@@ -32,7 +33,10 @@ export default function FinalCTASection() {
             <SignedOut>
               <button
                 type="button"
-                onClick={() => router.push('/jobs')}
+                onClick={() => {
+                  trackHirelyEvent('homepage_primary_cta_click', { destination: '/jobs', placement: 'final_cta' });
+                  router.push('/jobs');
+                }}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-white text-indigo-700 text-sm font-semibold hover:bg-indigo-50 transition-colors shadow-sm"
               >
                 Find Your Match
@@ -41,7 +45,10 @@ export default function FinalCTASection() {
 
               <button
                 type="button"
-                onClick={() => router.push('/onboarding?role=company')}
+                onClick={() => {
+                  trackHirelyEvent('company_cta_click', { destination: '/onboarding?role=company', placement: 'final_cta' });
+                  router.push('/onboarding?role=company');
+                }}
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg border border-indigo-300/60 text-white text-sm font-semibold hover:bg-indigo-500/40 transition-colors"
               >
                 For Companies

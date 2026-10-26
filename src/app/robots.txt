@@ -3,7 +3,8 @@
 User-agent: *
 Allow: /
 
-# Block admin & private API routes
+# Block admin, private application routes, and API endpoints
+Disallow: /api/
 Disallow: /admin/
 Disallow: /api/admin/
 Disallow: /dashboard/
@@ -14,8 +15,7 @@ Disallow: /recruiter/
 Disallow: /sign-in
 Disallow: /sign-up
 
-# Explicitly allow key SEO routes
-Allow: /api/startups
+# Explicitly allow key public page routes
 Allow: /blog/
 Allow: /jobs/
 Allow: /roadmaps/

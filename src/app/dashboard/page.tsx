@@ -86,7 +86,6 @@ export default function Dashboard() {
   // Modal State
   const [selectedApp, setSelectedApp] = useState<ApplicationWithCvExtras | null>(null);
   const [copiedEmail, setCopiedEmail] = useState<boolean>(false);
-  const [isUpdatingStatus, setIsUpdatingStatus] = useState<boolean>(false);
 
   // Keep company accounts in their dedicated hiring workspace.
   useEffect(() => {
@@ -185,31 +184,6 @@ export default function Dashboard() {
 
     fetchSavedJobs();
   }, [isCompany, isSignedIn, roleLoading, user]);
-
-  // Update application status
-  const handleStatusChange = async (appId: string, newStatus: string) => {
-    try {
-      setIsUpdatingStatus(true);
-      const res = await fetch(`/api/applications/${appId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: newStatus }),
-      });
-
-      if (res.ok) {
-        setApplications((prev) =>
-          prev.map((a) => (a.id === appId ? { ...a, status: newStatus as Application['status'] } : a))
-        );
-        if (selectedApp) {
-          setSelectedApp({ ...selectedApp, status: newStatus as Application['status'] });
-        }
-      }
-    } catch (err) {
-      console.error('Failed to update status:', err);
-    } finally {
-      setIsUpdatingStatus(false);
-    }
-  };
 
   // Remove from saved jobs
   const handleRemoveSavedJob = async (saveIdentifier: string, targetJobId: string) => {
@@ -747,20 +721,13 @@ export default function Dashboard() {
                 </div>
               </div>
 
-              {/* Status Update Control */}
+              {/* Application status is managed by the hiring team. */}
               <div className="flex items-center justify-between border-t border-b border-slate-100 py-3">
                 <span className="font-bold text-slate-700">Application Status</span>
-                <select
-                  value={selectedApp.status}
-                  disabled={isUpdatingStatus}
-                  onChange={(e) => handleStatusChange(selectedApp.id, e.target.value)}
-                  className="font-bold bg-white border border-slate-300 rounded-lg px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                  <option value="pending">Pending</option>
-                  <option value="interview">Interview</option>
-                  <option value="accepted">Accepted</option>
-                  <option value="rejected">Rejected</option>
-                </select>
+                <span className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 font-bold ${getStatusBadge(selectedApp.status)}`}>
+                  {getStatusIcon(selectedApp.status)}
+                  {selectedApp.status}
+                </span>
               </div>
 
               {/* Cover Letter Section */}

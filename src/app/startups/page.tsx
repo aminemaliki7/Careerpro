@@ -3,17 +3,18 @@ import Link from 'next/link';
 import { createClient } from '@supabase/supabase-js';
 import StartupsClient from './StartupsClient';
 import type { Startup } from '@/types/startup';
+import MagneticLink from '@/components/ui/MagneticLink';
 
 // ─── SEO ──────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
   title: 'Companies Directory - Discover Growing Tech Companies',
   description:
-    'Explore 277+ curated companies across AI/ML, FinTech, HealthTech, SaaS and more. Find your next career opportunity at a fast-growing company.',
+    'Explore companies across AI/ML, FinTech, HealthTech, SaaS and more. Discover teams and open tech roles around the world.',
   alternates: { canonical: 'https://hirely.ma/startups' },
   openGraph: {
     title: 'Companies Directory - Hirely',
-    description: 'Discover innovative companies and find your next tech opportunity.',
+    description: 'Explore companies and discover their open tech roles.',
     url: 'https://hirely.ma/startups',
     siteName: 'Hirely.ma',
     images: [{ url: '/images/og-default.jpg', width: 1200, height: 630 }],
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Companies Directory - Hirely',
-    description: 'Discover innovative companies and find your next tech opportunity.',
+    description: 'Explore companies and discover their open tech roles.',
     site: '@hirely_ma',
     images: ['/images/og-default.jpg'],
   },
@@ -172,12 +173,12 @@ export default async function StartupsPage() {
               Get discovered by developers, QA and DevOps talent.
             </p>
           </div>
-          <Link
+          <MagneticLink
             href="/startups/submit"
             className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors flex-shrink-0"
           >
             Submit your company →
-          </Link>
+          </MagneticLink>
         </div>
       </section>
 

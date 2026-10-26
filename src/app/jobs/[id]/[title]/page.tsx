@@ -9,6 +9,7 @@ import JobQualityPanel from '@/components/jobs/JobQualityPanel';
 import type { Job } from '@/types/job';
 import type { Metadata } from 'next';
 import type { Startup } from '@/types/startup';
+import JobViewEvent from '@/components/analytics/JobViewEvent';
 
 const formatExperienceLevel = (level: string) => {
   const levels: Record<string, string> = {
@@ -124,6 +125,56 @@ const EMPLOYMENT_TYPE: Record<string, string> = {
   internship: 'INTERN', stage: 'INTERN',
 };
 
+const COUNTRY_CODES: Record<string, string> = {
+  morocco: 'MA', 'united states': 'US', usa: 'US', 'united kingdom': 'GB', uk: 'GB',
+  canada: 'CA', france: 'FR', germany: 'DE', spain: 'ES', portugal: 'PT',
+  netherlands: 'NL', belgium: 'BE', italy: 'IT', tunisia: 'TN', algeria: 'DZ',
+  egypt: 'EG', nigeria: 'NG', kenya: 'KE', 'south africa': 'ZA',
+};
+
+function getJobPostingJsonLd(job: Job) {
+  const postedAt = Date.parse(job.posted_date || '');
+  const validThrough = job.application_deadline
+    ? Date.parse(job.application_deadline)
+    : null;
+  const locationParts = (job.location || '').split(',').map((part) => part.trim());
+  const country = locationParts.length > 1
+    ? COUNTRY_CODES[locationParts[locationParts.length - 1].toLowerCase()]
+    : undefined;
+  const hasApplicationPath = Boolean(job.application_url || job.contact_email);
+  const employmentType = EMPLOYMENT_TYPE[(job.type || '').toLowerCase()];
+
+  // Only emit when the public listing contains the reliable fields needed for
+  // a current, apply-able, physically located posting. Remote geography and
+  // ambiguous city-only locations are not inferred.
+  if (
+    !job.title?.trim() || !job.company?.trim() || !job.description?.trim() || job.remote ||
+    !job.requirements?.length || !hasApplicationPath || !country ||
+    !Number.isFinite(postedAt) || postedAt > Date.now() ||
+    (validThrough !== null && (!Number.isFinite(validThrough) || validThrough < Date.now()))
+  ) return null;
+
+  const description = [
+    job.description,
+    `<p><strong>Requirements</strong></p><ul>${job.requirements.map((item) => `<li>${item}</li>`).join('')}</ul>`,
+  ].join('\n');
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'JobPosting',
+    title: job.title,
+    description,
+    datePosted: new Date(postedAt).toISOString(),
+    ...(validThrough ? { validThrough: new Date(validThrough).toISOString() } : {}),
+    ...(employmentType ? { employmentType } : {}),
+    hiringOrganization: { '@type': 'Organization', name: job.company,
+      ...(job.company_logo_url ? { logo: job.company_logo_url } : {}) },
+    jobLocation: { '@type': 'Place', address: { '@type': 'PostalAddress',
+      addressLocality: locationParts.slice(0, -1).join(', '), addressCountry: country } },
+    url: `https://hirely.ma/jobs/${job.id}/${createJobSlug(job.title)}`,
+  };
+}
+
 async function getApprovedJob(id: string): Promise<Job | null> {
   const { data } = await supabase
     .from('jobs').select('*').eq('id', id).eq('status', 'approved').single();
@@ -183,28 +234,17 @@ export default async function JobDetailsPage({
 
   const qualityAnalysis = analyzeJobQuality(typedJob, (startups ?? []) as Startup[]);
 
-  const jobPostingJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'JobPosting',
-    title: typedJob.title,
-    description: typedJob.description || `${typedJob.title} at ${typedJob.company}`,
-    datePosted: typedJob.posted_date,
-    ...(typedJob.application_deadline ? { validThrough: typedJob.application_deadline } : {}),
-    employmentType: EMPLOYMENT_TYPE[(typedJob.type || '').toLowerCase()] || 'OTHER',
-    hiringOrganization: { '@type': 'Organization', name: typedJob.company,
-      ...(typedJob.company_logo_url ? { logo: typedJob.company_logo_url } : {}) },
-    ...(typedJob.remote ? { jobLocationType: 'TELECOMMUTE' } : {}),
-    ...(typedJob.location ? { jobLocation: { '@type': 'Place',
-      address: { '@type': 'PostalAddress', addressLocality: typedJob.location } } } : {}),
-    url: `https://hirely.ma/jobs/${typedJob.id}/${createJobSlug(typedJob.title)}`,
-  };
+  const jobPostingJsonLd = getJobPostingJsonLd(typedJob);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd).replace(/</g, '\\u003c') }}
-      />
+      <JobViewEvent jobId={String(typedJob.id)} />
+      {jobPostingJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jobPostingJsonLd).replace(/</g, '\\u003c') }}
+        />
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* COLUMN 1: Sticky Navigation & Quick Specs (Span 3) */}

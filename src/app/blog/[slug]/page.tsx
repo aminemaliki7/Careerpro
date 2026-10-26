@@ -144,7 +144,7 @@
       headline: post.title,
       description: post.description,
       datePublished: post.publishedAt,
-      dateModified: post.updatedAt || post.publishedAt,
+      ...(post.updatedAt ? { dateModified: post.updatedAt } : {}),
       author: {
         '@type': 'Person',
         name: post.author,
@@ -162,8 +162,8 @@
         '@type': 'WebPage',
         '@id': canonical,
       },
-      ...(post.coverImage && /^https?:\/\//i.test(post.coverImage)
-        ? { image: post.coverImage }
+      ...(post.coverImage && (/^https?:\/\//i.test(post.coverImage) || post.coverImage.startsWith('/'))
+        ? { image: new URL(post.coverImage, 'https://hirely.ma').href }
         : {}),
     };
 

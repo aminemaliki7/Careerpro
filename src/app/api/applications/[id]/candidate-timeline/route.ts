@@ -1,6 +1,7 @@
 ﻿// src/app/api/applications/[id]/candidate-timeline/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isMissingCommunicationsTable } from '@/lib/application-communications';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -82,6 +83,18 @@ export async function GET(
     const { data: communications, error: commError } = await query;
 
     if (commError) {
+      if (isMissingCommunicationsTable(commError)) {
+        return NextResponse.json(
+          {
+            application_id: applicationId,
+            timeline: [],
+            count: 0,
+            communications_available: false,
+          },
+          { status: 200 }
+        );
+      }
+
       console.error('Communications fetch error:', commError);
       return NextResponse.json(
         { error: 'Failed to fetch timeline' },

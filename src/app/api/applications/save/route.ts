@@ -1,6 +1,7 @@
 ﻿// src/app/api/applications/save/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isMissingCommunicationsTable } from '@/lib/application-communications';
 import { NextRequest, NextResponse } from 'next/server';
 import { runATSAnalysis } from '@/lib/ats';
 
@@ -31,7 +32,11 @@ async function logApplicationEvent({
       .limit(1)
       .maybeSingle();
 
-    if (lookupError && lookupError.code !== 'PGRST116') {
+    if (
+      lookupError &&
+      lookupError.code !== 'PGRST116' &&
+      !isMissingCommunicationsTable(lookupError)
+    ) {
       console.error('Communication lookup error (non-blocking):', lookupError);
       return;
     }
@@ -49,7 +54,7 @@ async function logApplicationEvent({
         body,
       });
 
-    if (insertError) {
+    if (insertError && !isMissingCommunicationsTable(insertError)) {
       console.error('Application activity log error (non-blocking):', insertError);
     }
   } catch (error) {
@@ -147,7 +152,10 @@ async function applyAutomationToSavedApplication({
         body: `Automation moved candidate from ${application.pipeline_stage} to ${targetStage}`,
       });
 
-    if (communicationError) {
+    if (
+      communicationError &&
+      !isMissingCommunicationsTable(communicationError)
+    ) {
       console.error('Candidate communication insert error (non-blocking):', communicationError);
     }
   } catch (error) {

@@ -34,12 +34,12 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://hirely.ma'),
 
   title: {
-    default: 'Hirely | AI Career Intelligence & Global Tech Jobs',
+    default: 'Hirely | Know Your Match Before You Apply',
     template: '%s | Hirely',
   },
 
   description:
-    'Find better tech jobs with AI-powered career intelligence. Match your skills to jobs, understand your fit, improve your CV, explore career paths, and discover startups worldwide.',
+    'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
 
   applicationName: 'Hirely',
 
@@ -72,14 +72,14 @@ export const metadata: Metadata = {
 
     siteName: 'Hirely',
 
-    title: 'Hirely | AI Career Intelligence & Global Tech Jobs',
+    title: 'Hirely | Know Your Match Before You Apply',
 
     description:
-      'Find better tech jobs with AI-powered career intelligence. Match your skills to jobs, understand your fit, improve your CV, explore career paths, and discover startups worldwide.',
+      'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
 
     images: [
       {
-        url: 'https://hirely.ma/images/og-default.jpg',
+        url: 'https://hirely.ma/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'Hirely - AI Career Intelligence & Global Tech Jobs',
@@ -90,12 +90,12 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
 
-    title: 'Hirely | AI Career Intelligence & Global Tech Jobs',
+    title: 'Hirely | Know Your Match Before You Apply',
 
     description:
-      'Match your skills to tech jobs, understand your fit, improve your CV, explore career paths, and build your career with Hirely.',
+      'See how your skills align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
 
-    images: ['https://hirely.ma/images/og-default.jpg'],
+    images: ['https://hirely.ma/og-image.jpg'],
   },
 
   robots: {
@@ -197,8 +197,7 @@ export default function RootLayout({
               Website structured data
           ------------------------------------------------------------------ */}
 
-          <Script
-            id="schema-org"
+          <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
               __html: JSON.stringify({
@@ -216,7 +215,7 @@ export default function RootLayout({
                   'AI-powered career intelligence for discovering, evaluating, and pursuing global tech opportunities.',
 
                 inLanguage: 'en',
-              }),
+              }).replace(/</g, '\\u003c'),
             }}
           />
         </head>

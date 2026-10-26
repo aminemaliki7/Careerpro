@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin, Sparkles } from 'lucide-react';
 import { generatePageMetadata } from '@/lib/seo';
 import StartupLogo from '@/components/startups/StartupLogo';
 import StartupJobs from '@/components/startups/StartupJobs';
+import { trackHirelyEvent } from '@/lib/analytics/track-event';
 
 async function getStartup(slug: string) {
   try {
@@ -37,7 +38,7 @@ export async function generateMetadata({
   const { slug } = await params;
   const startup = await getStartup(slug);
 
-  if (!startup) return { title: 'Startup Not Found' };
+  if (!startup) return { title: 'Startup Not Found', robots: { index: false, follow: false } };
 
   return generatePageMetadata({
     title: `${startup.name} - ${startup.industry}`,
@@ -184,6 +185,7 @@ export default async function StartupPage({
                 href={startup.website_url}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackHirelyEvent('company_profile_cta_click', { destination: 'company_website' })}
                 className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 hover:underline"
               >
                 Visit website

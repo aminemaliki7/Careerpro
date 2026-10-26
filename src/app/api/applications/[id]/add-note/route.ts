@@ -1,6 +1,7 @@
 ﻿// src/app/api/applications/[id]/add-note/route.ts
 import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { isMissingCommunicationsTable } from '@/lib/application-communications';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(
@@ -115,9 +116,8 @@ export async function POST(
       .select()
       .single();
 
-    if (commError) {
+    if (commError && !isMissingCommunicationsTable(commError)) {
       console.error('Communication record error (non-blocking):', commError);
-      // Don't fail the entire request if communication logging fails
     }
 
     return NextResponse.json(

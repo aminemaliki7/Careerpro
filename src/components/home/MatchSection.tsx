@@ -2,15 +2,7 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { Check, AlertCircle, Gauge, HelpCircle } from 'lucide-react';
-
-const BREAKDOWN = [
-  { label: 'Skills match', value: 92, weight: '35% of score' },
-  { label: 'Experience', value: 88, weight: '25% of score' },
-  { label: 'Keyword relevance', value: 76, weight: '20% of score' },
-  { label: 'Education', value: 100, weight: '10% of score' },
-  { label: 'CV depth', value: 80, weight: '10% of score' },
-];
+import { Check, AlertCircle, Gauge, HelpCircle, ArrowRight } from 'lucide-react';
 
 const SKILLS = [
   { name: 'Java', status: 'match' as const },
@@ -47,15 +39,21 @@ export default function MatchSection() {
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
-              The score isn&apos;t the product.
-              <br className="hidden sm:block" />
-              The explanation is.
+              Know your match before you apply.
             </h2>
 
             <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-600 leading-relaxed max-w-md">
-              See how your skills and experience match the role, including your
-              strengths and gaps.
+              See how your skills and experience align with a role, understand
+              the gaps, and prepare a more relevant application.
             </p>
+
+            <Link
+              href="/jobs"
+              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-indigo-700 hover:text-indigo-800"
+            >
+              Explore jobs
+              <ArrowRight className="w-4 h-4" />
+            </Link>
 
             <div className="hidden sm:block mt-8 rounded-2xl border border-indigo-100 bg-indigo-50/50 p-5">
               <div className="flex items-center gap-2 mb-3">
@@ -96,42 +94,16 @@ export default function MatchSection() {
               <div className="px-3 py-2.5 sm:px-5 sm:py-4 border-b border-slate-100 flex items-center justify-between">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                    Example score breakdown
+                    Illustrative skills comparison
                   </div>
                   <div className="text-sm font-bold text-slate-900 mt-0.5">
                     Senior Backend Engineer
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-slate-900">87%</div>
-                  <div className="text-[10px] font-semibold text-emerald-600 uppercase tracking-wide">
-                    Strong match
-                  </div>
-                </div>
               </div>
 
-              <div className="p-3 sm:p-5 space-y-2 sm:space-y-3.5">
-                {BREAKDOWN.map((row, index) => (
-                  <div key={row.label}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-semibold text-slate-700">
-                        {row.label}
-                      </span>
-                      <span className="text-[10px] text-slate-400">
-                        {row.weight}
-                      </span>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-slate-100 overflow-hidden">
-                      <motion.div
-                        className="h-full rounded-full bg-indigo-500"
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${row.value}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6, delay: index * 0.08 }}
-                      />
-                    </div>
-                  </div>
-                ))}
+            <div className="px-3 pt-3 sm:px-5 sm:pt-5">
+                <p className="text-xs text-slate-500">Illustrative example; results depend on the role and candidate profile.</p>
               </div>
 
               <div className="px-4 pb-4 sm:px-5 sm:pb-5">
