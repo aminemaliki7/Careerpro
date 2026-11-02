@@ -295,7 +295,7 @@ export default function Dashboard() {
             {/* User Profile Card */}
             <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white font-bold text-lg overflow-hidden shadow-xs">
+                <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-tr from-[#4F46E5] to-[#3730A3] text-lg font-bold text-white shadow-xs">
                   {user?.imageUrl ? (
                     <img src={user.imageUrl} alt={user.fullName || 'User'} className="w-full h-full object-cover" />
                   ) : (
@@ -319,7 +319,7 @@ export default function Dashboard() {
                   <span className="text-sm font-bold text-slate-900 mt-0.5 block">{stats.totalApplications}</span>
                 </div>
                 <div className="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">Win Rate</span>
+                  <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider block">Interview rate</span>
                   <span className="text-sm font-bold text-indigo-600 mt-0.5 block">{successRate}%</span>
                 </div>
               </div>
@@ -488,7 +488,7 @@ export default function Dashboard() {
                                   {app.ai_applied && (
                                     <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-200">
                                       <Bot className="w-3 h-3 text-indigo-600" />
-                                      AI Auto-Applied
+                                      Auto-applied
                                     </span>
                                   )}
                                   {app.salary_range && (
@@ -642,20 +642,19 @@ export default function Dashboard() {
                 </div>
 
                 <div className="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-100">
-                  <span className="text-xs text-slate-600 font-medium">AI Submissions</span>
+                  <span className="text-xs text-slate-600 font-medium">Auto-applied</span>
                   <span className="text-xs font-bold text-indigo-600">{stats.aiApplied}</span>
                 </div>
               </div>
             </div>
 
-            {/* Smart Tip Widget */}
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-xl p-4 shadow-xs text-xs">
-              <div className="flex items-center gap-2 font-bold mb-1.5 text-indigo-300">
-                <Sparkles className="w-4 h-4" />
-                <span>Hirely Pro Tip</span>
+            <div className="rounded-xl border border-slate-200 bg-white p-4 text-xs">
+              <div className="mb-1.5 flex items-center gap-2 font-bold text-slate-900">
+                <Sparkles className="h-4 w-4 text-[#4F46E5]" />
+                <span>Keep exploring</span>
               </div>
-              <p className="text-slate-300 leading-relaxed text-[11px]">
-                Targeting job posts with salary ranges transparently listed increases interview call-backs by up to 35%.
+              <p className="text-[11px] leading-relaxed text-slate-600">
+                Review startup profiles and opportunity details to find a team and role that fit what you want to build.
               </p>
             </div>
           </aside>
@@ -675,7 +674,7 @@ export default function Dashboard() {
                   <h2 className="text-base font-bold text-slate-900">{selectedApp.job_title}</h2>
                   {selectedApp.ai_applied && (
                     <span className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-bold rounded border border-indigo-200">
-                      AI Applied
+                      Auto-applied
                     </span>
                   )}
                 </div>

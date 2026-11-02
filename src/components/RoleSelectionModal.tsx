@@ -62,7 +62,7 @@ export function RoleSelectionModal({ onRoleSelected, isOpen }: RoleSelectionModa
         {/* Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-slate-900 mb-2">Welcome to Hirely</h2>
-          <p className="text-slate-600 text-sm">Let&apos;s set up your account. What describes you best?</p>
+          <p className="text-sm text-slate-600">Choose how you want to take part in Hirely.</p>
         </div>
 
         {/* Error message */}
@@ -82,24 +82,25 @@ export function RoleSelectionModal({ onRoleSelected, isOpen }: RoleSelectionModa
             }}
             className={`p-6 rounded-xl border-2 transition-all text-left ${
               selectedRole === 'candidate'
-                ? 'border-indigo-600 bg-indigo-50'
-                : 'border-slate-200 hover:border-indigo-400 bg-white'
-            }`}
+                ? 'border-[#4F46E5] bg-blue-50'
+                : 'border-slate-200 bg-white hover:border-blue-300'
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2`}
+            aria-pressed={selectedRole === 'candidate'}
           >
             <div
               className={`w-10 h-10 rounded-lg mb-3 flex items-center justify-center ${
-                selectedRole === 'candidate' ? 'bg-indigo-600' : 'bg-slate-100'
+                selectedRole === 'candidate' ? 'bg-[#4F46E5]' : 'bg-blue-50'
               }`}
             >
               <Users
                 className={`w-5 h-5 ${
-                  selectedRole === 'candidate' ? 'text-white' : 'text-slate-600'
+                  selectedRole === 'candidate' ? 'text-white' : 'text-[#4F46E5]'
                 }`}
               />
             </div>
-            <h3 className="font-bold text-slate-900 mb-1">Job Seeker</h3>
+            <h3 className="mb-1 font-semibold text-slate-950">Discover and contribute</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              I&apos;m looking for opportunities to apply to jobs, bookmark positions, and advance my career.
+              Explore startups, save opportunities, and keep track of the teams you are interested in.
             </p>
           </button>
 
@@ -111,24 +112,25 @@ export function RoleSelectionModal({ onRoleSelected, isOpen }: RoleSelectionModa
             }}
             className={`p-6 rounded-xl border-2 transition-all text-left ${
               selectedRole === 'company'
-                ? 'border-emerald-600 bg-emerald-50'
-                : 'border-slate-200 hover:border-emerald-400 bg-white'
-            }`}
+                ? 'border-[#4F46E5] bg-blue-50'
+                : 'border-slate-200 bg-white hover:border-blue-300'
+            } focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2`}
+            aria-pressed={selectedRole === 'company'}
           >
             <div
               className={`w-10 h-10 rounded-lg mb-3 flex items-center justify-center ${
-                selectedRole === 'company' ? 'bg-emerald-600' : 'bg-slate-100'
+                selectedRole === 'company' ? 'bg-[#4F46E5]' : 'bg-blue-50'
               }`}
             >
               <Briefcase
                 className={`w-5 h-5 ${
-                  selectedRole === 'company' ? 'text-white' : 'text-slate-600'
+                  selectedRole === 'company' ? 'text-white' : 'text-[#4F46E5]'
                 }`}
               />
             </div>
-            <h3 className="font-bold text-slate-900 mb-1">Company / Recruiter</h3>
+            <h3 className="mb-1 font-semibold text-slate-950">I&apos;m a founder</h3>
             <p className="text-xs text-slate-600 leading-relaxed">
-              I&apos;m hiring talent for my startup. I want to manage job postings and recruit candidates.
+              Showcase your startup and share opportunities for people who want to build with you.
             </p>
           </button>
         </div>
@@ -136,7 +138,7 @@ export function RoleSelectionModal({ onRoleSelected, isOpen }: RoleSelectionModa
         {/* Info Box */}
         <div className="mb-8 p-4 bg-slate-50 border border-slate-200 rounded-lg">
           <p className="text-xs text-slate-600">
-            <span className="font-semibold text-slate-900">Tip:</span> You can change your role anytime in your account settings.
+            You can explore public startup profiles and resources without an account.
           </p>
         </div>
 
@@ -144,7 +146,7 @@ export function RoleSelectionModal({ onRoleSelected, isOpen }: RoleSelectionModa
         <button
           onClick={handleRoleSubmit}
           disabled={!selectedRole || isSubmitting}
-          className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 disabled:bg-slate-300 disabled:cursor-not-allowed text-white rounded-lg font-semibold text-sm transition-all flex items-center justify-center gap-2 shadow-md"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#4F46E5] py-3 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           {isSubmitting ? (
             <>

@@ -1,7 +1,8 @@
 ﻿// app/api/startups/submit/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase/client';
-import { auth } from '@clerk/nextjs/server';
+import { requireCompanyUser } from '@/lib/auth/authorization';
+import { supabaseAdmin } from '@/lib/supabase/admin';
+import { startupSubmissionSchema } from '@/schemas';
 
 function generateSlug(name: string): string {
   return name
@@ -13,49 +14,39 @@ function generateSlug(name: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // Get authenticated user from Clerk
-    const { userId } = await auth();
+    const authResult = await requireCompanyUser();
+    if (authResult.response) return authResult.response;
 
-    if (!userId) {
+    let body: unknown;
+    try {
+      body = await request.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+    }
+
+    const parsed = startupSubmissionSchema.safeParse(body);
+    if (!parsed.success) {
       return NextResponse.json(
-        { error: 'You must be signed in to submit a startup.' },
-        { status: 401 }
+        { error: parsed.error.issues[0]?.message ?? 'Invalid startup submission' },
+        { status: 400 }
       );
     }
 
-    const body = await request.json();
-
-    // Required fields
-    const requiredFields = [
-      'name',
-      'description',
-      'industry',
-      'size',
-      'fundingStage',
-      'foundedDate',
-      'location',
-      'websiteUrl',
-      'contactEmail',
-      'contactName'
-    ];
-
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        return NextResponse.json(
-          { error: `Missing required field: ${field}` },
-          { status: 400 }
-        );
-      }
+    const slug = generateSlug(parsed.data.name);
+    if (!slug) {
+      return NextResponse.json({ error: 'Startup name must contain letters or numbers' }, { status: 400 });
     }
 
-    const slug = generateSlug(body.name);
-
-    // Check if slug already exists (approved or pending)
-    const { data: exists } = await supabase
+    const { data: exists, error: lookupError } = await supabaseAdmin
       .from('startups')
       .select('id, status')
       .eq('slug', slug)
       .maybeSingle();
+
+    if (lookupError) {
+      console.error('Startup slug lookup error:', lookupError);
+      return NextResponse.json({ error: 'Failed to verify startup name' }, { status: 500 });
+    }
 
     if (exists) {
       return NextResponse.json(
@@ -66,26 +57,25 @@ export async function POST(request: NextRequest) {
 
     // Build payload with owner_id from Clerk
     const payload = {
-      name: body.name.trim(),
+      name: parsed.data.name,
       slug,
-      description: body.description.trim(),
-      full_description: body.fullDescription || null,
-      industry: body.industry,
-      size: body.size,
-      funding_stage: body.fundingStage,
-      founded_date: body.foundedDate,
-      location: body.location.trim(),
-      website_url: body.websiteUrl.trim(),
-      logo_url: body.logoUrl || null,
-      contact_email: body.contactEmail.trim(),
-      contact_name: body.contactName.trim(),
-      owner_id: userId, // Capture Clerk user ID as owner
+      description: parsed.data.description,
+      full_description: parsed.data.fullDescription || null,
+      industry: parsed.data.industry,
+      size: parsed.data.size,
+      funding_stage: parsed.data.fundingStage,
+      founded_date: parsed.data.foundedDate,
+      location: parsed.data.location,
+      website_url: parsed.data.websiteUrl,
+      logo_url: parsed.data.logoUrl || null,
+      contact_email: parsed.data.contactEmail,
+      contact_name: parsed.data.contactName,
+      owner_id: authResult.userId,
       status: 'pending',
-      created_at: new Date().toISOString()
+      created_at: new Date().toISOString(),
     };
 
-    // Insert into startups table
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('startups')
       .insert(payload)
       .select()

@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import StartupSubmissionForm from '@/components/startups/StartupSubmissionForm';
 import { generatePageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generatePageMetadata({
-  title: 'Submit Your Startup | Get Featured in Our Tech Directory',
+  title: 'Showcase Your Startup on Hirely',
   description:
-    'Add your startup to our curated directory. Connect with top talent, early-stage investors, and potential customers. Fast approval and free listing.',
+    'Create a public startup profile on Hirely and help founders, builders, and future teammates discover what you are building.',
   path: '/startups/submit',
   noIndex: true,
 });
@@ -29,28 +29,15 @@ export default function SubmitStartupPage() {
         {/* Header */}
         <div className="mb-6 pb-6 border-b border-slate-200">
           <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 mb-2 tracking-tight leading-tight">
-            Submit your startup
+            Showcase your startup
           </h1>
           <p className="text-sm text-slate-500 max-w-lg mb-4">
-            Join our curated directory to get discovered by tech talent, investors,
-            and potential customers.
+            Tell the Hirely community what you are building, where you are based, and how people can learn more.
           </p>
 
-          {/* Trust markers — flat text row, no card chrome */}
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-xs font-medium text-slate-600">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Free listing</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>48h review</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-              <span>Direct link & SEO exposure</span>
-            </div>
-          </div>
+          <p className="text-xs leading-relaxed text-slate-500">
+            Submissions are reviewed before publication. Review times may vary; your contact details are kept off the public profile.
+          </p>
         </div>
 
         {/* Form */}

@@ -8,7 +8,7 @@ import { analyzeJobQuality } from '@/lib/job-quality';
 import JobQualityPanel from '@/components/jobs/JobQualityPanel';
 import type { Job } from '@/types/job';
 import type { Metadata } from 'next';
-import type { Startup } from '@/types/startup';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import JobViewEvent from '@/components/analytics/JobViewEvent';
 
 const formatExperienceLevel = (level: string) => {
@@ -181,17 +181,65 @@ async function getApprovedJob(id: string): Promise<Job | null> {
   return (data as Job) ?? null;
 }
 
+type OpportunityStartup = {
+  id: string;
+  name: string;
+  slug: string;
+  website_url: string | null;
+};
+
+async function getOpportunityStartup(startupId?: string | null): Promise<OpportunityStartup | null> {
+  if (!startupId) return null;
+
+  const { data, error } = await supabaseAdmin
+    .from('startups')
+    .select('id,name,slug,website_url')
+    .eq('id', startupId)
+    .eq('status', 'approved')
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error loading opportunity startup:', error);
+    return null;
+  }
+  return data;
+}
+
+function getSafeHttpUrl(value?: string | null) {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:' ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
+function getOpportunityCompensation(job: Job) {
+  if (job.compensation_type === 'paid') {
+    return job.salary_range ? `Paid · ${job.salary_range}` : 'Paid';
+  }
+  if (job.compensation_type === 'equity') return 'Equity';
+  if (job.compensation_type === 'unpaid') return 'Unpaid / volunteer';
+  if (job.compensation_type === 'unspecified') return 'Not specified';
+  return job.salary_range || 'Not specified';
+}
+
 export async function generateMetadata(
   { params }: { params: Promise<{ id: string; title: string }> }
 ): Promise<Metadata> {
   const { id } = await params;
   const job = await getApprovedJob(id);
   if (!job) return { title: 'Job not found', robots: { index: false, follow: false } };
+  const startup = await getOpportunityStartup(job.startup_id);
 
   const canonical = `/jobs/${job.id}/${createJobSlug(job.title)}`;
   const where = job.remote ? 'Remote' : job.location || '';
   const title = `${job.title} at ${job.company}${where ? ` (${where})` : ''}`;
-  const description = (job.description || `${job.title} at ${job.company}. Check your CV match before you apply.`)
+  const opportunityDescription = `${job.title} is an opportunity to contribute to ${startup?.name ?? job.company}.`;
+  const description = (job.description || (job.startup_id
+    ? opportunityDescription
+    : `${job.title} at ${job.company}. Explore the role details and find out how to express your interest.`))
     .replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 155);
 
   return {
@@ -219,6 +267,12 @@ export default async function JobDetailsPage({
   if (error || !job) notFound();
 
   const typedJob: Job = job;
+  const opportunityStartup = await getOpportunityStartup(typedJob.startup_id);
+  const isStartupOpportunity = Boolean(typedJob.startup_id);
+  const startupWebsite = getSafeHttpUrl(opportunityStartup?.website_url);
+  const startupProfileHref = opportunityStartup
+    ? `/startups/${encodeURIComponent(opportunityStartup.slug)}`
+    : '/startups';
 
   const { data: relatedJobs } = await supabase
     .from('jobs')
@@ -227,14 +281,28 @@ export default async function JobDetailsPage({
     .eq('status', 'approved')
     .limit(4);
 
-  const { data: startups } = await supabase
+  const { data: startups } = await supabaseAdmin
     .from('startups')
-    .select('*')
+    .select('id,name,slug,funding_stage,size,founded_date,job_count,owner_id')
     .eq('status', 'approved');
 
-  const qualityAnalysis = analyzeJobQuality(typedJob, (startups ?? []) as Startup[]);
+  const qualityAnalysis = isStartupOpportunity
+    ? null
+    : analyzeJobQuality(
+        typedJob,
+        (startups ?? []).map((startup) => ({
+          id: startup.id,
+          name: startup.name,
+          slug: startup.slug,
+          fundingStage: startup.funding_stage,
+          size: startup.size,
+          foundedDate: startup.founded_date,
+          jobCount: startup.job_count ?? undefined,
+          ownerId: startup.owner_id ?? undefined,
+        }))
+      );
 
-  const jobPostingJsonLd = getJobPostingJsonLd(typedJob);
+  const jobPostingJsonLd = isStartupOpportunity ? null : getJobPostingJsonLd(typedJob);
 
   return (
     <div className="min-h-screen bg-gray-50/50">
@@ -268,13 +336,20 @@ export default async function JobDetailsPage({
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <MapPinIcon className="h-4 w-4 text-gray-400 shrink-0" />
-                  <span className="truncate">{typedJob.location}</span>
+                  <span className="truncate">
+                    {typedJob.location || (typedJob.remote ? 'Remote-friendly' : 'Location not specified')}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <ClockIcon className="h-4 w-4 text-gray-400 shrink-0" />
                   <span>{typedJob.type}</span>
                 </div>
-                {typedJob.salary_range && (
+                {isStartupOpportunity ? (
+                  <div className="flex items-center gap-2 text-gray-600">
+                    <GiftIcon className="h-4 w-4 shrink-0 text-gray-400" />
+                    <span>{getOpportunityCompensation(typedJob)}</span>
+                  </div>
+                ) : typedJob.salary_range && (
                   <div className="flex items-center gap-2 text-gray-600">
                     <CurrencyDollarIcon className="h-4 w-4 text-gray-400 shrink-0" />
                     <span>{typedJob.salary_range}</span>
@@ -283,7 +358,7 @@ export default async function JobDetailsPage({
               </div>
             </div>
 
-            <div className="pt-3 border-t border-gray-100/80 space-y-2">
+            {!isStartupOpportunity && <div className="pt-3 border-t border-gray-100/80 space-y-2">
               <h2 className="text-[10px] font-bold uppercase tracking-wider text-gray-400">Classifications</h2>
               <div className="flex flex-wrap gap-1.5">
                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700">
@@ -300,10 +375,10 @@ export default async function JobDetailsPage({
                   </span>
                 )}
               </div>
-            </div>
+              </div>}
           </div>
 
-          <JobQualityPanel analysis={qualityAnalysis} />
+          {qualityAnalysis && <JobQualityPanel analysis={qualityAnalysis} />}
         </div>
 
         {/* COLUMN 2: Main Job Details Content (Span 6) */}
@@ -324,7 +399,25 @@ export default async function JobDetailsPage({
 
             {/* Action Buttons Bar */}
             <div className="pt-3 border-t border-gray-100/80 flex flex-wrap items-center gap-2">
-              {typedJob.contact_email && (
+              {isStartupOpportunity ? (
+                <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3 rounded-lg bg-blue-50/70 px-3 py-2.5">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-slate-900">Interested in joining?</p>
+                    <p className="mt-0.5 text-xs leading-5 text-slate-600">
+                      Learn more about {opportunityStartup?.name ?? typedJob.company} and connect with the team.
+                    </p>
+                  </div>
+                  <a
+                    href={startupWebsite ?? startupProfileHref}
+                    target={startupWebsite ? '_blank' : undefined}
+                    rel={startupWebsite ? 'noopener noreferrer' : undefined}
+                    className="inline-flex min-h-9 items-center justify-center gap-1.5 rounded-lg bg-[#4F46E5] px-3 py-2 text-xs font-semibold text-white transition-colors hover:bg-[#3730A3]"
+                  >
+                    {startupWebsite ? 'Visit startup' : 'Explore startup'}
+                    <ArrowTopRightOnSquareIcon className="h-3.5 w-3.5" />
+                  </a>
+                </div>
+              ) : typedJob.contact_email && (
                 <EasyApplyButton 
                   jobTitle={typedJob.title}
                   company={typedJob.company}
@@ -338,7 +431,7 @@ export default async function JobDetailsPage({
                 />
               )}
 
-              {typedJob.contact_email && (
+              {!isStartupOpportunity && typedJob.contact_email && (
                 <a
                   href={`mailto:${typedJob.contact_email}?subject=Inquiry: ${encodeURIComponent(typedJob.title)} position at ${encodeURIComponent(typedJob.company)}`}
                   className="px-3 py-1.5 bg-white text-gray-700 border border-gray-200/80 rounded-lg text-xs font-semibold hover:bg-gray-50 transition-all flex items-center gap-1.5 shadow-2xs"
@@ -348,7 +441,7 @@ export default async function JobDetailsPage({
                 </a>
               )}
 
-              {typedJob.application_url && (
+              {!isStartupOpportunity && typedJob.application_url && (
                 <a
                   href={typedJob.application_url}
                   target="_blank"
@@ -372,12 +465,12 @@ export default async function JobDetailsPage({
             </div>
           </div>
 
-          {/* Job Description */}
+          {/* Opportunity details */}
           {typedJob.description && (
             <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
               <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
                 <UserGroupIcon className="h-4 w-4 text-blue-600" />
-                Job Description
+                {isStartupOpportunity ? 'About this opportunity' : 'Job Description'}
               </h2>
               <div className="text-xs text-gray-600 leading-relaxed whitespace-pre-line">
                 {typedJob.description}
@@ -390,7 +483,7 @@ export default async function JobDetailsPage({
             <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
               <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
                 <CheckCircleIcon className="h-4 w-4 text-emerald-600" />
-                Key Requirements
+                {isStartupOpportunity ? 'What would help' : 'Key Requirements'}
               </h2>
               <ul className="space-y-2 text-xs text-gray-600">
                 {typedJob.requirements.map((req, index) => (
@@ -408,7 +501,7 @@ export default async function JobDetailsPage({
             <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-5 space-y-3">
               <h2 className="text-xs font-bold text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
                 <CodeBracketIcon className="h-4 w-4 text-indigo-600" />
-                Required Tech & Skills
+                {isStartupOpportunity ? 'Skills to contribute' : 'Required Tech & Skills'}
               </h2>
               <div className="flex flex-wrap gap-1.5">
                 {typedJob.skills.map((skill, index) => (
@@ -476,23 +569,22 @@ export default async function JobDetailsPage({
             </div>
           )}
 
-          {/* AI Application Tips */}
-          <div className="bg-gradient-to-br from-purple-50/80 to-blue-50/80 rounded-2xl border border-purple-200/60 p-4 shadow-xs space-y-3">
+          {!isStartupOpportunity && <div className="space-y-3 rounded-xl border border-slate-200 bg-white p-4">
             <div className="flex items-center gap-1.5">
-              <SparklesIcon className="h-4 w-4 text-purple-600" />
-              <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide">Application Tip</h3>
+              <SparklesIcon className="h-4 w-4 text-[#4F46E5]" />
+              <h3 className="text-xs font-bold uppercase tracking-wide text-slate-900">Before you apply</h3>
             </div>
             <ul className="space-y-2 text-xs text-gray-600">
               <li className="flex items-start gap-1.5">
-                <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                <span>Tailor your pitch using Easy Apply for customized emails.</span>
+                <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#4F46E5]" />
+                <span>Read the role details and share relevant experience in your application.</span>
               </li>
               <li className="flex items-start gap-1.5">
-                <CheckCircleIcon className="h-3.5 w-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                <span>Highlight matching technical stack keywords.</span>
+                <CheckCircleIcon className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#4F46E5]" />
+                <span>Check the organization and application details before you send.</span>
               </li>
             </ul>
-          </div>
+          </div>}
         </div>
 
       </div>

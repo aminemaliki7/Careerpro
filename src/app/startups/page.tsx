@@ -8,32 +8,27 @@ import MagneticLink from '@/components/ui/MagneticLink';
 // ─── SEO ──────────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Companies Directory - Discover Growing Tech Companies',
+  title: 'Discover Startups',
   description:
-    'Explore companies across AI/ML, FinTech, HealthTech, SaaS and more. Discover teams and open tech roles around the world.',
+    'Discover startups, explore what founders are building, and find opportunities to contribute or join.',
   alternates: { canonical: 'https://hirely.ma/startups' },
   openGraph: {
-    title: 'Companies Directory - Hirely',
-    description: 'Explore companies and discover their open tech roles.',
+    title: 'Discover Startups | Hirely',
+    description: 'Explore startups, meet their founders, and find opportunities to build together.',
     url: 'https://hirely.ma/startups',
     siteName: 'Hirely.ma',
     images: [{ url: '/images/og-default.jpg', width: 1200, height: 630 }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Companies Directory - Hirely',
-    description: 'Explore companies and discover their open tech roles.',
+    title: 'Discover Startups | Hirely',
+    description: 'Explore startups, meet their founders, and find opportunities to build together.',
     site: '@hirely_ma',
     images: ['/images/og-default.jpg'],
   },
 };
 
 export const revalidate = 300; // revalidate every 5 min
-
-const CATEGORIES = [
-  'AI/ML', 'FinTech', 'HealthTech', 'EdTech', 'E-commerce',
-  'SaaS', 'Cybersecurity', 'DevTools', 'CleanTech', 'Blockchain',
-];
 
 // ─── SSR fetch - first page loaded server-side ───────────────────────────────
 
@@ -51,7 +46,7 @@ async function getInitialStartups(): Promise<{
 
     const { data, count, error } = await supabase
       .from('startups')
-      .select('*', { count: 'exact' })
+      .select('id,name,slug,description,full_description,industry,size,funding_stage,founded_date,location,website_url,logo_url,featured,vote_score,job_count,created_at,updated_at', { count: 'exact' })
       .eq('status', 'approved')
       .order('vote_score', { ascending: false })
       .order('created_at', { ascending: false })
@@ -112,31 +107,31 @@ export default async function StartupsPage() {
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-6 sm:pt-10 sm:pb-7">
           <div className="flex flex-col items-start text-left">
             <div className="flex items-center gap-2 mb-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#4F46E5]" />
               <span className="text-xs font-medium text-slate-500 tracking-wide">
-                {total > 0 ? `${total} companies tracked` : 'Live company directory'}
+                {total > 0 ? `${total} approved startups` : 'Discover startups'}
               </span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight tracking-tight mb-2 max-w-2xl">
-              The directory of fast-growing tech companies
+              Discover startups worth building with.
             </h1>
 
             <p className="text-sm sm:text-base text-slate-500 max-w-xl mb-4">
-              Curated companies across AI, FinTech, HealthTech and more — updated
-              as teams open new roles.
+              Explore what founders are building, meet their teams, and find
+              opportunities to contribute or join.
             </p>
 
             <div className="flex flex-wrap items-center gap-2.5">
               <Link
                 href="/startups/submit"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-[#4F46E5] px-3.5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
               >
                 + Add your company
               </Link>
               <Link
                 href="#browse"
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white hover:bg-slate-50 text-slate-700 text-sm font-semibold rounded-lg border border-slate-200 transition-colors"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-blue-200 hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]"
               >
                 Browse directory
               </Link>
@@ -170,14 +165,14 @@ export default async function StartupsPage() {
               For Founders
             </p>
             <p className="text-sm font-semibold text-slate-900">
-              Get discovered by developers, QA and DevOps talent.
+              Put your startup on the map and find people who want to build with you.
             </p>
           </div>
           <MagneticLink
             href="/startups/submit"
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg transition-colors flex-shrink-0"
+            className="inline-flex flex-shrink-0 items-center gap-1.5 rounded-lg bg-[#4F46E5] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
           >
-            Submit your company →
+            Showcase your startup →
           </MagneticLink>
         </div>
       </section>

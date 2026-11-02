@@ -7,10 +7,13 @@ import {
   Menu,
   X,
   LayoutDashboard,
+  LogIn,
   Building2,
-  Map,
+  Compass,
   Briefcase,
   ChevronRight,
+  BookOpen,
+  Plus,
 } from 'lucide-react';
 import {
   SignInButton,
@@ -20,21 +23,24 @@ import {
 } from '@clerk/nextjs';
 import CircuitLogo from './CircuitLogo';
 import { useUserRole } from '@/hooks/useUserRole';
-import { BookOpen } from 'lucide-react';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
-  const { isCompany } = useUserRole();
+  const { isCompany, isFounder } = useUserRole();
 
-  const dashboardHref = isCompany ? '/company/dashboard' : '/dashboard';
-  const dashboardLabel = isCompany ? 'Dashboard' : 'Dashboard';
+  const dashboardHref = isFounder
+    ? '/founder/dashboard'
+    : isCompany
+      ? '/company/dashboard'
+      : '/dashboard';
+  const dashboardLabel = 'Dashboard';
 
   const navigation = [
-    { name: 'Jobs', href: '/jobs', icon: Briefcase },
-    { name: 'Career Paths', href: '/roadmaps', icon: Map },
-    { name: 'Companies', href: '/startups', icon: Building2 },
-    { name: 'Articles', href: '/blog', icon: BookOpen },
+    { name: 'Discover', href: '/', icon: Compass },
+    { name: 'Startups', href: '/startups', icon: Building2 },
+    { name: 'Opportunities', href: '/jobs', icon: Briefcase },
+    { name: 'Resources', href: '/blog', icon: BookOpen },
   ];
 
   // Automatically close mobile menu on route change
@@ -48,25 +54,23 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-zinc-200/80 bg-white/95 backdrop-blur-md text-zinc-900 transition-colors">
+    <header className="site-header sticky top-0 z-50 w-full border-b text-slate-900">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative flex h-14 items-center justify-between gap-4">
-          
-          {/* Brand Logo */}
-          <div className="flex items-center shrink-0">
+        <div className="flex h-14 items-center gap-3 sm:gap-5">
+          <div className="flex shrink-0 items-center">
             <Link
               href="/"
               aria-label="Hirely Home"
-              className="flex items-center gap-2 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#24b47e] rounded-md"
+              className="flex items-center rounded-md transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
               onClick={() => setIsMenuOpen(false)}
             >
-              <CircuitLogo size="sm" />
+              <CircuitLogo size="xs" showWordmark={false} />
             </Link>
           </div>
-
+          
         {/* Desktop Navigation */}
 <nav
-  className="hidden md:flex absolute left-1/2 -translate-x-1/2 items-center gap-1"
+  className="hidden flex-1 items-center justify-center gap-0.5 lg:flex"
   aria-label="Main Navigation"
 >
   {navigation.map((item) => {
@@ -76,10 +80,10 @@ export default function Header() {
       <Link
         key={item.name}
         href={item.href}
-        className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-150 ${
+        className={`rounded-md px-2.5 py-2 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] ${
           isActive
-            ? 'text-zinc-900 bg-zinc-100 font-semibold'
-            : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
+            ? 'font-semibold text-[#4F46E5]'
+            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-950'
         }`}
       >
         <span>{item.name}</span>
@@ -89,44 +93,46 @@ export default function Header() {
 </nav>
 
           {/* Right Controls & Auth */}
-          <div className="flex items-center justify-end gap-3 shrink-0">
-            <SignedOut>
-              <div className="hidden md:flex items-center gap-2">
+          <div className="ml-auto flex shrink-0 items-center justify-end gap-1.5">
+            <div className="hidden items-center gap-2 lg:flex">
+              <SignedOut>
                 <SignInButton mode="modal">
                   <button
                     type="button"
-                    className="px-3 py-1.5 text-xs font-medium text-zinc-700 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors"
+                    aria-label="Sign in"
+                    title="Sign in"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-50 hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]"
                   >
-                    Sign In
+                    <LogIn aria-hidden="true" className="h-4 w-4" />
                   </button>
                 </SignInButton>
-
-                <Link
-                  href="/onboarding"
-                  className="px-3 py-1.5 text-xs font-semibold bg-[#24b47e] hover:bg-[#1ea872] text-white rounded-md transition-all shadow-xs active:scale-95"
-                >
-                  Get Started
-                </Link>
-              </div>
-            </SignedOut>
+              </SignedOut>
+              <Link
+                href="/startups/submit"
+                aria-label="Showcase your startup"
+                title="Showcase your startup"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-[#4F46E5] text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2"
+              >
+                <Plus aria-hidden="true" className="h-4 w-4" />
+              </Link>
+            </div>
 
             <SignedIn>
-              <div className="flex items-center gap-3">
-                {/* Supabase-style prominent Dashboard CTA button */}
+              <div className="flex items-center gap-1.5">
                 <Link
                   href={dashboardHref}
-                  className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-[#24b47e] hover:bg-[#1ea872] text-white rounded-md transition-all shadow-xs active:scale-95"
+                  aria-label={dashboardLabel}
+                  title={dashboardLabel}
+                  className="hidden h-8 w-8 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-indigo-50 hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] lg:inline-flex"
                 >
-                  <LayoutDashboard className="w-3.5 h-3.5" />
-                  <span>{dashboardLabel}</span>
+                  <LayoutDashboard aria-hidden="true" className="h-4 w-4" />
                 </Link>
 
-                {/* User Avatar */}
                 <UserButton
                   appearance={{
                     elements: {
                       avatarBox:
-                        'w-7 h-7 rounded-full ring-1 ring-zinc-300 hover:ring-[#24b47e] transition-all',
+                        'h-7 w-7 rounded-full ring-1 ring-slate-200 transition-all hover:ring-[#4F46E5]',
                     },
                   }}
                 >
@@ -136,6 +142,13 @@ export default function Header() {
                       labelIcon={<LayoutDashboard className="w-4 h-4" />}
                       href={dashboardHref}
                     />
+                    {isCompany && !isFounder && (
+                      <UserButton.Link
+                        label="Startup dashboard"
+                        labelIcon={<Building2 className="w-4 h-4" />}
+                        href="/founder/dashboard"
+                      />
+                    )}
                     <UserButton.Action label="manageAccount" />
                     <UserButton.Action label="signOut" />
                   </UserButton.MenuItems>
@@ -147,19 +160,19 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setIsMenuOpen((prev) => !prev)}
-              className="md:hidden p-1.5 text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-md transition-colors focus:outline-none focus:ring-1 focus:ring-[#24b47e]"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-950 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] lg:hidden"
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMenuOpen}
             >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation Drawer */}
         {isMenuOpen && (
-          <div className="md:hidden border-t border-zinc-200/80 py-3 bg-white transition-all">
-            <div className="space-y-1 px-1">
+          <div className="border-t border-slate-200 bg-white py-2 lg:hidden">
+            <nav aria-label="Mobile navigation" className="space-y-0.5 px-1">
               {navigation.map((item) => {
                 const isActive = isPathActive(item.href);
                 const Icon = item.icon;
@@ -168,41 +181,50 @@ export default function Header() {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className={`flex items-center justify-between px-3 py-2 rounded-md text-xs font-medium transition-colors ${
+                    className={`flex items-center justify-between rounded-lg px-3 py-2 text-[13px] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] ${
                       isActive
-                        ? 'text-[#1ea872] bg-emerald-50/60 font-semibold'
-                        : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50'
+                        ? 'bg-blue-50 font-semibold text-[#4F46E5]'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-950'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5">
-                      <Icon className={`w-4 h-4 ${isActive ? 'text-[#1ea872]' : 'text-zinc-400'}`} />
+                    <div className="flex items-center gap-2">
+                      <Icon className={`h-4 w-4 ${isActive ? 'text-[#4F46E5]' : 'text-slate-400'}`} />
                       <span>{item.name}</span>
                     </div>
-                    <ChevronRight className="w-3.5 h-3.5 text-zinc-400" />
+                    <ChevronRight className="h-3.5 w-3.5 text-slate-400" />
                   </Link>
                 );
               })}
 
               <SignedOut>
-                <div className="pt-3 mt-2 border-t border-zinc-200/80 space-y-2">
+                <div className="mt-1.5 space-y-1 border-t border-slate-200 pt-2">
                   <SignInButton mode="modal">
                     <button
                       type="button"
-                      className="w-full px-3 py-2 text-xs font-medium text-zinc-700 hover:bg-zinc-100 rounded-md transition-colors text-left"
+                      className="w-full rounded-lg px-3 py-2 text-left text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]"
                     >
                       Sign In
                     </button>
                   </SignInButton>
-
-                  <Link
-                    href="/onboarding"
-                    className="block w-full px-3 py-2 text-xs font-semibold bg-[#24b47e] hover:bg-[#1ea872] text-white rounded-md transition-colors text-center shadow-xs"
-                  >
-                    Get Started
-                  </Link>
                 </div>
               </SignedOut>
-            </div>
+              <Link
+                href="/startups/submit"
+                className="mt-1.5 flex w-full items-center justify-center gap-2 rounded-lg bg-[#4F46E5] px-4 py-2 text-center text-[13px] font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 lg:hidden"
+              >
+                <Plus aria-hidden="true" className="h-4 w-4" />
+                Showcase your startup
+              </Link>
+              <SignedIn>
+                <Link
+                  href={dashboardHref}
+                  className="mt-1.5 flex items-center gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold text-[#4F46E5] hover:bg-indigo-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] lg:hidden"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                  {dashboardLabel}
+                </Link>
+              </SignedIn>
+            </nav>
           </div>
         )}
       </div>

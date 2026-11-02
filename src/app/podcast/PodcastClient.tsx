@@ -154,7 +154,7 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-12 lg:py-16">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 lg:gap-12 text-center sm:text-left">
             {/* Podcast Cover */}
-            <div className="w-28 h-28 sm:w-32 sm:h-32 md:w-48 md:h-48 lg:w-56 lg:h-56 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl shadow-xl overflow-hidden flex-shrink-0 border border-gray-200">
+            <div className="w-28 h-28 flex-shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-slate-100 sm:w-32 md:h-48 md:w-48 lg:h-56 lg:w-56">
               <Image
                 src="/images/podcast.jpg"
                 alt="Hirely Podcast"
@@ -167,22 +167,22 @@ export default function PodcastClient({ allEpisodes, featuredEpisodes }: Podcast
             
             {/* Content */}
             <div className="flex-1 min-w-0">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00C4CC]/10 border border-[#00C4CC]/20 text-[#00C4CC] text-xs font-semibold uppercase tracking-wider mb-4">
+              <div className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-[#4F46E5]">
                 <Headphones className="w-3.5 h-3.5" />
                 DEEP DIVE
               </div>
               
               <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-gray-900 mb-3 leading-tight">
-                TECH PODCAST
+                Startup stories and ideas
               </h1>
               
               <p className="text-lg sm:text-xl text-gray-500 mb-6 leading-relaxed max-w-2xl mx-auto sm:mx-0">
-  Deep dives into <strong>tech industry trends</strong>, <strong>AI-native development</strong>, and the <strong>startup playbooks</strong> defining the next era of innovation.
+  Conversations about technology, startup journeys, and the people building what comes next.
 </p>
               
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1 text-sm text-gray-500">
                 <span className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-[#00C4CC] flex items-center justify-center shadow-md">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#4F46E5]">
                     <User className="w-4 h-4 text-white" />
                   </div>
                   <span className="font-semibold text-gray-700">The Hirely Team</span>

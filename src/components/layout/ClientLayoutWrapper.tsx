@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import EmailModal from '@/components/ui/EmailModal';
 import Header from '@/components/ui/Header';
 import Footer from '@/components/ui/Footer';
@@ -12,6 +13,7 @@ export default function ClientLayoutWrapper({
 }) {
   const [showModal, setShowModal] = useState(false);
   const [hasShownModal, setHasShownModal] = useState(false);
+  const pathname = usePathname();
 
   const handleShowModal = () => {
     setShowModal(true);
@@ -25,6 +27,11 @@ export default function ClientLayoutWrapper({
   };
 
   useEffect(() => {
+    if (pathname === '/') {
+      setShowModal(false);
+      return;
+    }
+
     // Check localStorage on component mount
     const modalShown = localStorage.getItem('hasShownEmailModal');
     if (modalShown) {
@@ -51,12 +58,12 @@ export default function ClientLayoutWrapper({
     return () => {
       document.removeEventListener('click', handleUserInteraction);
     };
-  }, [hasShownModal]);
+  }, [hasShownModal, pathname]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="site-shell flex min-h-screen flex-col">
       <Header />
-      <main className="flex-grow">{children}</main>
+      <main className="min-w-0 flex-grow">{children}</main>
       <Footer />
       {showModal && <EmailModal onClose={handleHideModal} />}
     </div>

@@ -501,7 +501,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
         <div className="mx-auto max-w-4xl">
           <Link
             href="/blog"
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-[#24b47e]"
+            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-zinc-500 transition-colors hover:text-[#4F46E5]"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Articles
@@ -513,7 +513,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                 <Link
                   key={tag}
                   href={`/blog?tag=${encodeURIComponent(tag)}`}
-                  className="rounded-full border border-[#24b47e]/20 bg-[#24b47e]/5 px-3 py-1 text-xs font-semibold text-[#18865b] transition-colors hover:bg-[#24b47e]/10"
+                  className="rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-[#3730A3] transition-colors hover:bg-blue-100"
                 >
                   {tag
                     .replace(/-/g, ' ')
@@ -564,7 +564,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                       onClick={toggleAudioPlay}
                       className={`flex h-9 items-center gap-2 rounded-full border px-3 text-xs font-semibold transition-all ${
                         isPlaying
-                          ? 'border-[#24b47e]/30 bg-[#24b47e]/10 text-[#18865b]'
+                          ? 'border-blue-200 bg-blue-50 text-[#3730A3]'
                           : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300 hover:bg-zinc-50'
                       }`}
                       aria-label={
@@ -592,7 +592,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
 
                 <button
                   onClick={handleClap}
-                  className="relative flex h-9 items-center gap-1.5 rounded-full border border-zinc-200 px-3 text-xs font-semibold text-zinc-700 transition-all hover:border-[#24b47e]/30 hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                  className="relative flex h-9 items-center gap-1.5 rounded-full border border-zinc-200 px-3 text-xs font-semibold text-zinc-700 transition-all hover:border-blue-200 hover:bg-blue-50 hover:text-[#4F46E5]"
                   aria-label={
                     hasClapped
                       ? 'Remove appreciation'
@@ -607,7 +607,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   <Sparkles
                     className={`h-3.5 w-3.5 transition-all duration-300 ${
                       hasClapped || isClapping
-                        ? 'scale-110 text-[#24b47e]'
+                        ? 'scale-110 text-[#4F46E5]'
                         : 'text-zinc-500'
                     }`}
                   />
@@ -688,7 +688,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                           }
                           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm text-zinc-700 transition-colors hover:bg-zinc-50"
                         >
-                          <Linkedin className="h-4 w-4 text-[#0A66C2]" />
+                          <Linkedin className="h-4 w-4 text-[#4F46E5]" />
                           <span className="font-medium">
                             LinkedIn
                           </span>
@@ -707,7 +707,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                           </span>
 
                           {copySuccess && (
-                            <Check className="h-4 w-4 text-[#24b47e]" />
+                            <Check className="h-4 w-4 text-[#4F46E5]" />
                           )}
                         </button>
                       </div>
@@ -729,7 +729,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           )}
 
           <div className="mx-auto max-w-[720px]">
-            <div className="prose prose-lg max-w-none text-zinc-800 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-zinc-950 prose-p:leading-8 prose-p:text-zinc-700 prose-a:text-[#18865b] prose-a:no-underline hover:prose-a:underline prose-strong:text-zinc-950 prose-li:text-zinc-700 prose-blockquote:border-[#24b47e] prose-blockquote:text-zinc-600">
+            <div className="prose prose-lg max-w-none text-zinc-800 prose-headings:font-bold prose-headings:tracking-tight prose-headings:text-zinc-950 prose-p:leading-8 prose-p:text-zinc-700 prose-a:text-[#4F46E5] prose-a:no-underline hover:prose-a:underline prose-strong:text-zinc-950 prose-li:text-zinc-700 prose-blockquote:border-[#4F46E5] prose-blockquote:text-zinc-600">
               {children}
             </div>
           </div>
@@ -745,7 +745,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   <Link
                     key={tag}
                     href={`/blog?tag=${encodeURIComponent(tag)}`}
-                    className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-600 transition-all hover:border-[#24b47e]/30 hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                    className="rounded-full border border-zinc-200 bg-white px-3.5 py-2 text-xs font-medium text-zinc-600 transition-all hover:border-blue-200 hover:bg-blue-50 hover:text-[#4F46E5]"
                   >
                     {tag
                       .replace(/-/g, ' ')
@@ -775,8 +775,8 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                   onClick={handleClap}
                   className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-all ${
                     hasClapped
-                      ? 'border-[#24b47e]/30 bg-[#24b47e]/10 text-[#18865b]'
-                      : 'border-zinc-200 bg-white text-zinc-700 hover:border-[#24b47e]/30 hover:text-[#18865b]'
+                      ? 'border-blue-200 bg-blue-50 text-[#3730A3]'
+                      : 'border-zinc-200 bg-white text-zinc-700 hover:border-blue-200 hover:text-[#4F46E5]'
                   }`}
                 >
                   <Sparkles className="h-4 w-4" />
@@ -912,7 +912,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
                         }
                         className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
                           comment.isLiked
-                            ? 'text-[#18865b]'
+                            ? 'text-[#4F46E5]'
                             : 'text-zinc-400 hover:text-zinc-700'
                         }`}
                       >
@@ -976,7 +976,7 @@ export default function BlogLayout({ post, children }: BlogLayoutProps) {
           <div className="mx-auto mt-16 max-w-[720px] border-t border-zinc-200 pt-8">
             <Link
               href="/blog"
-              className="group inline-flex items-center gap-2 text-sm font-semibold text-zinc-700 transition-colors hover:text-[#18865b]"
+              className="group inline-flex items-center gap-2 text-sm font-semibold text-zinc-700 transition-colors hover:text-[#4F46E5]"
             >
               <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
               Explore more Articles

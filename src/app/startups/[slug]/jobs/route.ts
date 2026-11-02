@@ -1,12 +1,7 @@
-// src/app/api/startups/[slug]/jobs/route.ts
-import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  { auth: { persistSession: false } }
-);
+export const dynamic = 'force-dynamic';
 
 export async function GET(
   _req: NextRequest,
@@ -14,29 +9,52 @@ export async function GET(
 ) {
   const { slug } = await params;
 
-  // 1. Résoudre le slug → nom de la startup
-  const { data: startup, error: startupError } = await supabase
+  const { data: startup, error: startupError } = await supabaseAdmin
     .from('startups')
-    .select('name')
+    .select('id,name')
     .eq('slug', slug)
     .eq('status', 'approved')
-    .single();
+    .maybeSingle();
 
-  if (startupError || !startup) {
-    return NextResponse.json({ jobs: [] });
+  if (startupError) {
+    console.error('Error loading startup opportunities profile:', startupError);
+    return NextResponse.json({ error: 'Unable to load startup opportunities' }, { status: 500 });
+  }
+  if (!startup) return NextResponse.json({ error: 'Startup not found' }, { status: 404 });
+
+  const columns = 'id,title,location,type,experience_level,salary_range,compensation_type,remote,posted_date,slug,startup_id,company';
+  const [linkedResult, legacyResult] = await Promise.all([
+    supabaseAdmin
+      .from('jobs')
+      .select(columns)
+      .eq('startup_id', startup.id)
+      .eq('status', 'approved')
+      .order('posted_date', { ascending: false }),
+    supabaseAdmin
+      .from('jobs')
+      .select(columns)
+      .ilike('company', startup.name.replace(/[\\%_]/g, '\\$&'))
+      .is('startup_id', null)
+      .eq('status', 'approved')
+      .order('posted_date', { ascending: false }),
+  ]);
+
+  if (linkedResult.error || legacyResult.error) {
+    console.error('Error fetching published startup opportunities:', linkedResult.error || legacyResult.error);
+    return NextResponse.json({ error: 'Unable to load startup opportunities' }, { status: 500 });
   }
 
-  // 2. Fetch les jobs qui matchent ce nom (case-insensitive)
-  const { data: jobs, error: jobsError } = await supabase
-    .from('jobs')
-    .select('id, title, location, type, experience_level, salary_range, remote, posted_date, slug')
-    .ilike('company', startup.name)
-    .eq('status', 'approved')
-    .order('posted_date', { ascending: false });
+  const legacyJobs = (legacyResult.data ?? []).filter(
+    (job) => job.company?.toLocaleLowerCase() === startup.name.toLocaleLowerCase()
+  );
+  const seenIds = new Set((linkedResult.data ?? []).map((job) => String(job.id)));
+  const jobs = [
+    ...(linkedResult.data ?? []),
+    ...legacyJobs.filter((job) => !seenIds.has(String(job.id))),
+  ].sort((left, right) => new Date(right.posted_date ?? 0).getTime() - new Date(left.posted_date ?? 0).getTime());
 
-  if (jobsError) {
-    return NextResponse.json({ jobs: [] });
-  }
-
-  return NextResponse.json({ jobs: jobs ?? [], startupName: startup.name });
+  return NextResponse.json(
+    { jobs, startupName: startup.name },
+    { headers: { 'Cache-Control': 'no-store' } }
+  );
 }

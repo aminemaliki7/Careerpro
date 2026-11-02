@@ -1,16 +1,16 @@
 // src/app/contact/page.tsx
 import { Metadata } from 'next'
 import ContactForm from '@/components/ContactForm'
-import { Clock, MapPin, Mail, Sparkles } from 'lucide-react'
+import { Clock, MapPin, MessageCircle } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Contact Us',
-  description: 'Reach out to Hirely for inquiries about our AI-powered ATS platform, candidate match scoring, or recruitment partnerships.',
-  keywords: 'contact, recruitment ATS, AI job matching, hiring solutions, candidate ranking',
+  description: 'Contact Hirely with questions about startup profiles, opportunities, partnerships, or using the platform.',
+  keywords: 'contact Hirely, startup platform, founder support, startup opportunities',
   alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contact Us | Hirely',
-    description: 'Get in touch to learn how Hirely connects candidates and recruiters with AI precision.',
+    description: 'Get in touch with Hirely about startup discovery, founder profiles, and opportunities.',
     type: 'website',
   },
 }
@@ -19,27 +19,25 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Section */}
-      <section className="relative pt-20 pb-12 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-transparent to-slate-100/50"></div>
-        
-        <div className="relative z-10 text-center max-w-4xl mx-auto px-6">
-          <div className="w-14 h-14 bg-indigo-50 border border-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
-            <Sparkles className="w-7 h-7 text-indigo-600" />
+      <section className="flex items-center justify-center border-b border-slate-200 bg-white py-14 sm:py-16">
+        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-[#4F46E5]">
+            <MessageCircle className="h-6 w-6" />
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-900 mb-4 tracking-tight">
+          <h1 className="mb-4 text-3xl font-bold tracking-tight text-slate-950 sm:text-4xl">
             Get in touch with us
           </h1>
 
-          <p className="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Have questions about our AI matching system or need assistance with your hiring workflow? We&apos;re here to help candidates and recruiters succeed.
+          <p className="mx-auto max-w-2xl text-base leading-relaxed text-slate-600">
+            Have a question about discovering startups, showcasing what you are building, or exploring opportunities? Send us a message.
           </p>
         </div>
       </section>
 
       {/* Main Content */}
       <section className="pt-8 pb-24">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Contact Form */}
             <div className="lg:col-span-2">
@@ -48,8 +46,8 @@ export default function ContactPage() {
                   Send us a message
                 </h2>
 
-                <p className="text-xs sm:text-sm text-slate-500 mb-8">
-                  Whether you are a candidate evaluating match scores or a recruiter setting up an ATS pipeline, we reply within 24 hours.
+                <p className="mb-8 text-sm text-slate-500">
+                  Share a little context so we can direct your message to the right place.
                 </p>
                 
                 <ContactForm />
@@ -60,8 +58,8 @@ export default function ContactPage() {
             <div className="space-y-4">
               {/* Response Time */}
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-                <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center mb-3">
-                  <Clock className="w-5 h-5 text-indigo-600" />
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-100 bg-blue-50">
+                  <Clock className="h-5 w-5 text-[#4F46E5]" />
                 </div>
 
                 <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -69,14 +67,14 @@ export default function ContactPage() {
                 </h3>
 
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Our team reviews all inquiries promptly and responds within 24 hours.
+                  We review messages and follow up when we can.
                 </p>
               </div>
 
               {/* Location */}
               <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6">
-                <div className="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center mb-3">
-                  <MapPin className="w-5 h-5 text-indigo-600" />
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl border border-blue-100 bg-blue-50">
+                  <MapPin className="h-5 w-5 text-[#4F46E5]" />
                 </div>
 
                 <h3 className="text-sm font-bold text-slate-900 mb-1">
@@ -84,8 +82,7 @@ export default function ContactPage() {
                 </h3>
 
                 <p className="text-xs text-slate-500 leading-relaxed">
-                  Based in Morocco 🇲🇦<br />
-                  Serving global remote teams & tech talent 🌍
+                  Starting in Morocco, with an international outlook.
                 </p>
               </div>
 

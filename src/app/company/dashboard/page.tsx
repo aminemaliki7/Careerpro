@@ -661,7 +661,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                       onChange={(event) => setSortMode(event.target.value as 'ats-desc' | 'newest')}
                       className="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 focus:border-emerald-500 focus:outline-none"
                     >
-                      <option value="ats-desc">ATS score</option>
+                      <option value="ats-desc">Application fit score</option>
                       <option value="newest">Newest</option>
                     </select>
                   </label>
@@ -774,7 +774,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                   <div className="flex items-center justify-between mb-4">
                     <div>
                       <h2 className="text-sm font-bold text-slate-900">Automation rules</h2>
-                      <p className="text-xs text-slate-500 mt-1">Configure automatic candidate actions based on ATS scores.</p>
+                      <p className="text-xs text-slate-500 mt-1">Configure automatic application actions based on fit scores.</p>
                     </div>
                     {automationSaving && <span className="text-[11px] text-slate-500 font-medium">Saving...</span>}
                   </div>
@@ -814,7 +814,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-200">
                               <div className="min-w-0">
                                 <h3 className="text-xs font-bold text-slate-900">Auto-shortlist</h3>
-                                <p className="text-[11px] text-slate-500 mt-1">Automatically move candidates to Shortlisted when their ATS score reaches this threshold.</p>
+                                <p className="text-[11px] text-slate-500 mt-1">Automatically move applications to Shortlisted when their fit score reaches this threshold.</p>
                               </div>
                               <input
                                 type="checkbox"
@@ -839,7 +839,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             </div>
                             <div>
                               <label className="text-[11px] text-slate-600 font-medium">
-                                <span className="block mb-1.5">ATS score threshold (0-100)</span>
+                                <span className="block mb-1.5">Fit score threshold (0-100)</span>
                                 <input
                                   type="number"
                                   min="0"
@@ -865,7 +865,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             <div className="flex items-center justify-between gap-3 pb-3 border-b border-slate-200">
                               <div className="min-w-0">
                                 <h3 className="text-xs font-bold text-slate-900">Auto-review</h3>
-                                <p className="text-[11px] text-slate-500 mt-1">Automatically move candidates to Review when their ATS score is below this threshold.</p>
+                                <p className="text-[11px] text-slate-500 mt-1">Automatically move applications to Review when their fit score is below this threshold.</p>
                               </div>
                               <input
                                 type="checkbox"
@@ -890,7 +890,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
                             </div>
                             <div>
                               <label className="text-[11px] text-slate-600 font-medium">
-                                <span className="block mb-1.5">ATS score threshold (0-100)</span>
+                                <span className="block mb-1.5">Fit score threshold (0-100)</span>
                                 <input
                                   type="number"
                                   min="0"
@@ -1003,7 +1003,7 @@ if (!isLoaded || roleLoading || !isCompany || loading) {
               )}
               {typeof selectedApplication.ats_score === 'number' && (
                 <div className="flex items-center justify-between border-y border-slate-100 py-3">
-                  <span className="font-bold text-slate-700">ATS match score</span>
+                  <span className="font-bold text-slate-700">Application fit score</span>
                   <span className={`inline-flex px-2.5 py-1 text-[11px] font-bold rounded-lg border ${atsScoreStyle(selectedApplication.ats_score)}`}>
                     {selectedApplication.ats_score}%
                   </span>

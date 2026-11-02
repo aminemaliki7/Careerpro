@@ -28,8 +28,8 @@ export default function StartupLogo({ logoUrl, name, size = 'md' }: StartupLogoP
   if (!logoUrl || imageError) {
     return (
       <div className={`flex-shrink-0 ${sizeClasses[size]} bg-white rounded-xl border border-gray-200 shadow-sm flex items-center justify-center`}>
-        <div className="w-full h-full flex items-center justify-center bg-[#0A66C2]/10 rounded-lg">
-          <span className={`text-[#0A66C2] font-bold ${textSizeClasses[size]}`}>
+        <div className="w-full h-full flex items-center justify-center bg-[#4F46E5]/10 rounded-lg">
+          <span className={`text-[#4F46E5] font-bold ${textSizeClasses[size]}`}>
             {name.charAt(0).toUpperCase()}
           </span>
         </div>

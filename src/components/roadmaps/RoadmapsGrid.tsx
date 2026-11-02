@@ -8,8 +8,6 @@ import {
   Filter,
   Clock,
   Zap,
-  TrendingUp,
-  Star,
   BookOpen,
   Sparkles,
   ChevronRight,
@@ -20,13 +18,6 @@ interface RoadmapsGridProps {
   initialRoadmaps: Roadmap[];
 }
 
-interface RoadmapStats {
-  totalRoadmaps: number;
-  categories: number;
-  avgDuration: string;
-  mostPopular: Roadmap | null;
-}
-
 export default function RoadmapsGrid({ initialRoadmaps = [] }: RoadmapsGridProps) {
   const categories = Array.from(
     new Set(initialRoadmaps.map((r) => r.category).filter(Boolean))
@@ -34,16 +25,6 @@ export default function RoadmapsGrid({ initialRoadmaps = [] }: RoadmapsGridProps
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
-
-  // Calculate stats
-  const stats: RoadmapStats = useMemo(() => {
-    return {
-      totalRoadmaps: initialRoadmaps.length,
-      categories: categories.length,
-      avgDuration: "Self-paced",
-      mostPopular: initialRoadmaps[0] || null,
-    };
-  }, [initialRoadmaps, categories]);
 
   const filteredRoadmaps = useMemo(() => {
     return initialRoadmaps.filter((roadmap) => {
@@ -203,54 +184,16 @@ export default function RoadmapsGrid({ initialRoadmaps = [] }: RoadmapsGridProps
           {/* RIGHT SIDEBAR: Insights & Recommendations */}
           <aside className="lg:col-span-3 space-y-4">
             
-            {/* Featured Roadmap */}
-            {stats.mostPopular && (
-              <div className="bg-slate-900 text-white rounded-xl p-4 shadow-xs border border-slate-800">
-                <div className="flex items-center gap-2 font-bold mb-2 text-indigo-400">
-                  <Star className="w-4 h-4" />
-                  <span className="text-xs">Featured Path</span>
-                </div>
-                <h3 className="font-bold text-sm mb-1">{stats.mostPopular.title}</h3>
-                <p className="text-[11px] text-slate-300 mb-3 leading-relaxed line-clamp-3">
-                  {stats.mostPopular.description}
-                </p>
-                <Link
-                  href={`/roadmaps/${stats.mostPopular.id}`}
-                  className="inline-flex items-center gap-1 text-indigo-400 hover:text-indigo-300 text-xs font-bold transition-colors group"
-                >
-                  Explore Path
-                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
-            )}
-
-            {/* Learning Tip */}
-            <div className="bg-white rounded-xl border border-slate-200/80 p-4 shadow-xs">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
               <div className="flex items-center gap-2 font-bold mb-2 text-slate-900">
                 <Sparkles className="w-4 h-4 text-indigo-600" />
-                <span className="text-xs">Learning Tip</span>
+                <span className="text-xs">Choose a path</span>
               </div>
               <p className="text-[11px] text-slate-600 leading-relaxed">
-                Following a structured roadmap increases your likelihood of mastering complex skills by 3x. Pick one and commit to the path.
+                Explore the available learning tracks and choose one that fits your interests and current experience.
               </p>
             </div>
 
-            {/* Progress Stat */}
-            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-4 shadow-xs">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-bold text-slate-900 uppercase tracking-wider">Most Popular</span>
-                <TrendingUp className="w-3.5 h-3.5 text-indigo-600" />
-              </div>
-
-              <div className="space-y-2.5">
-                {initialRoadmaps.slice(0, 3).map((rm, idx) => (
-                  <div key={rm.id} className="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200/60 shadow-2xs">
-                    <span className="text-xs text-slate-700 font-medium truncate">{rm.title}</span>
-                    <span className="text-xs font-bold text-slate-400 pl-2">{idx + 1}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
           </aside>
 
         </div>

@@ -1,7 +1,7 @@
 // app/api/upload/logo/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs/server';
 import { supabaseAdmin } from '@/lib/supabase/admin';
+import { requireCompanyUser } from '@/lib/auth/authorization';
 import { v4 as uuidv4 } from 'uuid';
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
@@ -12,14 +12,8 @@ const LOGO_PATH_REGEX =
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please sign in to upload a logo' },
-        { status: 401 }
-      );
-    }
+    const authResult = await requireCompanyUser();
+    if (authResult.response) return authResult.response;
 
     const formData = await request.formData();
     const file = formData.get('logo') as File;
@@ -57,7 +51,7 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer);
 
     // Upload to Supabase Storage
-    const { data, error } = await supabaseAdmin.storage
+    const { error } = await supabaseAdmin.storage
       .from(BUCKET_NAME)
       .upload(filePath, buffer, {
         contentType: file.type,
@@ -101,14 +95,8 @@ export async function POST(request: NextRequest) {
 // arbitrary objects (e.g. CVs) from storage by guessing a path.
 export async function DELETE(request: NextRequest) {
   try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'Unauthorized - Please sign in' },
-        { status: 401 }
-      );
-    }
+    const authResult = await requireCompanyUser();
+    if (authResult.response) return authResult.response;
 
     const { searchParams } = new URL(request.url);
     const filePath = searchParams.get('path');
@@ -125,6 +113,25 @@ export async function DELETE(request: NextRequest) {
         { error: 'Invalid logo path' },
         { status: 400 }
       );
+    }
+
+    const { data: ownedStartup, error: ownerError } = await supabaseAdmin
+      .from('startups')
+      .select('id')
+      .eq('owner_id', authResult.userId)
+      .eq(
+        'logo_url',
+        supabaseAdmin.storage.from(BUCKET_NAME).getPublicUrl(filePath).data.publicUrl
+      )
+      .limit(1)
+      .maybeSingle();
+
+    if (ownerError) {
+      console.error('Error verifying startup logo ownership:', ownerError);
+      return NextResponse.json({ error: 'Failed to verify logo ownership' }, { status: 500 });
+    }
+    if (!ownedStartup) {
+      return NextResponse.json({ error: 'You cannot delete a logo that is not used by your startup' }, { status: 404 });
     }
 
     const { error } = await supabaseAdmin.storage

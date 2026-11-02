@@ -7,15 +7,15 @@ import JobsClient from './JobsClient';
 export const revalidate = 600;
 
 export const metadata: Metadata = {
-  title: 'Tech Jobs: Find Roles That Match Your CV',
+  title: 'Opportunities',
   description:
-    'Browse tech jobs in engineering, data, DevOps, QA and product. See how well your CV matches each role before you apply.',
+    'Explore published roles and startup opportunities, and find ways to contribute to teams building what comes next.',
   alternates: { canonical: '/jobs' },
   openGraph: {
     url: '/jobs',
-    title: 'Tech Jobs: Find Roles That Match Your CV | Hirely',
+    title: 'Opportunities | Hirely',
     description:
-      'Browse tech jobs and see your CV match score before you apply.',
+      'Explore published roles and startup opportunities on Hirely.',
   },
 };
 
@@ -29,8 +29,8 @@ export default async function JobsPage() {
   return (
     <>
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold tracking-tight text-gray-900">
-          Find tech jobs that match your CV
+        <h1 className="text-2xl font-bold tracking-tight text-slate-950">
+          Explore opportunities
         </h1>
       </div>
       <JobsClient initialJobs={(data ?? []) as Job[]} />

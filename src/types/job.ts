@@ -4,12 +4,14 @@ export interface Job {
   // Database fields
   id: number | string;  // Can be uuid or number depending on your setup
   owner_id?: string; // Clerk user ID for company-owned postings
+  startup_id?: string | null;
   title: string;
   company: string;
   location: string | null;
   type: string; // More flexible than union type to support any job type
   experience_level?: string;
   salary_range?: string;
+  compensation_type?: OpportunityCompensationType | null;
   description?: string; // Made optional to match database
   requirements: string[];
   benefits: string[];
@@ -23,7 +25,7 @@ export interface Job {
   updated_date?: string;
  
   
-  status?: 'pending' | 'approved' | 'rejected';
+  status?: 'pending' | 'approved' | 'rejected' | 'closed';
 
   // Optional fields for future enhancements
   company_size?: string;
@@ -36,6 +38,20 @@ export interface Job {
 
   
 }
+
+export const STARTUP_OPPORTUNITY_TYPES = [
+  'Full-time',
+  'Part-time',
+  'Internship',
+  'Freelance',
+  'Technical co-founder',
+  'Business co-founder',
+  'Volunteer / collaboration',
+  'Advisor / mentor',
+] as const;
+
+export type StartupOpportunityType = (typeof STARTUP_OPPORTUNITY_TYPES)[number];
+export type OpportunityCompensationType = 'paid' | 'equity' | 'unpaid' | 'unspecified';
 
 // More specific types for better type safety
 export type JobType = 

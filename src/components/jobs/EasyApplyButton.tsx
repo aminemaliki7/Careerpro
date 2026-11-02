@@ -33,14 +33,14 @@ export default function EasyApplyButton({
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const buttonClasses =
-    "px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5 whitespace-nowrap active:scale-[0.98] shadow-sm";
+    "inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg bg-[#4F46E5] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2";
 
   if (!isSignedIn) {
     return (
       <SignInButton mode="modal">
         <button type="button" className={buttonClasses}>
           <Send className="w-3.5 h-3.5" />
-          <span>Easy Apply</span>
+          <span>Apply</span>
         </button>
       </SignInButton>
     );
@@ -54,7 +54,7 @@ export default function EasyApplyButton({
         className={buttonClasses}
       >
         <Send className="w-3.5 h-3.5" />
-        <span>Easy Apply</span>
+        <span>Apply</span>
       </button>
 
       <EasyApplyModal

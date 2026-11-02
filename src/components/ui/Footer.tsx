@@ -27,37 +27,49 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="w-full bg-transparent border-t border-gray-200/60 dark:border-gray-800/60 py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="site-footer w-full border-t border-slate-200 py-6">
+      <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 sm:flex-row sm:px-6 lg:px-8">
         
         {/* Brand & Copyright */}
         <div className="flex items-center gap-3">
           <Link href="/" aria-label="Hirely Home" className="opacity-90 hover:opacity-100 transition-opacity">
-            <HirelyLogo size="sm" />
+            <HirelyLogo size="sm" showWordmark={false} />
           </Link>
-          <span className="text-xs text-gray-500">
-            © {currentYear} Hirely. All rights reserved.
+          <span className="text-xs text-slate-500">
+            © {currentYear} Hirely. All rights reserved. Build something together.
           </span>
         </div>
 
         {/* Links & Socials */}
         <div className="flex items-center gap-6">
-          <nav className="flex items-center gap-4 text-xs text-gray-500">
-            <Link href="/about" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+          <nav className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs text-slate-500">
+            <Link href="/" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
+              Discover
+            </Link>
+            <Link href="/startups" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
+              Startups
+            </Link>
+            <Link href="/jobs" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
+              Opportunities
+            </Link>
+            <Link href="/blog" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
+              Resources
+            </Link>
+            <Link href="/about" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
               About Us
             </Link>
-            <Link href="/privacy-policy" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+            <Link href="/privacy-policy" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+            <Link href="/terms" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
               Terms of Service
             </Link>
-            <Link href="/contact" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
+            <Link href="/contact" className="transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]">
               Contact Us
             </Link>
           </nav>
 
-          <div className="h-3 w-px bg-gray-200 dark:bg-gray-800 hidden sm:block" />
+          <div className="hidden h-3 w-px bg-slate-200 sm:block" />
 
           <div className="flex items-center gap-3">
             {socialLinks.map((link) => {
@@ -68,7 +80,7 @@ export default function Footer() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                  className="text-slate-400 transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]"
                   aria-label={link.name}
                 >
                   <Icon className="w-4 h-4" />
@@ -79,7 +91,7 @@ export default function Footer() {
             {showScroll && (
               <button
                 onClick={scrollToTop}
-                className="p-1.5 rounded-md text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors cursor-pointer"
+                className="cursor-pointer rounded-md p-1.5 text-slate-400 transition-colors hover:text-[#4F46E5] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]"
                 aria-label="Scroll to top"
               >
                 <ArrowUp className="w-4 h-4" />

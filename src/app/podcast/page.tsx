@@ -6,14 +6,14 @@ import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 import { Headphones } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Podcast - Tech, AI & Startup Insights',
+  title: 'Startup and Technology Conversations',
   description:
-    'Audio episodes covering AI trends, Morocco tech ecosystem, startup stories, and global tech career insights. Plug in and level up on your commute.',
-  keywords: 'tech podcast, AI podcast, Morocco tech, startup podcast, developer podcast, Hirely',
+    'Listen to conversations about technology, startup journeys, and the people building what comes next.',
+  keywords: 'startup podcast, founder stories, technology conversations, Hirely',
   alternates: { canonical: 'https://hirely.ma/podcast' },
   openGraph: {
-    title:       'Podcast - Tech, AI & Startup Insights | Hirely',
-    description: 'Audio episodes covering AI, startups, and tech careers worldwide.',
+    title:       'Startup and Technology Conversations | Hirely',
+    description: 'Conversations about technology, startup journeys, and the people building what comes next.',
     url:         'https://hirely.ma/podcast',
     siteName:    'Hirely.ma',
     type:        'website',
@@ -22,8 +22,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card:        'summary_large_image',
-    title:       'Podcast - Tech, AI & Startup Insights | Hirely',
-    description: 'Audio episodes covering AI, startups, and tech careers worldwide.',
+    title:       'Startup and Technology Conversations | Hirely',
+    description: 'Conversations about technology, startup journeys, and the people building what comes next.',
     site:        '@hirely_ma',
     creator:     '@hirely_ma',
     images:      ['https://hirely.ma/images/og-default.jpg'],
@@ -96,7 +96,7 @@ export default async function PodcastPage() {
           '@type': 'PodcastSeries',
           name: 'Hirely Tech Podcast',
           description:
-            'A podcast sharing AI, startup, and tech career insights with global professionals.',
+            'Conversations about technology, startup journeys, and the people building what comes next.',
           url: 'https://hirely.ma/podcast',
           inLanguage: 'en',
           areaServed: {

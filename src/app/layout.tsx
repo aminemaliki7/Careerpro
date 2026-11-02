@@ -34,12 +34,12 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://hirely.ma'),
 
   title: {
-    default: 'Hirely | Know Your Match Before You Apply',
+    default: 'Hirely | Build something together',
     template: '%s | Hirely',
   },
 
   description:
-    'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
+    'Discover ambitious startups, meet the founders behind them, and find opportunities to contribute or join.',
 
   applicationName: 'Hirely',
 
@@ -72,17 +72,17 @@ export const metadata: Metadata = {
 
     siteName: 'Hirely',
 
-    title: 'Hirely | Know Your Match Before You Apply',
+    title: 'Hirely | Build something together',
 
     description:
-      'See how your skills and experience align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
+      'Discover ambitious startups, meet the founders behind them, and find opportunities to contribute or join.',
 
     images: [
       {
         url: 'https://hirely.ma/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Hirely - AI Career Intelligence & Global Tech Jobs',
+        alt: 'Hirely - Build something together',
       },
     ],
   },
@@ -90,10 +90,10 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
 
-    title: 'Hirely | Know Your Match Before You Apply',
+    title: 'Hirely | Build something together',
 
     description:
-      'See how your skills align with a job, understand potential gaps, and prepare a more relevant application with Hirely.',
+      'Discover ambitious startups, meet the founders behind them, and find opportunities to contribute or join.',
 
     images: ['https://hirely.ma/og-image.jpg'],
   },
@@ -122,7 +122,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{ variables: { colorPrimary: '#4F46E5' } }}>
       <html lang="en">
         <head>
           {/* -----------------------------------------------------------------
@@ -212,7 +212,7 @@ export default function RootLayout({
                 url: 'https://hirely.ma',
 
                 description:
-                  'AI-powered career intelligence for discovering, evaluating, and pursuing global tech opportunities.',
+                  'A startup discovery and founder platform where people explore what startups are building and find ways to contribute.',
 
                 inLanguage: 'en',
               }).replace(/</g, '\\u003c'),
@@ -275,4 +275,3 @@ export default function RootLayout({
     </ClerkProvider>
   );
 }
-

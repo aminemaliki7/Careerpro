@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tech Career Roadmaps',
+  title: 'Guides and Roadmaps',
   description:
-    'Step-by-step career paths for developers, data, DevOps, QA and more, with skills to learn, timelines and salary ranges.',
+    'Explore practical learning paths and roadmaps for developing skills in technology.',
   alternates: { canonical: '/roadmaps' },
-  openGraph: { url: '/roadmaps', title: 'Tech Career Roadmaps | Hirely', description: 'Step-by-step career paths for developers, data, DevOps, QA and more, with skills to learn, timelines and salary ranges.' },
+  openGraph: { url: '/roadmaps', title: 'Guides and Roadmaps | Hirely', description: 'Explore practical learning paths and roadmaps for developing skills in technology.' },
 };
 
 import { getAllRoadmaps } from '@/lib/roadmaps';

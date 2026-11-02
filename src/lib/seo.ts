@@ -14,7 +14,7 @@ export const siteConfig = {
   siteName: 'Hirely.ma',
 
   description:
-    'AI-powered career intelligence for discovering, evaluating, and pursuing global tech opportunities.',
+    'Discover ambitious startups, meet the founders behind them, and find opportunities to contribute or join.',
 
   url: 'https://hirely.ma',
 
@@ -23,18 +23,14 @@ export const siteConfig = {
   twitterHandle: '@hirely_ma',
 
   keywords: [
-    'AI career intelligence',
-    'AI job matching',
-    'tech jobs',
-    'software engineering jobs',
-    'global tech jobs',
-    'remote tech jobs',
-    'developer careers',
-    'career roadmaps',
-    'CV optimization',
-    'ATS resume analysis',
+    'startup discovery',
+    'startup profiles',
+    'startup opportunities',
+    'founder community',
+    'startup founders',
+    'startup careers',
+    'startup collaboration',
     'startup jobs',
-    'tech startups',
     'Hirely',
     'hirely.ma',
   ],
@@ -224,7 +220,7 @@ export function generateStructuredData(post: BlogPost) {
 
     keywords: post.seoKeywords?.join(', ') || '',
 
-    articleSection: post.tags?.[0] || 'Tech Careers',
+    articleSection: post.tags?.[0] || 'Startups and technology',
 
     wordCount: Math.round((post.readingTime || 0) * 250),
   };
@@ -291,13 +287,6 @@ export function generateWebsiteStructuredData() {
 
     inLanguage: 'en',
 
-    potentialAction: {
-      '@type': 'SearchAction',
-
-      target: `${siteConfig.url}/jobs?search={search_term_string}`,
-
-      'query-input': 'required name=search_term_string',
-    },
   };
 }
 
@@ -338,4 +327,3 @@ export function calculateReadingTime(content: string): number {
 
   return Math.ceil(wordCount / wordsPerMinute);
 }
-

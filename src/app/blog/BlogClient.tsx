@@ -276,13 +276,13 @@ function PostCard({
         href={`/blog/${post.slug}`}
         className="block"
       >
-        <div className="grid grid-cols-[1fr_120px] gap-5 border-b border-zinc-200 pb-7 sm:grid-cols-[1fr_180px] sm:gap-7 sm:pb-9">
+        <div className="grid grid-cols-[1fr_104px] gap-3.5 border-b border-zinc-200 pb-5 sm:grid-cols-[1fr_150px] sm:gap-5 sm:pb-6">
           <div className="min-w-0">
-            <div className="mb-3 flex flex-wrap items-center gap-2">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               {post.tags?.slice(0, 1).map((tag) => (
                 <span
                   key={tag}
-                  className="text-[11px] font-semibold uppercase tracking-wider text-[#18865b]"
+                  className="text-[11px] font-semibold uppercase tracking-wider text-[#4F46E5]"
                 >
                   {formatTag(tag)}
                 </span>
@@ -296,17 +296,17 @@ function PostCard({
               )}
             </div>
 
-            <h2 className="line-clamp-2 text-xl font-bold leading-tight tracking-tight text-zinc-950 transition-colors group-hover:text-[#18865b] sm:text-2xl">
+            <h2 className="line-clamp-2 text-lg font-bold leading-tight tracking-tight text-zinc-950 transition-colors group-hover:text-[#4F46E5] sm:text-xl">
               {post.title}
             </h2>
 
             {post.description && (
-              <p className="mt-2.5 hidden line-clamp-2 text-sm leading-6 text-zinc-500 sm:block">
+              <p className="mt-2 hidden line-clamp-2 text-[13px] leading-5 text-zinc-500 sm:block">
                 {post.description}
               </p>
             )}
 
-            <div className="mt-4 flex items-center justify-between gap-3">
+            <div className="mt-3 flex items-center justify-between gap-3">
               <div className="flex min-w-0 flex-wrap items-center gap-2 text-xs text-zinc-400 sm:gap-3">
                 <span className="whitespace-nowrap">
                   {formatDate(post.publishedAt)}
@@ -322,7 +322,7 @@ function PostCard({
               <div className="flex shrink-0 items-center gap-1">
                 <button
                   onClick={handleClap}
-                  className="relative flex h-8 items-center gap-1.5 rounded-full px-2.5 text-xs font-medium text-zinc-400 transition-all hover:bg-[#24b47e]/5 hover:text-[#18865b]"
+                  className="relative flex h-7 items-center gap-1 rounded-full px-2 text-[11px] font-medium text-zinc-400 transition-all hover:bg-blue-50 hover:text-[#4F46E5]"
                   aria-label={
                     hasClapped
                       ? 'Remove appreciation'
@@ -332,7 +332,7 @@ function PostCard({
                   <Sparkles
                     className={`h-3.5 w-3.5 transition-all duration-300 ${
                       hasClapped || isClapping
-                        ? 'scale-110 text-[#24b47e]'
+                        ? 'scale-110 text-[#4F46E5]'
                         : ''
                     }`}
                   />
@@ -346,7 +346,7 @@ function PostCard({
 
                 <button
                   onClick={handleBookmark}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all ${
+                  className={`flex h-7 w-7 items-center justify-center rounded-full transition-all ${
                     isBookmarked
                       ? 'bg-zinc-950 text-white'
                       : 'text-zinc-400 hover:bg-zinc-100 hover:text-zinc-900'
@@ -368,7 +368,7 @@ function PostCard({
           </div>
 
           {post.coverImage ? (
-            <div className="relative h-[90px] overflow-hidden rounded-xl bg-zinc-100 sm:h-[120px]">
+            <div className="relative h-[76px] overflow-hidden rounded-lg bg-zinc-100 sm:h-[100px]">
               <img
                 src={post.coverImage}
                 alt={post.title}
@@ -378,7 +378,7 @@ function PostCard({
               <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/5" />
             </div>
           ) : (
-            <div className="flex h-[90px] items-center justify-center rounded-xl bg-zinc-50 sm:h-[120px]">
+            <div className="flex h-[76px] items-center justify-center rounded-lg bg-zinc-50 sm:h-[100px]">
               <BookOpen className="h-6 w-6 text-zinc-200" />
             </div>
           )}
@@ -397,7 +397,7 @@ function FeaturedCard({
 }) {
   return (
     <article
-      className={`group overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] ${
+      className={`group overflow-hidden rounded-xl border border-zinc-200 bg-white transition-all duration-300 hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-[0_12px_40px_rgba(0,0,0,0.06)] ${
         large ? 'h-full' : ''
       }`}
     >
@@ -405,7 +405,7 @@ function FeaturedCard({
         {post.coverImage ? (
           <div
             className={`relative overflow-hidden bg-zinc-100 ${
-              large ? 'aspect-[16/9]' : 'aspect-[16/7]'
+              large ? 'aspect-[16/8]' : 'aspect-[16/6]'
             }`}
           >
             <img
@@ -424,7 +424,7 @@ function FeaturedCard({
         ) : (
           <div
             className={`flex items-center justify-center bg-zinc-50 ${
-              large ? 'aspect-[16/9]' : 'aspect-[16/7]'
+              large ? 'aspect-[16/8]' : 'aspect-[16/6]'
             }`}
           >
             <BookOpen className="h-5 w-5 text-zinc-300" />
@@ -432,11 +432,11 @@ function FeaturedCard({
         )}
       </Link>
 
-      <div className={large ? 'p-6 sm:p-7' : 'p-5'}>
-        <div className="mb-3 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-zinc-400">
+      <div className={large ? 'p-4 sm:p-5' : 'p-4'}>
+        <div className="mb-2 flex items-center gap-2 text-[10px] font-medium uppercase tracking-wider text-zinc-400">
           {post.tags?.[0] && (
             <>
-              <span className="text-[#18865b]">
+              <span className="text-[#4F46E5]">
                 {formatTag(post.tags[0])}
               </span>
               <span className="text-zinc-300">•</span>
@@ -448,10 +448,10 @@ function FeaturedCard({
 
         <Link href={`/blog/${post.slug}`}>
           <h3
-            className={`font-bold tracking-tight text-zinc-950 transition-colors group-hover:text-[#18865b] ${
+            className={`font-bold tracking-tight text-zinc-950 transition-colors group-hover:text-[#4F46E5] ${
               large
-                ? 'text-2xl leading-tight sm:text-3xl'
-                : 'text-lg leading-snug'
+                ? 'text-xl leading-tight sm:text-2xl'
+                : 'text-base leading-snug'
             }`}
           >
             {post.title}
@@ -459,10 +459,10 @@ function FeaturedCard({
 
           {post.description && (
             <p
-              className={`mt-3 line-clamp-2 text-zinc-500 ${
+              className={`mt-2 line-clamp-2 text-zinc-500 ${
                 large
-                  ? 'text-sm leading-6 sm:text-base'
-                  : 'text-sm leading-5'
+                  ? 'text-[13px] leading-5 sm:text-sm'
+                  : 'text-[13px] leading-5'
               }`}
             >
               {post.description}
@@ -470,12 +470,12 @@ function FeaturedCard({
           )}
         </Link>
 
-        <div className="mt-5 flex items-center justify-between border-t border-zinc-100 pt-4">
+        <div className="mt-4 flex items-center justify-between border-t border-zinc-100 pt-3">
           <span className="text-xs text-zinc-400">
             {formatDate(post.publishedAt)}
           </span>
 
-          <span className="text-xs font-medium text-zinc-400 transition-colors group-hover:text-[#18865b]">
+          <span className="text-xs font-medium text-zinc-400 transition-colors group-hover:text-[#4F46E5]">
             Read article →
           </span>
         </div>
@@ -502,7 +502,7 @@ function MobileFilterModal({
       <div className="absolute inset-x-0 bottom-0 top-8 overflow-y-auto rounded-t-3xl bg-white">
         <div className="sticky top-0 z-10 flex items-center justify-between border-b border-zinc-200 bg-white px-5 py-4">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+            <p className="text-xs font-semibold uppercase tracking-wider text-[#4F46E5]">
               Articles
             </p>
             <h2 className="mt-0.5 text-lg font-bold text-zinc-950">
@@ -648,21 +648,20 @@ export default function BlogClient({
       <main className="mx-auto max-w-7xl px-4 pb-20 pt-28 sm:px-6 sm:pt-32 lg:px-8">
         <section className="border-b border-zinc-200 pb-10 sm:pb-14">
           <div className="max-w-3xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#24b47e]/20 bg-[#24b47e]/5 px-3 py-1.5 text-xs font-semibold text-[#18865b]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold text-[#4F46E5]">
               <BookOpen className="h-3.5 w-3.5" />
-              Hirely Articles
+              Hirely Resources
             </div>
 
             <h1 className="text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl md:text-6xl">
-              Ideas that help you
-              <span className="text-[#18865b]">
-                {' '}make better career decisions.
+              Ideas for people
+              <span className="text-[#4F46E5]">
+                {' '}building what&apos;s next.
               </span>
             </h1>
 
             <p className="mt-5 max-w-2xl text-base leading-7 text-zinc-500 sm:text-lg">
-              Practical insights on AI, tech careers,
-              startups, salaries, and the global job market.
+              Stories, lessons, and practical ideas from startups and the people building them.
             </p>
           </div>
 
@@ -677,7 +676,7 @@ export default function BlogClient({
                 onChange={(event) =>
                   setSearchTerm(event.target.value)
                 }
-                className="h-11 w-full rounded-full border border-zinc-200 bg-zinc-50 pl-11 pr-10 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-zinc-300 focus:bg-white focus:ring-2 focus:ring-[#24b47e]/10"
+                className="h-11 w-full rounded-xl border border-zinc-200 bg-zinc-50 pl-11 pr-10 text-sm text-zinc-900 outline-none transition-all placeholder:text-zinc-400 focus:border-[#4F46E5] focus:bg-white focus:ring-2 focus:ring-[#4F46E5]/15"
               />
 
               {searchTerm && (
@@ -731,7 +730,7 @@ export default function BlogClient({
 {featured.length > 0 && !searchTerm && !selectedTag && (
   <section className="border-b border-zinc-200 py-8 sm:py-10">
     <div className="mb-5 flex items-center gap-2">
-      <TrendingUp className="h-3.5 w-3.5 text-[#18865b]" />
+      <TrendingUp className="h-3.5 w-3.5 text-[#4F46E5]" />
 
       <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-950">
         Featured
@@ -752,7 +751,7 @@ export default function BlogClient({
           <div className="lg:col-span-2">
             <div className="mb-7 flex items-end justify-between">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+                <p className="text-xs font-semibold uppercase tracking-wider text-[#4F46E5]">
                   Library
                 </p>
 
@@ -779,7 +778,7 @@ export default function BlogClient({
 
                 <button
                   onClick={() => setSelectedTag('')}
-                  className="inline-flex items-center gap-1.5 rounded-full bg-[#24b47e]/5 px-3 py-1.5 text-xs font-semibold text-[#18865b]"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1.5 text-xs font-semibold text-[#4F46E5]"
                 >
                   {formatTag(selectedTag)}
                   <X className="h-3 w-3" />
@@ -811,7 +810,7 @@ export default function BlogClient({
 
                 <button
                   onClick={clearFilters}
-                  className="mt-5 text-sm font-semibold text-[#18865b] hover:underline"
+                  className="mt-5 text-sm font-semibold text-[#4F46E5] hover:underline"
                 >
                   Clear filters
                 </button>
@@ -823,7 +822,7 @@ export default function BlogClient({
             <div className="sticky top-28 space-y-8">
               <div>
                 <div className="mb-4">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[#18865b]">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[#4F46E5]">
                     Explore
                   </p>
 
@@ -917,26 +916,24 @@ export default function BlogClient({
           <section className="mt-16 border-t border-zinc-200 pt-10 sm:mt-20 sm:pt-14">
             <div className="flex flex-col justify-between gap-5 rounded-2xl bg-zinc-950 p-6 sm:flex-row sm:items-center sm:p-8">
               <div className="max-w-xl">
-                <p className="text-xs font-semibold uppercase tracking-wider text-[#5ed6a5]">
+                <p className="text-xs font-semibold uppercase tracking-wider text-blue-200">
                   Keep exploring
                 </p>
 
                 <h2 className="mt-2 text-xl font-bold tracking-tight text-white sm:text-2xl">
-                  Your next career decision starts
-                  with better information.
+                  Find a startup worth building with.
                 </h2>
 
                 <p className="mt-2 text-sm leading-6 text-zinc-400">
-                  Explore jobs, career paths, and companies
-                  alongside the latest insights.
+                  Discover startups and opportunities alongside the latest stories and ideas.
                 </p>
               </div>
 
               <Link
-                href="/jobs"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-[#24b47e] px-5 py-2.5 text-sm font-semibold text-white transition-all hover:bg-[#1ea872]"
+                href="/startups"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-[#4F46E5] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950"
               >
-                Explore Jobs
+                Explore startups
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

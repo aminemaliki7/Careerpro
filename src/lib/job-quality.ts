@@ -4,7 +4,18 @@
 // from the startups table when a match can be found. No external calls.
 
 import type { Job } from '@/types/job';
-import type { Startup } from '@/types/startup';
+import type { FundingStage } from '@/types/startup';
+
+export interface StartupQualityProfile {
+  id: string;
+  name: string;
+  slug: string;
+  fundingStage: FundingStage;
+  size: string;
+  foundedDate: string;
+  jobCount?: number;
+  ownerId?: string;
+}
 
 export interface QualitySignal {
   type: 'positive' | 'concern';
@@ -38,7 +49,7 @@ function normalizeName(name: string): string {
 }
 
 /** Finds the startup record for a job, preferring owner_id linkage over fuzzy name matching. */
-export function findMatchingStartup(job: Pick<Job, 'owner_id' | 'company'>, startups: Startup[]): Startup | null {
+export function findMatchingStartup(job: Pick<Job, 'owner_id' | 'company'>, startups: StartupQualityProfile[]): StartupQualityProfile | null {
   if (job.owner_id) {
     const byOwner = startups.find((s) => s.ownerId === job.owner_id);
     if (byOwner) return byOwner;
@@ -162,13 +173,13 @@ function analyzePostingSignals(job: Partial<Job>): QualitySignal[] {
   return signals;
 }
 
-function analyzeCompanySignals(startup: Startup | null): QualitySignal[] {
+function analyzeCompanySignals(startup: StartupQualityProfile | null): QualitySignal[] {
   if (!startup) return [];
   const signals: QualitySignal[] = [];
 
   // Funding stage
-  const strongFunding: Startup['fundingStage'][] = ['Series B', 'Series C', 'Series D+', 'Public', 'Acquired'];
-  const earlyFunding: Startup['fundingStage'][] = ['Pre-Seed', 'Seed'];
+  const strongFunding: FundingStage[] = ['Series B', 'Series C', 'Series D+', 'Public', 'Acquired'];
+  const earlyFunding: FundingStage[] = ['Pre-Seed', 'Seed'];
 
   if (strongFunding.includes(startup.fundingStage)) {
     signals.push({
@@ -262,7 +273,7 @@ function deriveVerdict(signals: QualitySignal[]): { verdict: OpportunityVerdict;
  * posting-text signals with company data when a matching startup record
  * exists. Entirely rule-based - no external calls.
  */
-export function analyzeJobQuality(job: Job, startups: Startup[]): JobQualityAnalysis {
+export function analyzeJobQuality(job: Job, startups: StartupQualityProfile[]): JobQualityAnalysis {
   const matchedStartup = findMatchingStartup(job, startups);
 
   const signals = [

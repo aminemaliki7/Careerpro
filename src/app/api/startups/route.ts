@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
     // Build query
     let query = supabase
       .from('startups')
-      .select('*', { count: 'exact' })
+      .select('id,name,slug,description,full_description,industry,size,funding_stage,founded_date,location,website_url,logo_url,featured,vote_score,job_count,created_at,updated_at', { count: 'exact' })
       .eq('status', 'approved')
       .order('vote_score', { ascending: false })
       .order('created_at', { ascending: false });
@@ -61,8 +61,6 @@ export async function GET(request: NextRequest) {
 
     // Map database fields to frontend format
     const startups = (data || []).map(startup => {
-      console.log(`Startup: ${startup.name}, logo_url from DB:`, startup.logo_url); // DEBUG LOG
-      
       return {
         id: startup.id,
         name: startup.name,
@@ -75,7 +73,7 @@ export async function GET(request: NextRequest) {
         foundedDate: startup.founded_date,
         location: startup.location,
         websiteUrl: startup.website_url,
-        logoUrl: startup.logo_url, // Pass through exactly as stored
+        logoUrl: startup.logo_url,
         featured: startup.featured || false,
         voteScore: startup.vote_score || 0,
         userVote: userVotes[String(startup.id)] || 0,

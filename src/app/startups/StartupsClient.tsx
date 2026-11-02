@@ -44,13 +44,13 @@ const COUNTRIES = [
 // flat, text-only funding tags — no colored pill backgrounds (matches TrustMRR's plain-text metric style)
 const FUNDING_COLORS: Record<string, string> = {
   'Pre-Seed': 'text-slate-500',
-  'Seed':     'text-emerald-600',
-  'Series A': 'text-indigo-600',
-  'Series B': 'text-purple-600',
-  'Series C': 'text-amber-600',
-  'Series D+':'text-rose-600',
-  'Acquired': 'text-amber-700',
-  'Public':   'text-sky-600',
+  'Seed':     'text-slate-600',
+  'Series A': 'text-slate-600',
+  'Series B': 'text-slate-600',
+  'Series C': 'text-slate-600',
+  'Series D+':'text-slate-600',
+  'Acquired': 'text-slate-600',
+  'Public':   'text-slate-600',
 };
 
 // ─── Skeleton row ─────────────────────────────────────────────────────────────
@@ -158,8 +158,8 @@ function renderVoteButton(
         ${
           vote === value
             ? value === 1
-              ? 'text-orange-500'
-              : 'text-blue-600'
+              ? 'text-[#4F46E5]'
+              : 'text-rose-600'
             : 'text-slate-400 hover:bg-slate-200 hover:text-slate-700'
         }`}
     >
@@ -177,7 +177,7 @@ function renderVoteButton(
 
 
   return (
-    <div className="-mx-2 flex items-center gap-1.5
+    <div className="startup-directory-row -mx-2 flex items-center gap-1.5
   rounded-lg border-b border-slate-100 px-2
   sm:-mx-3 sm:gap-2 sm:px-3
   transition-colors hover:bg-slate-50/70">
@@ -244,13 +244,13 @@ function renderVoteButton(
         </span>
       </div>
 
-      {/* Open roles — the "metric" column, TrustMRR-style */}
+      {/* Show the existing count of opportunities linked to this startup. */}
       {Boolean(startup.jobCount) && (
         <div className="w-16 flex-shrink-0 text-right">
           <span className="text-sm font-mono font-semibold text-slate-900">
             {startup.jobCount}
           </span>
-          <span className="block text-[10px] text-slate-400 -mt-0.5">roles</span>
+          <span className="block text-[10px] text-slate-400 -mt-0.5">opportunities</span>
         </div>
       )}
       </Link>
@@ -266,9 +266,9 @@ function renderVoteButton(
     className={`min-w-0 px-0.5 text-center text-[10px]
       leading-3 font-bold tabular-nums sm:text-[11px] sm:leading-4 ${
         vote > 0
-          ? 'text-orange-500'
+          ? 'text-[#4F46E5]'
           : vote < 0
-            ? 'text-blue-600'
+            ? 'text-rose-600'
             : 'text-slate-600'
       }`}
   >
@@ -362,10 +362,10 @@ function FilterBar({
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search companies..."
+            placeholder="Search startups..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="h-10 w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 transition-colors placeholder:text-slate-400 hover:border-slate-300 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/15"
+            className="h-10 w-full rounded-lg border border-slate-200 bg-white py-2 pl-9 pr-3 text-sm text-slate-900 transition-colors placeholder:text-slate-400 hover:border-slate-300 focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/15"
           />
         </div>
 
@@ -376,14 +376,14 @@ function FilterBar({
           aria-haspopup="dialog"
           className={`relative flex h-10 flex-shrink-0 items-center gap-2 rounded-lg border px-3 text-sm font-medium transition-colors ${
             activeCount > 0
-              ? 'border-emerald-200 bg-emerald-50/70 text-emerald-800 hover:bg-emerald-50'
+              ? 'border-blue-200 bg-blue-50 text-[#3730A3] hover:bg-blue-100'
               : 'border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50'
           }`}
         >
           <Filter className="h-4 w-4 text-current" />
           <span className="hidden sm:inline">Filters</span>
           {activeCount > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-600 px-1 text-[10px] font-bold text-white">
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#4F46E5] px-1 text-[10px] font-bold text-white">
               {activeCount}
             </span>
           )}
@@ -394,7 +394,7 @@ function FilterBar({
       {activeCount > 0 && (
         <div className="flex flex-wrap gap-2 pt-3">
           {active.industry && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50/70 px-2.5 py-1 text-xs font-medium text-emerald-800">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-medium text-[#3730A3]">
               {active.industry}
               <button aria-label={`Remove ${active.industry} filter`} onClick={() => removeTag('industry')} className="transition-colors hover:text-rose-600">
                 <X className="w-3 h-3" />
@@ -402,7 +402,7 @@ function FilterBar({
             </span>
           )}
           {active.location && (
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-100 bg-emerald-50/70 px-2.5 py-1 text-xs font-medium text-emerald-800">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-100 bg-blue-50 px-2.5 py-1 text-xs font-medium text-[#3730A3]">
               {COUNTRIES.find(c => c.name === active.location)?.flag} {active.location}
               <button aria-label={`Remove ${active.location} filter`} onClick={() => removeTag('location')} className="transition-colors hover:text-rose-600">
                 <X className="w-3 h-3" />
@@ -456,7 +456,7 @@ function FilterBar({
                     <select
                       value={temp.industry}
                       onChange={(e) => setTemp({ ...temp, industry: e.target.value as IndustryType })}
-                      className="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-900 transition-colors hover:border-slate-300 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/15"
+                      className="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-900 transition-colors hover:border-slate-300 focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/15"
                     >
                       <option value="">All industries</option>
                       {INDUSTRIES.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -470,7 +470,7 @@ function FilterBar({
                     <select
                       value={temp.location}
                       onChange={(e) => setTemp({ ...temp, location: e.target.value })}
-                      className="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-900 transition-colors hover:border-slate-300 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/15"
+                      className="h-11 w-full appearance-none rounded-lg border border-slate-200 bg-white px-3 pr-10 text-sm text-slate-900 transition-colors hover:border-slate-300 focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/15"
                     >
                       <option value="">All countries</option>
                       {COUNTRIES.map((c) => <option key={c.name} value={c.name}>{c.flag} {c.name}</option>)}
@@ -490,7 +490,7 @@ function FilterBar({
                 <button
                   onClick={applyFilters}
                   disabled={!changed}
-                  className="flex min-h-10 flex-[2] items-center justify-center gap-2 rounded-lg bg-emerald-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
+                  className="flex min-h-10 flex-[2] items-center justify-center gap-2 rounded-lg bg-[#4F46E5] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400"
                 >
                   <Check className="w-4 h-4" /> Apply filters
                 </button>

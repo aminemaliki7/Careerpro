@@ -104,9 +104,10 @@ export default function ContactForm() {
           className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
         >
           <option value="">Select a topic</option>
-          <option value="career-advice">Career Advice</option>
+          <option value="startup-profile">Startup profile</option>
+          <option value="opportunity">Startup opportunity</option>
           <option value="collaboration">Collaboration</option>
-          <option value="job-posting">Post a Job</option>
+          <option value="partnership">Partnership</option>
           <option value="feedback">Feedback</option>
           <option value="technical-issue">Technical Issue</option>
           <option value="other">Other</option>
@@ -137,7 +138,7 @@ export default function ContactForm() {
           <div>
             <h4 className="font-medium text-green-900 mb-1">Message sent successfully!</h4>
             <p className="text-sm text-green-700">
-              We&apos;ll get back to you within 24 hours.
+              We&apos;ll review your message and follow up when we can.
             </p>
           </div>
         </div>
@@ -158,7 +159,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="w-full bg-black text-white py-4 px-6 rounded-full font-medium hover:bg-gray-800 transition-all duration-200 inline-flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed group"
+        className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-[#4F46E5] px-6 py-3.5 font-semibold text-white transition-colors hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 group"
       >
         {status === 'loading' ? (
           <>

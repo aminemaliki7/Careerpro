@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase/client';
+import { supabaseAdmin } from '@/lib/supabase/admin';
 import { analyzeJobQuality } from '@/lib/job-quality';
 import type { Job } from '@/types/job';
-import type { Startup } from '@/types/startup';
 
 export async function GET(
   request: NextRequest,
@@ -26,16 +26,28 @@ export async function GET(
       return NextResponse.json({ error: 'Failed to fetch job' }, { status: 500 });
     }
 
-    const { data: startups, error: startupsError } = await supabase
+    const { data: startups, error: startupsError } = await supabaseAdmin
       .from('startups')
-      .select('*')
+      .select('id,name,slug,funding_stage,size,founded_date,job_count,owner_id')
       .eq('status', 'approved');
 
     if (startupsError) {
       console.error('Supabase error fetching startups:', startupsError);
     }
 
-    const quality = analyzeJobQuality(job as Job, (startups ?? []) as Startup[]);
+    const quality = analyzeJobQuality(
+      job as Job,
+      (startups ?? []).map((startup) => ({
+        id: startup.id,
+        name: startup.name,
+        slug: startup.slug,
+        fundingStage: startup.funding_stage,
+        size: startup.size,
+        foundedDate: startup.founded_date,
+        jobCount: startup.job_count ?? undefined,
+        ownerId: startup.owner_id ?? undefined,
+      }))
+    );
 
     return NextResponse.json({ quality });
   } catch (err) {

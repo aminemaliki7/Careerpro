@@ -1,9 +1,9 @@
 ﻿'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { SignInButton, useUser } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
 import { StartupSubmission, IndustryType, CompanySize, FundingStage } from '@/types/startup';
 import { Loader2, CheckCircle, Upload, X, Image as ImageIcon, AlertCircle, Building2 } from 'lucide-react';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -33,16 +33,30 @@ const PERSONAL_EMAIL_DOMAINS = new Set([
 ]);
 
 export default function StartupSubmissionForm() {
-  const { isSignedIn, user, isLoaded } = useUser();
-  const { isCompany } = useUserRole();
-  const router = useRouter();
-
+  const { isSignedIn, isLoaded } = useUser();
+  const { isCompany, isLoading: roleLoading } = useUserRole();
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [ownedStartups, setOwnedStartups] = useState<Array<{
+    id: string;
+    slug: string;
+    status: 'pending' | 'approved' | 'rejected';
+    profile: StartupSubmission;
+  }>>([]);
+  const [profilesLoading, setProfilesLoading] = useState(false);
+  const [profilesLoaded, setProfilesLoaded] = useState(false);
+  const [profilesError, setProfilesError] = useState('');
+  const editQueryHandled = useRef(false);
+  const [editingStartup, setEditingStartup] = useState<{
+    id: string;
+    slug: string;
+    status: 'pending' | 'approved' | 'rejected';
+  } | null>(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [formData, setFormData] = useState<StartupSubmission>({
     name: '',
@@ -58,6 +72,66 @@ export default function StartupSubmissionForm() {
     contactEmail: '',
     contactName: ''
   });
+
+  const refreshOwnedStartups = useCallback(async () => {
+    setProfilesLoading(true);
+    setProfilesLoaded(false);
+    setProfilesError('');
+
+    try {
+      const response = await fetch('/api/startups/mine');
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || 'Unable to load your startup profiles.');
+      setOwnedStartups(
+        (data.startups ?? []).map((startup: {
+          id: string;
+          slug: string;
+          status: 'pending' | 'approved' | 'rejected';
+          name: string;
+          description: string;
+          fullDescription: string;
+          industry: IndustryType;
+          size: CompanySize;
+          fundingStage: FundingStage;
+          foundedDate: string;
+          location: string;
+          websiteUrl: string;
+          logoUrl: string;
+          contactName: string;
+          contactEmail: string;
+        }) => ({
+          id: startup.id,
+          slug: startup.slug,
+          status: startup.status,
+          profile: {
+            name: startup.name,
+            description: startup.description,
+            fullDescription: startup.fullDescription,
+            industry: startup.industry,
+            size: startup.size,
+            fundingStage: startup.fundingStage,
+            foundedDate: startup.foundedDate,
+            location: startup.location,
+            websiteUrl: startup.websiteUrl,
+            logoUrl: startup.logoUrl,
+            contactName: startup.contactName,
+            contactEmail: startup.contactEmail,
+          },
+        }))
+      );
+      setProfilesLoaded(true);
+    } catch (err) {
+      setProfilesError(err instanceof Error ? err.message : 'Unable to load your startup profiles.');
+    } finally {
+      setProfilesLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn && !roleLoading && isCompany) {
+      void refreshOwnedStartups();
+    }
+  }, [isCompany, isLoaded, isSignedIn, roleLoading, refreshOwnedStartups]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -82,8 +156,8 @@ export default function StartupSubmissionForm() {
   };
 
   const handleLogoUpload = (file: File) => {
-    if (!file.type.startsWith('image/')) {
-      setError('Please upload a valid image file (PNG, JPG, SVG).');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setError('Please upload a valid PNG, JPG, or WebP image.');
       return;
     }
 
@@ -124,6 +198,52 @@ export default function StartupSubmissionForm() {
   const removeLogo = () => {
     setLogoFile(null);
     setLogoPreview(null);
+    setFormData((prev) => ({ ...prev, logoUrl: '' }));
+  };
+
+  const selectStartupForEditing = useCallback((startup: (typeof ownedStartups)[number]) => {
+    setEditingStartup({
+      id: startup.id,
+      slug: startup.slug,
+      status: startup.status,
+    });
+    setFormData({ ...startup.profile });
+    setLogoFile(null);
+    setLogoPreview(startup.profile.logoUrl || null);
+    setSuccess(false);
+    setError(null);
+    setSuccessMessage('');
+  }, []);
+
+  useEffect(() => {
+    if (!profilesLoaded || editQueryHandled.current) return;
+
+    const editSlug = new URLSearchParams(window.location.search).get('edit');
+    editQueryHandled.current = true;
+    if (!editSlug) return;
+
+    const startup = ownedStartups.find((item) => item.slug === editSlug);
+    if (startup) {
+      selectStartupForEditing(startup);
+      return;
+    }
+
+    setProfilesError('That startup profile is not linked to your account.');
+  }, [ownedStartups, profilesLoaded, selectStartupForEditing]);
+
+  const startNewSubmission = () => {
+    setEditingStartup(null);
+    setLogoFile(null);
+    setLogoPreview(null);
+    setError(null);
+    setSuccess(false);
+    setSuccessMessage('');
+    setFormData({
+      name: '', description: '', fullDescription: '',
+      industry: 'AI/ML', size: '1-10', fundingStage: 'Seed',
+      foundedDate: '', location: '', websiteUrl: '', logoUrl: '',
+      contactEmail: '', contactName: ''
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -153,7 +273,7 @@ export default function StartupSubmissionForm() {
       return;
     }
 
-    if (!logoFile) {
+    if (!logoFile && !formData.logoUrl) {
       setError('Please attach a company logo before submitting.');
       setLoading(false);
       return;
@@ -161,31 +281,38 @@ export default function StartupSubmissionForm() {
 
     try {
       let logoUrl = formData.logoUrl;
-      const formDataUpload = new FormData();
-      formDataUpload.append('logo', logoFile);
+      if (logoFile) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('logo', logoFile);
 
-      const uploadResponse = await fetch('/api/upload/logo', {
-        method: 'POST',
-        body: formDataUpload
-      });
+        const uploadResponse = await fetch('/api/upload/logo', {
+          method: 'POST',
+          body: formDataUpload
+        });
 
-      if (!uploadResponse.ok) {
-        throw new Error('Logo upload failed. Please verify the file and try again.');
+        if (!uploadResponse.ok) {
+          const uploadData = await uploadResponse.json();
+          throw new Error(uploadData.error || 'Logo upload failed. Please verify the file and try again.');
+        }
+
+        const uploadData = await uploadResponse.json();
+        logoUrl = uploadData.url;
       }
 
-      const uploadData = await uploadResponse.json();
-      logoUrl = uploadData.url;
-
-      const response = await fetch('/api/startups/submit', {
-        method: 'POST',
+      const response = await fetch(
+        editingStartup
+          ? `/api/startups/${encodeURIComponent(editingStartup.slug)}`
+          : '/api/startups/submit',
+        {
+        method: editingStartup ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
           contactEmail: trimmedEmail,
           logoUrl,
-          ownerId: user?.id // Add owner_id from Clerk user
         })
-      });
+        }
+      );
 
       const data = await response.json();
 
@@ -193,7 +320,15 @@ export default function StartupSubmissionForm() {
         throw new Error(data.error || 'Unable to complete submission. Please try again.');
       }
 
+      setSuccessMessage(
+        editingStartup?.status === 'rejected'
+          ? 'Your updated startup profile has been resubmitted for review.'
+          : editingStartup
+            ? 'Your startup profile has been updated.'
+            : 'Your startup submission has been received and is awaiting review.'
+      );
       setSuccess(true);
+      await refreshOwnedStartups();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.');
     } finally {
@@ -202,16 +337,7 @@ export default function StartupSubmissionForm() {
   };
 
   const resetForm = () => {
-    setSuccess(false);
-    setLogoFile(null);
-    setLogoPreview(null);
-    setError(null);
-    setFormData({
-      name: '', description: '', fullDescription: '',
-      industry: 'AI/ML', size: '1-10', fundingStage: 'Seed',
-      foundedDate: '', location: '', websiteUrl: '', logoUrl: '',
-      contactEmail: '', contactName: ''
-    });
+    startNewSubmission();
   };
 
   // Show loading state while checking auth
@@ -286,16 +412,16 @@ export default function StartupSubmissionForm() {
             <CheckCircle className="w-6 h-6 text-emerald-600" />
           </div>
           <h3 className="text-lg font-bold text-slate-900 mb-1.5">
-            Submission Received
+            {editingStartup ? 'Profile updated' : 'Submission received'}
           </h3>
           <p className="text-xs text-slate-600 mb-6 max-w-xs mx-auto leading-relaxed">
-            Thank you for submitting your startup. Our team will review your details and contact you via <span className="font-semibold text-slate-800">{formData.contactEmail}</span> within 2-3 business days.
+            {successMessage} We&apos;ll contact you at <span className="font-semibold text-slate-800">{formData.contactEmail}</span> if we need anything else.
           </p>
           <button
             onClick={resetForm}
             className="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white text-xs rounded-lg font-semibold transition-all duration-200 shadow-md shadow-indigo-600/20"
           >
-            Submit Another Startup
+            {editingStartup ? 'Done' : 'Submit Another Startup'}
           </button>
         </div>
       </div>
@@ -303,7 +429,44 @@ export default function StartupSubmissionForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5 max-w-xl mx-auto text-xs">
+    <div className="space-y-6">
+      {profilesLoading && (
+        <p className="text-sm text-slate-500" role="status">Loading your startup profiles…</p>
+      )}
+      {profilesError && (
+        <div className="flex items-center justify-between gap-3 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <span>{profilesError}</span>
+          <button type="button" onClick={() => void refreshOwnedStartups()} className="font-semibold underline">Retry</button>
+        </div>
+      )}
+      {ownedStartups.length > 0 && (
+        <section aria-labelledby="owned-startups-heading" className="rounded-xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 id="owned-startups-heading" className="font-semibold text-slate-900">Your startup profiles</h2>
+              <p className="mt-1 text-xs text-slate-500">Manage profiles linked to your founder account.</p>
+            </div>
+            <button type="button" onClick={startNewSubmission} className="rounded-lg border border-[#4F46E5]/25 bg-white px-3 py-2 text-xs font-semibold text-[#4F46E5] hover:bg-blue-50">
+              Add another startup
+            </button>
+          </div>
+          <ul className="mt-4 divide-y divide-slate-200">
+            {ownedStartups.map((startup) => (
+              <li key={startup.id} className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-medium text-slate-900">{startup.profile.name}</p>
+                  <p className="mt-0.5 text-xs capitalize text-slate-500">{startup.status} {startup.status === 'pending' ? 'review' : ''}</p>
+                </div>
+                <button type="button" onClick={() => selectStartupForEditing(startup)} className="rounded-md px-3 py-1.5 text-xs font-semibold text-[#4F46E5] hover:bg-blue-50">
+                  Edit profile
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <form onSubmit={handleSubmit} className="space-y-5 max-w-xl mx-auto text-xs">
       {error && (
         <div className="bg-red-50 border border-red-200/80 rounded-xl p-3 flex items-start gap-2.5 shadow-sm">
           <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
@@ -328,7 +491,7 @@ export default function StartupSubmissionForm() {
         <div className="space-y-3">
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
-              Company Name <span className="text-red-500">*</span>
+              Startup Name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -336,9 +499,11 @@ export default function StartupSubmissionForm() {
               value={formData.name}
               onChange={handleChange}
               required
+              readOnly={Boolean(editingStartup)}
               placeholder="e.g., Acme Technologies"
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all outline-none bg-white text-slate-900"
             />
+            {editingStartup && <p className="mt-1 text-[10px] text-slate-500">Startup names are kept fixed to preserve profile links and job connections.</p>}
           </div>
 
           {/* Logo Upload */}
@@ -350,10 +515,10 @@ export default function StartupSubmissionForm() {
             {logoPreview ? (
               <div className="relative bg-slate-50 border border-slate-200 rounded-lg p-2.5 flex items-center gap-3">
                 <div className="w-12 h-12 bg-white rounded-md border border-slate-200 flex items-center justify-center overflow-hidden flex-shrink-0">
-                  <img src={logoPreview} alt="Logo preview" className="w-full h-full object-contain" />
+                  <Image src={logoPreview} alt="Logo preview" width={48} height={48} unoptimized className="h-full w-full object-contain" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-slate-900 truncate text-xs">{logoFile?.name}</p>
+                  <p className="font-semibold text-slate-900 truncate text-xs">{logoFile?.name ?? 'Current startup logo'}</p>
                   <p className="text-[10px] text-slate-500">{logoFile && (logoFile.size / 1024).toFixed(1)} KB</p>
                 </div>
                 <button
@@ -378,7 +543,7 @@ export default function StartupSubmissionForm() {
               >
                 <input
                   type="file"
-                  accept="image/png, image/jpeg, image/webp, image/svg+xml"
+                  accept="image/png, image/jpeg, image/webp"
                   onChange={handleFileInput}
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                 />
@@ -391,7 +556,7 @@ export default function StartupSubmissionForm() {
                   <span className="text-slate-700 font-medium">
                     {isDragging ? 'Drop logo image here' : 'Click or drop logo'}
                   </span>
-                  <span className="text-[10px] text-slate-400">(PNG, JPG, SVG max 5MB)</span>
+                  <span className="text-[10px] text-slate-400">(PNG, JPG, WebP · max 5MB)</span>
                 </div>
               </div>
             )}
@@ -417,14 +582,14 @@ export default function StartupSubmissionForm() {
 
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
-              Full Overview <span className="text-slate-400 font-normal">(Optional)</span>
+              What you&apos;re building <span className="text-slate-400 font-normal">(Optional)</span>
             </label>
             <textarea
               name="fullDescription"
               value={formData.fullDescription}
               onChange={handleChange}
               rows={3}
-              placeholder="Detail your product offering, key achievements, or mission..."
+              placeholder="Describe the product, problem you are solving, and what your team is building."
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition-all outline-none resize-none bg-white text-slate-900"
             />
           </div>
@@ -538,14 +703,14 @@ export default function StartupSubmissionForm() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
-              Contact Person <span className="text-red-500">*</span>
+              Founder or company contact <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="contactName"
               value={formData.contactName}
               onChange={handleChange}
-              placeholder="e.g., Sarah Jenkins"
+              placeholder="Name of the person reviewing the submission"
               required
               className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 outline-none bg-white text-slate-900"
             />
@@ -553,7 +718,7 @@ export default function StartupSubmissionForm() {
 
           <div>
             <label className="block font-semibold text-slate-700 mb-1">
-              Official Contact Email <span className="text-red-500">*</span>
+              Private review contact email <span className="text-red-500">*</span>
               <span className="text-slate-400 font-normal ml-1 text-[10px]">(company domain, not Gmail/Yahoo/etc.)</span>
             </label>
             <input
@@ -571,6 +736,9 @@ export default function StartupSubmissionForm() {
         </div>
       </div>
 
+      <p className="rounded-lg border border-blue-100 bg-blue-50/70 p-3 text-xs leading-relaxed text-slate-600">
+        New profiles are submitted for review before publication. Contact details are used for review and are not shown on public startup pages.
+      </p>
       <button
         type="submit"
         disabled={loading}
@@ -579,17 +747,18 @@ export default function StartupSubmissionForm() {
         {loading ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" />
-            Submitting Startup Profile...
+            {editingStartup ? 'Saving Profile…' : 'Submitting Startup…'}
           </>
         ) : (
           <>
-            <span>Submit Startup</span>
+            <span>{editingStartup ? 'Save profile' : 'Submit startup'}</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform">
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
           </>
         )}
       </button>
-    </form>
+      </form>
+    </div>
   );
 }

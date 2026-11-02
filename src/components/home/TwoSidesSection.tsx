@@ -66,7 +66,7 @@ export default function TwoSidesSection() {
               <div className="hidden h-px w-8 bg-slate-200 md:block" />
 
               <div className="translate-x-[-3px]">
-                <CircuitLogo size="sm" color="#ffffff" />
+                <CircuitLogo size="sm" color="#ffffff" showWordmark={false} />
               </div>
               <div className="hidden h-px w-8 bg-slate-200 md:block" />
 

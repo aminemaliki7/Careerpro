@@ -6,27 +6,23 @@ import { getAllPosts, getFeaturedPosts } from '@/lib/posts';
 export const revalidate = 60;   // ← add this line
 
 export const metadata: Metadata = {
-  title: 'Articles - AI, Tech Careers & Job Market Insights',
+  title: 'Resources for Startup Builders',
   description:
-    'Practical insights on AI, tech careers, startups, salaries, and the global job market. Make better career decisions with Hirely.',
+    'Ideas, stories, and practical insights for founders and people exploring what startups are building.',
   keywords: [
-    'AI careers',
-    'tech careers',
-    'tech jobs',
-    'job market',
-    'developer careers',
-    'AI trends',
-    'startup insights',
-    'tech salaries',
-    'career advice',
+    'startup stories',
+    'founder insights',
+    'startup building',
+    'startup community',
+    'technology',
   ],
   alternates: {
     canonical: 'https://hirely.ma/blog',
   },
   openGraph: {
-    title: 'Articles - AI, Tech Careers & Job Market Insights | Hirely',
+    title: 'Resources for Startup Builders | Hirely',
     description:
-      'Practical insights on AI, tech careers, startups, salaries, and the global job market.',
+      'Ideas, stories, and practical insights for founders and people exploring what startups are building.',
     url: 'https://hirely.ma/blog',
     siteName: 'Hirely.ma',
     type: 'website',
@@ -42,9 +38,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Articles - AI, Tech Careers & Job Market Insights | Hirely',
+    title: 'Resources for Startup Builders | Hirely',
     description:
-      'Practical insights on AI, tech careers, startups, salaries, and the global job market.',
+      'Ideas, stories, and practical insights for founders and people exploring what startups are building.',
     site: '@hirely_ma',
     creator: '@hirely_ma',
     images: ['https://hirely.ma/images/og-default.jpg'],
@@ -72,4 +68,3 @@ export default async function BlogPage() {
     />
   );
 }
-

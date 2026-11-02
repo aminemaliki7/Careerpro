@@ -10,7 +10,7 @@ import { requireAdmin } from '@/lib/auth/authorization';
 import { supabaseAdmin } from '@/lib/supabase/admin';
 import type { Job } from '@/types/job';
 
-export async function getPendingJobs(): Promise<Job[]> {
+export async function getPendingJobs(): Promise<Array<Job & { canApprove: boolean }>> {
   const authResult = await requireAdmin();
   if (authResult.response) redirect('/');
 
@@ -25,7 +25,10 @@ export async function getPendingJobs(): Promise<Job[]> {
     return [];
   }
 
-  return (data ?? []) as Job[];
+  return ((data ?? []) as Job[]).map((job) => ({
+    ...job,
+    canApprove: !(job.startup_id && job.owner_id === authResult.userId),
+  }));
 }
 
 export async function setJobStatus(
@@ -34,6 +37,23 @@ export async function setJobStatus(
 ): Promise<void> {
   const authResult = await requireAdmin();
   if (authResult.response) redirect('/');
+
+  if (status === 'approved') {
+    const { data: job, error: lookupError } = await supabaseAdmin
+      .from('jobs')
+      .select('owner_id,startup_id')
+      .eq('id', jobId)
+      .maybeSingle();
+
+    if (lookupError) {
+      console.error('Error checking job ownership before approval:', lookupError);
+      throw new Error('Unable to verify job ownership before approval.');
+    }
+    if (!job) throw new Error('Job not found.');
+    if (job.startup_id && job.owner_id === authResult.userId) {
+      throw new Error('You cannot approve your own startup opportunity.');
+    }
+  }
 
   const { error } = await supabaseAdmin
     .from('jobs')

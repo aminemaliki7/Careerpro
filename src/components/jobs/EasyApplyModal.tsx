@@ -183,13 +183,13 @@ export default function EasyApplyModal({
         body: JSON.stringify({ cvText: cvText.trim(), jobTitle, company, requirements, description, skills }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'ATS evaluation failed.');
+      if (!res.ok) throw new Error(data.error || 'Application review failed.');
 
       setAtsResult(data);
       setStep(3);
       trackHirelyEvent('match_analysis_completed');
     } catch (err) {
-      updateStatus({ error: err instanceof Error ? err.message : 'ATS Check failed.' });
+      updateStatus({ error: err instanceof Error ? err.message : 'Application review failed.' });
     } finally {
       updateStatus({ atsLoading: false });
     }
@@ -293,7 +293,7 @@ export default function EasyApplyModal({
     window.location.href = mailto;
   };
 
-  const stepsList = ['Info', 'CV Upload', 'ATS Check', 'Optimize', 'Review & Send'];
+  const stepsList = ['Your details', 'CV upload', 'Review', 'Improve', 'Review & send'];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-3 bg-black/50 backdrop-blur-xs">
@@ -304,7 +304,7 @@ export default function EasyApplyModal({
           <div>
             <h2 className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
               <Icons.Sparkles className="w-4 h-4 text-purple-600" />
-              Easy Apply with AI
+              Prepare your application
             </h2>
             <p className="text-xs text-gray-500 font-medium truncate mt-0.5">{jobTitle} • {company}</p>
           </div>
@@ -560,7 +560,7 @@ export default function EasyApplyModal({
                   disabled={cvText.length < 50 || status.atsLoading}
                   className="px-3 py-1.5 border border-purple-200 bg-purple-50 text-purple-700 text-xs font-semibold rounded-lg hover:bg-purple-100/80 disabled:opacity-40 transition-colors flex items-center gap-1.5 shadow-2xs"
                 >
-                  {status.atsLoading && <Icons.Spinner />} ATS Check
+                  {status.atsLoading && <Icons.Spinner />} Reviewing
                 </button>
                 <button
                   onClick={handleGenerateEmail}

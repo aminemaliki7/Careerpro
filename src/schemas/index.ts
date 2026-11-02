@@ -54,6 +54,27 @@ export const createJobSchema = z.object({
   owner_id: z.string().trim().optional(),
 });
 
+export const founderOpportunitySchema = z.object({
+  title: z.string().trim().min(2, 'Title is required').max(200),
+  type: z.enum([
+    'Full-time',
+    'Part-time',
+    'Internship',
+    'Freelance',
+    'Technical co-founder',
+    'Business co-founder',
+    'Volunteer / collaboration',
+    'Advisor / mentor',
+  ]),
+  location: z.string().trim().max(200).nullable().optional(),
+  remote: z.boolean().default(false),
+  description: z.string().trim().min(20, 'Add a little more detail about this opportunity').max(20000),
+  requirements: z.array(z.string().trim().min(1).max(1000)).max(30).default([]),
+  skills: z.array(z.string().trim().min(1).max(200)).max(30).default([]),
+  compensationType: z.enum(['paid', 'equity', 'unpaid', 'unspecified']),
+  salaryRange: z.string().trim().max(100).optional().or(z.literal('')),
+});
+
 export const applicationStageSchema = z.object({
   pipeline_stage: z.enum([
     'application',

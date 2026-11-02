@@ -6,9 +6,10 @@ export const dynamic = 'force-dynamic';
 
 import { getPendingJobs, setJobStatus } from './actions';
 import type { Job } from '@/types/job';
+import Link from 'next/link';
 
 export default async function AdminPendingJobsPage() {
-  const jobs: Job[] = await getPendingJobs();
+  const jobs: Array<Job & { canApprove: boolean }> = await getPendingJobs();
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -16,8 +17,11 @@ export default async function AdminPendingJobsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Pending Job Approvals</h1>
           <p className="mt-2 text-gray-600">
-            Review and approve job postings from recruiters ({jobs.length} pending)
+            Review and approve job postings and startup opportunities ({jobs.length} pending)
           </p>
+          <Link href="/admin/startups/pending" className="mt-3 inline-flex text-sm font-semibold text-blue-700 hover:text-blue-900">
+            Review startup submissions
+          </Link>
         </div>
 
         {jobs.length === 0 ? (
@@ -124,6 +128,8 @@ export default async function AdminPendingJobsPage() {
                     >
                       <button
                         type="submit"
+                        disabled={!job.canApprove}
+                        title={!job.canApprove ? 'You cannot approve your own startup opportunity.' : undefined}
                         className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-colors"
                       >
                         ✓ Approve & Publish
@@ -141,6 +147,11 @@ export default async function AdminPendingJobsPage() {
                       </button>
                     </form>
                   </div>
+                  {!job.canApprove && (
+                    <p role="note" className="mt-2 text-sm text-amber-800">
+                      You cannot approve your own startup opportunity.
+                    </p>
+                  )}
                 </div>
               </div>
             ))}
