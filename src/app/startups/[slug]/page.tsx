@@ -103,7 +103,7 @@ export default async function StartupPage({
         </Link>
 
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-          <div className="relative h-36 overflow-hidden bg-gradient-to-br from-[#4F46E5] via-[#3730A3] to-slate-900 sm:h-48">
+          <div className="relative z-0 h-36 overflow-hidden bg-gradient-to-br from-[#4F46E5] via-[#3730A3] to-slate-900 sm:h-48">
             <div
               aria-hidden="true"
               className="absolute inset-0 opacity-20"
@@ -116,7 +116,7 @@ export default async function StartupPage({
           </div>
 
           <div className="px-5 pb-6 sm:px-8 sm:pb-8">
-            <div className="-mt-10 flex flex-wrap items-end justify-between gap-4 sm:-mt-12">
+            <div className="relative z-10 -mt-10 flex flex-wrap items-end justify-between gap-4 sm:-mt-12">
               <StartupLogo logoUrl={startup.logo_url ?? undefined} name={startup.name} size="lg" />
               {startup.featured && (
                 <span className="mb-1 rounded-full border border-blue-100 bg-blue-50 px-3 py-1 text-xs font-semibold text-[#3730A3]">
