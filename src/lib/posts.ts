@@ -6,6 +6,7 @@ import readingTime from 'reading-time'
 import type {
   BlogMetadata,
   BlogPostWithContent,
+  ArticleContentImage,
   JobRoadmap,
   AffiliateCourseLink,
   Highlight,
@@ -24,6 +25,7 @@ type ArticleRow = {
   seo_keywords: string[]
   featured: boolean
   cover_image: string | null
+  content_images: unknown
   audio_url: string | null
   audio_duration: number | null
   highlights: Highlight[] | null
@@ -56,19 +58,42 @@ const supabase = createClient(
  * returned by the MDX loader.
  */
 function markdownToHtml(
-  markdown: string
+  markdown: string,
+  contentImages: ArticleContentImage[] = []
 ): string {
-  const htmlContent = markdown
+  const codeBlocks: string[] = [];
+  const markdownWithCodePlaceholders = markdown.replace(
+    /```([a-zA-Z0-9_+-]*)\s*\n([\s\S]*?)```/g,
+    (_match, rawLanguage: string, rawCode: string) => {
+      const language = rawLanguage.toLowerCase();
+      const code = rawCode.replace(/\n$/, '');
+      const languageClass = language ? ` class="language-${language}"` : '';
+      const codeBlock = `<pre><code${languageClass}>${escapeHtmlAttribute(code)}</code></pre>`;
+      const placeholder = `@@CODE_BLOCK_${codeBlocks.length}@@`;
+      codeBlocks.push(codeBlock);
+      return placeholder;
+    }
+  );
 
-    // Code blocks first
+  const htmlContent = markdownWithCodePlaceholders
+    // Images must be converted before links because both share Markdown syntax.
     .replace(
-      /```[\s\S]*?```/g,
-      (match) => {
-        const codeContent = match
-          .replace(/^```\w*\n?/, '')
-          .replace(/```$/, '')
+      /!\[([^\]]*)\]\(([^)\s]+)(?:\s+"([^"]*)")?\)/g,
+      (_match, alt: string, rawUrl: string, title?: string) => {
+        const url = rawUrl.trim();
+        const isSafeUrl =
+          url.startsWith('/') && !url.startsWith('//') ||
+          /^https?:\/\//i.test(url);
 
-        return `<pre><code>${codeContent}</code></pre>`
+        if (!isSafeUrl) return '';
+
+        const escapeAttribute = (value: string) =>
+          value.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
+        const titleAttribute = title
+          ? ` title="${escapeAttribute(title)}"`
+          : '';
+
+        return `<figure class="my-8 overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><img src="${escapeAttribute(url)}" alt="${escapeAttribute(alt)}"${titleAttribute} loading="lazy" decoding="async" class="h-auto max-h-[34rem] w-full object-contain" /></figure>`;
       }
     )
 
@@ -178,6 +203,16 @@ function markdownToHtml(
       )
 
       .replace(
+        /<p><figure/g,
+        '<figure'
+      )
+
+      .replace(
+        /<\/figure><\/p>/g,
+        '</figure>'
+      )
+
+      .replace(
         /<p><\/p>/g,
         ''
       )
@@ -187,7 +222,74 @@ function markdownToHtml(
         ''
       )
 
-  return wrappedContent
+  let paragraphIndex = 0;
+  const imagesByParagraph = new Map<number, ArticleContentImage[]>();
+
+  for (const image of contentImages) {
+    const images = imagesByParagraph.get(image.afterParagraph) ?? [];
+    images.push(image);
+    imagesByParagraph.set(image.afterParagraph, images);
+  }
+
+  const contentWithCodeBlocks = wrappedContent.replace(
+    /@@CODE_BLOCK_(\d+)@@/g,
+    (_match, index: string) => codeBlocks[Number(index)] ?? ''
+  ).replace(/<p>\s*(<pre>[\s\S]*?<\/pre>)\s*<\/p>/g, '$1');
+
+  const htmlWithPlacedImages = contentWithCodeBlocks.replace(/<\/p>/g, () => {
+    paragraphIndex += 1;
+    return `</p>${(imagesByParagraph.get(paragraphIndex) ?? [])
+      .map(renderArticleImage)
+      .join('')}`;
+  });
+
+  const lastParagraph = Math.max(0, paragraphIndex);
+  const trailingImages = contentImages
+    .filter((image) => image.afterParagraph > lastParagraph)
+    .map(renderArticleImage)
+    .join('');
+
+  return htmlWithPlacedImages + trailingImages
+}
+
+function escapeHtmlAttribute(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function isSafeImageUrl(url: string): boolean {
+  return (url.startsWith('/') && !url.startsWith('//')) || /^https?:\/\//i.test(url);
+}
+
+function renderArticleImage(image: ArticleContentImage): string {
+  return `<figure class="my-8 overflow-hidden rounded-xl border border-slate-200 bg-slate-50"><img src="${escapeHtmlAttribute(image.url)}" alt="${escapeHtmlAttribute(image.alt)}" loading="lazy" decoding="async" class="h-auto max-h-[34rem] w-full object-contain" /></figure>`;
+}
+
+function normalizeContentImages(value: unknown): ArticleContentImage[] {
+  if (!Array.isArray(value)) return [];
+
+  return value.flatMap((item): ArticleContentImage[] => {
+    if (!item || typeof item !== 'object') return [];
+
+    const image = item as Record<string, unknown>;
+    const url = typeof image.url === 'string' ? image.url.trim() : '';
+    const alt = typeof image.alt === 'string' ? image.alt.trim() : '';
+    const afterParagraph = Number(image.afterParagraph);
+
+    if (
+      !url ||
+      !isSafeImageUrl(url) ||
+      !Number.isInteger(afterParagraph) ||
+      afterParagraph < 1
+    ) {
+      return [];
+    }
+
+    return [{ url, alt, afterParagraph }];
+  });
 }
 
 function normalizeRoadmap(
@@ -248,6 +350,7 @@ function mapArticle(
   includeContent: boolean
 ): BlogPostWithContent {
   const content = article.content ?? ''
+  const contentImages = normalizeContentImages(article.content_images)
 
   const roadmap =
     normalizeRoadmap(article.roadmap)
@@ -289,7 +392,7 @@ function mapArticle(
 
     content:
       includeContent
-        ? markdownToHtml(content)
+        ? markdownToHtml(content, contentImages)
         : '',
 
     readingTime:
@@ -310,6 +413,8 @@ function mapArticle(
     coverImage:
       article.cover_image ??
       undefined,
+
+    contentImages,
 
     highlights,
 

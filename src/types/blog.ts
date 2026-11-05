@@ -6,6 +6,12 @@ export interface Highlight {
   color: 'yellow' | 'blue' | 'green' | 'purple' | 'pink' | 'red';
 }
 
+export interface ArticleContentImage {
+  url: string;
+  alt: string;
+  afterParagraph: number;
+}
+
 export interface BlogPost {
   title: string
   description: string
@@ -23,6 +29,7 @@ export interface BlogPost {
   audioUrl?: string;
   audioDuration?: number; // in seconds
   coverImage?: string;
+  contentImages?: ArticleContentImage[];
   highlights?: Highlight[]; // NEW: Add highlights field
 }
 
@@ -47,6 +54,7 @@ export interface BlogPostWithContent extends BlogPost {
   roadmap: JobRoadmap
   affiliateLink?: string
   coverImage?: string
+  contentImages?: ArticleContentImage[]
   highlights?: Highlight[]; // NEW: Add highlights field (inherited from BlogPost, but explicit for clarity)
 }
 
